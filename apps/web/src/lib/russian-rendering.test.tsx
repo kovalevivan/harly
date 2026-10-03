@@ -5,6 +5,7 @@ import { PipelineSpine } from "@/components/ui/PipelineSpine";
 import { GreetingHeader, buildSubline } from "@/features/dashboard/GreetingHeader";
 import { localizeSystemText, localizeStageName } from "./localize-system-text";
 import { formatRelative, formatShort } from "./date";
+import { formatEnumLabel } from "./format";
 import { russianPlural } from "./russian-plural";
 import { formatDistanceToNow } from "./date-format";
 
@@ -47,6 +48,12 @@ describe("Russian first render", () => {
       expect(russianPlural(Number(count), "кандидат", "кандидата", "кандидатов")).toBe(expected);
     },
   );
+
+  it("localizes dynamic system statuses without modifying their identifiers", () => {
+    expect(formatEnumLabel("running")).toBe("Выполняется");
+    expect(formatEnumLabel("completed_with_warnings")).toBe("Завершено с предупреждениями");
+    expect(formatEnumLabel("draft")).toBe("Черновик");
+  });
 
   it("keeps stored stage values usable while displaying Russian copy", () => {
     const html = renderToStaticMarkup(<PipelineSpine current="Screening" showLabel />);

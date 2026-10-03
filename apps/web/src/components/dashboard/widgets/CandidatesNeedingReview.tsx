@@ -12,7 +12,7 @@ import { Tile, TileHeader, TileLink, EmptyHint } from "./primitives";
 
 function agingLabel(days: number) {
   if (days <= 0) return "Запрошено сегодня";
-  return `Запрошено ${days} дня${days === 1 ? "" : "s"} назад`;
+  return `Дней с момента отклика: ${days}`;
 }
 
 export function CandidatesNeedingReview({

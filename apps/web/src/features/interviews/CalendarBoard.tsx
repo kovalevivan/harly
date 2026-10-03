@@ -162,7 +162,7 @@ export function CalendarBoard({
     <div className="space-y-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          {filtered.length} {"собеседований"}{filtered.length === 1 ? "" : "s"} {"в этом месяце"}{hasAnyFilter ? " (filtered)" : ""}.
+          {filtered.length} {"собеседований"} {"в этом месяце"}{hasAnyFilter ? " (с учётом фильтров)" : ""}.
         </p>
         <div className="flex items-center gap-1">
           <button
@@ -354,7 +354,7 @@ export function CalendarBoard({
                   role="gridcell"
                   aria-label={
                     dayInterviews.length > 0
-                      ? `${dateLabel}, ${dayInterviews.length} интервью${dayInterviews.length === 1 ? "" : "s"}${isToday ? ", сегодня" : ""}`
+                      ? `${dateLabel}, ${dayInterviews.length} интервью${isToday ? ", сегодня" : ""}`
                       : `${dateLabel}, интервью нет${isToday ? ", сегодня" : ""}`
                   }
                   aria-selected={selectedDay === key}

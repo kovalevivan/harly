@@ -144,7 +144,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
         return;
       }
       setSelectedIds(new Set());
-      toast.success(`Удален ${selectedIds.size} кандидат${selectedIds.size === 1 ? "" : "s"} из пула.`);
+      toast.success(`Удалено из резерва: ${selectedIds.size}.`);
       router.refresh();
     });
   }
@@ -245,7 +245,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
           </div>
         )}
         <div className="ml-auto text-sm text-muted-foreground">
-          {filtered.length} {"кандидат"}{filtered.length === 1 ? "" : "s"}
+          {"Кандидатов: "}{filtered.length}
         </div>
         {(search || sourceFilter !== "all") && (
           <Button

@@ -1,5 +1,6 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState, useTransition } from "react";
 import { toast } from "@/lib/notification-island/toast";
 
@@ -638,8 +639,8 @@ export function WorkflowBuilder({
                   )}
                 >
                   {hasUnpublishedChanges && status !== "draft"
-                    ? `${status} · правки`
-                    : status}
+                    ? `${formatEnumLabel(status)} · правки`
+                    : formatEnumLabel(status)}
                 </span>
                 {draft.id &&
                   (status === "draft" || hasUnpublishedChanges) &&

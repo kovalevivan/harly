@@ -239,7 +239,7 @@ export function ImportCandidatesDrawer({
       setSummary(result);
       if (result.imported > 0) {
         toast.success(
-          `Импортирован ${result.imported} кандидат${result.imported === 1 ? "" : "s"}.`,
+          `Импортирован ${result.imported} кандидат.`,
         );
         router.refresh();
       } else {
@@ -261,7 +261,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Импортирован ${result.imported} Кандидат в теплицу${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} Кандидат в теплицу.`,
       );
       router.refresh();
     });
@@ -281,7 +281,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Импортирован ${result.imported} Работоспособный кандидат${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} Работоспособный кандидат.`,
       );
       router.refresh();
     });
@@ -300,7 +300,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Импортирован ${result.imported} кандидат Эшби${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} кандидат Эшби.`,
       );
       router.refresh();
     });
@@ -319,7 +319,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Импортирован ${result.imported} Кандидат на рычаг ${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} Кандидат на рычаг .`,
       );
       router.refresh();
     });
@@ -338,7 +338,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Импортирован ${result.imported} кандидат ПРИСОЕДИНЯЙТЕСЬ${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} кандидат ПРИСОЕДИНЯЙТЕСЬ.`,
       );
       router.refresh();
     });
@@ -401,7 +401,7 @@ export function ImportCandidatesDrawer({
               >
                 {isPending
                   ? "Импорт…"
-                  : `Импортировать ${validRowCount} кандидата${validRowCount === 1 ? "" : "s"}`}
+                  : `Импортировать ${validRowCount} кандидата`}
               </Button>
             ) : null}
           </>
@@ -772,7 +772,7 @@ export function ImportCandidatesDrawer({
                     </Table>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {rowsToImport.length} {"строк "}{rowsToImport.length === 1 ? "" : "s"} {"нашел,"}{" "}
+                    {rowsToImport.length} {"строк "} {"нашел,"}{" "}
                     {validRowCount} {"готов к импорту "}{rowsToImport.length > PREVIEW_ROWS
                       ? `, показывая первый ${PREVIEW_ROWS}`
                       : ""}
@@ -788,7 +788,7 @@ export function ImportCandidatesDrawer({
                   <span className="font-semibold text-foreground">
                     {summary.imported}
                   </span>{" "}
-                  {"кандидат"}{summary.imported === 1 ? "" : "s"} {"импортировано. "}{summary.alreadyInPipeline > 0
+                  {"кандидат"} {"импортировано. "}{summary.alreadyInPipeline > 0
                     ? ` ${summary.alreadyInPipeline} уже в стадии разработки.`
                     : ""}
                   {summary.skipped
@@ -798,7 +798,7 @@ export function ImportCandidatesDrawer({
                 {summary.errors.length > 0 ? (
                   <div className="space-y-1.5">
                     <p className="font-medium text-foreground">
-                      {summary.errors.length} {"строк "}{summary.errors.length === 1 ? "" : "s"} {"пропущено: "}</p>
+                      {summary.errors.length} {"строк "} {"пропущено: "}</p>
                     <ul className="max-h-40 space-y-1 overflow-auto text-xs text-muted-foreground">
                       {summary.errors.map((error) => (
                         <li key={error.row}>

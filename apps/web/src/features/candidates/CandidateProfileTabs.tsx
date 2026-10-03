@@ -246,7 +246,7 @@ export function CandidateProfileTabs({
           <p className="text-sm text-muted-foreground">
             {scorecards.length === 0
               ? "Никто в команде еще не забил этого кандидата."
-              : `${scorecards.length} оценка${scorecards.length === 1 ? "" : "s"} от команды.`}
+              : `${scorecards.length} оценка от команды.`}
           </p>
           {applications[0] ? (
             <EvaluationDrawer

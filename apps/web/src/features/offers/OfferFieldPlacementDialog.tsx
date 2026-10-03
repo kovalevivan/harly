@@ -164,7 +164,7 @@ export function OfferFieldPlacementDialog({
             <p className="text-xs text-muted-foreground">
               {placements.length === 0
                 ? "Загрузка письма с предложением…"
-                : `Поле ${placements.length}${placements.length === 1 ? "" : "s"} размещено.`}
+                : `Поле ${placements.length} размещено.`}
             </p>
             <div className="mt-auto">
               {rotated ? (

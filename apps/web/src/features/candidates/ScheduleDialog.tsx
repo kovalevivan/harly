@@ -139,12 +139,12 @@ export function ScheduleDialog({
       const warnings: string[] = [];
       if (result.gcalBusy.length > 0) {
         warnings.push(
-          `${result.gcalBusy.length} существующее событие календаря${result.gcalBusy.length > 1 ? "s" : ""}`,
+          `${result.gcalBusy.length} существующее событие календаря`,
         );
       }
       if (result.internalConflicts.length > 0) {
         warnings.push(
-          `${result.internalConflicts.length} перекрывающееся интервью${result.internalConflicts.length > 1 ? "s" : ""} в этом рабочем пространстве`,
+          `${result.internalConflicts.length} перекрывающееся интервью в этом рабочем пространстве`,
         );
       }
       setAvailabilityWarning(

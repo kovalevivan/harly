@@ -354,7 +354,7 @@ function MembersPanel({
             />
           </div>
           <p className="hidden shrink-0 text-xs text-muted-foreground md:block">
-            {"Показаны "}{visible.length} {"участников"}{visible.length !== 1 ? "s" : ""}
+            {"Показаны "}{visible.length} {"участников"}
           </p>
         </div>
         <div className="flex items-center gap-2">

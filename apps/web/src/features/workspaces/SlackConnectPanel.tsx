@@ -1,5 +1,6 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/notification-island/toast";
@@ -197,7 +198,7 @@ export function SlackConnectPanel({
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
             {status.pendingDeliveries > 0
-              ? `${status.pendingDeliveries} уведомление${status.pendingDeliveries === 1 ? "" : "s"} ожидается.`
+              ? `${status.pendingDeliveries} уведомление ожидается.`
               : `Последняя попытка доставки: ${status.lastDelivery.attempts}.`}
             {status.lastDelivery.error ? ` ${status.lastDelivery.error}` : ""}
           </p>
@@ -567,7 +568,7 @@ function SlackConfigForm({
                 <div className="min-w-0">
                   <p className="truncate font-medium">{delivery.event}</p>
                   <p className="text-muted-foreground">
-                    {delivery.status} · {delivery.attempts} {"попыток"}{delivery.attempts === 1 ? "" : "s"}
+                    {formatEnumLabel(delivery.status)} · {delivery.attempts} {"попыток"}
                     {delivery.lastError ? ` · ${delivery.lastError}` : ""}
                   </p>
                 </div>

@@ -241,7 +241,7 @@ function RequestRow({ request }: { request: DocumentRequestItem }) {
               )}
             >
               {isPending ? <SpinnerIcon className="size-4 animate-spin" /> : <FileArrowUpIcon className="size-4" />}
-              {isPending ? "Загрузка…" : request.status === "declined" ? "Re-upload" : "Загрузить"}
+              {isPending ? "Загрузка…" : request.status === "declined" ? "Загрузить повторно" : "Загрузить"}
             </button>
           </>
         ) : canSign ? (

@@ -1,5 +1,6 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import { useMemo, useState, useTransition, type ComponentType, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow, format } from "@/lib/date-format";
@@ -945,7 +946,7 @@ function WebhooksSection({
                     <div className="flex items-center gap-2">
                       <span className="truncate font-mono text-xs">{delivery.event}</span>
                       <StatusPill tone={delivery.status === "success" ? "on" : "off"}>
-                        {delivery.status}
+                        {formatEnumLabel(delivery.status)}
                       </StatusPill>
                       {delivery.responseStatus !== null && (
                         <span className="text-xs text-muted-foreground">

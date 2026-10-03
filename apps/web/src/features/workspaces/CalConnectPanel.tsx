@@ -215,7 +215,7 @@ function WebhookCell({
       ) : (
         <WebhooksDuotoneIcon className="size-3.5" />
       )}
-      {status.hasWebhookSecret ? "Re-register" : "Зарегистрироваться"}
+      {status.hasWebhookSecret ? "Зарегистрировать повторно" : "Зарегистрироваться"}
     </button>
   );
 }

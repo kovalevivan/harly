@@ -78,7 +78,7 @@ export function CandidateActivityRail({ activity }: { activity: ActivityItem[] }
                 </span>
                 <p className="text-sm font-medium">{"Пока нет активности"}</p>
                 <p className="max-w-[16rem] text-xs text-muted-foreground">
-                  {"Здесь будут отображаться ходы сцены, комментарии, сообщения и события ИИ. "}</p>
+                  {"Здесь будут отображаться смены этапов, комментарии, сообщения и события ИИ. "}</p>
               </div>
             ) : (
               <ol className="max-h-[62vh] space-y-0 overflow-y-auto pr-1">

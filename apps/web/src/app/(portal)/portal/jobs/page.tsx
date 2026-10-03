@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 const WORKPLACE_LABELS: Record<string, string> = {
   remote: "Удаленный",
   hybrid: "Гибрид",
-  onsite: "On-site",
+  onsite: "В клинике",
 };
 
 const WORKPLACE_COLORS: Record<string, string> = {
@@ -29,8 +29,8 @@ const WORKPLACE_COLORS: Record<string, string> = {
 };
 
 const EMPLOYMENT_LABELS: Record<string, string> = {
-  full_time: "Full-time",
-  part_time: "Part-time",
+  full_time: "Полная занятость",
+  part_time: "Частичная занятость",
   contract: "Договор",
   internship: "Стажировка",
 };
@@ -94,8 +94,8 @@ export default async function PortalJobsPage() {
             {"Присоединяйтесь к нашей команде "}</h1>
           {openJobs.length > 0 && (
             <p className="mt-1.5 text-sm text-muted-foreground">
-              {openJobs.length} {"открытая роль"}{openJobs.length === 1 ? "" : "s"} {"в"}{" "}
-              {depts.length} {"отделах"}{depts.length === 1 ? "" : "s"}
+              {openJobs.length} {"открытая роль"} {"в"}{" "}
+              {depts.length} {"отделах"}
             </p>
           )}
         </div>

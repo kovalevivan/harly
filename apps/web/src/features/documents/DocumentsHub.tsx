@@ -275,11 +275,11 @@ export function DocumentsHub({
     setBulkUploading(false);
     if (uploaded > 0)
       toast.success(
-        `${uploaded} документ${uploaded === 1 ? "" : "s"} загружен`,
+        `${uploaded} документ загружен`,
       );
     if (rejected > 0)
       toast.error(
-        `${rejected} файл${rejected === 1 ? "" : "s"} не удалось загрузить`,
+        `${rejected} файл не удалось загрузить`,
       );
     router.refresh();
   }
@@ -303,7 +303,7 @@ export function DocumentsHub({
   function bulkDelete() {
     if (
       !window.confirm(
-        `Удалить навсегда ${selectedInView.length} документ${selectedInView.length === 1 ? "" : "s"}? Это невозможно отменить.`,
+        `Удалить навсегда ${selectedInView.length} документ? Это невозможно отменить.`,
       )
     )
       return;
@@ -471,7 +471,7 @@ export function DocumentsHub({
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          {filtered.length} {"из "}{data.documents.length} {"документов "}{data.documents.length === 1 ? "" : "s"}
+          {filtered.length} {"из "}{data.documents.length} {"документов "}
         </p>
       </section>
       {data.canManage && selectedInView.length > 0 ? (

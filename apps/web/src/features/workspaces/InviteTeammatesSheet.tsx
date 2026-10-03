@@ -171,7 +171,7 @@ export function InviteTeammatesSheet({
       return;
     }
     addEmails(emails, pasteRole);
-    toast.success(`Добавлен ${emails.length} адрес электронной почты${emails.length === 1 ? "" : "s"}`);
+    toast.success(`Добавлен ${emails.length} адрес электронной почты`);
   }
 
   async function handleCsv(file: File) {
@@ -409,7 +409,7 @@ export function InviteTeammatesSheet({
             <UserPlusIcon className="size-4" />
             {isPending
               ? "Отправка…"
-              : `Отправить ${validRows.length || ""} приглашение${validRows.length === 1 ? "" : "s"}`}
+              : `Отправить ${validRows.length || ""} приглашение`}
           </Button>
         </div>
       </SheetContent>

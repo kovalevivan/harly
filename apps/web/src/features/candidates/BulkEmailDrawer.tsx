@@ -65,7 +65,7 @@ export function BulkEmailDrawer({
       toast.success(
         result.failed > 0
           ? `${result.sent} отправлено, ${result.failed} не удалось.`
-          : `Электронная почта в очереди для ${result.sent} кандидата${result.sent === 1 ? "" : "s"}.`,
+          : `Электронная почта в очереди для ${result.sent} кандидата.`,
       );
       onOpenChange(false);
       setSubject("");
@@ -80,7 +80,7 @@ export function BulkEmailDrawer({
     <SidePanel
         open={open}
         onOpenChange={onOpenChange}
-        title={`Электронная почта ${candidateIds.length} кандидата${candidateIds.length === 1 ? "" : "s"}`}
+        title={`Электронная почта ${candidateIds.length} кандидата`}
         description="Переменные вида {{candidate_first_name}} подставляются для каждого кандидата при отправке."
         footer={
           <>

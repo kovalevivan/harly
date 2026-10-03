@@ -216,7 +216,7 @@ function ApplicationDisclosure({
             className="inline-flex items-center gap-1 rounded text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
           >
             <MessageSquareText className="size-3 shrink-0" strokeWidth={1.8} />
-            {application.answers.length} {"ответ "}{application.answers.length === 1 ? "" : "s"}
+            {application.answers.length} {"ответ "}
             {open ? (
               <ChevronUp className="size-3 shrink-0" strokeWidth={2} />
             ) : (
@@ -485,7 +485,7 @@ export function CandidateDetailsPanel({
 
           <Section hidden={applicationsWithAnswers.length === 0}>
             <SectionLabel
-              meta={`${applicationsWithAnswers.length} отклик${applicationsWithAnswers.length === 1 ? "" : "s"}`}
+              meta={`${applicationsWithAnswers.length} отклик`}
             >
               {"Ответы в форме отклика "}</SectionLabel>
             <div className="mt-4 divide-y divide-border/60">

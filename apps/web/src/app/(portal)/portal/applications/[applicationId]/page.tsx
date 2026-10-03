@@ -83,12 +83,12 @@ function synthesizeActivities(
 const WORKPLACE_LABELS: Record<string, string> = {
   remote: "Удаленный",
   hybrid: "Гибрид",
-  onsite: "On-site",
+  onsite: "В клинике",
 };
 
 const EMPLOYMENT_LABELS: Record<string, string> = {
-  full_time: "Full-time",
-  part_time: "Part-time",
+  full_time: "Полная занятость",
+  part_time: "Частичная занятость",
   contract: "Договор",
   internship: "Стажировка",
 };

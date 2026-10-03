@@ -66,7 +66,7 @@ export function RescheduleDrawer({
       const result = await checkAvailability({ timeMin: start, timeMax: end, excludeInterviewId: interviewId });
       if (result.gcalBusy.length > 0) {
         setAvailabilityWarning(
-          `Это время совпадает с ${result.gcalBusy.length} существующим событием${result.gcalBusy.length > 1 ? "s" : ""} в вашем календаре.`,
+          `Это время совпадает с ${result.gcalBusy.length} существующим событием в вашем календаре.`,
         );
       } else {
         setAvailabilityWarning(null);

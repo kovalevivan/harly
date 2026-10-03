@@ -1,5 +1,6 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { useEffect, useState, useTransition } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -150,7 +151,7 @@ function RunRow({
         aria-expanded={open}
       >
         <span className="flex shrink-0 flex-col items-start gap-1">
-          <StatusBadge status={logicalStatus} />
+          <StatusBadge status={formatEnumLabel(logicalStatus)} />
           <span
             className="rounded-full bg-muted/60 px-2 py-px text-[10px] font-medium text-muted-foreground"
             title={lifecycle.reason}
@@ -163,7 +164,7 @@ function RunRow({
             <span className="text-soft-ink">{"событие:"}</span> {run.triggerEvent}
           </p>
           <p className="text-xs text-soft-ink">
-            <RelativeTime value={run.startedAt} /> · {logicalStatus}
+            <RelativeTime value={run.startedAt} /> · {formatEnumLabel(logicalStatus)}
           </p>
         </div>
         {run.error && <span className="truncate text-xs text-danger-rust">{localizeSystemText(run.error)}</span>}
@@ -510,7 +511,7 @@ function UncertainResolution({ step }: { step: SerializedRunStep }) {
 function StatusBadge({ status }: { status: string }) {
   const reduceMotion = useReducedMotion();
   const statusMap = {
-    running: { icon: ClockIcon, cls: "bg-status-quiet-ink/10 text-status-quiet-ink", label: "Бег" },
+    running: { icon: ClockIcon, cls: "bg-status-quiet-ink/10 text-status-quiet-ink", label: "Выполняется" },
     succeeded: { icon: CheckCircleIcon, cls: "bg-success/10 text-success", label: "ОК" },
     failed: { icon: XCircleIcon, cls: "bg-danger-rust/10 text-danger-rust", label: "Не удалось" },
     skipped: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Пропущено" },
@@ -524,7 +525,7 @@ function StatusBadge({ status }: { status: string }) {
     queued: { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: "В очереди" },
   };
   const map = statusMap[status as keyof typeof statusMap];
-  const fallback = { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: status };
+  const fallback = { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: formatEnumLabel(status) };
   const selected = map ?? fallback;
   const Icon = selected.icon;
   const contentTransition = reduceMotion

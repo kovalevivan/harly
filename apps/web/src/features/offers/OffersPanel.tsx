@@ -67,7 +67,7 @@ export function OffersPanel({
         <p className="text-sm text-muted-foreground">
           {offers.length === 0
             ? "Пока предложений нет."
-            : `${offers.length} предложение${offers.length === 1 ? "" : "s"}.`}
+            : `Предложений: ${offers.length}.`}
         </p>
         {applications.length > 0 ? (
           <Button size="sm" onClick={() => setCreateOpen(true)}>

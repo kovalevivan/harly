@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/select";
 
 const employmentTypes = [
-  { value: "full_time", label: "Full-time" },
-  { value: "part_time", label: "Part-time" },
+  { value: "full_time", label: "Полная занятость" },
+  { value: "part_time", label: "Частичная занятость" },
   { value: "contract", label: "Договор" },
   { value: "internship", label: "Стажировка" },
 ];

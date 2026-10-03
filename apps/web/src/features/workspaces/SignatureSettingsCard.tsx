@@ -42,7 +42,7 @@ const TOGGLES: Array<{
 }> = [
   {
     key: "nativeSignEnabled",
-    title: "Self-sign",
+    title: "Самостоятельное подписание",
     description: "Позвольте участникам рисовать или печатать подпись и подписывать PDF-файлы прямо на панели управления.",
   },
   {

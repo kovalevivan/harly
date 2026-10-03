@@ -76,7 +76,7 @@ export function AssignToJobModal({
           return;
         }
         toast.success(
-          `На должность назначен ${result.assigned ?? 0} кандидат${(result.assigned ?? 0) === 1 ? "" : "s"}.` +
+          `На должность назначен ${result.assigned ?? 0} кандидат.` +
             ((result.failed ?? 0) > 0 ? ` ${result.failed} не удалось.` : ""),
         );
       } else {
@@ -104,7 +104,7 @@ export function AssignToJobModal({
           <DialogTitle>{"Назначить заданию"}</DialogTitle>
           <DialogDescription>
             {isBulk
-              ? `Создайте заявки для ${bulkCandidateIds.length} кандидата${bulkCandidateIds.length === 1 ? "" : "s"} в выбранном конвейере вакансий.`
+              ? `Создайте заявки для ${bulkCandidateIds.length} кандидата в выбранном конвейере вакансий.`
               : `Создайте заявку для ${candidateName} в выбранном конвейере заданий.`}
           </DialogDescription>
         </DialogHeader>

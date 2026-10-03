@@ -1,3 +1,4 @@
+import { formatEnumLabel } from "@/lib/format";
 import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -104,7 +105,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <div className="mt-10">
             {invitation.status !== "pending" ? (
               <div className="rounded-lg bg-muted px-4 py-3 text-center text-sm font-medium text-muted-foreground">
-                {"Это приглашение "}{invitation.status}.
+                {"Это приглашение "}{formatEnumLabel(invitation.status)}.
               </div>
             ) : isExpired ? (
               <div className="rounded-lg bg-destructive/10 px-4 py-3 text-center text-sm font-medium text-destructive">

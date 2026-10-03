@@ -243,7 +243,7 @@ export function PdfViewer({
         <div className="ml-auto flex items-center gap-1">
           {ready ? (
             <span className="mr-1 text-xs tabular-nums text-muted-foreground">
-              {state.numPages} {"страница"}{state.numPages === 1 ? "" : "s"}
+              {state.numPages} {"страница"}
             </span>
           ) : null}
           <Button

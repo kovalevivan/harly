@@ -888,7 +888,7 @@ export function DocumentDetailView({
               <ShieldCheck className="size-4 text-primary" />
               {document.accessRoles.length + document.accessMembers.length === 0
                 ? "Разрешение рабочей области"
-                : `${document.accessRoles.length + document.accessMembers.length} явное правило${document.accessRoles.length + document.accessMembers.length === 1 ? "" : "s"}`}
+                : `${document.accessRoles.length + document.accessMembers.length} явное правило`}
             </p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
               {"Владелец и администраторы рабочей области сохраняют доступ. Правила ACL могут ограничить доступ для всех остальных. "}</p>
@@ -1027,7 +1027,7 @@ export function DocumentDetailView({
               {"Управление "}</p>
             {activeHolds.length > 0 ? (
               <StatusPill className="bg-warning/10 text-warning">
-                {activeHolds.length} {"активное удержание "}{activeHolds.length === 1 ? "" : "s"}
+                {activeHolds.length} {"активное удержание "}
               </StatusPill>
             ) : null}
           </div>

@@ -109,7 +109,7 @@ export function JobCandidateRanking({
 
       if (totalSucceeded > 0 || totalFailed > 0) {
         toast.success(
-          `Набрал ${totalSucceeded} кандидат${totalSucceeded === 1 ? "" : "s"}` +
+          `Набрал ${totalSucceeded} кандидат` +
             (totalFailed > 0 ? ` · ${totalFailed} не удалось` : ""),
         );
       } else {

@@ -138,7 +138,7 @@ export function DocumentFieldPlacementDialog({
           <DialogHeader>
             <DialogTitle>{"Отправить с подписью Харли"}</DialogTitle>
             <DialogDescription>
-              {"Отправьте безопасную ссылку для подписи на любой адрес электронной почты. Кандидат заполняет только "}{placements.length} {"полей "}{placements.length === 1 ? "" : "s"} {"вы разместили — не перетаскивая их конец. "}</DialogDescription>
+              {"Отправьте безопасную ссылку для подписи на любой адрес электронной почты. Кандидат заполняет только "}{placements.length} {"полей "} {"вы разместили — не перетаскивая их конец. "}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="flex items-center justify-between">
@@ -231,7 +231,7 @@ export function DocumentFieldPlacementDialog({
             <p className="text-xs text-muted-foreground">
               {placements.length === 0
                 ? "Загрузка документа…"
-                : `Поле ${placements.length}${placements.length === 1 ? "" : "s"} размещено.`}
+                : `Поле ${placements.length} размещено.`}
             </p>
             <div className="mt-auto">
               {rotated ? (

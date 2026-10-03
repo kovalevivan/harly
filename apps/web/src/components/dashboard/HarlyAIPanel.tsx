@@ -1,5 +1,6 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import {localizeSystemText, localizeStageName } from "@/lib/localize-system-text";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
@@ -927,7 +928,7 @@ function ToolResultCard({
                   STATUS_TONE[j.status] ?? "text-muted-foreground",
                 )}
               >
-                {j.status}
+                {formatEnumLabel(j.status)}
               </span>
             </div>
             <div className="flex shrink-0 items-center gap-2 text-[11px] tabular-nums text-muted-foreground">
@@ -1185,7 +1186,7 @@ function ToolResultCard({
                 STATUS_TONE[of.status] ?? "text-muted-foreground",
               )}
             >
-              {of.status}
+              {formatEnumLabel(of.status)}
             </span>
           </Row>
         ))}
@@ -1536,7 +1537,7 @@ function getWriteActionPreview(
         details: [
           ...detail(
             "Затронутый",
-            count ? `${count} задача${count === 1 ? "" : "s"}` : null,
+            count ? `${count} задача` : null,
           ),
           ...detail("Изменения", changes.join(", ") || null),
         ],

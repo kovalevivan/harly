@@ -113,7 +113,7 @@ export function PasskeysCard({
           <StatusPill tone={passkeyList.length > 0 ? "on" : "neutral"}>
             {passkeyList.length === 0
               ? "Никто не зарегистрирован"
-              : `${passkeyList.length} пароль${passkeyList.length > 1 ? "s" : ""}`}
+              : `${passkeyList.length} пароль`}
           </StatusPill>
         }
         action={
@@ -176,7 +176,7 @@ export function PasskeysCard({
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{pk.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {pk.deviceType === "multiDevice" ? "Синхронизировано" : "Device-bound"}
+                    {pk.deviceType === "multiDevice" ? "Синхронизировано" : "Привязан к устройству"}
                     {pk.backedUp ? " · резервная копия" : ""}
                     {" · добавлено "}
                     {formatDistanceToNow(new Date(pk.createdAt), {

@@ -29,7 +29,7 @@ const DRAFT_TYPES: { id: DraftType; label: string }[] = [
   { id: "interview_invite", label: "Собеседование" },
   { id: "rejection", label: "Отказ" },
   { id: "offer", label: "Предложение" },
-  { id: "followup", label: "Follow-up" },
+  { id: "followup", label: "Повторное обращение" },
 ];
 
 export function EmailDrawer({

@@ -88,7 +88,7 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
                   <div className="flex items-center gap-2">
                     <p className="font-medium">{role.name}</p>
                     <Badge variant={role.isBuiltin ? "secondary" : "outline"}>
-                      {role.isBuiltin ? "Built-in" : "Пользовательский"}
+                      {role.isBuiltin ? "Встроенная" : "Пользовательский"}
                     </Badge>
                   </div>
                   <p className="mt-0.5 text-xs text-muted-foreground">
@@ -150,10 +150,10 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
               <p className="mt-3 text-xs text-muted-foreground">
                 {"Ограничено до "}{role.scope.jobAccess === "assigned" ? "назначенные задания" : "выбранные фильтры"}
                 {role.scope.departments.length > 0
-                  ? ` · ${role.scope.departments.length} отдел${role.scope.departments.length === 1 ? "" : "s"}`
+                  ? ` · ${role.scope.departments.length} отдел`
                   : ""}
                 {role.scope.regions.length > 0
-                  ? ` · ${role.scope.regions.length} регион${role.scope.regions.length === 1 ? "" : "s"}`
+                  ? ` · ${role.scope.regions.length} регион`
                   : ""}
               </p>
             ) : null}

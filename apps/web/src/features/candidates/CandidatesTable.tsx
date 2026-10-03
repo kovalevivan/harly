@@ -308,7 +308,7 @@ export function CandidatesTable({
       });
       if (result.success) {
         toast.success(
-          `Обновлен кандидат ${applicationIds.length}${applicationIds.length === 1 ? "" : "s"}.`,
+          `Обновлено откликов: ${applicationIds.length}.`,
         );
         setSelected(new Set());
         router.refresh();
@@ -393,7 +393,7 @@ export function CandidatesTable({
     if (ids.length === 0) return;
     if (
       !window.confirm(
-        `Переместить кандидата ${ids.length}${ids.length === 1 ? "" : "s"} в корзину? Вы сможете восстановить их позже.`,
+        `Переместить кандидатов в корзину (${ids.length})? Позже их можно восстановить.`,
       )
     ) {
       return;
@@ -403,7 +403,7 @@ export function CandidatesTable({
       if (result.success) {
         const count = result.count ?? ids.length;
         toast.success(
-          `Кандидат ${count}${count === 1 ? "" : "s"} перемещён в корзину.`,
+          `Перемещено в корзину: ${count}.`,
         );
         setSelected(new Set());
         router.refresh();

@@ -993,7 +993,7 @@ export function ApplyForm({
 
     setAutofillMessage(
       filledCount > 0
-        ? `Резюме прилагается. Автозаполненное поле ${filledCount}${filledCount === 1 ? "" : "s"}.`
+        ? `Резюме прилагается. Автозаполненное поле ${filledCount}.`
         : "Резюме прилагается.",
     );
   }

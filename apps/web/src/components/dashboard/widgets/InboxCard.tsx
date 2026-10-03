@@ -86,7 +86,7 @@ export function InboxCard({
                 )}
               >
                 <ChevronDown className="size-3.5" strokeWidth={1.8} />
-                {hiddenCount} {"больше товара"}{hiddenCount !== 1 ? "s" : ""}
+                {"Ещё уведомлений: "}{hiddenCount}
               </button>
             ) : showAll && hiddenCount > 0 ? (
               <button

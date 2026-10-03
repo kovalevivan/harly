@@ -278,7 +278,7 @@ export function TemplatesManager({
         <p className="text-sm text-muted-foreground">
           {templates.length === 0
             ? "Шаблонов пока нет."
-            : `${templates.length} шаблон${templates.length === 1 ? "" : "s"}.`}
+            : `Шаблонов: ${templates.length}.`}
         </p>
         <div className="flex items-center gap-2">
           {templates.length > 0 ? (
@@ -610,7 +610,7 @@ export function TemplatesManager({
 
                   {unknownVariables.length > 0 && (
                     <p className="text-xs text-amber-600 dark:text-amber-400">
-                      {"Неизвестная переменная"}{unknownVariables.length > 1 ? "s" : ""}:{" "}
+                      {"Неизвестные переменные"}:{" "}
                       {unknownVariables.map((v) => `{{${v}}}`).join(", ")}{", будет отправлено как есть. "}</p>
                   )}
                 </>

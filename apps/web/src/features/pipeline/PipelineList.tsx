@@ -115,7 +115,7 @@ export function PipelineList({
 
   function afterBulk(result: { success: boolean; error?: string }, label: string) {
     if (result.success) {
-      toast.success(`${label} ${selectedIds.length} кандидат${selectedIds.length === 1 ? "" : "s"}.`);
+      toast.success(`${label} ${selectedIds.length} кандидат.`);
       setSelected(new Set());
       router.refresh();
     } else {
