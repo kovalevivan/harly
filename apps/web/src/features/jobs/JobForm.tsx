@@ -74,13 +74,13 @@ function initialSectionsFor(job?: Job): JobContentSection[] {
     if (job.requirements)
       migrated.push({
         id: "migrated-req",
-        title: "Requirements",
+        title: "Требования",
         body: job.requirements,
       });
     if (job.benefits)
       migrated.push({
         id: "migrated-ben",
-        title: "Benefits",
+        title: "Преимущества",
         body: job.benefits,
       });
     return migrated;
@@ -95,36 +95,36 @@ function initialSectionsFor(job?: Job): JobContentSection[] {
 const SECTIONS = [
   {
     key: "essentials",
-    label: "Details",
-    blurb: "Use a common, searchable job title. One role per posting.",
+    label: "Подробности",
+    blurb: "Укажите понятное название позиции. Создавайте отдельную вакансию для каждой роли.",
   },
   {
     key: "description",
-    label: "Description",
-    blurb: "Lead with impact and team. Keep must-haves short and scannable.",
+    label: "Описание",
+    blurb: "Расскажите о команде, задачах и требованиях. Оставьте только то, что важно кандидату.",
   },
   {
     key: "compensation",
-    label: "Compensation",
-    blurb: "Listing a salary range measurably increases applications.",
+    label: "Компенсация",
+    blurb: "Укажите диапазон оплаты — это поможет привлечь подходящих кандидатов.",
   },
   {
     key: "application",
-    label: "Application form",
+    label: "Форма отклика",
     blurb:
-      "Ask only what you'll actually use to decide , fewer required fields, more completions.",
+      "Запрашивайте только информацию, которая поможет принять решение.",
   },
   {
     key: "advanced",
-    label: "Advanced",
+    label: "Расширенный",
     blurb:
-      "Keywords improve search on your careers page. A custom slug keeps URLs clean.",
+      "Ключевые слова помогают найти вакансию. Адрес можно настроить вручную.",
   },
   {
     key: "review",
-    label: "Team & publish",
+    label: "Команда и публикация",
     blurb:
-      "Assign a hiring team, then preview the listing exactly as candidates will see it.",
+      "Выберите участников команды найма и проверьте, как вакансия выглядит для кандидатов.",
   },
 ] as const satisfies readonly { key: string; label: string; blurb: string }[];
 
@@ -411,8 +411,7 @@ export function JobForm({
         size="sm"
         onClick={validateBeforeSubmit}
       >
-        Save as draft
-      </Button>
+        {"Сохранить как черновик "}</Button>
       <Button
         type="submit"
         name="intent"

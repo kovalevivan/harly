@@ -81,8 +81,7 @@ export default async function DashboardJobPage({
           <Button asChild variant="outline" size="sm" className="w-full justify-start">
             <a href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
               <ExternalLink className="size-4" />
-              View job
-            </a>
+              {"Посмотреть вакансию "}</a>
           </Button>
           <JobShareButton
             url={publicUrl}

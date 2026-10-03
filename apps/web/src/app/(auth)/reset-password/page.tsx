@@ -24,13 +24,12 @@ export default async function ResetPasswordPage({
           href="/login"
           className="font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
-          Back to sign in
-        </Link>
+          {"Вернуться для входа в систему "}</Link>
       }
     >
       <AuthCard
-        title="Reset password"
-        subtitle="Choose a new password for your account."
+        title={"Сбросить пароль"}
+        subtitle={"Выберите новый пароль для своей учетной записи."}
       >
         <ResetPasswordForm token={token ?? null} tokenError={error ?? null} />
       </AuthCard>

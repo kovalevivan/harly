@@ -9,8 +9,7 @@ export function PortalSignOutButton() {
         className="flex w-full items-center gap-2 px-2 py-1.5 text-sm text-rust transition-colors"
       >
         <SignOutIcon className="size-4" />
-        Sign out
-      </button>
+        {"Выйти "}</button>
     </form>
   );
 }

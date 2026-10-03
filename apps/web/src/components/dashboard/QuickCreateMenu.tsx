@@ -20,25 +20,22 @@ import {
 function Items() {
   return (
     <>
-      <DropdownMenuLabel className="type-col-head">Create</DropdownMenuLabel>
+      <DropdownMenuLabel className="type-col-head">{"Создать"}</DropdownMenuLabel>
       <DropdownMenuItem asChild className="gap-2.5">
         <Link href="/dashboard/jobs/new">
           <Briefcase className="size-4 text-soft-ink" strokeWidth={1.8} />
-          New job
-        </Link>
+          {"Новая вакансия "}</Link>
       </DropdownMenuItem>
       <DropdownMenuItem asChild className="gap-2.5">
         <Link href="/dashboard/candidates">
           <UserPlus className="size-4 text-soft-ink" strokeWidth={1.8} />
-          Add candidate
-        </Link>
+          {"Добавить кандидата "}</Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild className="gap-2.5">
         <Link href="/dashboard/calendars">
           <CalendarPlus className="size-4 text-soft-ink" strokeWidth={1.8} />
-          Schedule interview
-        </Link>
+          {"Назначить собеседование "}</Link>
       </DropdownMenuItem>
     </>
   );
@@ -56,13 +53,13 @@ export function QuickCreateButton() {
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger
-            aria-label="Create"
+            aria-label={"Создать"}
             className="flex size-10 items-center justify-center rounded-[12px] border border-mist-border bg-pure-snow text-near-ink transition-colors hover:bg-row-wash focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
           >
             <Plus className="size-[18px]" strokeWidth={2} />
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent side="right">Create</TooltipContent>
+        <TooltipContent side="right">{"Создать"}</TooltipContent>
       </Tooltip>
       <DropdownMenuContent side="right" align="start" className="min-w-52">
         <Items />

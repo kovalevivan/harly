@@ -61,16 +61,16 @@ export function OutlookConnectPanel({
   const statusTone = isConnected ? (status.enabled ? "on" : "off") : "neutral";
   const statusLabel = isConnected
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   const installUrl = `/api/integrations/outlook/install?ws=${workspaceId}`;
 
   function toggleEnabled(next: boolean) {
     if (!isConnected) return;
     if (next && !status.calendarId) {
-      toast.error("Select a calendar first.");
+      toast.error("Сначала выберите календарь.");
       return;
     }
     startToggle(async () => {
@@ -80,11 +80,11 @@ export function OutlookConnectPanel({
         events: status.events,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
       toast.success(
-        next ? "Outlook notifications on" : "Outlook notifications off",
+        next ? "Уведомления Outlook включены" : "Уведомления Outlook отключены",
       );
       router.refresh();
     });
@@ -94,10 +94,10 @@ export function OutlookConnectPanel({
     startDisconnect(async () => {
       const result = await disconnectOutlookAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Outlook disconnected");
+      toast.success("Outlook отключен");
       router.refresh();
     });
   }
@@ -121,17 +121,17 @@ export function OutlookConnectPanel({
                   aria-expanded={open}
                 >
                   <GearSixIcon className="size-4" />
-                  {open ? "Hide settings" : "Manage"}
+                  {open ? "Скрыть настройки" : "Управление"}
                 </Button>
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
                   <Switch
                     checked={status.enabled}
                     disabled={togglePending}
                     onCheckedChange={toggleEnabled}
-                    aria-label="Enable Outlook notifications"
+                    aria-label={"Включить уведомления Outlook"}
                   />
                   <span className="text-muted-foreground">
-                    {status.enabled ? "On" : "Off"}
+                    {status.enabled ? "On" : "Выкл."}
                   </span>
                 </label>
               </>
@@ -139,8 +139,7 @@ export function OutlookConnectPanel({
               <Button asChild>
                 <a href={installUrl}>
                   <MicrosoftOutlookLogo className="size-4" />
-                  Connect Microsoft
-                </a>
+                  {"Подключите Майкрософт "}</a>
               </Button>
             ) : (
               <Button
@@ -149,8 +148,7 @@ export function OutlookConnectPanel({
                 aria-expanded={open}
               >
                 <MicrosoftOutlookLogo className="size-4" />
-                Set up Outlook
-              </Button>
+                {"Настройка Outlook "}</Button>
             )
           ) : null
         }
@@ -160,27 +158,25 @@ export function OutlookConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on
-            the server to enable encrypted credential storage.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере, чтобы включить зашифрованное хранилище учетных данных. "}</p>
         </div>
       ) : null}
 
       {isConnected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <StatCell label="Account">
+            <StatCell label={"Аккаунт"}>
               <MicrosoftOutlookLogo className="size-4" />
-              {status.accountEmail ?? "Not connected"}
+              {status.accountEmail ?? "Не подключено"}
             </StatCell>
-            <StatCell label="Calendar">
-              {status.calendarId ? "Selected" : "Not selected"}
+            <StatCell label={"Календарь"}>
+              {status.calendarId ? "Выбрано" : "Не выбрано"}
             </StatCell>
-            <StatCell label="Events">
+            <StatCell label={"События"}>
               <span className="text-muted-foreground">
                 {status.events.length === 0
-                  ? "None selected"
-                  : `${status.events.length} subscribed`}
+                  ? "Ничего не выбрано"
+                  : `${status.events.length} подписался`}
               </span>
             </StatCell>
           </div>
@@ -218,10 +214,10 @@ function OutlookCredentialsForm({ onSaved }: { onSaved: () => void }) {
         clientSecret,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Outlook credentials saved. You can now connect.");
+      toast.success("Учетные данные Outlook сохранены. Теперь вы можете подключиться.");
       onSaved();
     });
   }
@@ -236,12 +232,9 @@ function OutlookCredentialsForm({ onSaved }: { onSaved: () => void }) {
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            Set up Microsoft Outlook
-          </h2>
+            {"Настройте Microsoft Outlook "}</h2>
           <p className="text-sm text-muted-foreground">
-            Register an app in Azure, then paste the credentials. Your Client
-            Secret is encrypted at rest.
-          </p>
+            {"Зарегистрируйте приложение в Azure, затем вставьте учетные данные. Ваш клиентский секрет зашифрован. "}</p>
         </div>
         <a
           href="https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
@@ -249,40 +242,35 @@ function OutlookCredentialsForm({ onSaved }: { onSaved: () => void }) {
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pine transition-colors hover:text-pine-strong"
         >
-          Azure portal
-          <ArrowUpRightIcon className="size-3.5" />
+          {"Портал Azure "}<ArrowUpRightIcon className="size-3.5" />
         </a>
       </div>
 
       <div className="space-y-4">
         <div className="rounded-lg border bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground space-y-1.5">
-          <p className="font-medium text-foreground">How to get credentials:</p>
+          <p className="font-medium text-foreground">{"Как получить учетные данные:"}</p>
           <ol className="list-decimal space-y-1 pl-4">
             <li>
-              Go to{" "}
+              {"Перейти к"}{" "}
               <a
                 href="https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline"
               >
-                Azure App Registrations
-              </a>{" "}
-              and register a new app
+                {"Регистрация приложений Azure "}</a>{" "}
+              {"и зарегистрируйте новое приложение "}</li>
+            <li>
+              {"В разделе «Аутентификация» добавьте URI перенаправления: "}<code>{redirectUrl}</code>
             </li>
             <li>
-              Under Authentication, add a redirect URI: <code>{redirectUrl}</code>
-            </li>
-            <li>
-              Under API permissions, add: Cal.ReadWrite, Mail.Send,
-              offline_access, User.Read
-            </li>
-            <li>Copy the Application (client) ID and create a Client Secret</li>
+              {"В разделе «Разрешения API» добавьте: Cal.ReadWrite, Mail.Send, offline_access, User.Read. "}</li>
+            <li>{"Скопируйте идентификатор приложения (клиента) и создайте секрет клиента."}</li>
           </ol>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="outlook-client-id">Application (client) ID</Label>
+          <Label htmlFor="outlook-client-id">{"Идентификатор приложения (клиента)"}</Label>
           <Input
             id="outlook-client-id"
             value={clientId}
@@ -294,19 +282,18 @@ function OutlookCredentialsForm({ onSaved }: { onSaved: () => void }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="outlook-client-secret">Client Secret</Label>
+          <Label htmlFor="outlook-client-secret">{"Секрет клиента"}</Label>
           <Input
             id="outlook-client-secret"
             type="password"
             value={clientSecret}
             onChange={(e) => setClientSecret(e.target.value)}
-            placeholder="e.g. ~abc..."
+            placeholder={"например ~абв..."}
             autoComplete="off"
             className="font-mono text-xs"
           />
           <p className="text-xs text-muted-foreground">
-            Encrypted at rest. Never visible again after saving.
-          </p>
+            {"Зашифровано в состоянии покоя. Больше никогда не отображается после сохранения. "}</p>
         </div>
       </div>
 
@@ -316,8 +303,7 @@ function OutlookCredentialsForm({ onSaved }: { onSaved: () => void }) {
           disabled={saving || !clientId.trim() || !clientSecret.trim()}
         >
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save credentials
-        </Button>
+          {"Сохранить учетные данные "}</Button>
       </div>
     </Card>
   );
@@ -369,16 +355,16 @@ function OutlookConfigForm({
     startTest(async () => {
       const result = await testOutlookAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Test failed.");
+        toast.error(result.error ?? "Тест не пройден.");
         return;
       }
-      toast.success("Test email sent via Outlook!");
+      toast.success("Тестовое письмо отправлено через Outlook!");
     });
   }
 
   function save() {
     if (!calendarId) {
-      toast.error("Select a calendar first.");
+      toast.error("Сначала выберите календарь.");
       return;
     }
     startSave(async () => {
@@ -388,10 +374,10 @@ function OutlookConfigForm({
         events: selected,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Outlook settings saved");
+      toast.success("Настройки Outlook сохранены.");
       onSaved();
     });
   }
@@ -400,17 +386,16 @@ function OutlookConfigForm({
     <Card className="p-6">
       <div className="mb-5 space-y-0.5">
         <h2 className="font-display text-base font-semibold tracking-tight">
-          Configure Outlook
-        </h2>
+          {"Настроить Outlook "}</h2>
         <p className="text-sm text-muted-foreground">
-          Connected to {status.accountEmail ?? "Outlook"}. Choose a calendar and
+          {"Подключено к "}{status.accountEmail ?? "Перспективы"}. Choose a calendar and
           events.
         </p>
       </div>
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label>Calendar</Label>
+          <Label>{"Календарь"}</Label>
           {!loaded ? (
             <Button
               variant="outline"
@@ -419,14 +404,12 @@ function OutlookConfigForm({
               disabled={loadingCalendars}
             >
               {loadingCalendars ? <SpinnerIcon className="size-4" /> : null}
-              Load calendars from Outlook
-            </Button>
+              {"Загрузка календарей из Outlook "}</Button>
           ) : (
             <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border p-2">
               {calendars.length === 0 ? (
                 <p className="py-2 text-center text-sm text-muted-foreground">
-                  No calendars found.
-                </p>
+                  {"Календари не найдены. "}</p>
               ) : (
                 calendars.map((cal) => (
                   <button
@@ -449,7 +432,7 @@ function OutlookConfigForm({
         </div>
 
         <div className="space-y-2">
-          <Label>Notify on</Label>
+          <Label>{"Уведомить о"}</Label>
           <div className="flex flex-wrap gap-1.5">
             {events.map((event) => (
               <button
@@ -471,10 +454,9 @@ function OutlookConfigForm({
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable</p>
+            <p className="text-sm font-medium">{"Включить"}</p>
             <p className="text-xs text-muted-foreground">
-              When off, no notifications are sent.
-            </p>
+              {"Если выключено, уведомления не отправляются. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -490,8 +472,7 @@ function OutlookConfigForm({
           disabled={disconnecting}
         >
           {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-          Disconnect
-        </Button>
+          {"Отключить "}</Button>
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -504,12 +485,10 @@ function OutlookConfigForm({
             ) : (
               <PaperPlaneDuotoneIcon className="size-4" />
             )}
-            Send test
-          </Button>
+            {"Отправить тест "}</Button>
           <Button onClick={save} disabled={saving || !calendarId}>
             {saving ? <SpinnerIcon className="size-4" /> : null}
-            Save
-          </Button>
+            {"Сохранить "}</Button>
         </div>
       </div>
     </Card>

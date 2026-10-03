@@ -66,7 +66,7 @@ export function RescheduleDrawer({
       const result = await checkAvailability({ timeMin: start, timeMax: end, excludeInterviewId: interviewId });
       if (result.gcalBusy.length > 0) {
         setAvailabilityWarning(
-          `This time overlaps with ${result.gcalBusy.length} existing event${result.gcalBusy.length > 1 ? "s" : ""} on your calendar.`,
+          `Это время совпадает с ${result.gcalBusy.length} существующим событием${result.gcalBusy.length > 1 ? "s" : ""} в вашем календаре.`,
         );
       } else {
         setAvailabilityWarning(null);
@@ -80,7 +80,7 @@ export function RescheduleDrawer({
 
   function submit() {
     if (!date || !time) {
-      toast.error("Pick a date and time.");
+      toast.error("Выберите дату и время.");
       return;
     }
     startTransition(async () => {
@@ -93,11 +93,11 @@ export function RescheduleDrawer({
         location: location.trim() || null,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not reschedule.");
+        toast.error(result.error ?? "Не удалось перенести встречу.");
         return;
       }
       if (result.warning) toast.warning(result.warning);
-      toast.success("Interview rescheduled");
+      toast.success("Интервью перенесено");
       setOpen(false);
       router.refresh();
     });
@@ -108,15 +108,14 @@ export function RescheduleDrawer({
       open={open}
       onOpenChange={setOpen}
       trigger={trigger}
-        title="Reschedule interview"
-        description="Update the date, time, or duration. Google Calendar will be updated automatically."
+        title={"Перенести собеседование"}
+        description={"Обновите дату, время или продолжительность. Календарь Google будет обновляться автоматически."}
         footer={
           <>
             <Button variant="outline" disabled={isPending} onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button onClick={submit} disabled={isPending}>
-              {isPending ? "Saving…" : "Save changes"}
+              {isPending ? "Сохранение…" : "Сохранить изменения"}
             </Button>
           </>
         }
@@ -128,8 +127,7 @@ export function RescheduleDrawer({
                 htmlFor="reschedule-date"
                 className="text-[13px] font-medium tracking-tight text-foreground/90"
               >
-                Date
-              </label>
+                {"Дата "}</label>
               <Input
                 id="reschedule-date"
                 type="date"
@@ -145,8 +143,7 @@ export function RescheduleDrawer({
                 htmlFor="reschedule-time"
                 className="text-[13px] font-medium tracking-tight text-foreground/90"
               >
-                Time
-              </label>
+                {"Время "}</label>
               <Input
                 id="reschedule-time"
                 type="time"
@@ -166,13 +163,12 @@ export function RescheduleDrawer({
             </div>
           ) : null}
           {checkingAvailability ? (
-            <p className="text-xs text-muted-foreground">Checking availability…</p>
+            <p className="text-xs text-muted-foreground">{"Проверка доступности…"}</p>
           ) : null}
 
           <div className="space-y-2">
             <label className="text-[13px] font-medium tracking-tight text-foreground/90">
-              Duration
-            </label>
+              {"Продолжительность "}</label>
             <Select
               value={durationMins}
               onValueChange={(value) => {
@@ -186,8 +182,7 @@ export function RescheduleDrawer({
               <SelectContent>
                 {DURATIONS.map((d) => (
                   <SelectItem key={d} value={String(d)}>
-                    {d} min
-                  </SelectItem>
+                    {d} {"мин "}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -198,13 +193,12 @@ export function RescheduleDrawer({
               htmlFor="reschedule-location"
               className="text-[13px] font-medium tracking-tight text-foreground/90"
             >
-              Location
-            </label>
+              {"Расположение "}</label>
             <Input
               id="reschedule-location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Meeting link or address…"
+              placeholder={"Ссылка или адрес встречи…"}
             />
           </div>
         </div>

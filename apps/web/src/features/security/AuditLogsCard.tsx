@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
-import { format, formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "@/lib/date-format";
 
 import { SectionHeader, StatusPill } from "@/features/workspaces/settings-ui";
 import {
@@ -76,7 +76,7 @@ function CopyButton({ value }: { value: string }) {
       ) : (
         <CopyIcon className="size-3" />
       )}
-      {copied ? "Copied" : "Copy"}
+      {copied ? "Скопировано" : "Копировать"}
     </button>
   );
 }
@@ -126,12 +126,11 @@ export function AuditLogsCard({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={AuditDuotoneIcon}
-        title="Audit Log"
-        description="A workspace audit trail of security and administrative events."
+        title={"Журнал аудита"}
+        description={"Журнал аудита рабочей области событий безопасности и администрирования."}
         badge={
           <StatusPill tone="neutral" dot={false}>
-            Last {logs.length} events
-          </StatusPill>
+            {"Последний "}{logs.length} {"событий "}</StatusPill>
         }
       />
 
@@ -141,7 +140,7 @@ export function AuditLogsCard({
           <SearchIcon className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             className="pl-8"
-            placeholder="Filter by action, email, IP, resource…"
+            placeholder={"Фильтровать по действию, электронной почте, IP, ресурсу…"}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -158,7 +157,7 @@ export function AuditLogsCard({
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
-            All{" "}
+            {"Все"}{" "}
             <span className="tabular-nums text-muted-foreground">
               {logs.length}
             </span>
@@ -188,8 +187,7 @@ export function AuditLogsCard({
           <div className="flex items-center gap-2">
             <a href={exportHref} className="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors hover:bg-accent">
               <DownloadDuotoneIcon className="size-4" />
-              CSV
-            </a>
+              {"CSV-файл "}</a>
             <a href={jsonExportHref} className="inline-flex h-9 items-center rounded-md border px-3 text-sm font-medium transition-colors hover:bg-accent">
               JSON
             </a>
@@ -204,11 +202,11 @@ export function AuditLogsCard({
             <thead className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm">
               <tr className="border-b text-left text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                 <th className="w-8 py-2.5 pl-4" />
-                <th className="py-2.5 pr-4">When</th>
-                <th className="py-2.5 pr-4">Action</th>
-                <th className="py-2.5 pr-4">Actor</th>
-                <th className="py-2.5 pr-4">IP</th>
-                <th className="py-2.5 pr-4">Severity</th>
+                <th className="py-2.5 pr-4">{"Когда"}</th>
+                <th className="py-2.5 pr-4">{"Действие"}</th>
+                <th className="py-2.5 pr-4">{"Актер"}</th>
+                <th className="py-2.5 pr-4">{"ИП"}</th>
+                <th className="py-2.5 pr-4">{"Серьезность"}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -219,13 +217,13 @@ export function AuditLogsCard({
                       <AuditDuotoneIcon className="size-8 text-muted-foreground/40" />
                       <p className="text-sm font-medium text-foreground">
                         {hasFilter
-                          ? "No matching events"
-                          : "No audit events yet"}
+                          ? "Нет соответствующих событий"
+                          : "Мероприятий аудита пока нет"}
                       </p>
                       <p className="max-w-[28ch] text-xs text-muted-foreground">
                         {hasFilter
-                          ? "Try a different search term or clear the severity filter."
-                          : "Security and admin actions will appear here as they happen."}
+                          ? "Попробуйте другой поисковый запрос или очистите фильтр серьезности."
+                          : "Действия безопасности и администратора будут отображаться здесь по мере их совершения."}
                       </p>
                     </div>
                   </td>
@@ -254,7 +252,7 @@ export function AuditLogsCard({
                             aria-expanded={expanded}
                             aria-controls={`audit-detail-${log.id}`}
                             aria-label={
-                              expanded ? "Collapse details" : "Expand details"
+                              expanded ? "Свернуть детали" : "Развернуть детали"
                             }
                             onClick={(e) => {
                               e.stopPropagation();
@@ -290,10 +288,10 @@ export function AuditLogsCard({
                         ) : null}
                       </td>
                       <td className="py-2.5 pr-4 align-top text-xs text-muted-foreground">
-                        {log.actorEmail ?? "Unknown actor"}
+                        {log.actorEmail ?? "Неизвестный актер"}
                       </td>
                       <td className="py-2.5 pr-4 align-top font-mono text-xs tabular-nums text-muted-foreground">
-                        {log.ipAddress ?? "Not recorded"}
+                        {log.ipAddress ?? "Не записано"}
                       </td>
                       <td className="py-2.5 pr-4 align-top">
                         <SeverityBadge severity={log.severity} />
@@ -305,18 +303,16 @@ export function AuditLogsCard({
                           <div className="animate-in fade-in slide-in-from-top-1 grid gap-3 px-4 py-3 duration-150 sm:grid-cols-2">
                             <div className="space-y-1">
                               <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                Full timestamp
-                              </p>
+                                {"Полная временная метка "}</p>
                               <p className="font-mono text-xs">
                                 {format(new Date(log.createdAt), "PPpp")}
                               </p>
                             </div>
                             <div className="space-y-1">
                               <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                Resource
-                              </p>
+                                {"Ресурс "}</p>
                               <p className="flex items-center gap-1.5 font-mono text-xs">
-                                {log.resourceType ?? "Not recorded"}
+                                {log.resourceType ?? "Не записано"}
                                 {log.resourceId ? (
                                   <>
                                     <span className="text-muted-foreground">
@@ -332,18 +328,16 @@ export function AuditLogsCard({
                             </div>
                             <div className="space-y-1 sm:col-span-2">
                               <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                User agent
-                              </p>
+                                {"Пользовательский агент "}</p>
                               <p className="truncate font-mono text-xs text-muted-foreground">
-                                {log.userAgent ?? "Unknown browser"}
+                                {log.userAgent ?? "Неизвестный браузер"}
                               </p>
                             </div>
                             {log.metadata ? (
                               <div className="space-y-1 sm:col-span-2">
                                 <div className="flex items-center justify-between">
                                   <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                    Metadata
-                                  </p>
+                                    {"Метаданные "}</p>
                                   <CopyButton
                                     value={JSON.stringify(
                                       log.metadata,

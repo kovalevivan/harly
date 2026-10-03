@@ -58,7 +58,7 @@ export async function PortalShell({ children }: { children: React.ReactNode }) {
 
   return (
     <PortalShellClient
-      orgName={org?.name ?? "Careers"}
+      orgName={org?.name ?? "Карьера"}
       orgLogo={org?.logo ?? null}
       orgFullLogoUrl={org?.fullLogoUrl ?? null}
       orgFullLogoDarkUrl={org?.fullLogoDarkUrl ?? null}

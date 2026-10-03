@@ -14,7 +14,7 @@ export function OnboardingSignOut() {
       onClick={() => startTransition(async () => void (await signOut()))}
       className="text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
     >
-      {isPending ? "Signing out…" : "Sign out"}
+      {isPending ? "Выход из системы…" : "Выйти"}
     </button>
   );
 }

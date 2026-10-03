@@ -29,7 +29,7 @@ export function ActorAvatar({
   }
 
   return (
-    <Avatar className={`${sizeClass} shrink-0`}>
+    <Avatar className={`${sizeClass} сжатие-0`}>
       <AvatarImage src={avatar} alt={name ?? ""} />
       <AvatarFallback className="text-[10px]">
         {getInitials(name)}

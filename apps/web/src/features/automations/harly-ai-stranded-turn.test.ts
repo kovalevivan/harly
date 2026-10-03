@@ -174,7 +174,7 @@ describe("chatErrorMessage", () => {
   });
 
   it("falls back to a friendly default for unknown values", () => {
-    expect(chatErrorMessage({})).toContain("temporarily unavailable");
+    expect(chatErrorMessage({})).toContain("временно недоступен");
     expect(chatErrorMessage(undefined)).toBeNull();
     expect(chatErrorMessage("")).toBeNull();
   });

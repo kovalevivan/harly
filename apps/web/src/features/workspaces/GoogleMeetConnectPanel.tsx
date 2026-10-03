@@ -54,9 +54,9 @@ export function GoogleMeetConnectPanel({
   const statusTone = isConnected ? (status.enabled ? "on" : "off") : "neutral";
   const statusLabel = isConnected
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   const installUrl = `/api/integrations/google/install?ws=${workspaceId}`;
 
@@ -64,10 +64,10 @@ export function GoogleMeetConnectPanel({
     startDisconnect(async () => {
       const result = await disconnectGCalAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Google Meet disconnected");
+      toast.success("Google Meet отключен");
       router.refresh();
     });
   }
@@ -76,9 +76,9 @@ export function GoogleMeetConnectPanel({
     startTest(async () => {
       const result = await testGCalConnectionAction();
       if (result.ok) {
-        toast.success("Connection is working!");
+        toast.success("Соединение работает!");
       } else {
-        toast.error(result.error ?? "Connection test failed.");
+        toast.error(result.error ?? "Проверка соединения не удалась.");
         // The server clears a revoked token on invalid_grant; refresh so the
         // panel immediately exposes the reconnect action.
         router.refresh();
@@ -104,20 +104,18 @@ export function GoogleMeetConnectPanel({
                 aria-expanded={open}
               >
                 <GearSixIcon className="size-4" />
-                {open ? "Hide settings" : "Manage"}
+                {open ? "Скрыть настройки" : "Управление"}
               </Button>
             ) : status.hasCredentials ? (
               <Button asChild>
                 <a href={installUrl}>
                   <GoogleCalendarLogo className="size-4" />
-                  Connect Google
-                </a>
+                  {"Подключите Google "}</a>
               </Button>
             ) : (
               <Button disabled>
                 <GoogleCalendarLogo className="size-4" />
-                Credentials not set
-              </Button>
+                {"Учетные данные не установлены "}</Button>
             )
           ) : null
         }
@@ -127,31 +125,28 @@ export function GoogleMeetConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">GOOGLE_CLIENT_ID</code> and{" "}
-            <code className="font-mono text-xs">GOOGLE_CLIENT_SECRET</code> on
-            the server to enable Google Meet.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">GOOGLE_CLIENT_ID</code> {"и"}{" "}
+            <code className="font-mono text-xs">GOOGLE_CLIENT_SECRET</code> {"на сервере, чтобы включить Google Meet. "}</p>
         </div>
       ) : null}
 
       {isConnected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <StatCell label="Account">
+            <StatCell label={"Аккаунт"}>
               <GoogleCalendarLogo className="size-4" />
-              {status.accountEmail ?? "Not connected"}
+              {status.accountEmail ?? "Не подключено"}
             </StatCell>
-            <StatCell label="Meet">
+            <StatCell label={"Знакомьтесь"}>
               {status.enabled ? (
                 <>
                   <SealCheckDuotoneIcon className="size-3.5 text-pine" />
-                  Ready
-                </>
+                  {"Готово "}</>
               ) : (
-                "Not enabled"
+                "Не включено"
               )}
             </StatCell>
-            <StatCell label="Status">
+            <StatCell label={"Статус"}>
               <button
                 type="button"
                 onClick={testConnection}
@@ -163,7 +158,7 @@ export function GoogleMeetConnectPanel({
                 ) : (
                   <SealCheckDuotoneIcon className="size-3.5" />
                 )}
-                {testing ? "Testing…" : "Test connection"}
+                {testing ? "Тестирование…" : "Тестовое соединение"}
               </button>
             </StatCell>
           </div>
@@ -175,13 +170,9 @@ export function GoogleMeetConnectPanel({
           <Card className="p-6">
             <div className="mb-5 space-y-0.5">
               <h2 className="font-display text-base font-semibold tracking-tight">
-                Google Meet
-              </h2>
+                {"Google Встреча "}</h2>
               <p className="text-sm text-muted-foreground">
-                Meet creates a video link for every video interview scheduled
-                through Google Calendar. Calendar selection lives on the Google
-                Calendar card.
-              </p>
+                {"Meet создает ссылку на видео для каждого видеоинтервью, запланированного через Календарь Google. Выбор календаря хранится на карточке Календаря Google. "}</p>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
@@ -194,12 +185,10 @@ export function GoogleMeetConnectPanel({
                 disabled={disconnecting}
               >
                 {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-                Disconnect
-              </Button>
+                {"Отключить "}</Button>
               <Button asChild size="sm" variant="outline">
                 <Link href="/settings/integrations/google-calendar">
-                  Manage calendar
-                  <ArrowUpRightIcon className="size-3.5" />
+                  {"Управление календарем "}<ArrowUpRightIcon className="size-3.5" />
                 </Link>
               </Button>
             </div>

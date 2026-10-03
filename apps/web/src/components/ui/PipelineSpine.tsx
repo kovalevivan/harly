@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
  */
 
 const CANONICAL_STAGES = [
-  "Applied",
-  "Screening",
-  "Interview",
-  "Offer",
-  "Hired",
+  "Отклик",
+  "Первичный отбор",
+  "Собеседование",
+  "Предложение",
+  "Нанят",
 ] as const;
 
 const REJECTED = new Set(["rejected", "declined", "withdrawn"]);
@@ -42,7 +42,7 @@ export function PipelineSpine({
   const position = activeIndex >= 0 ? activeIndex + 1 : 0;
 
   const label = isRejected
-    ? "Rejected"
+    ? "Отказ"
     : activeIndex >= 0
       ? stages[activeIndex]
       : current;
@@ -54,7 +54,7 @@ export function PipelineSpine({
         role="img"
         aria-label={
           isRejected
-            ? "Rejected"
+            ? "Отказ"
             : position > 0
               ? `Stage: ${label} (${position} of ${total})`
               : `Stage: ${label}`

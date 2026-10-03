@@ -79,19 +79,18 @@ function EmptyState({
       </span>
       <p className="text-base font-semibold">
         {data.documents.length === 0
-          ? "Your document library is empty"
-          : "No documents match these filters"}
+          ? "Ваша библиотека документов пуста"
+          : "Нет документов, соответствующих этим фильтрам."}
       </p>
       <p className="max-w-sm text-sm leading-6 text-muted-foreground">
         {data.documents.length === 0
-          ? "Drag files anywhere on this page, or upload one to start building a shared, auditable source of truth for your hiring team."
-          : "Try a broader search or clear one of the filters."}
+          ? "Перетащите файлы в любое место на этой странице или загрузите их, чтобы начать создавать общий, проверяемый источник достоверной информации для вашей команды по подбору персонала."
+          : "Попробуйте расширить поиск или очистите один из фильтров."}
       </p>
       {data.documents.length === 0 && data.canManage ? (
         <Button size="sm" className="mt-4" onClick={onUpload}>
           <Upload className="size-4" />
-          Upload first document
-        </Button>
+          {"Загрузите первый документ "}</Button>
       ) : null}
     </div>
   );
@@ -116,7 +115,7 @@ function FilterSelect({
         onChange={(event) => onChange(event.target.value)}
         className="h-10 min-w-[8.5rem] appearance-none rounded-full border border-input bg-background px-4 pr-8 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <option value="all">{label}: All</option>
+        <option value="all">{label}{": Все"}</option>
         {options.map(([optionValue, optionLabel]) => (
           <option key={optionValue} value={optionValue}>
             {optionLabel}
@@ -248,7 +247,7 @@ export function DocumentsHub({
     }
     if (valid.length === 0) {
       toast.error(
-        "No files could be uploaded. Use PDF, DOCX, or image files up to 25 MB.",
+        "Никакие файлы не могут быть загружены. Используйте PDF, DOCX или файлы изображений размером до 25 МБ.",
       );
       return;
     }
@@ -276,11 +275,11 @@ export function DocumentsHub({
     setBulkUploading(false);
     if (uploaded > 0)
       toast.success(
-        `${uploaded} document${uploaded === 1 ? "" : "s"} uploaded`,
+        `${uploaded} документ${uploaded === 1 ? "" : "s"} загружен`,
       );
     if (rejected > 0)
       toast.error(
-        `${rejected} file${rejected === 1 ? "" : "s"} could not be uploaded`,
+        `${rejected} файл${rejected === 1 ? "" : "s"} не удалось загрузить`,
       );
     router.refresh();
   }
@@ -292,7 +291,7 @@ export function DocumentsHub({
     void (async () => {
       const result = await action();
       if (!result.ok) {
-        toast.error(result.error ?? "Bulk action failed.");
+        toast.error(result.error ?? "Массовое действие не удалось.");
         return;
       }
       toast.success(result.error ?? success);
@@ -304,13 +303,13 @@ export function DocumentsHub({
   function bulkDelete() {
     if (
       !window.confirm(
-        `Permanently delete ${selectedInView.length} document${selectedInView.length === 1 ? "" : "s"}? This cannot be undone.`,
+        `Удалить навсегда ${selectedInView.length} документ${selectedInView.length === 1 ? "" : "s"}? Это невозможно отменить.`,
       )
     )
       return;
     runBulk(
       () => bulkDeleteDocuments({ documentIds: selectedInView }),
-      "Documents deleted",
+      "Документы удалены",
     );
   }
 
@@ -347,8 +346,7 @@ export function DocumentsHub({
           <div className="flex flex-col items-center gap-2 text-primary">
             <Upload className="size-8" />
             <p className="text-sm font-semibold">
-              Drop files to upload to the workspace library
-            </p>
+              {"Перетащите файлы для загрузки в библиотеку рабочей области. "}</p>
           </div>
         </div>
       ) : null}
@@ -360,36 +358,32 @@ export function DocumentsHub({
       <header className="flex flex-col gap-4 border-b border-border/70 pb-5 duration-500 animate-in fade-in slide-in-from-bottom-1 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold tracking-tight">
-            Documents
-          </h1>
+            {"Документы "}</h1>
           <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">
-            A secure home for the files that move candidates, offers, and hiring
-            decisions forward.
-          </p>
+            {"Надежное хранилище файлов, которые помогают продвигать кандидатов, предложения и решения о найме. "}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => setCategoriesOpen(true)}>
             <FolderCog className="size-4" />
-            Categories
-          </Button>
+            {"Категории "}</Button>
           {data.canManage ? (
             <Button
               onClick={() => setUploadOpen(true)}
               disabled={bulkUploading}
             >
               <Upload className="size-4" />
-              {bulkUploading ? "Uploading…" : "Upload document"}
+              {bulkUploading ? "Загрузка…" : "Загрузить документ"}
             </Button>
           ) : null}
         </div>
       </header>
       {candidateFilterName ? (
         <div className="flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.04] px-3 py-1.5 text-xs font-medium text-foreground">
-          Showing documents for {candidateFilterName}
+          {"Показ документов на "}{candidateFilterName}
           <button
             type="button"
             onClick={clearCandidateFilter}
-            aria-label="Clear candidate filter"
+            aria-label={"Очистить фильтр кандидатов"}
             className="rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <X className="size-3.5" />
@@ -397,13 +391,13 @@ export function DocumentsHub({
         </div>
       ) : null}
       <section className="flex flex-wrap gap-x-8 gap-y-4 border-b border-border/70 pb-5 duration-500 animate-in fade-in slide-in-from-bottom-2">
-        <Stat label="Active documents" value={active} tone="text-primary" />
-        <Stat label="Archived" value={archived} />
-        <Stat label="Pending signature" value={pending} tone="text-warning" />
-        <Stat label="Expired" value={expired} tone="text-destructive" />
-        <Stat label="Assigned to me" value={assigned} />
+        <Stat label={"Активные документы"} value={active} tone="text-primary" />
+        <Stat label={"В архиве"} value={archived} />
+        <Stat label={"Ожидается подпись"} value={pending} tone="text-warning" />
+        <Stat label={"Срок действия истек"} value={expired} tone="text-destructive" />
+        <Stat label={"Назначено мне"} value={assigned} />
       </section>
-      <nav className="flex gap-1 border-b border-border/70" aria-label="Document sections">
+      <nav className="flex gap-1 border-b border-border/70" aria-label={"Разделы документа"}>
         {(["active", "archived"] as const).map((value) => (
           <button
             key={value}
@@ -412,7 +406,7 @@ export function DocumentsHub({
             onClick={() => { setSection(value); clearSelection(); }}
             className={`border-b-2 px-3 py-2 text-sm font-medium transition-colors ${section === value ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
           >
-            {value === "active" ? "Active documents" : "Archived"} <span className="ml-1 text-xs text-muted-foreground">{value === "active" ? active : archived}</span>
+            {value === "active" ? "Активные документы" : "В архиве"} <span className="ml-1 text-xs text-muted-foreground">{value === "active" ? active : archived}</span>
           </button>
         ))}
       </nav>
@@ -423,12 +417,12 @@ export function DocumentsHub({
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search documents, owners, or original names"
+              placeholder={"Поиск документов, владельцев или оригинальных имен"}
               className="h-10 rounded-full pl-10"
             />
           </div>
           <FilterSelect
-            label="Category"
+            label={"Категория"}
             value={category}
             onChange={setCategory}
             options={data.categories
@@ -436,7 +430,7 @@ export function DocumentsHub({
               .map((item) => [item.id, item.name])}
           />
           <FilterSelect
-            label="Signature"
+            label={"Подпись"}
             value={signature}
             onChange={setSignature}
             options={Object.entries(SIGNATURE_STATUS_META).map(
@@ -444,21 +438,21 @@ export function DocumentsHub({
             )}
           />
           <FilterSelect
-            label="Association"
+            label={"Ассоциация"}
             value={association}
             onChange={setAssociation}
             options={[
-              ["workspace", "Workspace"],
-              ["candidate", "Candidate"],
-              ["application", "Application"],
-              ["offer", "Offer"],
-              ["job", "Job"],
+              ["workspace", "Рабочая область"],
+              ["candidate", "Кандидат"],
+              ["application", "Отклик"],
+              ["offer", "Предложение"],
+              ["job", "Вакансия"],
             ]}
           />
           <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-muted p-1">
             <button
               type="button"
-              aria-label="List view"
+              aria-label={"Просмотр списка"}
               aria-pressed={view === "list"}
               onClick={() => setView("list")}
               className={`flex size-8 items-center justify-center rounded-full transition-colors ${view === "list" ? "bg-card text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"}`}
@@ -467,7 +461,7 @@ export function DocumentsHub({
             </button>
             <button
               type="button"
-              aria-label="Grid view"
+              aria-label={"Представление в виде сетки"}
               aria-pressed={view === "grid"}
               onClick={() => setView("grid")}
               className={`flex size-8 items-center justify-center rounded-full transition-colors ${view === "grid" ? "bg-card text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"}`}
@@ -477,15 +471,13 @@ export function DocumentsHub({
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          {filtered.length} of {data.documents.length} document
-          {data.documents.length === 1 ? "" : "s"}
+          {filtered.length} {"из "}{data.documents.length} {"документов "}{data.documents.length === 1 ? "" : "s"}
         </p>
       </section>
       {data.canManage && selectedInView.length > 0 ? (
         <section className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/25 bg-accent/40 px-4 py-2.5 animate-in fade-in slide-in-from-top-1">
           <span className="text-sm font-medium">
-            {selectedInView.length} selected
-          </span>
+            {selectedInView.length} {"выбрано "}</span>
           <div className="ml-auto flex flex-wrap items-center gap-2">
             <Button
               size="sm"
@@ -498,13 +490,12 @@ export function DocumentsHub({
                       documentIds: selectedInView,
                       status: "archived",
                     }),
-                  "Documents archived",
+                  "Документы в архиве",
                 )
               }
             >
               <Archive className="size-4" />
-              Archive
-            </Button>
+              {"Архив "}</Button>
             <Button
               size="sm"
               variant="outline"
@@ -516,13 +507,12 @@ export function DocumentsHub({
                       documentIds: selectedInView,
                       status: "active",
                     }),
-                  "Documents restored",
+                  "Документы восстановлены",
                 )
               }
             >
               <ArchiveRestore className="size-4" />
-              Restore
-            </Button>
+              {"Восстановить "}</Button>
             <label className="flex items-center gap-1.5 text-sm">
               <FolderCog className="size-4 text-muted-foreground" />
               <select
@@ -537,16 +527,15 @@ export function DocumentsHub({
                         documentIds: selectedInView,
                         categoryId: value === "none" ? null : value,
                       }),
-                    "Category updated",
+                    "Категория обновлена",
                   );
                   event.target.value = "";
                 }}
                 className="h-8 rounded-md border border-input bg-background px-2 text-sm"
               >
                 <option value="" disabled>
-                  Set category…
-                </option>
-                <option value="none">No category</option>
+                  {"Установить категорию… "}</option>
+                <option value="none">{"Нет категории"}</option>
                 {data.categories
                   .filter((item) => item.active)
                   .map((item) => (
@@ -559,13 +548,11 @@ export function DocumentsHub({
             {data.canDelete ? (
               <Button size="sm" variant="destructive" onClick={bulkDelete}>
                 <Trash2 className="size-4" />
-                Delete
-              </Button>
+                {"Удалить "}</Button>
             ) : null}
             <Button size="sm" variant="ghost" onClick={clearSelection}>
               <X className="size-4" />
-              Clear
-            </Button>
+              {"Очистить "}</Button>
           </div>
         </section>
       ) : null}
@@ -577,17 +564,17 @@ export function DocumentsHub({
                 <Checkbox
                   checked={allInViewSelected}
                   onCheckedChange={toggleSelectAll}
-                  aria-label="Select all"
+                  aria-label={"Выбрать все"}
                 />
               </span>
             ) : (
               <span />
             )}
-            <span>Name</span>
-            <span>Type</span>
-            <span>Association</span>
-            <span>Owner</span>
-            <span>Updated</span>
+            <span>{"Имя"}</span>
+            <span>{"Тип"}</span>
+            <span>{"Ассоциация"}</span>
+            <span>{"Владелец"}</span>
+            <span>{"Обновлено"}</span>
           </div>
           {filtered.length === 0 ? (
             <EmptyState data={data} onUpload={() => setUploadOpen(true)} />
@@ -615,7 +602,7 @@ export function DocumentsHub({
                         <Checkbox
                           checked={isSelected}
                           onCheckedChange={() => toggleSelected(document.id)}
-                          aria-label={`Select ${document.name}`}
+                          aria-label={`Выберите ${document.name}`}
                         />
                       </span>
                     ) : (
@@ -654,7 +641,7 @@ export function DocumentsHub({
                       {document.ownerId ? (
                         <>
                           <UserAvatar
-                            name={document.ownerName ?? "Workspace"}
+                            name={document.ownerName ?? "Рабочая область"}
                             src={document.ownerImage}
                             size="sm"
                             className="size-5 text-[9px]"
@@ -662,7 +649,7 @@ export function DocumentsHub({
                           <span className="truncate">{document.ownerName}</span>
                         </>
                       ) : (
-                        "Workspace"
+                        "Рабочая область"
                       )}
                     </span>
                     <span className="hidden text-xs text-muted-foreground md:block">
@@ -702,7 +689,7 @@ export function DocumentsHub({
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => toggleSelected(document.id)}
-                      aria-label={`Select ${document.name}`}
+                      aria-label={`Выберите ${document.name}`}
                     />
                   </span>
                 ) : null}

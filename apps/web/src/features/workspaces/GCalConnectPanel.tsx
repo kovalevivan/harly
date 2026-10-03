@@ -50,9 +50,9 @@ export function GCalConnectPanel({
   const statusTone = isConnected ? (status.enabled ? "on" : "off") : "neutral";
   const statusLabel = isConnected
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   const installUrl = `/api/integrations/google/install?ws=${workspaceId}`;
 
@@ -60,10 +60,10 @@ export function GCalConnectPanel({
     startDisconnect(async () => {
       const result = await disconnectGCalAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Google Calendar disconnected");
+      toast.success("Календарь Google отключен");
       router.refresh();
     });
   }
@@ -72,9 +72,9 @@ export function GCalConnectPanel({
     startTest(async () => {
       const result = await testGCalConnectionAction();
       if (result.ok) {
-        toast.success("Connection is working!");
+        toast.success("Соединение работает!");
       } else {
-        toast.error(result.error ?? "Connection test failed.");
+        toast.error(result.error ?? "Проверка соединения не удалась.");
         // An invalid_grant clears the stored token server-side. Refresh here so
         // the panel immediately changes from the stale connected state to the
         // actionable Connect Google state.
@@ -101,20 +101,18 @@ export function GCalConnectPanel({
                 aria-expanded={open}
               >
                 <GearSixIcon className="size-4" />
-                {open ? "Hide settings" : "Manage"}
+                {open ? "Скрыть настройки" : "Управление"}
               </Button>
             ) : status.hasCredentials ? (
               <Button asChild>
                 <a href={installUrl}>
                   <GoogleCalendarLogo className="size-4" />
-                  Connect Google
-                </a>
+                  {"Подключите Google "}</a>
               </Button>
             ) : (
               <Button disabled>
                 <GoogleCalendarLogo className="size-4" />
-                Credentials not set
-              </Button>
+                {"Учетные данные не установлены "}</Button>
             )
           ) : null
         }
@@ -124,26 +122,24 @@ export function GCalConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">GOOGLE_CLIENT_ID</code> and{" "}
-            <code className="font-mono text-xs">GOOGLE_CLIENT_SECRET</code> on
-            the server to enable Google Calendar.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">GOOGLE_CLIENT_ID</code> {"и"}{" "}
+            <code className="font-mono text-xs">GOOGLE_CLIENT_SECRET</code> {"на сервере, чтобы включить Календарь Google. "}</p>
         </div>
       ) : null}
 
       {isConnected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <StatCell label="Account">
+            <StatCell label={"Аккаунт"}>
               <GoogleCalendarLogo className="size-4" />
-              {status.accountEmail ?? "Not connected"}
+              {status.accountEmail ?? "Не подключено"}
             </StatCell>
-            <StatCell label="Calendar">
+            <StatCell label={"Календарь"}>
               {status.calendarId === "primary"
-                ? "Primary calendar"
-                : status.calendarId ?? "Not selected"}
+                ? "Основной календарь"
+                : status.calendarId ?? "Не выбрано"}
             </StatCell>
-            <StatCell label="Status">
+            <StatCell label={"Статус"}>
               <button
                 type="button"
                 onClick={testConnection}
@@ -155,7 +151,7 @@ export function GCalConnectPanel({
                 ) : (
                   <SealCheckDuotoneIcon className="size-3.5" />
                 )}
-                {testing ? "Testing…" : "Test connection"}
+                {testing ? "Тестирование…" : "Тестовое соединение"}
               </button>
             </StatCell>
           </div>
@@ -196,7 +192,7 @@ function GCalConfigForm({
     startLoad(async () => {
       const result = await listGCalCalendarsAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not load calendars.");
+        toast.error(result.error ?? "Не удалось загрузить календари.");
         return;
       }
       setCalendars(result.calendars);
@@ -207,10 +203,10 @@ function GCalConfigForm({
     startSave(async () => {
       const result = await saveGCalSettingsAction({ calendarId: selected });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Calendar saved");
+      toast.success("Календарь сохранен.");
       onSaved();
     });
   }
@@ -219,15 +215,13 @@ function GCalConfigForm({
     <Card className="p-6">
       <div className="mb-5 space-y-0.5">
         <h2 className="font-display text-base font-semibold tracking-tight">
-          Configure Google Calendar
-        </h2>
+          {"Настроить Календарь Google "}</h2>
         <p className="text-sm text-muted-foreground">
-          Choose which calendar to use for interview events.
-        </p>
+          {"Выберите, какой календарь использовать для собеседований. "}</p>
       </div>
 
       <div className="space-y-2">
-        <Label>Calendar</Label>
+        <Label>{"Календарь"}</Label>
         {calendars === null ? (
           <Button
             variant="outline"
@@ -236,7 +230,7 @@ function GCalConfigForm({
             disabled={loading}
           >
             {loading ? <SpinnerIcon className="size-3.5" /> : null}
-            {loading ? "Loading calendars…" : "Load calendars"}
+            {loading ? "Загрузка календарей…" : "Загрузить календари"}
           </Button>
         ) : (
           <select
@@ -264,12 +258,10 @@ function GCalConfigForm({
           disabled={disconnecting}
         >
           {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-          Disconnect
-        </Button>
+          {"Отключить "}</Button>
         <Button onClick={save} disabled={saving}>
           {saving ? <SpinnerIcon className="size-3.5" /> : null}
-          Save
-        </Button>
+          {"Сохранить "}</Button>
       </div>
     </Card>
   );

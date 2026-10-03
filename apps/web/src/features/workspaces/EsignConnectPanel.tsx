@@ -58,9 +58,9 @@ export function EsignConnectPanel({
   function testConnection() {
     startTest(async () => {
       const result = await testEsignAction();
-      if (result.ok) toast.success("DocuSeal connection is working!");
+      if (result.ok) toast.success("Соединение DocuSeal работает!");
       else {
-        toast.error(result.error ?? "DocuSeal connection test failed.");
+        toast.error(result.error ?? "Проверка соединения DocuSeal не удалась.");
         router.refresh();
       }
     });
@@ -73,7 +73,7 @@ export function EsignConnectPanel({
         tileClassName={tileClassName}
         name="DocuSeal"
         description={description}
-        statusLabel={connected ? "Connected" : "Not connected"}
+        statusLabel={connected ? "Подключено" : "Не подключено"}
         statusTone={connected ? "on" : "neutral"}
         action={
           canEdit ? (
@@ -84,7 +84,7 @@ export function EsignConnectPanel({
               aria-expanded={open}
             >
               {connected ? <GearSixIcon className="size-4" /> : <KeyDuotoneIcon className="size-4" />}
-              {connected ? (open ? "Hide settings" : "Manage") : "Connect"}
+              {connected ? (open ? "Скрыть настройки" : "Управление") : "Подключиться"}
             </Button>
           ) : null
         }
@@ -93,21 +93,21 @@ export function EsignConnectPanel({
       {!status.encryptionReady && !connected ? (
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
-          <p>Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on the server to store the DocuSeal API token securely.</p>
+          <p>{"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере для безопасного хранения токена DocuSeal API."}</p>
         </div>
       ) : null}
 
       {connected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            <StatCell label="Instance">
+            <StatCell label={"Экземпляр"}>
               <DocuSealLogo className="size-4" />
-              <span className="truncate">{status.url ?? "Connected"}</span>
+              <span className="truncate">{status.url ?? "Подключено"}</span>
             </StatCell>
-            <StatCell label="Status">
+            <StatCell label={"Статус"}>
               <button type="button" onClick={testConnection} disabled={testing} className="flex items-center gap-1.5 text-sm font-medium text-pine hover:underline disabled:opacity-50">
                 {testing ? <SpinnerIcon className="size-3.5" /> : null}
-                {testing ? "Testing…" : "Test connection"}
+                {testing ? "Тестирование…" : "Тестовое соединение"}
               </button>
             </StatCell>
           </div>
@@ -120,14 +120,14 @@ export function EsignConnectPanel({
             <Card className="space-y-4 p-5">
               {webhookUrl ? (
                 <div className="space-y-2 border-t pt-4">
-                  <h2 className="font-display text-base font-semibold tracking-tight">Webhook</h2>
-                  <p className="text-sm text-muted-foreground">In your DocuSeal instance → Settings → Webhooks, add this endpoint for the <code className="font-mono text-xs">form.completed</code>, <code className="font-mono text-xs">form.declined</code>, and <code className="font-mono text-xs">submission.*</code> events. The URL contains only the workspace selector.</p>
+                  <h2 className="font-display text-base font-semibold tracking-tight">{"Вебхук"}</h2>
+                  <p className="text-sm text-muted-foreground">{"В вашем экземпляре DocuSeal → Настройки → Вебхуки добавьте эту конечную точку для "}<code className="font-mono text-xs">form.completed</code>, <code className="font-mono text-xs">form.declined</code>{"и "}<code className="font-mono text-xs">{"представление.*"}</code> {"события. URL-адрес содержит только селектор рабочей области."}</p>
                   <code className="block break-all rounded-md border bg-muted/30 px-3 py-2 font-mono text-xs">{webhookUrl}</code>
                   {webhookSecret ? (
                     <div className="space-y-1.5">
-                      <p className="text-xs font-medium text-foreground">Authentication header</p>
+                      <p className="text-xs font-medium text-foreground">{"Заголовок аутентификации"}</p>
                       <code className="block break-all rounded-md border bg-muted/30 px-3 py-2 font-mono text-xs">X-DocuSeal-Secret: {webhookSecret}</code>
-                      <p className="text-xs text-muted-foreground">Configure this as an HTTP header in DocuSeal or in your reverse proxy. Never append the secret as <code className="font-mono text-xs">?secret=</code>.</p>
+                      <p className="text-xs text-muted-foreground">{"Настройте это как заголовок HTTP в DocuSeal или в обратном прокси-сервере. Никогда не добавляйте секрет как "}<code className="font-mono text-xs">{"?секрет="}</code>.</p>
                     </div>
                   ) : null}
                 </div>
@@ -141,17 +141,16 @@ export function EsignConnectPanel({
                   startTest(async () => {
                     const result = await disconnectEsignAction();
                     if (!result.ok) {
-                      toast.error(result.error ?? "Could not disconnect DocuSeal.");
+                      toast.error(result.error ?? "Не удалось отключить DocuSeal.");
                       return;
                     }
-                    toast.success("DocuSeal disconnected");
+                    toast.success("DocuSeal отключен");
                     router.refresh();
                   })
                 }
                 disabled={testing}
               >
-                Disconnect DocuSeal
-              </Button>
+                {"Отключить DocuSeal "}</Button>
             </Card>
           ) : (
             <ConnectForm status={status} onSaved={() => { setOpen(false); router.refresh(); }} />
@@ -182,10 +181,10 @@ function ConnectForm({
         enabled,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save DocuSeal settings.");
+        toast.error(result.error ?? "Не удалось сохранить настройки DocuSeal.");
         return;
       }
-      toast.success("DocuSeal settings saved");
+      toast.success("Настройки DocuSeal сохранены.");
       onSaved();
     });
   }
@@ -195,12 +194,10 @@ function ConnectForm({
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            {status.hasToken ? "Manage connection" : "Connect DocuSeal"}
+            {status.hasToken ? "Управление подключением" : "Подключить DocuSeal"}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Point Harly at your self-hosted DocuSeal instance. The API token is
-            encrypted at rest and never shown again.
-          </p>
+            {"Наведите Харли на свой локальный экземпляр DocuSeal. Токен API шифруется в состоянии покоя и никогда больше не отображается. "}</p>
         </div>
         <a
           href="https://www.docuseal.com/docs/api"
@@ -208,14 +205,13 @@ function ConnectForm({
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pine transition-colors hover:text-pine-strong"
         >
-          DocuSeal docs
-          <ArrowUpRightIcon className="size-3.5" />
+          {"Документы DocuSeal "}<ArrowUpRightIcon className="size-3.5" />
         </a>
       </div>
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="docuseal-url">Instance URL</Label>
+          <Label htmlFor="docuseal-url">{"URL-адрес экземпляра"}</Label>
           <Input
             id="docuseal-url"
             value={url}
@@ -224,34 +220,34 @@ function ConnectForm({
             autoComplete="off"
             className="font-mono text-xs"
           />
-          <p className="text-xs text-muted-foreground">Base URL of your DocuSeal instance (without /api).</p>
+          <p className="text-xs text-muted-foreground">{"Базовый URL-адрес вашего экземпляра DocuSeal (без /api)."}</p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="docuseal-token">API token</Label>
+          <Label htmlFor="docuseal-token">{"API-токен"}</Label>
           <Input
             id="docuseal-token"
             type="password"
             value={apiToken}
             onChange={(event) => setApiToken(event.target.value)}
-            placeholder={status.hasToken ? "•••••••• (stored, leave blank to keep)" : "Paste your X-Auth-Token"}
+            placeholder={status.hasToken ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)" : "Вставьте свой X-Auth-токен"}
             autoComplete="off"
             className="font-mono text-xs"
           />
-          <p className="text-xs text-muted-foreground">DocuSeal → Settings → API. Encrypted at rest.</p>
+          <p className="text-xs text-muted-foreground">{"DocuSeal → Настройки → API. Зашифровано в состоянии покоя."}</p>
         </div>
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable DocuSeal</p>
-            <p className="text-xs text-muted-foreground">Allow sending documents and offers for signature.</p>
+            <p className="text-sm font-medium">{"Включить DocuSeal"}</p>
+            <p className="text-xs text-muted-foreground">{"Разрешить отправку документов и предложений на подпись."}</p>
           </div>
           <input
             type="checkbox"
             checked={enabled}
             onChange={(event) => setEnabled(event.target.checked)}
             className="size-4 accent-pine"
-            aria-label="Enable DocuSeal"
+            aria-label={"Включить DocuSeal"}
           />
         </div>
       </div>
@@ -259,8 +255,7 @@ function ConnectForm({
       <div className="mt-6 flex justify-end">
         <Button onClick={save} disabled={saving || !url.trim() || (!apiToken.trim() && !status.hasToken)}>
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save
-        </Button>
+          {"Сохранить "}</Button>
       </div>
     </Card>
   );

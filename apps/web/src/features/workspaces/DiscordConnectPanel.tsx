@@ -61,9 +61,9 @@ export function DiscordConnectPanel({
   const statusTone = isConnected ? (status.enabled ? "on" : "off") : "neutral";
   const statusLabel = isConnected
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   function toggleEnabled(next: boolean) {
     if (!isConnected) return;
@@ -76,10 +76,10 @@ export function DiscordConnectPanel({
           })
         : await disableChatAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
-      toast.success(next ? "Discord notifications on" : "Discord notifications off");
+      toast.success(next ? "Уведомления в Discord включены" : "Уведомления Discord отключены");
       router.refresh();
     });
   }
@@ -107,7 +107,7 @@ export function DiscordConnectPanel({
                 ) : (
                   <KeyDuotoneIcon className="size-4" />
                 )}
-                {isConnected ? (open ? "Hide settings" : "Manage") : "Connect"}
+                {isConnected ? (open ? "Скрыть настройки" : "Управление") : "Подключиться"}
               </Button>
               {isConnected ? (
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -115,10 +115,10 @@ export function DiscordConnectPanel({
                     checked={status.enabled}
                     disabled={togglePending}
                     onCheckedChange={toggleEnabled}
-                    aria-label="Enable Discord notifications"
+                    aria-label={"Включить уведомления Discord"}
                   />
                   <span className="text-muted-foreground">
-                    {status.enabled ? "On" : "Off"}
+                    {status.enabled ? "On" : "Выкл."}
                   </span>
                 </label>
               ) : null}
@@ -131,24 +131,21 @@ export function DiscordConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on
-            the server to store the webhook URL.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере для хранения URL-адреса веб-перехватчика. "}</p>
         </div>
       ) : null}
 
       {isConnected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            <StatCell label="Destination">
+            <StatCell label={"Пункт назначения"}>
               <DiscordLogo className="size-4" />
-              Discord webhook
-            </StatCell>
-            <StatCell label="Events">
+              {"Вебхук Discord "}</StatCell>
+            <StatCell label={"События"}>
               <span className="text-muted-foreground">
                 {status.events.length === 0
-                  ? "None selected"
-                  : `${status.events.length} subscribed`}
+                  ? "Ничего не выбрано"
+                  : `${status.events.length} подписался`}
               </span>
             </StatCell>
           </div>
@@ -207,10 +204,10 @@ function DiscordConnectForm({
         webhookUrl: webhookUrl || undefined,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Test failed.");
+        toast.error(result.error ?? "Тест не пройден.");
         return;
       }
-      toast.success("Test message sent to Discord");
+      toast.success("Тестовое сообщение отправлено в Discord");
     });
   }
 
@@ -223,10 +220,10 @@ function DiscordConnectForm({
         events: selected,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Discord settings saved");
+      toast.success("Настройки Discord сохранены.");
       onSaved();
     });
   }
@@ -235,10 +232,10 @@ function DiscordConnectForm({
     startDisconnect(async () => {
       const result = await disableChatAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Discord notifications disabled");
+      toast.success("Уведомления Discord отключены");
       router.refresh();
     });
   }
@@ -248,11 +245,10 @@ function DiscordConnectForm({
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            {connected ? "Manage connection" : "Connect Discord"}
+            {connected ? "Управление подключением" : "Подключить Дискорд"}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Your webhook URL is encrypted at rest and never shown again.
-          </p>
+            {"URL-адрес вашего веб-перехватчика зашифрован и никогда больше не отображается. "}</p>
         </div>
         <a
           href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
@@ -260,14 +256,13 @@ function DiscordConnectForm({
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pine transition-colors hover:text-pine-strong"
         >
-          Webhook docs
-          <ArrowUpRightIcon className="size-3.5" />
+          {"Документация вебхука "}<ArrowUpRightIcon className="size-3.5" />
         </a>
       </div>
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="discord-webhook">Incoming webhook URL</Label>
+          <Label htmlFor="discord-webhook">{"URL входящего вебхука"}</Label>
           <Input
             id="discord-webhook"
             type="password"
@@ -275,20 +270,18 @@ function DiscordConnectForm({
             onChange={(e) => setWebhookUrl(e.target.value)}
             placeholder={
               connected
-                ? "•••••••• (stored, leave blank to keep)"
+                ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
                 : "https://discord.com/api/webhooks/000/xxxx"
             }
             autoComplete="off"
             className="font-mono text-xs"
           />
           <p className="text-xs text-muted-foreground">
-            Discord → Server Settings → Integrations → Webhooks → New Webhook,
-            then Copy URL.
-          </p>
+            {"Discord → Настройки сервера → Интеграции → Вебхуки → Новый вебхук, затем Скопировать URL. "}</p>
         </div>
 
         <div className="space-y-2">
-          <Label>Notify on</Label>
+          <Label>{"Уведомить о"}</Label>
           <div className="flex flex-wrap gap-1.5">
             {events.map((event) => (
               <button
@@ -310,10 +303,9 @@ function DiscordConnectForm({
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable</p>
+            <p className="text-sm font-medium">{"Включить"}</p>
             <p className="text-xs text-muted-foreground">
-              When off, no messages are posted.
-            </p>
+              {"Если параметр выключен, сообщения не отправляются. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -330,8 +322,7 @@ function DiscordConnectForm({
             disabled={disconnecting}
           >
             {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-            Disconnect
-          </Button>
+            {"Отключить "}</Button>
         ) : (
           <span />
         )}
@@ -347,12 +338,10 @@ function DiscordConnectForm({
             ) : (
               <PaperPlaneDuotoneIcon className="size-4" />
             )}
-            Send test
-          </Button>
+            {"Отправить тест "}</Button>
           <Button onClick={save} disabled={saving}>
             {saving ? <SpinnerIcon className="size-4" /> : null}
-            Save
-          </Button>
+            {"Сохранить "}</Button>
         </div>
       </div>
     </Card>

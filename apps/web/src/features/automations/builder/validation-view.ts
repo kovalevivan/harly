@@ -60,7 +60,7 @@ export function requiredConfigIssues(graph: WorkflowGraphV2): GraphValidationIss
         issues.push({
           nodeId: node.id,
           fieldPath: "input.templateId",
-          message: "Choose an email template or write a subject and body.",
+          message: "Выберите шаблон электронного письма или напишите тему и тело письма.",
         });
       }
     }
@@ -71,7 +71,7 @@ export function requiredConfigIssues(graph: WorkflowGraphV2): GraphValidationIss
         issues.push({
           nodeId: node.id,
           fieldPath: `input.${field.key}`,
-          message: `Fill in ${field.label}.`,
+          message: `Заполните ${field.label}.`,
         });
       }
     }
@@ -92,7 +92,7 @@ export function visibleIssues(graph: WorkflowGraphV2): VisibleIssue[] {
   return merged
     .map((issue) => ({
       ...issue,
-      title: byId.get(issue.nodeId) ? nodeTitle(byId.get(issue.nodeId)!) : "Automation",
+      title: byId.get(issue.nodeId) ? nodeTitle(byId.get(issue.nodeId)!) : "Автоматизация",
     }))
     .sort((a, b) => {
       const ra = rank.get(a.nodeId) ?? Number.MAX_SAFE_INTEGER;

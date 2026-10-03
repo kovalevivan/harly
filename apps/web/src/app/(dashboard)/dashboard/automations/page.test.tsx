@@ -45,17 +45,17 @@ describe("Automations page demo branch", () => {
     expect(listPendingWorkflowApprovals).not.toHaveBeenCalled();
 
     const markup = renderToStaticMarkup(page);
-    expect(markup).toContain("Notify chat on new application");
-    expect(markup).toContain("Starter recipes");
-    expect(markup).toContain("View only");
-    expect(markup).toContain("nothing runs and editing is off");
-    expect(markup).toContain("Self-host Harly");
+    expect(markup).toContain("Уведомить команду о новом отклике");
+    expect(markup).toContain("Готовые сценарии");
+    expect(markup).toContain("Только просмотр");
+    expect(markup).toContain("ничего не запускается и редактирование отключено");
+    expect(markup).toContain("Развернуть Harly у себя");
     // Display-only: no builder links, no toggles, no mutating controls.
     expect(markup).not.toContain("/dashboard/automations/");
     expect(markup).not.toContain("<button");
     expect(markup).not.toContain('role="switch"');
-    expect(markup).not.toContain("Start from scratch");
-    expect(markup).not.toContain("Publish");
+    expect(markup).not.toContain("Начать с нуля");
+    expect(markup).not.toContain("Опубликовать");
   });
 
   it("keeps the normal manager and data loading when demo mode is off", async () => {

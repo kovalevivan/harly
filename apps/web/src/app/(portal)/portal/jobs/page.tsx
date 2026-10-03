@@ -17,8 +17,8 @@ import {
 export const dynamic = "force-dynamic";
 
 const WORKPLACE_LABELS: Record<string, string> = {
-  remote: "Remote",
-  hybrid: "Hybrid",
+  remote: "Удаленный",
+  hybrid: "Гибрид",
   onsite: "On-site",
 };
 
@@ -31,8 +31,8 @@ const WORKPLACE_COLORS: Record<string, string> = {
 const EMPLOYMENT_LABELS: Record<string, string> = {
   full_time: "Full-time",
   part_time: "Part-time",
-  contract: "Contract",
-  internship: "Internship",
+  contract: "Договор",
+  internship: "Стажировка",
 };
 
 function formatSalary(min: number | null, max: number | null, currency: string | null, period: string | null): string | null {
@@ -41,8 +41,8 @@ function formatSalary(min: number | null, max: number | null, currency: string |
   const fmt = (v: number) => v >= 1000 ? `${cur} ${Math.round(v / 1000)}k` : `${cur} ${v}`;
   const suffix = period === "monthly" ? "/mo" : "/yr";
   if (min && max) return `${fmt(min)} – ${fmt(max)}${suffix}`;
-  if (min) return `From ${fmt(min)}${suffix}`;
-  return `Up to ${fmt(max!)}${suffix}`;
+  if (min) return `С ${fmt(min)}${suffix}`;
+  return `До ${fmt(max!)}${suffix}`;
 }
 
 export default async function PortalJobsPage() {
@@ -89,15 +89,13 @@ export default async function PortalJobsPage() {
       <div className="space-y-8">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Open positions
-          </p>
+            {"Открытые позиции "}</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">
-            Join our team
-          </h1>
+            {"Присоединяйтесь к нашей команде "}</h1>
           {openJobs.length > 0 && (
             <p className="mt-1.5 text-sm text-muted-foreground">
-              {openJobs.length} open role{openJobs.length === 1 ? "" : "s"} across{" "}
-              {depts.length} department{depts.length === 1 ? "" : "s"}
+              {openJobs.length} {"открытая роль"}{openJobs.length === 1 ? "" : "s"} {"в"}{" "}
+              {depts.length} {"отделах"}{depts.length === 1 ? "" : "s"}
             </p>
           )}
         </div>
@@ -105,8 +103,8 @@ export default async function PortalJobsPage() {
         {openJobs.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card p-12 text-center">
             <BriefcaseIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-            <p className="font-medium text-foreground">No open roles right now</p>
-            <p className="mt-1 text-sm text-muted-foreground">Check back soon for new opportunities.</p>
+            <p className="font-medium text-foreground">{"Сейчас открытых вакансий нет"}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{"Загляните сюда позже, чтобы узнать о новых возможностях."}</p>
           </div>
         ) : (
           <div className="space-y-8">

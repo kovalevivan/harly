@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useEffect, useState, useTransition } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
@@ -39,7 +40,7 @@ export function RunsTimeline({
     startLoad(async () => {
       const r = await listRunsAction({ workflowId, limit: 20 });
       if (r.ok) setRuns(r.runs as SerializedRun[]);
-      else setError(r.error ?? "Could not load runs.");
+      else setError(r.error ?? "Не удалось загрузить серии.");
     });
   }, [workflowId]);
 
@@ -47,15 +48,14 @@ export function RunsTimeline({
     return <RunsListSkeleton />;
   }
   if (error) {
-    return <p className="text-sm text-danger-rust">{error}</p>;
+    return <p className="text-sm text-danger-rust">{localizeSystemText(error)}</p>;
   }
   if (runs && runs.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-border bg-pure-snow p-8 text-center">
-        <p className="font-display text-sm font-semibold text-foreground">No activity yet</p>
+        <p className="font-display text-sm font-semibold text-foreground">{"Пока нет активности"}</p>
         <p className="mt-1 text-xs text-soft-ink max-w-sm mx-auto">
-          This automation will record its execution history here once it is published and triggered by incoming events.
-        </p>
+          {"Эта автоматизация будет записывать здесь историю своего выполнения, как только она будет опубликована и вызвана входящими событиями. "}</p>
       </div>
     );
   }
@@ -77,7 +77,7 @@ function RunsListSkeleton() {
       animate={{ opacity: 1, filter: "blur(0px)" }}
       transition={reduceMotion ? { duration: 0.12, ease: "linear" } : { duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className="space-y-2"
-      aria-label="Loading runs"
+      aria-label={"Загрузка прогонов"}
     >
       {Array.from({ length: 3 }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 rounded-xl border border-border bg-pure-snow px-4 py-3">
@@ -160,13 +160,13 @@ function RunRow({
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">
-            <span className="text-soft-ink">trigger:</span> {run.triggerEvent}
+            <span className="text-soft-ink">{"событие:"}</span> {run.triggerEvent}
           </p>
           <p className="text-xs text-soft-ink">
             <RelativeTime value={run.startedAt} /> · {logicalStatus}
           </p>
         </div>
-        {run.error && <span className="truncate text-xs text-danger-rust">{run.error}</span>}
+        {run.error && <span className="truncate text-xs text-danger-rust">{localizeSystemText(run.error)}</span>}
         <CaretDownIcon
           aria-hidden
           className={cn("size-3.5 shrink-0 text-soft-ink transition-transform", open && "rotate-180")}
@@ -177,12 +177,10 @@ function RunRow({
         <div className="flex items-center justify-end gap-2 border-t border-border px-4 py-2">
           {logicalStatus === "running" || logicalStatus === "waiting" ? (
             <button type="button" onClick={cancel} disabled={pending} className="text-xs font-medium text-soft-ink hover:text-danger-rust disabled:opacity-50">
-              Cancel run
-            </button>
+              {"Отменить запуск "}</button>
           ) : (
             <button type="button" onClick={retry} disabled={pending} className="text-xs font-medium text-foreground hover:underline disabled:opacity-50">
-              Retry run
-            </button>
+              {"Повторить попытку "}</button>
           )}
         </div>
       )}
@@ -255,7 +253,7 @@ function ExpandedSteps({
             ))}
           </ol>
         ) : (
-          <p className="text-xs text-soft-ink">No steps recorded.</p>
+          <p className="text-xs text-soft-ink">{"Шаги не записаны."}</p>
         )}
       </div>
     </motion.div>
@@ -294,12 +292,12 @@ function StepRow({
         {(step.status === "failed" || step.status === "uncertain") && (step.errorCode || isErrorResult(step.result)) && (
           <p className="mt-0.5 truncate text-xs text-danger-rust">
             {step.status === "uncertain"
-              ? String(step.errorCode ?? "External effect needs reconciliation.")
-              : String((step.result as { error?: unknown }).error ?? step.errorCode ?? "Step failed.")}
+              ? String(step.errorCode ?? "Внешний эффект требует согласования.")
+              : String((step.result as { error?: unknown }).error ?? step.errorCode ?? "Шаг не удался.")}
           </p>
         )}
         {step.attemptCount && step.attemptCount > 1 ? (
-          <p className="mt-0.5 text-[11px] text-soft-ink">{step.attemptCount} attempts recorded</p>
+          <p className="mt-0.5 text-[11px] text-soft-ink">{step.attemptCount} {"попытки зарегистрированы"}</p>
         ) : null}
       </div>
       {step.actionType === "approval" && step.status === "waiting" && step.nodeId ? (
@@ -313,8 +311,7 @@ function StepRow({
             })}
             className="rounded-md border border-success/30 px-2 py-1 text-[11px] font-medium text-success hover:bg-success/10 disabled:opacity-50"
           >
-            Approve
-          </button>
+            {"Утвердить "}</button>
           <button
             type="button"
             disabled={decisionPending}
@@ -324,8 +321,7 @@ function StepRow({
             })}
             className="rounded-md border border-danger-rust/30 px-2 py-1 text-[11px] font-medium text-danger-rust hover:bg-danger-rust/10 disabled:opacity-50"
           >
-            Reject
-          </button>
+            {"Отклонить "}</button>
         </div>
       ) : null}
       {step.actionType === "approval" && step.status === "waiting" && step.nodeId ? (
@@ -335,7 +331,7 @@ function StepRow({
         <UncertainResolution step={step} />
       ) : null}
       {step.actionType !== "approval" && step.status === "failed" && (
-        <button type="button" onClick={onReplay} className="shrink-0 text-[11px] font-medium text-foreground hover:underline">Replay</button>
+        <button type="button" onClick={onReplay} className="shrink-0 text-[11px] font-medium text-foreground hover:underline">{"Повтор"}</button>
       )}
     </li>
   );
@@ -359,7 +355,7 @@ function ApprovalReassignment({
 
   return (
     <div className="flex shrink-0 items-center gap-1.5">
-      <label className="sr-only" htmlFor={`reassign-${step.id}`}>Reassign approval</label>
+      <label className="sr-only" htmlFor={`reassign-${step.id}`}>{"Переназначить одобрение"}</label>
       <select
         id={`reassign-${step.id}`}
         multiple
@@ -367,7 +363,7 @@ function ApprovalReassignment({
         value={selectedIds}
         onChange={(event) => setSelectedIds(Array.from(event.target.selectedOptions, (option) => option.value))}
         disabled={pending}
-        title="Select one or more members"
+        title={"Выберите одного или нескольких участников"}
         className="max-w-36 rounded-md border border-border bg-warm-paper px-1.5 py-0.5 text-[11px] text-foreground disabled:opacity-50"
       >
         {members.map((member) => (
@@ -384,16 +380,15 @@ function ApprovalReassignment({
             actorIds: selectedIds,
           });
           if (result.ok) {
-            toast.success("Approval assignees updated.");
+            toast.success("Ответственные за утверждение обновлены.");
             window.location.reload();
           } else {
-            toast.error(result.error ?? "Could not reassign approval.");
+            toast.error(result.error ?? "Не удалось переназначить одобрение.");
           }
         })}
         className="rounded-md border border-border px-2 py-1 text-[11px] font-medium text-soft-ink hover:bg-soft-kraft disabled:opacity-50"
       >
-        Reassign
-      </button>
+        {"Переназначить "}</button>
     </div>
   );
 }
@@ -418,45 +413,41 @@ function UncertainResolution({ step }: { step: SerializedRunStep }) {
         type="button"
         onClick={() => setOpen(true)}
         className="shrink-0 rounded-md border border-danger-rust/30 px-2 py-1 text-[11px] font-medium text-danger-rust hover:bg-danger-rust/10"
-        title="Record the provider outcome without sending the action again"
+        title={"Запишите результат поставщика, не отправляя действие повторно."}
       >
-        Reconcile
-      </button>
+        {"Примириться "}</button>
     );
   }
 
   return (
     <div className="basis-full rounded-lg border border-danger-rust/30 bg-danger-rust/5 p-2.5 text-xs">
-      <p className="font-medium text-foreground">Provider outcome is unknown</p>
-      <p className="mt-0.5 text-[11px] text-soft-ink">Check the provider first. This records the result and never sends the action again.</p>
+      <p className="font-medium text-foreground">{"Результат поставщика неизвестен"}</p>
+      <p className="mt-0.5 text-[11px] text-soft-ink">{"Сначала проверьте провайдера. Это записывает результат и никогда больше не отправляет действие."}</p>
       <div className="mt-2 grid gap-2 sm:grid-cols-2">
         <label className="grid gap-1 text-[11px] text-soft-ink">
-          Result
-          <BuilderSelect
+          {"Результат "}<BuilderSelect
             value={decision}
             onChange={(event) => setDecision(event.target.value as "succeeded" | "failed")}
             disabled={pending}
             className="rounded-md border border-border bg-warm-paper px-2 py-1 text-xs text-foreground"
           >
-            <option value="succeeded">Provider confirms success</option>
-            <option value="failed">Provider confirms failure</option>
+            <option value="succeeded">{"Провайдер подтверждает успех"}</option>
+            <option value="failed">{"Провайдер подтверждает неисправность"}</option>
           </BuilderSelect>
         </label>
         <label className="grid gap-1 text-[11px] text-soft-ink">
-          Provider reference (optional)
-          <input
+          {"Ссылка на поставщика (необязательно) "}<input
             value={providerRef}
             onChange={(event) => setProviderRef(event.target.value)}
             disabled={pending}
-            placeholder="message id, request id…"
+            placeholder={"идентификатор сообщения, идентификатор запроса…"}
             maxLength={300}
             className="rounded-md border border-border bg-warm-paper px-2 py-1 text-xs text-foreground"
           />
         </label>
       </div>
       <label className="mt-2 grid gap-1 text-[11px] text-soft-ink">
-        Reconciliation note (required)
-        <textarea
+        {"Акт сверки (обязательно) "}<textarea
           value={note}
           onChange={(event) => setNote(event.target.value)}
           disabled={pending}
@@ -464,14 +455,13 @@ function UncertainResolution({ step }: { step: SerializedRunStep }) {
           minLength={3}
           maxLength={1_000}
           rows={2}
-          placeholder="What did you verify in the provider?"
+          placeholder={"Что вы проверяли у провайдера?"}
           className="resize-y rounded-md border border-border bg-warm-paper px-2 py-1 text-xs text-foreground"
         />
       </label>
       {decision === "succeeded" ? (
         <label className="mt-2 grid gap-1 text-[11px] text-soft-ink">
-          Output JSON (optional; used by downstream bindings)
-          <textarea
+          {"Вывод JSON (необязательно; используется последующими привязками) "}<textarea
             value={outputJson}
             onChange={(event) => setOutputJson(event.target.value)}
             disabled={pending}
@@ -482,12 +472,12 @@ function UncertainResolution({ step }: { step: SerializedRunStep }) {
         </label>
       ) : null}
       <div className="mt-2 flex justify-end gap-2">
-        <button type="button" onClick={() => setOpen(false)} disabled={pending} className="rounded-md px-2 py-1 text-[11px] text-soft-ink hover:bg-soft-kraft disabled:opacity-50">Cancel</button>
+        <button type="button" onClick={() => setOpen(false)} disabled={pending} className="rounded-md px-2 py-1 text-[11px] text-soft-ink hover:bg-soft-kraft disabled:opacity-50">{"Отмена"}</button>
         <button
           type="button"
           onClick={() => {
             if (note.trim().length < 3) {
-              toast.error("Add a reconciliation note first.");
+              toast.error("Сначала добавьте записку о сверке.");
               return;
             }
             startTransition(async () => {
@@ -500,17 +490,17 @@ function UncertainResolution({ step }: { step: SerializedRunStep }) {
                 outputJson: decision === "succeeded" ? outputJson : undefined,
               });
               if (result.ok) {
-                toast.success("Uncertain action reconciled; workflow resumed.");
+                toast.success("Неопределенные действия согласованы; рабочий процесс возобновился.");
                 window.location.reload();
               } else {
-                toast.error(result.error ?? "Could not reconcile action.");
+                toast.error(result.error ?? "Не удалось согласовать действия.");
               }
             });
           }}
           disabled={pending}
           className="rounded-md bg-foreground px-2.5 py-1 text-[11px] font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
         >
-          {pending ? "Saving…" : "Record and resume"}
+          {pending ? "Сохранение…" : "Запись и возобновление"}
         </button>
       </div>
     </div>
@@ -520,18 +510,18 @@ function UncertainResolution({ step }: { step: SerializedRunStep }) {
 function StatusBadge({ status }: { status: string }) {
   const reduceMotion = useReducedMotion();
   const statusMap = {
-    running: { icon: ClockIcon, cls: "bg-status-quiet-ink/10 text-status-quiet-ink", label: "Running" },
-    succeeded: { icon: CheckCircleIcon, cls: "bg-success/10 text-success", label: "OK" },
-    failed: { icon: XCircleIcon, cls: "bg-danger-rust/10 text-danger-rust", label: "Failed" },
-    skipped: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Skipped" },
-    dead_letter: { icon: XCircleIcon, cls: "bg-danger-rust/20 text-danger-rust", label: "Failed permanently" },
-    cancelled: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Cancelled" },
-    waiting: { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: "Waiting" },
-    retrying: { icon: ClockIcon, cls: "bg-status-quiet-ink/10 text-status-quiet-ink", label: "Retrying" },
-    completed_with_warnings: { icon: CheckCircleIcon, cls: "bg-warning/10 text-warning", label: "Warnings" },
-    stopped: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Stopped" },
-    uncertain: { icon: XCircleIcon, cls: "bg-danger-rust/20 text-danger-rust", label: "Needs review" },
-    queued: { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: "Queued" },
+    running: { icon: ClockIcon, cls: "bg-status-quiet-ink/10 text-status-quiet-ink", label: "Бег" },
+    succeeded: { icon: CheckCircleIcon, cls: "bg-success/10 text-success", label: "ОК" },
+    failed: { icon: XCircleIcon, cls: "bg-danger-rust/10 text-danger-rust", label: "Не удалось" },
+    skipped: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Пропущено" },
+    dead_letter: { icon: XCircleIcon, cls: "bg-danger-rust/20 text-danger-rust", label: "Не удалось навсегда" },
+    cancelled: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Отменено" },
+    waiting: { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: "Ожидание" },
+    retrying: { icon: ClockIcon, cls: "bg-status-quiet-ink/10 text-status-quiet-ink", label: "Повторная попытка" },
+    completed_with_warnings: { icon: CheckCircleIcon, cls: "bg-warning/10 text-warning", label: "Предупреждения" },
+    stopped: { icon: ProhibitIcon, cls: "bg-soft-kraft text-soft-ink", label: "Остановлено" },
+    uncertain: { icon: XCircleIcon, cls: "bg-danger-rust/20 text-danger-rust", label: "Требуется проверка" },
+    queued: { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: "В очереди" },
   };
   const map = statusMap[status as keyof typeof statusMap];
   const fallback = { icon: ClockIcon, cls: "bg-soft-kraft text-soft-ink", label: status };
@@ -558,12 +548,12 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function StepStatus({ status }: { status: SerializedRunStep["status"] }) {
-  if (status === "succeeded") return <CheckCircleIcon aria-label="Succeeded" className="size-4 text-success" />;
-  if (status === "failed") return <XCircleIcon aria-label="Failed" className="size-4 text-danger-rust" />;
-  if (status === "uncertain") return <WarningCircleIcon aria-label="Uncertain" className="size-4 text-danger-rust" />;
-  if (status === "waiting") return <ClockIcon aria-label="Waiting" className="size-4 text-warning" />;
-  if (status === "running") return <span aria-label="Running" className="text-status-quiet-ink">…</span>;
-  return <span aria-label="No status" className="text-soft-ink">–</span>;
+  if (status === "succeeded") return <CheckCircleIcon aria-label={"Удалось"} className="size-4 text-success" />;
+  if (status === "failed") return <XCircleIcon aria-label={"Не удалось"} className="size-4 text-danger-rust" />;
+  if (status === "uncertain") return <WarningCircleIcon aria-label={"Неопределенный"} className="size-4 text-danger-rust" />;
+  if (status === "waiting") return <ClockIcon aria-label={"Ожидание"} className="size-4 text-warning" />;
+  if (status === "running") return <span aria-label={"Бег"} className="text-status-quiet-ink">…</span>;
+  return <span aria-label={"Нет статуса"} className="text-soft-ink">–</span>;
 }
 
 /** Type guard: a failed step's result often carries `{ error: string }`. */

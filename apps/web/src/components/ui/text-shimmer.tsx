@@ -30,7 +30,7 @@ function TextShimmerComponent({
         {
           '--spread': `${dynamicSpread}px`,
           '--shimmer-duration': `${duration}s`,
-          backgroundImage: `linear-gradient(90deg,#0000 calc(50% - var(--spread)),var(--base-gradient-color),#0000 calc(50% + var(--spread))), linear-gradient(var(--base-color), var(--base-color))`,
+          backgroundImage: "линейный-градиент(90 градусов,#0000 Calc(50% - var(--spread)),var(--base-gradient-color),#0000 Calc(50% + var(--spread))), линейный-градиент(var(--base-color), var(--base-color))",
         } as React.CSSProperties
       }
     >

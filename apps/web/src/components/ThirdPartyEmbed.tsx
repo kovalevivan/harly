@@ -14,15 +14,13 @@ export function EmbedConsentPlaceholder({ className }: { className?: string }) {
       )}
     >
       <p className="text-sm text-zinc-600 dark:text-zinc-300">
-        This content is embedded from another site. It stays off until you allow embeds.
-      </p>
+        {"Этот контент встроен с другого сайта. Он остается выключенным, пока вы не разрешите встраивание. "}</p>
       <button
         type="button"
         onClick={() => writeCookiePreferences(true)}
         className="mt-3 inline-flex items-center justify-center rounded-xl bg-zinc-900 px-3.5 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 dark:bg-zinc-100 dark:text-zinc-900"
       >
-        Allow embeds
-      </button>
+        {"Разрешить встраивание "}</button>
     </div>
   );
 }

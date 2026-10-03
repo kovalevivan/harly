@@ -38,12 +38,12 @@ type JobQuestionBuilderProps = {
 };
 
 const questionTypes: Array<{ value: JobQuestionType; label: string }> = [
-  { value: "text", label: "Short text" },
-  { value: "textarea", label: "Long text" },
-  { value: "url", label: "URL" },
-  { value: "select", label: "Select" },
-  { value: "info", label: "Text / disclaimer" },
-  { value: "consent", label: "Agree / do not agree" },
+  { value: "text", label: "Краткий текст" },
+  { value: "textarea", label: "Длинный текст" },
+  { value: "url", label: "URL-адрес" },
+  { value: "select", label: "Выбрать" },
+  { value: "info", label: "Текст / отказ от ответственности" },
+  { value: "consent", label: "Согласен/не согласен" },
 ];
 
 function createQuestion(index: number): JobApplicationQuestion {
@@ -129,7 +129,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
 
   function generateWithAI() {
     if (!aiContext?.title?.trim()) {
-      toast.error("Add a job title first.");
+      toast.error("Сначала добавьте название должности.");
       return;
     }
     startGenerate(async () => {
@@ -141,7 +141,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
       if (!result.ok) {
         if (result.reason === "not_configured") {
           toast.error(result.error, {
-            action: { label: "Set up AI", onClick: () => router.push("/settings/ai") },
+            action: { label: "Настроить ИИ", onClick: () => router.push("/settings/ai") },
           });
         } else {
           toast.error(result.error);
@@ -152,7 +152,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
         (s) => !questions.some((q) => q.label === s.label),
       );
       setSuggestions(fresh);
-      if (fresh.length === 0) toast.message("All suggested questions already added.");
+      if (fresh.length === 0) toast.message("Все предложенные вопросы уже добавлены.");
     });
   }
 
@@ -164,19 +164,17 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
       {suggestions.length > 0 ? (
         <div
           className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 space-y-2.5"
-          style={{ animation: "fadeUp 200ms cubic-bezier(0.23,1,0.32,1) both" }}
+          style={{ animation: "FadeUp 200 мс кубического Безье (0,23,1,0,32,1) оба" }}
         >
           <div className="flex items-center justify-between gap-2">
             <p className="text-[12px] font-semibold uppercase tracking-wide text-primary/70">
-              AI suggestions, click to add
-            </p>
+              {"Предложения ИИ, нажмите, чтобы добавить "}</p>
             <button
               type="button"
               onClick={addAllSuggestions}
               className="text-[12px] font-medium text-primary underline-offset-2 hover:underline"
             >
-              Add all
-            </button>
+              {"Добавить все "}</button>
           </div>
           <div className="flex flex-col gap-1.5">
             {suggestions.map((s, i) => (
@@ -185,7 +183,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
                 type="button"
                 onClick={() => addSuggestion(s)}
                 style={{
-                  animation: `fadeUp 180ms cubic-bezier(0.23,1,0.32,1) ${i * 35}ms both`,
+                  animation: `FadeUp 180 мс кубического Безье (0,23,1,0,32,1) ${i * 35}мс оба`,
                 }}
                 className={cn(
                   "group flex w-full items-start gap-2.5 rounded-lg border bg-background px-3 py-2.5 text-left",
@@ -205,8 +203,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
 
       {questions.length === 0 ? (
         <p className="rounded-lg border border-dashed bg-muted/40 p-4 text-sm text-muted-foreground">
-          No custom questions. Candidates only see the default application fields.
-        </p>
+          {"Никаких нестандартных вопросов. Кандидаты видят только поля заявки по умолчанию. "}</p>
       ) : null}
 
       {questions.map((question, index) => (
@@ -215,20 +212,20 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
             <FieldBox
               label={
                 question.type === "info"
-                  ? "Heading"
+                  ? "Заголовок"
                   : question.type === "consent"
-                    ? "Agreement title"
-                    : "Question label"
+                    ? "Название соглашения"
+                    : "Метка вопроса"
               }
             >
               <Input
                 value={question.label}
                 onChange={(event) => updateQuestion(index, { label: event.target.value })}
-                placeholder="What makes you a strong fit?"
+                placeholder={"Что делает вас сильным?"}
                 className={fieldBoxControlClassName}
               />
             </FieldBox>
-            <FieldBox label="Type">
+            <FieldBox label={"Тип"}>
               <Select
                 value={question.type}
                 onValueChange={(value) =>
@@ -250,7 +247,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
           </div>
 
           {question.type === "info" || question.type === "consent" ? (
-            <FieldBox label={question.type === "info" ? "Text" : "Agreement details"}>
+            <FieldBox label={question.type === "info" ? "Текст" : "Детали соглашения"}>
               <Textarea
                 value={question.description ?? ""}
                 onChange={(event) =>
@@ -259,8 +256,8 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
                 rows={question.type === "info" ? 4 : 6}
                 placeholder={
                   question.type === "info"
-                    ? "Share context, resources, or instructions with applicants."
-                    : "Write the full agreement or disclaimer applicants must review."
+                    ? "Поделитесь контекстом, ресурсами или инструкциями с кандидатами."
+                    : "Напишите полное соглашение или заявление об отказе от ответственности, которое должны прочитать заявители."
                 }
                 className={fieldBoxControlClassName}
               />
@@ -268,15 +265,15 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
           ) : null}
 
           {question.type !== "info" && question.type !== "consent" ? <div className="grid gap-3 md:grid-cols-2">
-            <FieldBox label="Placeholder">
+            <FieldBox label={"Заполнитель"}>
               <Input
                 value={question.placeholder ?? ""}
                 onChange={(event) => updateQuestion(index, { placeholder: event.target.value })}
-                placeholder="Optional helper text"
+                placeholder={"Необязательный вспомогательный текст"}
                 className={fieldBoxControlClassName}
               />
             </FieldBox>
-            <FieldBox label="Minimum characters">
+            <FieldBox label={"Минимум символов"}>
               <Input
                 value={question.minLength ?? ""}
                 onChange={(event) =>
@@ -293,18 +290,18 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
 
           {question.type === "select" ? (
             <div className="grid gap-3 md:grid-cols-2">
-              <FieldBox label="Options">
+              <FieldBox label={"Опции"}>
                 <Textarea
                   value={optionsToText(question.options)}
                   onChange={(event) =>
                     updateQuestion(index, { options: textToOptions(event.target.value) })
                   }
                   rows={4}
-                  placeholder={"One option per line\nRemote\nHybrid\nOn-site"}
+                  placeholder={"Одна опция на линию. Удаленный гибридный вариант на месте."}
                   className={fieldBoxControlClassName}
                 />
               </FieldBox>
-              <FieldBox label="Option descriptions (optional, same order)">
+              <FieldBox label={"Описания опций (необязательно, в том же порядке)"}>
                 <Textarea
                   value={descriptionsToText(question.optionDescriptions)}
                   onChange={(event) =>
@@ -313,7 +310,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
                     })
                   }
                   rows={4}
-                  placeholder={"One description per option\nWork from anywhere\nSplit time between home and office"}
+                  placeholder={"Одно описание для каждого варианта. Работа из любого места. Разделение времени между домом и офисом."}
                   className={fieldBoxControlClassName}
                 />
               </FieldBox>
@@ -322,16 +319,16 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
 
           {question.type === "consent" ? (
             <div className="grid gap-3 md:grid-cols-2">
-              <FieldBox label="Accept label">
+              <FieldBox label={"Принять этикетку"}>
                 <Input
-                  value={question.agreeLabel ?? "I agree"}
+                  value={question.agreeLabel ?? "Я согласен"}
                   onChange={(event) => updateQuestion(index, { agreeLabel: event.target.value })}
                   className={fieldBoxControlClassName}
                 />
               </FieldBox>
-              <FieldBox label="Decline label">
+              <FieldBox label={"Отклонить ярлык"}>
                 <Input
-                  value={question.disagreeLabel ?? "I do not agree"}
+                  value={question.disagreeLabel ?? "Я не согласен"}
                   onChange={(event) => updateQuestion(index, { disagreeLabel: event.target.value })}
                   className={fieldBoxControlClassName}
                 />
@@ -348,7 +345,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
                     updateQuestion(index, { required: checked === true })
                   }
                 />
-                {question.type === "consent" ? "Require agreement" : "Required"}
+                {question.type === "consent" ? "Требовать согласия" : "Требуется"}
               </label>
             ) : <span />}
             <Button
@@ -359,8 +356,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
               onClick={() => removeQuestion(index)}
             >
               <Trash2 className="size-4" />
-              Remove
-            </Button>
+              {"Удалить "}</Button>
           </div>
         </div>
       ))}
@@ -375,8 +371,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
           }
         >
           <Plus className="size-4" />
-          Add question
-        </Button>
+          {"Добавить вопрос "}</Button>
         {aiContext ? (
           <AiButton
             type="button"
@@ -384,10 +379,9 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
             variant="ghost"
             onClick={generateWithAI}
             loading={isGenerating}
-            loadingText="Suggesting"
+            loadingText={"Предлагая"}
           >
-            Suggest with AI
-          </AiButton>
+            {"Предложить с помощью ИИ "}</AiButton>
         ) : null}
       </div>
     </div>

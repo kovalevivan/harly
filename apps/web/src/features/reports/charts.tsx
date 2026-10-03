@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 /**
  * Reports chart primitives , hand-built, dependency-free SVG.
  *
@@ -73,7 +74,7 @@ function smoothPath(points: { x: number; y: number }[]): string {
   return d;
 }
 
-const fmt = new Intl.NumberFormat("en");
+const fmt = new Intl.NumberFormat("ru-RU");
 
 // ── Trend chart , multi-series area + line with inspector ────────────────────
 
@@ -161,7 +162,7 @@ export function TrendChart({ series }: { series: TrendSeries[] }) {
           height={H}
           className="block w-full select-none"
           role="img"
-          aria-label="Hiring trend over time"
+          aria-label={"Тенденция найма с течением времени"}
           onMouseLeave={() => setActive(Math.max(n - 1, 0))}
         >
           <defs>
@@ -304,7 +305,7 @@ export function FunnelChart({ stages }: { stages: FunnelDatum[] }) {
           transition={{ duration: 0.25, ease: EASE_OUT, delay: i * 0.04 }}
           className="grid grid-cols-[minmax(90px,120px)_1fr_auto] items-center gap-3 sm:gap-4"
         >
-          <span className="truncate text-sm font-medium text-near-ink">{stage.name}</span>
+          <span className="truncate text-sm font-medium text-near-ink">{localizeSystemText(stage.name)}</span>
           <span className="relative h-7 overflow-hidden rounded-lg bg-warm-paper">
             <span
               className="absolute inset-y-0 left-0 rounded-lg transition-[width] duration-300"
@@ -318,8 +319,8 @@ export function FunnelChart({ stages }: { stages: FunnelDatum[] }) {
         </motion.li>
       ))}
       <li className="flex items-center justify-between border-t border-hairline pt-2 text-xs text-soft-ink">
-        <span>Share of applied currently in each stage</span>
-        <span className="tabular-nums">{fmt.format(total)} active</span>
+        <span>{"Доля примененных в настоящее время на каждом этапе"}</span>
+        <span className="tabular-nums">{fmt.format(total)} {"активных"}</span>
       </li>
     </ul>
   );
@@ -390,8 +391,8 @@ export function SourceBars({ sources }: { sources: SourceDatum[] }) {
             </span>
             <span className="flex min-w-0 flex-col gap-1">
               <span className="flex items-baseline justify-between text-[11px] tabular-nums text-soft-ink">
-                <span>{fmt.format(row.candidates)} candidates</span>
-                <span>{fmt.format(row.hires)} hired</span>
+                <span>{fmt.format(row.candidates)} {"кандидатов"}</span>
+                <span>{fmt.format(row.hires)} {"нанято"}</span>
               </span>
               <span className="relative h-5 overflow-hidden rounded-lg bg-warm-paper">
                 <span
@@ -421,13 +422,13 @@ export function Histogram({ data, color = "var(--chart-2)" }: { data: { bucket: 
   if (total === 0) {
     return (
       <div className="flex h-40 flex-col items-center justify-center gap-1 text-center">
-        <p className="text-sm text-soft-ink">No hires yet</p>
-        <p className="text-xs text-soft-ink">Distribution appears once roles are filled.</p>
+        <p className="text-sm text-soft-ink">{"Найма пока нет"}</p>
+        <p className="text-xs text-soft-ink">{"Распределение появляется после заполнения ролей."}</p>
       </div>
     );
   }
 
-  const summary = `Time to hire distribution. ${data.map((d) => `${d.bucket}: ${d.count}`).join("; ")}.`;
+  const summary = `Время нанимать дистрибьюторов. ${data.map((d) => `${d.bucket}: ${d.count}`).join("; ")}.`;
 
   return (
     <div className="flex h-44 items-end gap-2" role="img" aria-label={summary}>

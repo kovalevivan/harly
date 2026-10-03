@@ -23,17 +23,16 @@ export default async function PeoplePage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">People</h1>
+        <h1 className="text-xl font-semibold tracking-tight">{"Люди"}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Everyone on the team, with contact details, specialties, and availability.
-        </p>
+          {"Все члены команды, с контактными данными, специальностями и доступностью. "}</p>
       </div>
 
       {people.length === 0 ? (
         <EmptyState
           icon={UserRound}
-          title="No teammates yet"
-          description="Invite people from Settings → Members to see them here."
+          title={"Товарищей по команде пока нет"}
+          description={"Пригласите людей из «Настройки» → «Участники», чтобы увидеть их здесь."}
         />
       ) : (
         <PeopleTable rows={people} />

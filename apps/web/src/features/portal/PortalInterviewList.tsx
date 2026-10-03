@@ -18,7 +18,7 @@ type PortalInterviewListProps = {
 };
 
 function formatTimeRange(scheduledAt: Date, durationMins: number): string {
-  const fmt = new Intl.DateTimeFormat("en-US", {
+  const fmt = new Intl.DateTimeFormat("ru-RU", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -57,8 +57,7 @@ function InterviewAction({ interview }: { interview: PortalInterview }) {
         className="flex shrink-0 items-center gap-2 rounded-lg bg-pine px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-pine-strong active:scale-[0.98]"
       >
         <VideoCameraIcon className="size-4" />
-        Join
-      </a>
+        {"Присоединяйтесь "}</a>
     );
   }
 
@@ -75,8 +74,7 @@ function InterviewAction({ interview }: { interview: PortalInterview }) {
         className="flex shrink-0 items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted active:scale-[0.98]"
       >
         <MapPinIcon className="size-4" />
-        Directions
-      </a>
+        {"Направления "}</a>
     );
   }
 
@@ -85,8 +83,7 @@ function InterviewAction({ interview }: { interview: PortalInterview }) {
     return (
       <span className="flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground">
         <PhoneIcon className="size-4" />
-        Phone call
-      </span>
+        {"Телефонный звонок "}</span>
     );
   }
 
@@ -97,7 +94,7 @@ function InterviewAction({ interview }: { interview: PortalInterview }) {
         {/* eslint-disable-next-line @next/next/no-img-element -- external URL */}
         <img
           src={interview.interviewerImage}
-          alt={interview.interviewerName ?? "Interviewer"}
+          alt={interview.interviewerName ?? "Интервьюер"}
           className="size-9 rounded-full object-cover ring-2 ring-background"
         />
       </div>
@@ -113,14 +110,14 @@ export function PortalInterviewList({
   heading,
 }: PortalInterviewListProps) {
   const isPast = variant === "past";
-  const title = heading ?? (isPast ? "Past interviews" : "Interviews");
+  const title = heading ?? (isPast ? "Прошлые интервью" : "Собеседования");
 
   return (
     <div>
       <h2 className="mb-4 text-lg font-semibold text-foreground">{title}</h2>
       {interviews.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          {isPast ? "No past interviews." : "No interviews scheduled yet."}
+          {isPast ? "Никаких прошлых интервью." : "Собеседований пока не запланировано."}
         </p>
       ) : (
         <div className="space-y-3">

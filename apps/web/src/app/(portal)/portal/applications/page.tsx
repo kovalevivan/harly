@@ -66,10 +66,9 @@ export default async function PortalApplicationsPage() {
     <PortalShell>
       <div className="mx-auto max-w-3xl space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">My applications</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">{"Мои отклики"}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Review the status and next steps for each application.
-          </p>
+            {"Просмотрите статус и дальнейшие действия для каждого приложения. "}</p>
         </div>
 
         {candidate && (
@@ -79,12 +78,12 @@ export default async function PortalApplicationsPage() {
         {applicationsRows.length === 0 ? (
           <PortalEmptyState
             icon={BriefcaseIcon}
-            title="No applications yet"
-            description="Explore open positions and find your next opportunity."
-            cta={{ label: "Browse positions", href: "/portal/jobs" as Route }}
+            title={"Пока нет заявок"}
+            description={"Изучите открытые вакансии и найдите следующую возможность."}
+            cta={{ label: "Просмотр позиций", href: "/portal/jobs" as Route }}
           />
         ) : (
-          <div className="space-y-3" role="list" aria-label="My applications">
+          <div className="space-y-3" role="list" aria-label={"Мои отклики"}>
             {applicationsRows.map((application) => (
               <Link
                 key={application.id}
@@ -98,16 +97,15 @@ export default async function PortalApplicationsPage() {
                       {application.jobTitle}
                     </h2>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {[application.jobDepartment, application.jobLocation].filter(Boolean).join(" · ") || "Application submitted"}
+                      {[application.jobDepartment, application.jobLocation].filter(Boolean).join(" · ") || "Заявка отправлена"}
                     </p>
                   </div>
                   <PortalStatusBadge status={application.status} />
                 </div>
                 <div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted-foreground">
-                  <span>Applied {formatShort(application.appliedAt)}</span>
+                  <span>{"Отклик "}{formatShort(application.appliedAt)}</span>
                   <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                    View application
-                    <CaretRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                    {"Посмотреть заявку "}<CaretRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </div>
               </Link>

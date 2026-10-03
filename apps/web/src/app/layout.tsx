@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CookiePanel } from "@/components/CookieConsentBanner";
-import { LanguageController } from "@/components/locale/LanguageController";
 import { getHarlyPublicOrigin } from "@/lib/public-origin";
 
 import "./globals.css";
@@ -42,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(getHarlyPublicOrigin()),
     title: "Harly",
-    description: "Open-source applicant tracking system for modern teams.",
+    description: "Система отслеживания кандидатов с открытым исходным кодом для современных команд.",
     icons: {
       icon: "/favicon.svg",
     },
@@ -77,7 +76,6 @@ export default function RootLayout({
           <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           <Toaster position="bottom-right" richColors closeButton />
           <CookiePanel />
-          <LanguageController />
         </ThemeProvider>
       </body>
     </html>

@@ -58,8 +58,7 @@ export default async function Setup2FAPage() {
             href="/"
             className="font-display text-lg tracking-tight text-pine"
           >
-            Harly
-          </Link>
+            {"Харли "}</Link>
         </header>
 
         <main className="flex flex-1 flex-col items-center justify-center px-6 pb-20">
@@ -68,7 +67,7 @@ export default async function Setup2FAPage() {
               <div className="mb-6 flex justify-center">
                 <Image
                   src={membership.logo}
-                  alt={membership.name ?? "Workspace"}
+                  alt={membership.name ?? "Рабочая область"}
                   width={56}
                   height={56}
                   className="h-14 w-14 rounded-xl object-cover"
@@ -77,15 +76,11 @@ export default async function Setup2FAPage() {
               </div>
             )}
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-pine">
-              Security required
-            </p>
+              {"Требуется безопасность "}</p>
             <h1 className="mt-3 text-center font-display text-3xl tracking-tight text-foreground">
-              Set up two-factor authentication
-            </h1>
+              {"Настройте двухфакторную аутентификацию "}</h1>
             <p className="mt-2 text-center text-sm leading-6 text-muted-foreground">
-              Your workspace requires 2FA. Set it up below to continue to the
-              dashboard.
-            </p>
+              {"Ваше рабочее пространство требует 2FA. Настройте его ниже, чтобы перейти к панели управления. "}</p>
 
             <div className="mt-10">
               <Setup2FAForm />

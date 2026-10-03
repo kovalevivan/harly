@@ -26,11 +26,9 @@ export default async function PortalNotificationsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Notifications
-          </h1>
+            {"Уведомления "}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Updates on your applications and interviews
-          </p>
+            {"Обновления по вашим заявлениям и собеседованиям "}</p>
         </div>
         <PortalNotificationsList notifications={notifications} />
       </div>

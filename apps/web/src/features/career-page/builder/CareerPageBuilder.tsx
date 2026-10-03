@@ -82,12 +82,12 @@ export function CareerPageBuilder({
     startSave(async () => {
       const result = await saveCareerPageConfigAction(config);
       if (result.success) {
-        toast.success("Career page saved. It's live.");
+        toast.success("Страница карьеры сохранена. Это в прямом эфире.");
         setDirty(false);
         setJustSaved(true);
         window.setTimeout(() => setJustSaved(false), 2000);
       } else {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
       }
     });
   }
@@ -137,8 +137,7 @@ export function CareerPageBuilder({
       ) : (
         <div className="flex w-full max-w-[440px] shrink-0 items-center justify-center border-r border-border bg-paper-raised p-8">
           <p className="text-center text-sm text-ink-soft">
-            Pick a template to start designing your career page.
-          </p>
+            {"Выберите шаблон, чтобы начать создавать страницу своей карьеры. "}</p>
         </div>
       )}
 
@@ -165,7 +164,7 @@ export function CareerPageBuilder({
                       ? "bg-sage text-pine"
                       : "text-ink-soft hover:text-foreground",
                   )}
-                  aria-label={`${d} preview`}
+                  aria-label={`${d} предварительный просмотр`}
                   aria-pressed={device === d}
                 >
                   <Icon className="size-4" />
@@ -189,8 +188,7 @@ export function CareerPageBuilder({
             </PreviewFrame>
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-ink-soft">
-              Choose a template to see the live preview.
-            </div>
+              {"Выберите шаблон, чтобы просмотреть его в реальном времени. "}</div>
           )}
         </div>
       </div>

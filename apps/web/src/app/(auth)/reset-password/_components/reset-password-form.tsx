@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,11 +29,11 @@ export function ResetPasswordForm({
     setError(null);
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError("Пароль должен быть не менее 8 символов.");
       return;
     }
     if (password !== confirm) {
-      setError("Passwords don't match.");
+      setError("Пароли не совпадают.");
       return;
     }
     if (!token) return;
@@ -47,12 +48,12 @@ export function ResetPasswordForm({
       if (result.error) {
         setError(
           result.error.message ??
-            "This reset link is invalid or has expired. Request a new one.",
+            "Эта ссылка для сброса недействительна или срок ее действия истек. Запросите новый.",
         );
         return;
       }
 
-      toast.success("Password updated. Sign in with your new password.");
+      toast.success("Пароль обновлен. Войдите в систему, используя новый пароль.");
       router.push("/login");
     } finally {
       setIsPending(false);
@@ -63,14 +64,12 @@ export function ResetPasswordForm({
     return (
       <div className="auth-stagger space-y-4">
         <p className="text-sm leading-6 text-foreground">
-          This password reset link is invalid or has expired.
-        </p>
+          {"Эта ссылка для сброса пароля недействительна или срок ее действия истек. "}</p>
         <Link
           href="/forgot-password"
           className="inline-block text-sm font-medium text-foreground underline-offset-4 hover:underline"
         >
-          Request a new reset link
-        </Link>
+          {"Запросить новую ссылку для сброса "}</Link>
       </div>
     );
   }
@@ -82,8 +81,7 @@ export function ResetPasswordForm({
           htmlFor="new-password"
           className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
         >
-          New password
-        </label>
+          {"Новый пароль "}</label>
         <input
           id="new-password"
           name="new-password"
@@ -94,7 +92,7 @@ export function ResetPasswordForm({
             setPassword(e.target.value);
             setError(null);
           }}
-          placeholder="At least 8 characters"
+          placeholder={"Минимум 8 символов"}
           className="auth-field mt-2 w-full border-0 border-b border-input bg-transparent pb-2.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-ring"
         />
       </div>
@@ -104,8 +102,7 @@ export function ResetPasswordForm({
           htmlFor="confirm-password"
           className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
         >
-          Confirm password
-        </label>
+          {"Подтвердите пароль "}</label>
         <input
           id="confirm-password"
           name="confirm-password"
@@ -116,12 +113,12 @@ export function ResetPasswordForm({
             setConfirm(e.target.value);
             setError(null);
           }}
-          placeholder="Repeat your new password"
+          placeholder={"Повторите новый пароль"}
           className="auth-field mt-2 w-full border-0 border-b border-input bg-transparent pb-2.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-ring"
         />
       </div>
 
-      {error ? <p className="text-center text-sm text-danger-rust">{error}</p> : null}
+      {error ? <p className="text-center text-sm text-danger-rust">{localizeSystemText(error)}</p> : null}
 
       <button
         type="submit"
@@ -132,10 +129,10 @@ export function ResetPasswordForm({
         {isPending ? (
           <>
             <AuthSpinner />
-            <span>Updating…</span>
+            <span>{"Обновление…"}</span>
           </>
         ) : (
-          <span>Update password</span>
+          <span>{"Обновить пароль"}</span>
         )}
       </button>
     </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Copy, Redo2, Trash2, Undo2 } from "lucide-react";
 
@@ -224,10 +225,10 @@ export function EditorWorkspace({
       const positions = await layoutGraph(state.graph);
       if (graphRef.current === state.graph)
         dispatch({ type: "apply-layout", positions });
-      else setLayoutError("The workflow changed while arranging. Try again.");
+      else setLayoutError("Во время аранжировки изменился рабочий процесс. Попробуйте еще раз.");
     } catch {
       setLayoutError(
-        "Could not arrange the workflow. Your positions have been preserved.",
+        "Не удалось наладить рабочий процесс. Ваши позиции сохранены.",
       );
     } finally {
       arranging.current = false;
@@ -290,46 +291,46 @@ export function EditorWorkspace({
               type="button"
               onClick={() => dispatch({ type: "undo" })}
               disabled={!state.past.length}
-              title="Undo (Cmd+Z)"
-              aria-label="Undo"
+              title={"Отменить (Cmd+Z)"}
+              aria-label={"Отменить"}
               className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-soft-kraft disabled:opacity-30"
             >
               <Undo2 className="size-3.5" />
-              <span className="hidden sm:inline">Undo</span>
+              <span className="hidden sm:inline">{"Отменить"}</span>
             </button>
             <button
               type="button"
               onClick={() => dispatch({ type: "redo" })}
               disabled={!state.future.length}
-              title="Redo (Cmd+Shift+Z)"
-              aria-label="Redo"
+              title={"Повторить (Cmd+Shift+Z)"}
+              aria-label={"Повторить"}
               className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-soft-kraft disabled:opacity-30"
             >
               <Redo2 className="size-3.5" />
-              <span className="hidden sm:inline">Redo</span>
+              <span className="hidden sm:inline">{"Повторить"}</span>
             </button>
             <div className="mx-1 h-3.5 w-px bg-hairline-c" aria-hidden />
             <button
               type="button"
               onClick={() => dispatch({ type: "duplicate-selection" })}
               disabled={!selectedId}
-              title="Duplicate selected step (Cmd+D)"
-              aria-label="Duplicate selected step"
+              title={"Дублировать выбранный шаг (Cmd+D)"}
+              aria-label={"Дублировать выбранный шаг"}
               className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-soft-kraft disabled:opacity-30"
             >
               <Copy className="size-3.5" />
-              <span className="hidden sm:inline">Duplicate</span>
+              <span className="hidden sm:inline">{"Дублировать"}</span>
             </button>
             <button
               type="button"
               onClick={() => dispatch({ type: "delete-selection" })}
               disabled={!selectedId && !state.selection.edgeIds.length}
-              title="Delete selected (Backspace / Delete)"
-              aria-label="Delete selected"
+              title={"Удалить выбранное (Backspace/Удалить)"}
+              aria-label={"Удалить выбранное"}
               className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium text-danger-rust transition-colors hover:bg-danger-rust/10 disabled:opacity-30"
             >
               <Trash2 className="size-3.5" />
-              <span className="hidden sm:inline">Delete</span>
+              <span className="hidden sm:inline">{"Удалить"}</span>
             </button>
           </div>
         </div>
@@ -339,22 +340,20 @@ export function EditorWorkspace({
             className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium"
             onClick={() => setLibraryOpen(true)}
           >
-            Blocks
-          </button>
+            {"Блоки "}</button>
           <button
             type="button"
             className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium xl:hidden"
             onClick={() => setShowCanvas((open) => !open)}
           >
-            {showCanvas ? "Steps" : "Canvas"}
+            {showCanvas ? "Шаги" : "Холст"}
           </button>
           <button
             type="button"
             className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium md:hidden"
             onClick={() => setInspectorOpen(true)}
           >
-            Configure
-          </button>
+            {"Настроить "}</button>
         </div>
         {state.lastError ? (
           <p className="border-b border-danger-rust/20 bg-danger-rust/5 px-3 py-2 text-xs text-danger-rust">
@@ -366,7 +365,7 @@ export function EditorWorkspace({
             role="status"
             className="border-b border-border px-3 py-2 text-xs text-danger-rust"
           >
-            {layoutError}
+            {localizeSystemText(layoutError)}
           </p>
         ) : null}
         <div className={cn("relative min-h-0 flex-1", !showCanvas && "hidden xl:block")}>
@@ -427,10 +426,9 @@ export function EditorWorkspace({
           className="w-[264px] bg-warm-paper p-0 sm:max-w-[264px]"
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Blocks</SheetTitle>
+            <SheetTitle>{"Блоки"}</SheetTitle>
             <SheetDescription>
-              Choose a block to add to this workflow.
-            </SheetDescription>
+              {"Выберите блок, который нужно добавить в этот рабочий процесс. "}</SheetDescription>
           </SheetHeader>
           {library}
         </SheetContent>
@@ -445,10 +443,9 @@ export function EditorWorkspace({
           className="w-full bg-warm-paper p-0 sm:max-w-[360px]"
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Configure step</SheetTitle>
+            <SheetTitle>{"Шаг настройки"}</SheetTitle>
             <SheetDescription>
-              Configure the selected workflow step.
-            </SheetDescription>
+              {"Настройте выбранный шаг рабочего процесса. "}</SheetDescription>
           </SheetHeader>
           {inspector}
         </SheetContent>

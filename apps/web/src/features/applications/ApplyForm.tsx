@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import {
   useActionState,
   useEffect,
@@ -191,7 +192,7 @@ function validateUrl(value: string): string | null {
     new URL(normalUrl);
     return null;
   } catch {
-    return "Enter a valid URL.";
+    return "Введите действительный URL-адрес.";
   }
 }
 
@@ -231,7 +232,7 @@ const inputIconClass = "pl-9";
 
 // Staggered entrance, matching the career templates' `reveal` pattern.
 const reveal =
-  "duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-backwards motion-reduce:animate-none";
+  "длительность-500 анимация постепенное появление слайд-вниз-снизу-3 режим заливки назад движение-уменьшение: анимация-нет";
 
 // Inline SVG icon components (brand icons from better-icons / Iconify)
 function LinkedInIcon({ className }: { className?: string }) {
@@ -349,7 +350,7 @@ function YesNoToggle({
       )}
     >
       <input type="hidden" name={name} value={value} />
-      {["Yes", "No"].map((option) => {
+      {["Да", "No"].map((option) => {
         const active = value === option;
         return (
           <button
@@ -424,7 +425,7 @@ function ConsentCheckbox({
           )}
         </span>
       </label>
-      {error ? <p className="text-sm text-red-500">{error}</p> : null}
+      {error ? <p className="text-sm text-red-500">{localizeSystemText(error)}</p> : null}
     </div>
   );
 }
@@ -726,7 +727,7 @@ export function ApplyForm({
     : null;
   const consentText =
     consentCheckboxText ||
-    "I agree to the privacy policy and consent to the processing of my personal data.";
+    "Я согласен с политикой конфиденциальности и даю согласие на обработку моих персональных данных.";
   const showPhone = isFieldEnabled(applicationConfig.sections.personal.phone);
   const showAddress = isFieldEnabled(
     applicationConfig.sections.personal.address,
@@ -859,7 +860,7 @@ export function ApplyForm({
         Record<Extract<keyof EducationEntry, string>, string[]>
       > = {};
       if (!entry.school?.trim()) {
-        entryErrors.school = ["School is required."];
+        entryErrors.school = ["Школа обязательна."];
       }
       if (Object.keys(entryErrors).length > 0) {
         nextEducationErrors[entry.id] = entryErrors;
@@ -871,10 +872,10 @@ export function ApplyForm({
         Record<Extract<keyof ExperienceEntry, string>, string[]>
       > = {};
       if (!entry.company?.trim()) {
-        entryErrors.company = ["Company is required."];
+        entryErrors.company = ["Требуется компания."];
       }
       if (!entry.title?.trim()) {
-        entryErrors.title = ["Job title is required."];
+        entryErrors.title = ["Требуется название должности."];
       }
       if (Object.keys(entryErrors).length > 0) {
         nextExperienceErrors[entry.id] = entryErrors;
@@ -907,12 +908,12 @@ export function ApplyForm({
 
       const value = answers[question.id]?.trim() ?? "";
       if (question.required && !value) {
-        nextQuestionErrors[question.id] = ["This question is required."];
+        nextQuestionErrors[question.id] = ["Этот вопрос обязателен."];
         continue;
       }
       if (question.type === "consent" && question.required && value !== "agree") {
         nextQuestionErrors[question.id] = [
-          "You must agree to continue with your application.",
+          "Вы должны согласиться продолжить рассмотрение вашего заявления.",
         ];
         continue;
       }
@@ -992,8 +993,8 @@ export function ApplyForm({
 
     setAutofillMessage(
       filledCount > 0
-        ? `Resume attached. Autofilled ${filledCount} field${filledCount === 1 ? "" : "s"}.`
-        : "Resume attached.",
+        ? `Резюме прилагается. Автозаполненное поле ${filledCount}${filledCount === 1 ? "" : "s"}.`
+        : "Резюме прилагается.",
     );
   }
 
@@ -1036,7 +1037,7 @@ export function ApplyForm({
 
       if (!parseResult.ok) {
         setAutofillMessage(
-          "Resume attached. We couldn't autofill fields from this file.",
+          "Резюме прилагается. Не удалось автозаполнить поля из этого файла.",
         );
         return;
       }
@@ -1048,7 +1049,7 @@ export function ApplyForm({
       setResumeError(
         error instanceof Error
           ? error.message
-          : "Unable to read this resume. Please try again.",
+          : "Невозможно прочитать это резюме. Пожалуйста, попробуйте еще раз.",
       );
     } finally {
       setIsUploadingResume(false);
@@ -1188,7 +1189,7 @@ export function ApplyForm({
       setPhotoError(
         error instanceof Error
           ? error.message
-          : "Unable to upload this photo. Please try again.",
+          : "Не удалось загрузить это фото. Пожалуйста, попробуйте еще раз.",
       );
     } finally {
       setIsUploadingPhoto(false);
@@ -1205,7 +1206,7 @@ export function ApplyForm({
     }
 
     if (applicationConfig.resumeRequired && !resumeFile) {
-      setResumeError("Resume is required.");
+      setResumeError("Резюме обязательно.");
       return;
     }
 
@@ -1220,7 +1221,7 @@ export function ApplyForm({
 
     if (showConsentCheckbox && !consentGiven) {
       setConsentError(
-        "You must agree to the privacy policy to submit your application.",
+        "Чтобы подать заявку, вы должны согласиться с политикой конфиденциальности.",
       );
       return;
     }
@@ -1277,7 +1278,7 @@ export function ApplyForm({
       setResumeError(
         error instanceof Error
           ? error.message
-          : "Unable to upload resume. Please try again.",
+          : "Невозможно загрузить резюме. Пожалуйста, попробуйте еще раз.",
       );
     }
   }
@@ -1328,11 +1329,9 @@ export function ApplyForm({
           <Check className="size-6" strokeWidth={2.5} />
         </span>
         <p className="mt-4 text-xs font-medium uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">
-          Application submitted
-        </p>
+          {"Заявка отправлена "}</p>
         <h2 className="mt-2 text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-          Thank you for applying
-        </h2>
+          {"Спасибо за заявку "}</h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-600 dark:text-zinc-400">
           {state.message}
         </p>
@@ -1346,8 +1345,7 @@ export function ApplyForm({
     <>
       {isUploadingResume ? (
         <p className="mt-2 rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">
-          Reading your resume…
-        </p>
+          {"Читая ваше резюме… "}</p>
       ) : autofillMessage ? (
         <p className="mt-2 rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">
           {autofillMessage}
@@ -1360,8 +1358,7 @@ export function ApplyForm({
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
           {detected.experienceYears !== undefined ? (
             <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-              {detected.experienceYears}+ yrs experience
-            </span>
+              {detected.experienceYears}{"+ многолетний опыт "}</span>
           ) : null}
           {detected.education ? (
             <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
@@ -1379,7 +1376,7 @@ export function ApplyForm({
         </div>
       ) : null}
       {resumeError ? (
-        <p className="mt-2 text-xs font-medium text-red-600">{resumeError}</p>
+        <p className="mt-2 text-xs font-medium text-red-600">{localizeSystemText(resumeError)}</p>
       ) : null}
       <FieldError errors={fieldErrorsFor(state, "resumeUrl")} />
     </>
@@ -1389,15 +1386,14 @@ export function ApplyForm({
     <>
       {isUploadingPhoto ? (
         <p className="mt-2 rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">
-          Uploading your photo…
-        </p>
+          {"Загрузка фотографии… "}</p>
       ) : photoFile ? (
         <p className="mt-2 rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">
           {photoFile.name}
         </p>
       ) : null}
       {photoError ? (
-        <p className="mt-2 text-xs font-medium text-red-600">{photoError}</p>
+        <p className="mt-2 text-xs font-medium text-red-600">{localizeSystemText(photoError)}</p>
       ) : null}
       <FieldError errors={fieldErrorsFor(state, "photoUrl")} />
     </>
@@ -1431,10 +1427,9 @@ export function ApplyForm({
       <div key={entry.id} className={entryCardClass}>
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className={subLabelClass}>Education {index + 1}</p>
+            <p className={subLabelClass}>{"Образование "}{index + 1}</p>
             <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Add a school, degree, and dates if relevant.
-            </p>
+              {"Добавьте школу, степень и даты, если это необходимо. "}</p>
           </div>
           <button
             type="button"
@@ -1442,8 +1437,7 @@ export function ApplyForm({
             className={removeButtonClass}
           >
             <TrashIcon className="size-3.5" />
-            Remove
-          </button>
+            {"Удалить "}</button>
         </div>
         <FieldError
           errors={mergeErrors(entryErrors._entry, clientErrors._entry)}
@@ -1451,8 +1445,7 @@ export function ApplyForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
             <FieldLabel ashby={flatVariant} required>
-              School
-            </FieldLabel>
+              {"Школа "}</FieldLabel>
             <input
               id={`education-school-${entry.id}`}
               name={`education-school-${entry.id}`}
@@ -1461,7 +1454,7 @@ export function ApplyForm({
               onChange={(event) =>
                 updateEducationEntry(entry.id, "school", event.target.value)
               }
-              placeholder="University of..."
+              placeholder={"Университет..."}
               className={`${input} mt-1.5`}
             />
             <FieldError
@@ -1472,7 +1465,7 @@ export function ApplyForm({
             />
           </label>
           <label className="block">
-            <FieldLabel ashby={flatVariant}>Degree</FieldLabel>
+            <FieldLabel ashby={flatVariant}>{"Степень"}</FieldLabel>
             <input
               id={`education-degree-${entry.id}`}
               name={`education-degree-${entry.id}`}
@@ -1481,7 +1474,7 @@ export function ApplyForm({
               onChange={(event) =>
                 updateEducationEntry(entry.id, "degree", event.target.value)
               }
-              placeholder="Bachelor's degree"
+              placeholder={"Степень бакалавра"}
               className={`${input} mt-1.5`}
             />
             <FieldError
@@ -1492,7 +1485,7 @@ export function ApplyForm({
             />
           </label>
           <label className="block">
-            <FieldLabel ashby={flatVariant}>Field of study</FieldLabel>
+            <FieldLabel ashby={flatVariant}>{"Область исследования"}</FieldLabel>
             <input
               id={`education-field-${entry.id}`}
               name={`education-field-${entry.id}`}
@@ -1501,7 +1494,7 @@ export function ApplyForm({
               onChange={(event) =>
                 updateEducationEntry(entry.id, "field", event.target.value)
               }
-              placeholder="Computer science"
+              placeholder={"Информатика"}
               className={`${input} mt-1.5`}
             />
             <FieldError
@@ -1513,7 +1506,7 @@ export function ApplyForm({
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <FieldLabel ashby={flatVariant}>Start date</FieldLabel>
+              <FieldLabel ashby={flatVariant}>{"Дата начала"}</FieldLabel>
               <input
                 id={`education-startDate-${entry.id}`}
                 name={`education-startDate-${entry.id}`}
@@ -1540,7 +1533,7 @@ export function ApplyForm({
               />
             </label>
             <label className="block">
-              <FieldLabel ashby={flatVariant}>End date</FieldLabel>
+              <FieldLabel ashby={flatVariant}>{"Дата окончания"}</FieldLabel>
               <input
                 id={`education-endDate-${entry.id}`}
                 name={`education-endDate-${entry.id}`}
@@ -1565,7 +1558,7 @@ export function ApplyForm({
           </div>
         </div>
         <label className="block">
-          <FieldLabel ashby={flatVariant}>Description</FieldLabel>
+          <FieldLabel ashby={flatVariant}>{"Описание"}</FieldLabel>
           <textarea
             id={`education-description-${entry.id}`}
             name={`education-description-${entry.id}`}
@@ -1574,7 +1567,7 @@ export function ApplyForm({
             onChange={(event) =>
               updateEducationEntry(entry.id, "description", event.target.value)
             }
-            placeholder="Achievements, honors, thesis, or relevant notes."
+            placeholder={"Достижения, награды, диссертации или соответствующие примечания."}
             className={`${textarea} mt-1.5`}
           />
           <FieldError
@@ -1600,10 +1593,9 @@ export function ApplyForm({
       <div key={entry.id} className={entryCardClass}>
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className={subLabelClass}>Experience {index + 1}</p>
+            <p className={subLabelClass}>{"Опыт "}{index + 1}</p>
             <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Add your role, company, and scope of work.
-            </p>
+              {"Укажите свою роль, компанию и объем работы. "}</p>
           </div>
           <button
             type="button"
@@ -1611,8 +1603,7 @@ export function ApplyForm({
             className={removeButtonClass}
           >
             <TrashIcon className="size-3.5" />
-            Remove
-          </button>
+            {"Удалить "}</button>
         </div>
         <FieldError
           errors={mergeErrors(entryErrors._entry, clientErrors._entry)}
@@ -1620,8 +1611,7 @@ export function ApplyForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
             <FieldLabel ashby={flatVariant} required>
-              Company
-            </FieldLabel>
+              {"Компания "}</FieldLabel>
             <input
               id={`experience-company-${entry.id}`}
               name={`experience-company-${entry.id}`}
@@ -1630,7 +1620,7 @@ export function ApplyForm({
               onChange={(event) =>
                 updateExperienceEntry(entry.id, "company", event.target.value)
               }
-              placeholder="Company name"
+              placeholder={"Название компании"}
               className={`${input} mt-1.5`}
             />
             <FieldError
@@ -1646,8 +1636,7 @@ export function ApplyForm({
           </label>
           <label className="block">
             <FieldLabel ashby={flatVariant} required>
-              Job title
-            </FieldLabel>
+              {"Должность "}</FieldLabel>
             <input
               id={`experience-title-${entry.id}`}
               name={`experience-title-${entry.id}`}
@@ -1656,7 +1645,7 @@ export function ApplyForm({
               onChange={(event) =>
                 updateExperienceEntry(entry.id, "title", event.target.value)
               }
-              placeholder="Senior software engineer"
+              placeholder={"Старший инженер-программист"}
               className={`${input} mt-1.5`}
             />
             <FieldError
@@ -1667,7 +1656,7 @@ export function ApplyForm({
             />
           </label>
           <label className="block">
-            <FieldLabel ashby={flatVariant}>Location</FieldLabel>
+            <FieldLabel ashby={flatVariant}>{"Расположение"}</FieldLabel>
             <input
               id={`experience-location-${entry.id}`}
               name={`experience-location-${entry.id}`}
@@ -1676,7 +1665,7 @@ export function ApplyForm({
               onChange={(event) =>
                 updateExperienceEntry(entry.id, "location", event.target.value)
               }
-              placeholder="Remote, Santiago, Chile"
+              placeholder={"Удаленный, Сантьяго, Чили"}
               className={`${input} mt-1.5`}
             />
             <FieldError
@@ -1692,7 +1681,7 @@ export function ApplyForm({
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <FieldLabel ashby={flatVariant}>Start date</FieldLabel>
+              <FieldLabel ashby={flatVariant}>{"Дата начала"}</FieldLabel>
               <input
                 id={`experience-startDate-${entry.id}`}
                 name={`experience-startDate-${entry.id}`}
@@ -1719,7 +1708,7 @@ export function ApplyForm({
               />
             </label>
             <label className="block">
-              <FieldLabel ashby={flatVariant}>End date</FieldLabel>
+              <FieldLabel ashby={flatVariant}>{"Дата окончания"}</FieldLabel>
               <input
                 id={`experience-endDate-${entry.id}`}
                 name={`experience-endDate-${entry.id}`}
@@ -1755,10 +1744,9 @@ export function ApplyForm({
             }
             className="size-4 rounded border-zinc-300 text-[var(--board-primary)] focus:ring-[var(--board-primary)]"
           />
-          I currently work here
-        </label>
+          {"Сейчас я работаю здесь "}</label>
         <label className="block">
-          <FieldLabel ashby={flatVariant}>Description</FieldLabel>
+          <FieldLabel ashby={flatVariant}>{"Описание"}</FieldLabel>
           <textarea
             id={`experience-description-${entry.id}`}
             name={`experience-description-${entry.id}`}
@@ -1767,7 +1755,7 @@ export function ApplyForm({
             onChange={(event) =>
               updateExperienceEntry(entry.id, "description", event.target.value)
             }
-            placeholder="Scope, achievements, technologies, or impact."
+            placeholder={"Масштаб, достижения, технологии или влияние."}
             className={`${textarea} mt-1.5`}
           />
           <FieldError
@@ -1838,8 +1826,7 @@ export function ApplyForm({
               <div className={cn("space-y-4", reveal)} style={{ animationDelay: "0ms" }}>
                 <div className="border-b border-zinc-200 pb-2.5 dark:border-zinc-800">
                   <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                    Resume
-                  </h2>
+                    {"Резюме "}</h2>
                 </div>
                 {resumeFile ? (
                   <div className="flex items-center justify-between gap-3 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-800">
@@ -1858,8 +1845,7 @@ export function ApplyForm({
                       className="cursor-pointer text-sm font-medium underline underline-offset-2"
                       style={{ color: "var(--board-primary)" }}
                     >
-                      Replace
-                    </label>
+                      {"Заменить "}</label>
                   </div>
                 ) : (
                   <label
@@ -1878,7 +1864,7 @@ export function ApplyForm({
                       className="flex size-12 items-center justify-center rounded-full transition-transform duration-150 group-hover:-translate-y-0.5 motion-reduce:transform-none"
                       style={{
                         backgroundColor:
-                          "color-mix(in srgb, var(--board-primary) 10%, transparent)",
+                          "color-mix(в srgb, var(--board-primary) 10%, прозрачный)",
                         color: "var(--board-primary)",
                       }}
                       aria-hidden
@@ -1887,13 +1873,12 @@ export function ApplyForm({
                     </span>
                     <p className="text-sm text-zinc-700 dark:text-zinc-300">
                       <span className="font-semibold" style={{ color: "var(--board-primary)" }}>
-                        {isDragging ? "Drop here" : "Upload your resume"}
+                        {isDragging ? "Перетащите сюда" : "Загрузите свое резюме"}
                       </span>{" "}
-                      {isDragging ? "" : "or drag and drop"}
+                      {isDragging ? "" : "или перетащите"}
                     </p>
                     <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                      PDF, DOC, or DOCX · up to 10MB
-                    </p>
+                      {"PDF, DOC или DOCX · до 10 МБ "}</p>
                   </label>
                 )}
                 {resumeStatus}
@@ -1909,7 +1894,7 @@ export function ApplyForm({
                       className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-lg"
                       style={{
                         backgroundColor:
-                          "color-mix(in srgb, var(--board-primary) 12%, transparent)",
+                          "color-mix(в srgb, var(--board-primary) 12%, прозрачный)",
                         color: "var(--board-primary)",
                       }}
                       aria-hidden
@@ -1918,11 +1903,9 @@ export function ApplyForm({
                     </span>
                     <div>
                       <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                        Autofill from resume
-                      </p>
+                        {"Автозаполнение из резюме "}</p>
                       <p className="mt-1 max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                        Upload your resume to autofill key application fields.
-                      </p>
+                        {"Загрузите свое резюме, чтобы автоматически заполнить ключевые поля заявки. "}</p>
                     </div>
                   </div>
                   <label
@@ -1930,11 +1913,11 @@ export function ApplyForm({
                     className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-transform duration-150 active:scale-[0.98]"
                     style={{
                       borderColor:
-                        "color-mix(in srgb, var(--board-primary) 40%, transparent)",
+                        "color-mix(в srgb, var(--board-primary) 40%, прозрачный)",
                       color: "var(--board-primary)",
                     }}
                   >
-                    {resumeFile ? "Replace file" : "Upload file"}
+                    {resumeFile ? "Заменить файл" : "Загрузить файл"}
                   </label>
                 </div>
 
@@ -1966,15 +1949,15 @@ export function ApplyForm({
                       className="inline-flex h-10 items-center gap-2 rounded-lg border bg-white px-4 text-sm font-semibold transition-transform duration-150 group-active:scale-[0.98] dark:bg-zinc-900"
                       style={{
                         borderColor:
-                          "color-mix(in srgb, var(--board-primary) 40%, transparent)",
+                          "color-mix(в srgb, var(--board-primary) 40%, прозрачный)",
                         color: "var(--board-primary)",
                       }}
                     >
                       <Paperclip className="size-4" strokeWidth={2} />
-                      {isDragging ? "Drop here" : "Upload File"}
+                      {isDragging ? "Перетащите сюда" : "Загрузить файл"}
                     </span>
                     <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {isDragging ? "Release to upload" : "or drag and drop here"}
+                      {isDragging ? "Отпустите для загрузки" : "или перетащите сюда"}
                     </span>
                   </label>
                 )}
@@ -1989,8 +1972,7 @@ export function ApplyForm({
           ) : null}
 
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            <span className={requiredMarkClass}>*</span> Required fields
-          </p>
+            <span className={requiredMarkClass}>*</span> {"Обязательные поля "}</p>
 
           {/* Personal Information */}
           <section
@@ -1999,23 +1981,20 @@ export function ApplyForm({
           >
             <div className="flex items-center justify-between border-b border-zinc-200 pb-2.5 dark:border-zinc-800">
               <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                Personal Information
-              </h2>
+                {"Личная информация "}</h2>
               <button
                 type="button"
                 onClick={clearPersonalInfo}
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-100"
               >
                 <TrashIcon className="size-3.5" />
-                Clear
-              </button>
+                {"Очистить "}</button>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
                 <FieldLabel ashby required>
-                  First name
-                </FieldLabel>
+                  {"Имя "}</FieldLabel>
                 <input
                   name="firstName"
                   type="text"
@@ -2024,7 +2003,7 @@ export function ApplyForm({
                   onChange={(event) =>
                     updateField("firstName", event.target.value)
                   }
-                  placeholder="Type here..."
+                  placeholder={"Введите здесь..."}
                   className={`${input} mt-1.5`}
                 />
                 <FieldError errors={fieldErrorsFor(state, "firstName")} />
@@ -2032,8 +2011,7 @@ export function ApplyForm({
 
               <label className="block">
                 <FieldLabel ashby required>
-                  Last name
-                </FieldLabel>
+                  {"Фамилия "}</FieldLabel>
                 <input
                   name="lastName"
                   type="text"
@@ -2042,7 +2020,7 @@ export function ApplyForm({
                   onChange={(event) =>
                     updateField("lastName", event.target.value)
                   }
-                  placeholder="Type here..."
+                  placeholder={"Введите здесь..."}
                   className={`${input} mt-1.5`}
                 />
                 <FieldError errors={fieldErrorsFor(state, "lastName")} />
@@ -2051,15 +2029,14 @@ export function ApplyForm({
 
             <label className="block">
               <FieldLabel ashby required>
-                Email
-              </FieldLabel>
+                {"Электронная почта "}</FieldLabel>
               <input
                 name="email"
                 type="email"
                 autoComplete="email"
                 value={fields.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                placeholder="hello@example.com..."
+                placeholder={"привет@example.com..."}
                 className={`${input} mt-1.5`}
               />
               <FieldError errors={fieldErrorsFor(state, "email")} />
@@ -2073,14 +2050,13 @@ export function ApplyForm({
                     applicationConfig.sections.personal.photo,
                   )}
                 >
-                  Photo
-                </FieldLabel>
+                  {"Фото "}</FieldLabel>
                 <label
                   htmlFor="photoFile"
                   className="mt-1.5 flex cursor-pointer items-center justify-between rounded-lg border border-dashed border-zinc-300 px-4 py-3 text-sm text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                 >
                   <span>
-                    {photoFile ? photoFile.name : "Upload a profile photo"}
+                    {photoFile ? photoFile.name : "Загрузите фотографию профиля"}
                   </span>
                   <span className="text-xs text-zinc-500">PNG, JPG, WEBP</span>
                 </label>
@@ -2090,7 +2066,7 @@ export function ApplyForm({
 
             {showPhone ? (
               <label className="block">
-                <FieldLabel ashby>Phone</FieldLabel>
+                <FieldLabel ashby>{"Телефон"}</FieldLabel>
                 <PhoneInput
                   name="phone"
                   value={fields.phone}
@@ -2098,9 +2074,7 @@ export function ApplyForm({
                   className="mt-1.5"
                 />
                 <p className={hintClass}>
-                  The hiring team may use this number to contact you about this
-                  job.
-                </p>
+                  {"Команда по найму может использовать этот номер, чтобы связаться с вами по поводу этой вакансии. "}</p>
                 <FieldError errors={fieldErrorsFor(state, "phone")} />
               </label>
             ) : null}
@@ -2113,8 +2087,7 @@ export function ApplyForm({
                     applicationConfig.sections.personal.address,
                   )}
                 >
-                  Address
-                </FieldLabel>
+                  {"Адрес "}</FieldLabel>
                 <div className="relative mt-1.5">
                   <InputIcon>
                     <MapPin className="size-4" strokeWidth={1.8} />
@@ -2127,14 +2100,12 @@ export function ApplyForm({
                     onChange={(event) =>
                       updateField("address", event.target.value)
                     }
-                    placeholder="City, region, country"
+                    placeholder={"Город, регион, страна"}
                     className={`${input} ${inputIconClass}`}
                   />
                 </div>
                 <p className={hintClass}>
-                  Include your city, region, and country so the hiring team can
-                  evaluate your application.
-                </p>
+                  {"Укажите свой город, регион и страну, чтобы команда по найму могла оценить вашу заявку. "}</p>
                 <FieldError errors={fieldErrorsFor(state, "address")} />
               </label>
             ) : null}
@@ -2147,8 +2118,7 @@ export function ApplyForm({
                     applicationConfig.sections.personal.headline,
                   )}
                 >
-                  Headline
-                </FieldLabel>
+                  {"Заголовок "}</FieldLabel>
                 <input
                   name="headline"
                   type="text"
@@ -2156,7 +2126,7 @@ export function ApplyForm({
                   onChange={(event) =>
                     updateField("headline", event.target.value)
                   }
-                  placeholder="Senior backend engineer"
+                  placeholder={"Старший бэкэнд-инженер"}
                   className={`${input} mt-1.5`}
                 />
                 <FieldError errors={fieldErrorsFor(state, "headline")} />
@@ -2172,8 +2142,7 @@ export function ApplyForm({
             >
               <div className="border-b border-zinc-200 pb-2.5 dark:border-zinc-800">
                 <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Profile
-                </h2>
+                  {"Профиль "}</h2>
               </div>
               <div className="space-y-5">
                 {showEducation ? (
@@ -2181,16 +2150,14 @@ export function ApplyForm({
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                          Education
-                          {isFieldRequired(
+                          {"Образование "}{isFieldRequired(
                             applicationConfig.sections.profile.education,
                           ) ? (
                             <span className={requiredMarkClass}>*</span>
                           ) : null}
                         </p>
                         <p className={hintClass}>
-                          Add one or more education entries.
-                        </p>
+                          {"Добавьте одну или несколько записей об образовании. "}</p>
                       </div>
                       <button
                         id="education-add-button"
@@ -2200,8 +2167,7 @@ export function ApplyForm({
                         className={secondaryButtonClass}
                       >
                         <Plus className="size-4" strokeWidth={2} />
-                        Add education
-                      </button>
+                        {"Добавить образование "}</button>
                     </div>
                     <FieldError errors={educationFieldErrors} />
                     {educationEntries.length > 0 ? (
@@ -2217,16 +2183,14 @@ export function ApplyForm({
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                          Experience
-                          {isFieldRequired(
+                          {"Опыт "}{isFieldRequired(
                             applicationConfig.sections.profile.experience,
                           ) ? (
                             <span className={requiredMarkClass}>*</span>
                           ) : null}
                         </p>
                         <p className={hintClass}>
-                          Add one or more work experience entries.
-                        </p>
+                          {"Добавьте одну или несколько записей об опыте работы. "}</p>
                       </div>
                       <button
                         id="experience-add-button"
@@ -2236,8 +2200,7 @@ export function ApplyForm({
                         className={secondaryButtonClass}
                       >
                         <Plus className="size-4" strokeWidth={2} />
-                        Add experience
-                      </button>
+                        {"Добавить опыт "}</button>
                     </div>
                     <FieldError errors={experienceFieldErrors} />
                     {experienceEntries.length > 0 ? (
@@ -2259,8 +2222,7 @@ export function ApplyForm({
             >
               <div className="border-b border-zinc-200 pb-2.5 dark:border-zinc-800">
                 <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Links
-                </h2>
+                  {"Ссылки "}</h2>
               </div>
 
               {!showLinks &&
@@ -2271,8 +2233,7 @@ export function ApplyForm({
                   className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                 >
                   <Plus className="size-4" strokeWidth={2} />
-                  Add links
-                </button>
+                  {"Добавить ссылки "}</button>
               ) : (
                 <div className="space-y-4">
                   {applicationConfig.profileLinks.linkedin.enabled ? (
@@ -2286,8 +2247,7 @@ export function ApplyForm({
                         LinkedIn
                       </FieldLabel>
                       <p className={hintClass}>
-                        e.g.: linkedin.com/in/yourname
-                      </p>
+                        {"например: linkedin.com/in/ваше имя "}</p>
                       <div className="relative mt-1.5">
                         <InputIcon>
                           <LinkedInIcon className="size-4" />
@@ -2300,7 +2260,7 @@ export function ApplyForm({
                           onChange={(event) =>
                             updateField("linkedinUrl", event.target.value)
                           }
-                          placeholder="Type here..."
+                          placeholder={"Введите здесь..."}
                           className={`${input} ${inputIconClass}`}
                         />
                       </div>
@@ -2322,7 +2282,7 @@ export function ApplyForm({
                       >
                         GitHub
                       </FieldLabel>
-                      <p className={hintClass}>e.g.: github.com/yourname</p>
+                      <p className={hintClass}>{"например: github.com/ваше имя"}</p>
                       <div className="relative mt-1.5">
                         <InputIcon>
                           <GitHubIcon className="size-4" />
@@ -2335,7 +2295,7 @@ export function ApplyForm({
                           onChange={(event) =>
                             updateField("githubUrl", event.target.value)
                           }
-                          placeholder="Type here..."
+                          placeholder={"Введите здесь..."}
                           className={`${input} ${inputIconClass}`}
                         />
                       </div>
@@ -2355,9 +2315,8 @@ export function ApplyForm({
                           applicationConfig.profileLinks.website.required
                         }
                       >
-                        Portfolio or personal website
-                      </FieldLabel>
-                      <p className={hintClass}>e.g.: yoursite.com</p>
+                        {"Портфолио или личный сайт "}</FieldLabel>
+                      <p className={hintClass}>{"например: yoursite.com"}</p>
                       <div className="relative mt-1.5">
                         <InputIcon>
                           <Globe className="size-4" strokeWidth={1.8} />
@@ -2370,7 +2329,7 @@ export function ApplyForm({
                           onChange={(event) =>
                             updateField("websiteUrl", event.target.value)
                           }
-                          placeholder="Type here..."
+                          placeholder={"Введите здесь..."}
                           className={`${input} ${inputIconClass}`}
                         />
                       </div>
@@ -2395,8 +2354,7 @@ export function ApplyForm({
             >
               <div className="border-b border-zinc-200 pb-2.5 dark:border-zinc-800">
                 <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Additional information
-                </h2>
+                  {"Дополнительная информация "}</h2>
               </div>
               <div className="space-y-5">
                 {showCoverLetter ? (
@@ -2407,8 +2365,7 @@ export function ApplyForm({
                         applicationConfig.sections.details.coverLetter,
                       )}
                     >
-                      Cover letter
-                    </FieldLabel>
+                      {"Сопроводительное письмо "}</FieldLabel>
                     <textarea
                       name="coverLetter"
                       rows={5}
@@ -2416,7 +2373,7 @@ export function ApplyForm({
                       onChange={(event) =>
                         updateAnswer("coverLetter", event.target.value)
                       }
-                      placeholder="Tell the team why you're interested in this role."
+                      placeholder={"Расскажите команде, почему вас интересует эта роль."}
                       className={`${textarea} mt-1.5`}
                     />
                     <FieldError errors={fieldErrorsFor(state, "coverLetter")} />
@@ -2455,7 +2412,7 @@ export function ApplyForm({
                           onChange={(event) =>
                             updateAnswer(question.id, event.target.value)
                           }
-                          placeholder="Type here..."
+                          placeholder={"Введите здесь..."}
                           className={`${textarea} mt-1.5`}
                         />
                       ) : null}
@@ -2467,7 +2424,7 @@ export function ApplyForm({
                           onChange={(event) =>
                             updateAnswer(question.id, event.target.value)
                           }
-                          placeholder="Type here..."
+                          placeholder={"Введите здесь..."}
                           className={`${input} mt-1.5`}
                         />
                       ) : null}
@@ -2479,7 +2436,7 @@ export function ApplyForm({
                           onChange={(event) =>
                             updateAnswer(question.id, event.target.value)
                           }
-                          placeholder="Type here..."
+                          placeholder={"Введите здесь..."}
                           className={`${input} mt-1.5`}
                         />
                       ) : null}
@@ -2522,7 +2479,7 @@ export function ApplyForm({
                           className={`${input} mt-1.5`}
                         >
                           <option value="">
-                            {question.placeholder ?? "Select"}
+                            {question.placeholder ?? "Выбрать"}
                           </option>
                           {question.options?.map((option) => (
                             <option key={option} value={option}>
@@ -2545,16 +2502,15 @@ export function ApplyForm({
                                 className="accent-[var(--board-primary)]"
                               />
                               {value === "agree"
-                                ? question.agreeLabel ?? "I agree"
-                                : question.disagreeLabel ?? "I do not agree"}
+                                ? question.agreeLabel ?? "Я согласен"
+                                : question.disagreeLabel ?? "Я не согласен"}
                             </label>
                           ))}
                         </fieldset>
                       ) : null}
                       {question.minLength ? (
                         <p className={hintClass}>
-                          Minimum {question.minLength} characters if answered.
-                        </p>
+                          {"Минимум "}{question.minLength} {"символы, если ответили. "}</p>
                       ) : null}
                       <FieldError
                         errors={mergeErrors(
@@ -2582,7 +2538,7 @@ export function ApplyForm({
               onErrorClear={() => setConsentError(null)}
               consentText={consentText}
               privacyPolicyUrl={privacyPolicyUrl}
-              error={consentError}
+              error={localizeSystemText(consentError)}
             />
           ) : null}
 
@@ -2615,10 +2571,10 @@ export function ApplyForm({
               </svg>
             ) : null}
             {isSubmittingForm
-              ? "Uploading..."
+              ? "Загрузка..."
               : isPending
-                ? "Submitting..."
-                : "Submit Application"}
+                ? "Отправка..."
+                : "Подать заявку"}
             {!isSubmittingForm && !isPending ? (
               <Send className="size-4" strokeWidth={2} />
             ) : null}
@@ -2632,28 +2588,23 @@ export function ApplyForm({
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.08em] text-zinc-900 dark:text-zinc-100">
-                    Resume
-                  </p>
+                    {"Резюме "}</p>
                   <p className="mt-1.5 max-w-md text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                    Upload once. We&apos;ll attach it to your application and
-                    use it to pre-fill the form below.
-                  </p>
+                    {"Загрузите один раз. Мы прикрепим его к вашему заявлению и используем для предварительного заполнения формы ниже. "}</p>
                 </div>
                 {resumeFile ? (
                   <label
                     htmlFor="resumeFile"
                     className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-md border border-zinc-200 bg-white px-5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-500"
                   >
-                    Replace file
-                  </label>
+                    {"Заменить файл "}</label>
                 ) : (
                   <label
                     htmlFor="resumeFile"
                     className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-md px-5 text-sm font-medium text-[var(--board-primary-contrast)] transition hover:brightness-110"
                     style={{ backgroundColor: "var(--board-primary)" }}
                   >
-                    Upload resume
-                  </label>
+                    {"Загрузить резюме "}</label>
                 )}
               </div>
               {resumeFile ? (
@@ -2665,7 +2616,7 @@ export function ApplyForm({
                   >
                     <Check className="size-3" strokeWidth={3} />
                   </span>
-                  Uploaded: {resumeFile.name} ({formatFileSize(resumeFile.size)}
+                  {"Загружено: "}{resumeFile.name} ({formatFileSize(resumeFile.size)}
                   )
                 </p>
               ) : (
@@ -2685,7 +2636,7 @@ export function ApplyForm({
                     className="mb-3 flex size-11 items-center justify-center rounded-full transition-transform duration-150 group-hover:-translate-y-0.5 motion-reduce:transform-none"
                     style={{
                       backgroundColor:
-                        "color-mix(in srgb, var(--board-primary) 14%, transparent)",
+                        "color-mix(в srgb, var(--board-primary) 14%, прозрачный)",
                       color: "var(--board-primary)",
                     }}
                     aria-hidden
@@ -2697,9 +2648,9 @@ export function ApplyForm({
                       className="font-medium"
                       style={{ color: "var(--board-primary)" }}
                     >
-                      {isDragging ? "Drop here" : "Choose a file"}
+                      {isDragging ? "Перетащите сюда" : "Выберите файл"}
                     </span>{" "}
-                    {isDragging ? "Release to upload" : "or drag and drop here"}
+                    {isDragging ? "Отпустите для загрузки" : "или перетащите сюда"}
                   </p>
                   <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
                     .pdf, .doc, .docx · up to 10MB
@@ -2711,27 +2662,24 @@ export function ApplyForm({
           ) : null}
 
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            <span className={requiredMarkClass}>*</span> Required fields
-          </p>
+            <span className={requiredMarkClass}>*</span> {"Обязательные поля "}</p>
 
           <section className={cardClass}>
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4 dark:border-zinc-800">
               <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                Personal information
-              </h2>
+                {"Личная информация "}</h2>
               <button
                 type="button"
                 onClick={clearPersonalInfo}
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-100"
               >
                 <TrashIcon className="size-3.5" />
-                Clear
-              </button>
+                {"Очистить "}</button>
             </div>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <FieldLabel required>First name</FieldLabel>
+                <FieldLabel required>{"Имя"}</FieldLabel>
                 <input
                   name="firstName"
                   type="text"
@@ -2746,7 +2694,7 @@ export function ApplyForm({
               </label>
 
               <label className="block">
-                <FieldLabel required>Last name</FieldLabel>
+                <FieldLabel required>{"Фамилия"}</FieldLabel>
                 <input
                   name="lastName"
                   type="text"
@@ -2762,7 +2710,7 @@ export function ApplyForm({
             </div>
 
             <label className="mt-4 block">
-              <FieldLabel required>Email</FieldLabel>
+              <FieldLabel required>{"Электронная почта"}</FieldLabel>
               <input
                 name="email"
                 type="email"
@@ -2781,14 +2729,13 @@ export function ApplyForm({
                     applicationConfig.sections.personal.photo,
                   )}
                 >
-                  Photo
-                </FieldLabel>
+                  {"Фото "}</FieldLabel>
                 <label
                   htmlFor="photoFile"
                   className="mt-1.5 flex cursor-pointer items-center justify-between rounded-lg border border-dashed border-zinc-300 px-4 py-3 text-sm text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                 >
                   <span>
-                    {photoFile ? photoFile.name : "Upload a profile photo"}
+                    {photoFile ? photoFile.name : "Загрузите фотографию профиля"}
                   </span>
                   <span className="text-xs text-zinc-500">PNG, JPG, WEBP</span>
                 </label>
@@ -2798,7 +2745,7 @@ export function ApplyForm({
 
             {showPhone ? (
               <label className="mt-4 block">
-                <FieldLabel>Phone</FieldLabel>
+                <FieldLabel>{"Телефон"}</FieldLabel>
                 <PhoneInput
                   name="phone"
                   value={fields.phone}
@@ -2806,9 +2753,7 @@ export function ApplyForm({
                   className="mt-1.5"
                 />
                 <p className={hintClass}>
-                  The hiring team may use this number to contact you about this
-                  job.
-                </p>
+                  {"Команда по найму может использовать этот номер, чтобы связаться с вами по поводу этой вакансии. "}</p>
                 <FieldError errors={fieldErrorsFor(state, "phone")} />
               </label>
             ) : null}
@@ -2820,8 +2765,7 @@ export function ApplyForm({
                     applicationConfig.sections.personal.address,
                   )}
                 >
-                  Address
-                </FieldLabel>
+                  {"Адрес "}</FieldLabel>
                 <input
                   name="address"
                   type="text"
@@ -2830,13 +2774,11 @@ export function ApplyForm({
                   onChange={(event) =>
                     updateField("address", event.target.value)
                   }
-                  placeholder="City, region, country"
+                  placeholder={"Город, регион, страна"}
                   className={`${input} mt-1.5`}
                 />
                 <p className={hintClass}>
-                  Include your city, region, and country so the hiring team can
-                  evaluate your application.
-                </p>
+                  {"Укажите свой город, регион и страну, чтобы команда по найму могла оценить вашу заявку. "}</p>
                 <FieldError errors={fieldErrorsFor(state, "address")} />
               </label>
             ) : null}
@@ -2848,8 +2790,7 @@ export function ApplyForm({
                     applicationConfig.sections.personal.headline,
                   )}
                 >
-                  Headline
-                </FieldLabel>
+                  {"Заголовок "}</FieldLabel>
                 <input
                   name="headline"
                   type="text"
@@ -2857,7 +2798,7 @@ export function ApplyForm({
                   onChange={(event) =>
                     updateField("headline", event.target.value)
                   }
-                  placeholder="Senior backend engineer"
+                  placeholder={"Старший бэкэнд-инженер"}
                   className={`${input} mt-1.5`}
                 />
                 <FieldError errors={fieldErrorsFor(state, "headline")} />
@@ -2874,8 +2815,7 @@ export function ApplyForm({
                     className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                   >
                     <Plus className="size-4" strokeWidth={2} />
-                    Add links
-                  </button>
+                    {"Добавить ссылки "}</button>
                 ) : (
                   <div className="grid gap-4 sm:grid-cols-3">
                     {applicationConfig.profileLinks.linkedin.enabled ? (
@@ -2951,8 +2891,7 @@ export function ApplyForm({
                             applicationConfig.profileLinks.website.required
                           }
                         >
-                          Website
-                        </FieldLabel>
+                          {"Веб-сайт "}</FieldLabel>
                         <div className="relative mt-1.5">
                           <InputIcon>
                             <Globe className="size-4" strokeWidth={1.8} />
@@ -2987,8 +2926,7 @@ export function ApplyForm({
             <section className={cardClass}>
               <div className="border-b border-zinc-100 pb-4 dark:border-zinc-800">
                 <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Profile
-                </h2>
+                  {"Профиль "}</h2>
               </div>
               <div className="mt-5 space-y-5">
                 {showEducation ? (
@@ -2996,16 +2934,14 @@ export function ApplyForm({
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                          Education
-                          {isFieldRequired(
+                          {"Образование "}{isFieldRequired(
                             applicationConfig.sections.profile.education,
                           ) ? (
                             <span className={requiredMarkClass}>*</span>
                           ) : null}
                         </p>
                         <p className={hintClass}>
-                          Add one or more education entries.
-                        </p>
+                          {"Добавьте одну или несколько записей об образовании. "}</p>
                       </div>
                       <button
                         id="education-add-button"
@@ -3015,8 +2951,7 @@ export function ApplyForm({
                         className={secondaryButtonClass}
                       >
                         <Plus className="size-4" strokeWidth={2} />
-                        Add education
-                      </button>
+                        {"Добавить образование "}</button>
                     </div>
                     <FieldError errors={educationFieldErrors} />
                     {educationEntries.length > 0 ? (
@@ -3032,16 +2967,14 @@ export function ApplyForm({
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                          Experience
-                          {isFieldRequired(
+                          {"Опыт "}{isFieldRequired(
                             applicationConfig.sections.profile.experience,
                           ) ? (
                             <span className={requiredMarkClass}>*</span>
                           ) : null}
                         </p>
                         <p className={hintClass}>
-                          Add one or more work experience entries.
-                        </p>
+                          {"Добавьте одну или несколько записей об опыте работы. "}</p>
                       </div>
                       <button
                         id="experience-add-button"
@@ -3051,8 +2984,7 @@ export function ApplyForm({
                         className={secondaryButtonClass}
                       >
                         <Plus className="size-4" strokeWidth={2} />
-                        Add experience
-                      </button>
+                        {"Добавить опыт "}</button>
                     </div>
                     <FieldError errors={experienceFieldErrors} />
                     {experienceEntries.length > 0 ? (
@@ -3070,8 +3002,7 @@ export function ApplyForm({
             <section className={cardClass}>
               <div className="border-b border-zinc-100 pb-4 dark:border-zinc-800">
                 <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Details
-                </h2>
+                  {"Подробности "}</h2>
               </div>
               <div className="mt-5 space-y-5">
                 {showCoverLetter ? (
@@ -3081,8 +3012,7 @@ export function ApplyForm({
                         applicationConfig.sections.details.coverLetter,
                       )}
                     >
-                      Cover letter
-                    </FieldLabel>
+                      {"Сопроводительное письмо "}</FieldLabel>
                     <textarea
                       name="coverLetter"
                       rows={5}
@@ -3090,7 +3020,7 @@ export function ApplyForm({
                       onChange={(event) =>
                         updateAnswer("coverLetter", event.target.value)
                       }
-                      placeholder="Tell the team why you're interested in this role."
+                      placeholder={"Расскажите команде, почему вас интересует эта роль."}
                       className={`${textarea} mt-1.5`}
                     />
                     <FieldError errors={fieldErrorsFor(state, "coverLetter")} />
@@ -3174,7 +3104,7 @@ export function ApplyForm({
                         className={`${input} mt-1.5`}
                       >
                         <option value="">
-                          {question.placeholder ?? "Select"}
+                          {question.placeholder ?? "Выбрать"}
                         </option>
                         {question.options?.map((option) => (
                           <option key={option} value={option}>
@@ -3196,15 +3126,14 @@ export function ApplyForm({
                               onChange={() => updateAnswer(question.id, value)}
                               className="accent-[var(--board-primary)]"
                             />
-                            {value === "agree" ? question.agreeLabel ?? "I agree" : question.disagreeLabel ?? "I do not agree"}
+                            {value === "agree" ? question.agreeLabel ?? "Я согласен" : question.disagreeLabel ?? "Я не согласен"}
                           </label>
                         ))}
                       </fieldset>
                     ) : null}
                     {question.minLength ? (
                       <p className={hintClass}>
-                        Minimum {question.minLength} characters if answered.
-                      </p>
+                        {"Минимум "}{question.minLength} {"символы, если ответили. "}</p>
                     ) : null}
                     <FieldError
                       errors={mergeErrors(
@@ -3230,7 +3159,7 @@ export function ApplyForm({
               onErrorClear={() => setConsentError(null)}
               consentText={consentText}
               privacyPolicyUrl={privacyPolicyUrl}
-              error={consentError}
+              error={localizeSystemText(consentError)}
             />
           ) : null}
 
@@ -3245,10 +3174,10 @@ export function ApplyForm({
             }}
           >
             {isSubmittingForm
-              ? "Uploading…"
+              ? "Загрузка…"
               : isPending
-                ? "Submitting…"
-                : "Submit application"}
+                ? "Отправка…"
+                : "Подать заявку"}
           </Button>
         </>
       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -73,7 +74,7 @@ export function AutomationsManager({
               : w,
           ),
         );
-        toast.error(r.error ?? "Could not toggle automation.");
+        toast.error(r.error ?? "Не удалось переключить автоматизацию.");
       }
     });
   }
@@ -89,9 +90,9 @@ export function AutomationsManager({
       const r = await deleteWorkflowAction(id);
       if (!r.ok) {
         setWorkflows((prev) => restoreAtIndex(prev, index, removed));
-        toast.error(r.error ?? "Could not delete.");
+        toast.error(r.error ?? "Не удалось удалить.");
       } else {
-        toast.success("Automation deleted.");
+        toast.success("Автоматизация удалена.");
       }
     });
   }
@@ -100,10 +101,10 @@ export function AutomationsManager({
     startTransition(async () => {
       const r = await createWorkflowFromTemplateAction(t.build());
       if (r.ok && r.workflow) {
-        toast.success(`Created “${t.name}”.`);
+        toast.success(`Создан «${t.name}».`);
         window.location.href = `/dashboard/automations/${r.workflow.id}` as Route;
       } else {
-        toast.error(r.error ?? "Could not create from template.");
+        toast.error(r.error ?? "Не удалось создать из шаблона.");
       }
     });
   }
@@ -151,18 +152,17 @@ export function AutomationsManager({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this automation?</AlertDialogTitle>
+            <AlertDialogTitle>{"Удалить эту автоматизацию?"}</AlertDialogTitle>
             <AlertDialogDescription>
               {pendingDelete
-                ? `“${pendingDelete.name}” will be removed. This cannot be undone.`
-                : "This cannot be undone."}
+                ? `«${pendingDelete.name}» будет удалено. Это невозможно отменить.`
+                : "Это невозможно отменить."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep it</AlertDialogCancel>
+            <AlertDialogCancel>{"Держи это"}</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={confirmRemove}>
-              Delete
-            </AlertDialogAction>
+              {"Удалить "}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -175,27 +175,22 @@ function Header({ count, onCreate }: { count: number; onCreate: () => void }) {
     <div className="flex items-end justify-between gap-4">
       <div>
         <h1 className="font-display text-2xl font-semibold tracking-tight text-near-ink">
-          Automations
-        </h1>
+          {"Автоматизация "}</h1>
         <p className="mt-1 text-sm text-soft-ink">
-          {count} {count === 1 ? "recipe" : "recipes"} · when something happens,
-          Harly can email, tag, task, or move a candidate.
-        </p>
+          {count} {count === 1 ? "recipe" : "recipes"} {"· когда что-то происходит, Харли может отправить кандидату электронное письмо, отметить его, поставить ему задачу или переместить его. "}</p>
       </div>
       <div className="flex items-center gap-2">
         <Link
           href={"/dashboard/automations/new" as Route}
           className="inline-flex items-center gap-1.5 rounded-full border border-mist-border bg-pure-snow px-4 py-2 text-sm font-medium text-near-ink transition-all hover:bg-soft-kraft active:scale-[0.98]"
         >
-          <PlusIcon className="size-4" /> Start from scratch
-        </Link>
+          <PlusIcon className="size-4" /> {"Начать с нуля "}</Link>
         <button
           type="button"
           onClick={onCreate}
           className="inline-flex items-center gap-1.5 rounded-full bg-near-ink px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:bg-near-ink/90 active:scale-[0.98]"
         >
-          <MagicWandDuotoneIcon className="size-4" /> Templates
-        </button>
+          <MagicWandDuotoneIcon className="size-4" /> {"Шаблоны "}</button>
       </div>
     </div>
   );
@@ -261,7 +256,7 @@ function WorkflowCard({
           checked={workflow.enabled}
           onCheckedChange={onToggle}
           disabled={disabled || !canToggle}
-          aria-label={workflow.enabled ? "Disable automation" : "Enable automation"}
+          aria-label={workflow.enabled ? "Отключить автоматизацию" : "Включить автоматизацию"}
         />
       </div>
 
@@ -281,15 +276,15 @@ function WorkflowCard({
           )}
         >
           {workflow.hasUnpublishedChanges
-            ? "Edits pending"
+            ? "Изменения ожидаются"
             : workflow.status === "published"
               ? "On"
               : workflow.status === "paused"
-                ? "Paused"
-                : "Draft"}
+                ? "Приостановлено"
+                : "Черновик"}
         </span>
         <span className="ml-auto text-[11px] text-soft-ink">
-          edited <RelativeTime value={workflow.updatedAt} />
+          {"изменено "}<RelativeTime value={workflow.updatedAt} />
         </span>
       </div>
 
@@ -298,16 +293,14 @@ function WorkflowCard({
           href={`/dashboard/automations/${workflow.id}` as Route}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-near-ink hover:underline"
         >
-          <PencilIcon className="size-3.5" /> Edit
-        </Link>
+          <PencilIcon className="size-3.5" /> {"Редактировать "}</Link>
         <button
           type="button"
           onClick={onDelete}
           disabled={disabled}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-soft-ink transition-colors hover:text-danger-rust disabled:opacity-50"
         >
-          <TrashIcon className="size-3.5" /> Delete
-        </button>
+          <TrashIcon className="size-3.5" /> {"Удалить "}</button>
       </div>
     </div>
   );
@@ -320,30 +313,23 @@ function EmptyState({ onShowTemplates }: { onShowTemplates: () => void }) {
         <MagicWandDuotoneIcon className="size-7" />
       </span>
       <h2 className="font-display mt-5 text-xl font-semibold text-near-ink">
-        Automate the repetitive hiring work
-      </h2>
+        {"Автоматизируйте повторяющуюся работу по подбору персонала "}</h2>
       <p className="mt-2 max-w-md text-sm leading-relaxed text-soft-ink">
-        Write a simple recipe:{" "}
-        <strong className="font-medium text-near-ink">When</strong> a candidate
-        applies or moves stage,{" "}
-        <strong className="font-medium text-near-ink">if</strong> they match a
-        filter, <strong className="font-medium text-near-ink">then</strong> send
-        an email, create a task, or tag the profile.
-      </p>
+        {"Напишите простой рецепт:"}{" "}
+        <strong className="font-medium text-near-ink">{"Когда"}</strong> {"кандидат подает заявку или переходит на этап,"}{" "}
+        <strong className="font-medium text-near-ink">{"если"}</strong> {"они соответствуют фильтру, "}<strong className="font-medium text-near-ink">{"то"}</strong> {"отправьте электронное письмо, создайте задачу или отметьте профиль. "}</p>
       <div className="mt-6 flex items-center gap-3">
         <Link
           href={"/dashboard/automations/new" as Route}
           className="inline-flex items-center gap-1.5 rounded-full border border-mist-border bg-pure-snow px-4 py-2 text-sm font-medium text-near-ink hover:bg-soft-kraft active:scale-[0.98]"
         >
-          <PlusIcon className="size-4" /> Start from scratch
-        </Link>
+          <PlusIcon className="size-4" /> {"Начать с нуля "}</Link>
         <button
           type="button"
           onClick={onShowTemplates}
           className="inline-flex items-center gap-1.5 rounded-full bg-near-ink px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:bg-near-ink/90 active:scale-[0.98]"
         >
-          <MagicWandDuotoneIcon className="size-4" /> Choose a template
-        </button>
+          <MagicWandDuotoneIcon className="size-4" /> {"Выберите шаблон "}</button>
       </div>
     </div>
   );
@@ -363,19 +349,16 @@ function TemplateGallery({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-lg font-semibold text-near-ink">
-            Starter recipes
-          </h2>
+            {"Стартовые рецепты "}</h2>
           <p className="mt-0.5 text-xs text-soft-ink">
-            Pick one to start. You can change every detail in the editor.
-          </p>
+            {"Выберите один, чтобы начать. В редакторе можно изменить каждую деталь. "}</p>
         </div>
         <button
           type="button"
           onClick={onClose}
           className="rounded-lg px-2.5 py-1 text-xs font-medium text-soft-ink hover:bg-soft-kraft hover:text-near-ink"
         >
-          Close
-        </button>
+          {"Закрыть "}</button>
       </div>
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {WORKFLOW_TEMPLATES.map((t) => (
@@ -388,7 +371,7 @@ function TemplateGallery({
           >
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-medium uppercase tracking-wider text-soft-ink">
-                {t.category}
+                {localizeSystemText(t.category)}
               </span>
             </div>
             <span className="font-display mt-1 text-sm font-semibold text-near-ink">

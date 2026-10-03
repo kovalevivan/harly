@@ -39,17 +39,17 @@ export type ScheduleMemberOption = {
 };
 
 const TYPES = [
-  { key: "screening", label: "Screening" },
-  { key: "technical", label: "Technical" },
-  { key: "culture_fit", label: "Culture fit" },
-  { key: "onsite", label: "Onsite" },
-  { key: "final", label: "Final round" },
+  { key: "screening", label: "Первичный отбор" },
+  { key: "technical", label: "Технический" },
+  { key: "culture_fit", label: "Культура соответствует" },
+  { key: "onsite", label: "На месте" },
+  { key: "final", label: "Финальный раунд" },
 ] as const;
 
 const MODES = [
-  { key: "video", label: "Video", icon: Video },
-  { key: "phone", label: "Phone", icon: Phone },
-  { key: "onsite", label: "Onsite", icon: MapPin },
+  { key: "video", label: "Видео", icon: Video },
+  { key: "phone", label: "Телефон", icon: Phone },
+  { key: "onsite", label: "На месте", icon: MapPin },
 ] as const;
 
 const DURATIONS = [30, 45, 60, 90] as const;
@@ -100,7 +100,7 @@ export function ScheduleDrawer({
 
   const hasApplication = applications.length > 0;
   const locationLabel = useMemo(
-    () => (mode === "onsite" ? "Address" : "Meeting link"),
+    () => (mode === "onsite" ? "Адрес" : "Ссылка на встречу"),
     [mode],
   );
 
@@ -129,17 +129,17 @@ export function ScheduleDrawer({
       const warnings: string[] = [];
       if (result.gcalBusy.length > 0) {
         warnings.push(
-          `${result.gcalBusy.length} existing calendar event${result.gcalBusy.length > 1 ? "s" : ""}`,
+          `${result.gcalBusy.length} существующее событие календаря${result.gcalBusy.length > 1 ? "s" : ""}`,
         );
       }
       if (result.internalConflicts.length > 0) {
         warnings.push(
-          `${result.internalConflicts.length} overlapping interview${result.internalConflicts.length > 1 ? "s" : ""} in this workspace`,
+          `${result.internalConflicts.length} перекрывающееся интервью${result.internalConflicts.length > 1 ? "s" : ""} в этом рабочем пространстве`,
         );
       }
       setAvailabilityWarning(
         warnings.length > 0
-          ? `This time conflicts with ${warnings.join(" and ")}.`
+          ? `На этот раз конфликтует с ${warnings.join(" and ")}.`
           : null,
       );
     } catch {
@@ -152,7 +152,7 @@ export function ScheduleDrawer({
   function copyBookingLink() {
     if (!cal.bookingUrl) return;
     if (!applicationId) {
-      toast.error("Pick which role this interview is for.");
+      toast.error("Выберите, для какой роли предназначено это интервью.");
       return;
     }
     const link = buildCalBookingLink({
@@ -162,7 +162,7 @@ export function ScheduleDrawer({
       metadata: { applicationId, candidateId, workspaceId },
     });
     void navigator.clipboard.writeText(link);
-    toast.success("Booking link copied. Send it to the candidate");
+    toast.success("Ссылка на бронирование скопирована. Отправьте это кандидату");
   }
 
   function reset() {
@@ -179,15 +179,15 @@ export function ScheduleDrawer({
 
   function submit() {
     if (!hasApplication) {
-      toast.error("This candidate has no application to attach the interview to.");
+      toast.error("У этого кандидата нет заявки, к которой можно прикрепить собеседование.");
       return;
     }
     if (!applicationId) {
-      toast.error("Pick which role this interview is for.");
+      toast.error("Выберите, для какой роли предназначено это интервью.");
       return;
     }
     if (!date || !time) {
-      toast.error("Pick a date and time.");
+      toast.error("Выберите дату и время.");
       return;
     }
     startTransition(async () => {
@@ -206,11 +206,11 @@ export function ScheduleDrawer({
         notes: notes.trim() || null,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not schedule.");
+        toast.error(result.error ?? "Не удалось запланировать.");
         return;
       }
       if (result.warning) toast.warning(result.warning);
-      toast.success("Interview scheduled");
+      toast.success("Интервью запланировано");
       setOpen(false);
       reset();
       router.refresh();
@@ -222,24 +222,21 @@ export function ScheduleDrawer({
       open={open}
       onOpenChange={setOpen}
       trigger={trigger}
-        title="Schedule interview"
-        description="Set the date, time, and interviewers for this meeting."
+        title={"Назначить собеседование"}
+        description={"Установите дату, время и интервьюеров для этой встречи."}
         footer={
           <>
             <Button variant="outline" disabled={isPending} onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button onClick={submit} disabled={isPending || !hasApplication}>
-              {isPending ? "Scheduling…" : "Schedule"}
+              {isPending ? "Планирование…" : "Расписание"}
             </Button>
           </>
         }
       >
         {!hasApplication ? (
           <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            This candidate hasn&apos;t applied to any role yet. Interviews attach
-            to an application.
-          </p>
+            {"Этот кандидат еще не подавал заявки ни на одну должность. Собеседование прилагается к заявке. "}</p>
         ) : (
           <div className="space-y-5">
             {calLinkAvailable ? (
@@ -247,13 +244,10 @@ export function ScheduleDrawer({
                 <div className="flex items-center gap-2">
                   <Link2 className="size-4 text-primary" strokeWidth={1.8} />
                   <p className="text-[13px] font-medium tracking-tight">
-                    Let the candidate self-schedule
-                  </p>
+                    {"Позвольте кандидату самостоятельно составить график "}</p>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Send a Cal.com link. When they book, the interview syncs here
-                  automatically.
-                </p>
+                  {"Отправьте ссылку Cal.com. Когда они записываются, интервью автоматически синхронизируется здесь. "}</p>
                 <Button
                   type="button"
                   variant="outline"
@@ -262,16 +256,14 @@ export function ScheduleDrawer({
                   onClick={copyBookingLink}
                 >
                   <Link2 className="size-4" />
-                  Copy booking link
-                </Button>
+                  {"Скопировать ссылку на бронирование "}</Button>
                 <p className="text-center text-[11px] uppercase tracking-wide text-muted-foreground">
-                  or log it manually
-                </p>
+                  {"или войдите вручную "}</p>
               </div>
             ) : null}
 
             {applications.length > 1 ? (
-              <Field label="Role">
+              <Field label={"Роль"}>
                 <Select value={applicationId} onValueChange={setApplicationId}>
                   <SelectTrigger className="w-full">
                     <SelectValue />
@@ -293,14 +285,14 @@ export function ScheduleDrawer({
               </Field>
             ) : (
               <p className="text-[13px] text-muted-foreground">
-                For{" "}
+                {"Для"}{" "}
                 <span className="font-medium text-foreground">
                   {applications[0]?.jobTitle}
                 </span>
               </p>
             )}
 
-            <Field label="Type">
+            <Field label={"Тип"}>
               <div className="grid grid-cols-3 gap-2">
                 {TYPES.map((t) => (
                   <SegButton
@@ -314,7 +306,7 @@ export function ScheduleDrawer({
               </div>
             </Field>
 
-            <Field label="Mode">
+            <Field label={"Режим"}>
               <div className="grid grid-cols-3 gap-2">
                 {MODES.map((m) => (
                   <SegButton
@@ -330,7 +322,7 @@ export function ScheduleDrawer({
             </Field>
 
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Date" htmlFor="schedule-date">
+              <Field label={"Дата"} htmlFor="schedule-date">
                 <Input
                   id="schedule-date"
                   type="date"
@@ -341,7 +333,7 @@ export function ScheduleDrawer({
                   }}
                 />
               </Field>
-              <Field label="Time" htmlFor="schedule-time">
+              <Field label={"Время"} htmlFor="schedule-time">
                 <Input
                   id="schedule-time"
                   type="time"
@@ -361,11 +353,11 @@ export function ScheduleDrawer({
               </div>
             ) : null}
             {checkingAvailability ? (
-              <p className="text-xs text-muted-foreground">Checking availability…</p>
+              <p className="text-xs text-muted-foreground">{"Проверка доступности…"}</p>
             ) : null}
 
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Duration">
+              <Field label={"Продолжительность"}>
                 <Select
                   value={durationMins}
                   onValueChange={(value) => {
@@ -379,13 +371,12 @@ export function ScheduleDrawer({
                   <SelectContent>
                     {DURATIONS.map((d) => (
                       <SelectItem key={d} value={String(d)}>
-                        {d} min
-                      </SelectItem>
+                        {d} {"мин "}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </Field>
-              <Field label="Interviewer">
+              <Field label={"Интервьюер"}>
                 <Select
                   value={interviewerId || "unassigned"}
                   onValueChange={(value) => {
@@ -400,7 +391,7 @@ export function ScheduleDrawer({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                    <SelectItem value="unassigned">{"Неназначенный"}</SelectItem>
                     {members.map((m) => (
                       <SelectItem key={m.userId} value={m.userId}>
                         {m.name}
@@ -418,18 +409,18 @@ export function ScheduleDrawer({
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder={
                   mode === "onsite"
-                    ? "Office address…"
+                    ? "Адрес офиса…"
                     : "https://meet.google.com/…"
                 }
               />
             </Field>
 
-            <Field label="Notes" htmlFor="schedule-notes">
+            <Field label={"Примечания"} htmlFor="schedule-notes">
               <Textarea
                 id="schedule-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Focus areas, panel, prep…"
+                placeholder={"Области фокуса, панельная дискуссия, подготовка…"}
                 className="min-h-20"
               />
             </Field>

@@ -23,10 +23,10 @@ const DECISION_META: Record<
   "strong_yes" | "yes" | "maybe" | "no",
   { label: string; className: string }
 > = {
-  strong_yes: { label: "Strong yes", className: "bg-primary/10 text-primary" },
-  yes: { label: "Yes", className: "bg-primary/10 text-primary" },
-  maybe: { label: "Maybe", className: "bg-clay/15 text-clay" },
-  no: { label: "No", className: "bg-destructive/10 text-destructive" },
+  strong_yes: { label: "Сильный да", className: "bg-primary/10 text-primary" },
+  yes: { label: "Да", className: "bg-primary/10 text-primary" },
+  maybe: { label: "Может быть", className: "bg-clay/15 text-clay" },
+  no: { label: "Нет", className: "bg-destructive/10 text-destructive" },
 };
 
 export function SummarizeNotesSheet({
@@ -49,7 +49,7 @@ export function SummarizeNotesSheet({
 
   function summarize() {
     if (!rawNotes.trim()) {
-      toast.error("Enter some notes first.");
+      toast.error("Сначала введите несколько примечаний.");
       return;
     }
     startTransition(async () => {
@@ -69,17 +69,17 @@ export function SummarizeNotesSheet({
     if (!summary) return;
     const decision = DECISION_META[summary.suggestedDecision];
     const body = [
-      `Interview summary, ${interview.title ?? interviewTypeLabel(interview.type)}`,
+      `Итог интервью, ${interview.title ?? interviewTypeLabel(interview.type)}`,
       "",
       summary.executiveSummary,
       "",
-      "Positive signals",
+      "Позитивные сигналы",
       ...summary.positiveSignals.map((s) => `• ${s}`),
       ...(summary.concerns.length > 0
-        ? ["", "Concerns", ...summary.concerns.map((c) => `• ${c}`)]
+        ? ["", "Проблемы", ...summary.concerns.map((c) => `• ${c}`)]
         : []),
       "",
-      `Suggested decision: ${decision?.label ?? summary.suggestedDecision}`,
+      `Предлагаемое решение: ${decision?.label ?? summary.suggestedDecision}`,
     ].join("\n");
 
     startSaveTransition(async () => {
@@ -89,10 +89,10 @@ export function SummarizeNotesSheet({
         body,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not save note.");
+        toast.error(result.error ?? "Не удалось сохранить заметку.");
         return;
       }
-      toast.success("Summary saved as note");
+      toast.success("Краткое описание сохранено как заметка.");
       setOpen(false);
       (router as { refresh?: () => void }).refresh?.();
     });
@@ -102,7 +102,7 @@ export function SummarizeNotesSheet({
     <Sheet open={open} onOpenChange={setOpen} mobilePresentation="bottom-on-mobile">
       <SheetTrigger asChild>{trigger}</SheetTrigger>
       <DrawerLayout
-        title="Summarize interview notes"
+        title={"Обобщить записи интервью"}
         description={`${interview.title ?? interviewTypeLabel(interview.type)} · ${interview.jobTitle}`}
         footer={
           summary ? (
@@ -112,7 +112,7 @@ export function SummarizeNotesSheet({
               disabled={isSaving}
               onClick={saveAsNote}
             >
-              {isSaving ? "Saving…" : "Save as note"}
+              {isSaving ? "Сохранение…" : "Сохранить как заметку"}
             </Button>
           ) : undefined
         }
@@ -121,7 +121,7 @@ export function SummarizeNotesSheet({
           {!summary ? (
             <>
               <Textarea
-                placeholder="Paste your raw interview notes here — messy is fine."
+                placeholder={"Вставьте сюда свои необработанные записи интервью — беспорядок — это нормально."}
                 className="min-h-[180px] resize-y text-sm"
                 value={rawNotes}
                 onChange={(e) => setRawNotes(e.target.value)}
@@ -131,16 +131,15 @@ export function SummarizeNotesSheet({
                 size="sm"
                 onClick={summarize}
                 loading={isPending}
-                loadingText="Summarizing"
+                loadingText={"Подведение итогов"}
                 disabled={!rawNotes.trim()}
               >
-                Summarize with AI
-              </AiButton>
+                {"Подведите итоги с помощью ИИ "}</AiButton>
             </>
           ) : (
             <div className="space-y-5 text-sm">
               <div>
-                <p className="mb-1.5 font-medium text-foreground">Summary</p>
+                <p className="mb-1.5 font-medium text-foreground">{"Резюме"}</p>
                 <p className="leading-relaxed text-muted-foreground">
                   {summary.executiveSummary}
                 </p>
@@ -149,8 +148,7 @@ export function SummarizeNotesSheet({
               {summary.positiveSignals.length > 0 ? (
                 <div>
                   <p className="mb-1.5 font-medium text-foreground">
-                    Positive signals
-                  </p>
+                    {"Позитивные сигналы "}</p>
                   <ul className="space-y-1 text-muted-foreground">
                     {summary.positiveSignals.map((s, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -164,7 +162,7 @@ export function SummarizeNotesSheet({
 
               {summary.concerns.length > 0 ? (
                 <div>
-                  <p className="mb-1.5 font-medium text-foreground">Concerns</p>
+                  <p className="mb-1.5 font-medium text-foreground">{"Проблемы"}</p>
                   <ul className="space-y-1 text-muted-foreground">
                     {summary.concerns.map((c, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -177,7 +175,7 @@ export function SummarizeNotesSheet({
               ) : null}
 
               <div className="flex items-center gap-2">
-                <p className="font-medium text-foreground">Suggested decision</p>
+                <p className="font-medium text-foreground">{"Предлагаемое решение"}</p>
                 <span
                   className={cn(
                     "rounded-full px-2.5 py-0.5 text-xs font-medium",
@@ -194,8 +192,7 @@ export function SummarizeNotesSheet({
                 className="text-xs text-muted-foreground underline-offset-2 hover:underline"
                 onClick={() => setSummary(null)}
               >
-                Edit notes and re-summarize
-              </button>
+                {"Редактировать заметки и подводить итоги "}</button>
             </div>
           )}
         </div>

@@ -6,16 +6,16 @@ const applicationStatusMap: Record<
   string,
   { variant: BadgeVariant; label: string }
 > = {
-  active: { variant: "success", label: "Active" },
-  hired: { variant: "success", label: "Hired" },
-  rejected: { variant: "danger", label: "Rejected" },
-  withdrawn: { variant: "neutral", label: "Withdrawn" },
+  active: { variant: "success", label: "Активные" },
+  hired: { variant: "success", label: "Нанят" },
+  rejected: { variant: "danger", label: "Отказ" },
+  withdrawn: { variant: "neutral", label: "снято" },
 };
 
 const jobStatusMap: Record<string, { variant: BadgeVariant; label: string }> = {
-  draft: { variant: "neutral", label: "Draft" },
-  open: { variant: "success", label: "Open" },
-  closed: { variant: "warning", label: "Closed" },
+  draft: { variant: "neutral", label: "Черновик" },
+  open: { variant: "success", label: "Открыта" },
+  closed: { variant: "warning", label: "Закрыта" },
 };
 
 export function ApplicationStatusBadge({ status }: { status: string }) {

@@ -14,14 +14,14 @@ import {
 const employmentTypes = [
   { value: "full_time", label: "Full-time" },
   { value: "part_time", label: "Part-time" },
-  { value: "contract", label: "Contract" },
-  { value: "internship", label: "Internship" },
+  { value: "contract", label: "Договор" },
+  { value: "internship", label: "Стажировка" },
 ];
 
 const workplaceTypes = [
-  { value: "remote", label: "Remote" },
-  { value: "hybrid", label: "Hybrid" },
-  { value: "onsite", label: "Onsite" },
+  { value: "remote", label: "Удаленный" },
+  { value: "hybrid", label: "Гибрид" },
+  { value: "onsite", label: "На месте" },
 ];
 
 export function EssentialsSection({
@@ -48,10 +48,10 @@ export function EssentialsSection({
       <div className="grid gap-4 sm:grid-cols-2">
         <FieldBox
           className="sm:col-span-2"
-          label="Job name"
+          label={"Название вакансии"}
           htmlFor="title"
           required
-          error={titleError ? "Add a job title (at least 3 characters) to continue." : undefined}
+          error={titleError ? "Чтобы продолжить, добавьте название должности (минимум 3 символа)." : undefined}
         >
           <Input
             id="title"
@@ -62,12 +62,12 @@ export function EssentialsSection({
               if (titleError) setTitleError(false);
             }}
             aria-invalid={titleError}
-            placeholder="Senior Full Stack Engineer"
+            placeholder={"Старший инженер полного стека"}
             className={fieldBoxControlClassName}
           />
         </FieldBox>
 
-        <FieldBox label="Department">
+        <FieldBox label={"Отдел"}>
           <DepartmentCombobox
             name="department"
             departments={departments}
@@ -76,38 +76,38 @@ export function EssentialsSection({
           />
         </FieldBox>
 
-        <FieldBox label="Country code for search" htmlFor="jobLocationCountry">
+        <FieldBox label={"Код страны для поиска"} htmlFor="jobLocationCountry">
           <Input
             id="jobLocationCountry"
             name="jobLocationCountry"
             defaultValue={job?.jobLocationCountry ?? ""}
-            placeholder="US"
+            placeholder={"США"}
             maxLength={2}
             className={cnUppercase}
           />
         </FieldBox>
 
-        <FieldBox label="State or region" htmlFor="jobLocationRegion">
+        <FieldBox label={"Штат или регион"} htmlFor="jobLocationRegion">
           <Input
             id="jobLocationRegion"
             name="jobLocationRegion"
             defaultValue={job?.jobLocationRegion ?? ""}
-            placeholder="California"
+            placeholder={"Калифорния"}
             className={fieldBoxControlClassName}
           />
         </FieldBox>
 
-        <FieldBox label="Location" htmlFor="location" hint="Shown on your public posting.">
+        <FieldBox label={"Расположение"} htmlFor="location" hint={"Отображается в вашей публичной публикации."}>
           <Input
             id="location"
             name="location"
             defaultValue={job?.location ?? ""}
-            placeholder="Remote, LATAM"
+            placeholder={"Удаленный доступ, Латинская Америка"}
             className={fieldBoxControlClassName}
           />
         </FieldBox>
 
-        <FieldBox label="Employment type" htmlFor="employmentType">
+        <FieldBox label={"Тип занятости"} htmlFor="employmentType">
           <Select name="employmentType" defaultValue={job?.employmentType ?? "full_time"}>
             <SelectTrigger id="employmentType" className={fieldBoxSelectTriggerClassName}>
               <SelectValue />
@@ -122,7 +122,7 @@ export function EssentialsSection({
           </Select>
         </FieldBox>
 
-        <FieldBox label="Workplace type" htmlFor="workplaceType">
+        <FieldBox label={"Тип рабочего места"} htmlFor="workplaceType">
           <Select name="workplaceType" value={workplace} onValueChange={setWorkplace}>
             <SelectTrigger id="workplaceType" className={fieldBoxSelectTriggerClassName}>
               <SelectValue />
@@ -140,9 +140,9 @@ export function EssentialsSection({
 
       {workplace === "remote" ? (
         <FieldBox
-          label="Eligible remote countries"
+          label={"Подходящие удаленные страны"}
           htmlFor="remoteEligibleCountries"
-          hint="Leave empty for worldwide."
+          hint={"Оставьте пустым для всего мира."}
         >
           <Input
             id="remoteEligibleCountries"
@@ -154,7 +154,7 @@ export function EssentialsSection({
         </FieldBox>
       ) : null}
 
-      <FieldBox label="Posting expires" htmlFor="validThrough">
+      <FieldBox label={"Срок публикации истекает"} htmlFor="validThrough">
         <Input
           id="validThrough"
           name="validThrough"
@@ -167,4 +167,4 @@ export function EssentialsSection({
   );
 }
 
-const cnUppercase = `${fieldBoxControlClassName} uppercase`;
+const cnUppercase = `${fieldBoxControlClassName} заглавная буква`;

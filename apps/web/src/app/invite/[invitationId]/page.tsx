@@ -35,14 +35,12 @@ export default async function InvitePage({ params }: InvitePageProps) {
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-8 py-6">
         <Link href="/" className="font-display text-lg tracking-tight text-pine">
-          Harly
-        </Link>
+          {"Харли "}</Link>
         <Link
           href={`/login?redirect=${encodeURIComponent(`/invite/${invitationId}`)}`}
           className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
         >
-          Sign in
-        </Link>
+          {"Войти "}</Link>
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 pb-20">
@@ -61,17 +59,16 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
         <div className="w-full max-w-sm">
           <p className="text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-pine">
-            Invitation
-          </p>
+            {"Приглашение "}</p>
           <h1 className="mt-3 text-center font-display text-3xl tracking-tight text-foreground">
-            Join {invitation.organizationName}
+            {"Присоединяйтесь "}{invitation.organizationName}
           </h1>
           <p className="mt-2 text-center text-sm leading-6 text-muted-foreground">
-            You were invited as{" "}
+            {"Вас пригласили как"}{" "}
             <span className="font-semibold capitalize text-foreground">
               {invitation.role.replace("_", " ")}
             </span>{" "}
-            using {invitation.email}.
+            {"используя "}{invitation.email}.
           </p>
 
           {invitation.inviter && (
@@ -96,7 +93,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
                 </div>
               )}
               <p className="text-sm text-muted-foreground">
-                Invited by{" "}
+                {"Приглашен"}{" "}
                 <span className="font-medium text-foreground">
                   {invitation.inviter.name}
                 </span>
@@ -107,12 +104,11 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <div className="mt-10">
             {invitation.status !== "pending" ? (
               <div className="rounded-lg bg-muted px-4 py-3 text-center text-sm font-medium text-muted-foreground">
-                This invitation is {invitation.status}.
+                {"Это приглашение "}{invitation.status}.
               </div>
             ) : isExpired ? (
               <div className="rounded-lg bg-destructive/10 px-4 py-3 text-center text-sm font-medium text-destructive">
-                This invitation has expired.
-              </div>
+                {"Срок действия этого приглашения истек. "}</div>
             ) : !session ? (
               hasAccount ? (
                 <div className="space-y-3">
@@ -120,15 +116,13 @@ export default async function InvitePage({ params }: InvitePageProps) {
                     href={`/login?redirect=${encodeURIComponent(`/invite/${invitationId}`)}`}
                     className="block w-full rounded-lg bg-primary py-3.5 text-center text-sm font-semibold text-primary-foreground transition hover:bg-pine-strong"
                   >
-                    Sign in to accept
-                  </Link>
+                    {"Войдите, чтобы принять "}</Link>
                   <p className="text-center text-xs text-muted-foreground">
-                    Sign in with{" "}
+                    {"Войти через"}{" "}
                     <span className="font-medium text-foreground">
                       {invitation.email}
                     </span>{" "}
-                    to accept this invitation.
-                  </p>
+                    {"принять это приглашение. "}</p>
                 </div>
               ) : (
                 <InviteOnboard
@@ -138,7 +132,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
               )
             ) : !isRecipient ? (
               <div className="rounded-lg bg-destructive/10 px-4 py-3 text-center text-sm font-medium text-destructive">
-                You are signed in as {session.user.email}. This invitation
+                {"Вы вошли в систему как "}{session.user.email}. This invitation
                 belongs to {invitation.email}.
               </div>
             ) : (

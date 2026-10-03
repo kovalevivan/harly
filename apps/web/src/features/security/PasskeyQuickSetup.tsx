@@ -38,16 +38,16 @@ export function PasskeyQuickSetup() {
         });
         if (!verRes.ok) {
           const err = await verRes.json();
-          throw new Error(err.error ?? "Passkey setup failed");
+          throw new Error(err.error ?? "Не удалось настроить ключ доступа");
         }
 
-        toast.success("Passkey registered");
+        toast.success("Ключ доступа зарегистрирован");
         setDone(true);
         router.refresh();
       } catch (err: unknown) {
         // User dismissed the browser dialog , not an error.
         if (err instanceof Error && err.name === "NotAllowedError") return;
-        toast.error(err instanceof Error ? err.message : "Passkey setup failed");
+        toast.error(err instanceof Error ? err.message : "Не удалось настроить ключ доступа");
       }
     });
   }
@@ -56,7 +56,7 @@ export function PasskeyQuickSetup() {
     return (
       <div className="flex items-center gap-2.5 rounded-xl border border-pine/20 bg-sage/30 px-4 py-3">
         <CheckIcon className="size-4 text-pine" />
-        <p className="text-sm font-medium text-foreground">Passkey added.</p>
+        <p className="text-sm font-medium text-foreground">{"Добавлен пароль."}</p>
       </div>
     );
   }
@@ -67,12 +67,9 @@ export function PasskeyQuickSetup() {
         <FingerPrintDuotoneIcon className="mt-0.5 size-5 text-pine" />
         <span>
           <span className="block text-sm font-medium text-foreground">
-            Set up a passkey
-          </span>
+            {"Установить пароль "}</span>
           <span className="mt-0.5 block text-xs text-muted-foreground">
-            Sign in with your fingerprint, face, or security key , no password
-            needed.
-          </span>
+            {"Войдите в систему с помощью отпечатка пальца, лица или ключа безопасности. Пароль не требуется. "}</span>
         </span>
       </span>
       <Button
@@ -87,8 +84,7 @@ export function PasskeyQuickSetup() {
         ) : (
           <FingerPrintDuotoneIcon className="mr-1.5 size-3.5" />
         )}
-        Add passkey
-      </Button>
+        {"Добавить ключ доступа "}</Button>
     </div>
   );
 }

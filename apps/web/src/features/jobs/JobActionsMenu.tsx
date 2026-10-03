@@ -47,19 +47,19 @@ export function JobActionsMenu({
 
   function copyLink() {
     void navigator.clipboard.writeText(publicUrl());
-    toast.success("Public link copied.");
+    toast.success("Публичная ссылка скопирована.");
   }
 
   function moveToTrash() {
     startTransition(async () => {
       const result = await trashJobAction(jobId);
       if (!result.success) {
-        toast.error(result.error ?? "Could not move the job to trash.");
+        toast.error(result.error ?? "Не удалось переместить задание в корзину.");
         return;
       }
-      toast.success("Job moved to trash.", {
+      toast.success("Работа перемещена в корзину.", {
         action: {
-          label: "Undo",
+          label: "Отменить",
           onClick: () => {
             startTransition(async () => {
               await restoreJobAction(jobId);
@@ -82,7 +82,7 @@ export function JobActionsMenu({
           variant="ghost"
           size="icon"
           className="size-8 text-muted-foreground data-[state=open]:bg-accent"
-          aria-label="Job actions"
+          aria-label={"Действия с вакансией"}
           disabled={isPending}
           onClick={(event) => event.stopPropagation()}
         >
@@ -94,18 +94,15 @@ export function JobActionsMenu({
           onClick={() => router.push(`/dashboard/jobs/${jobId}`)}
         >
           <Pencil />
-          Edit
-        </DropdownMenuItem>
+          {"Редактировать "}</DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`/jobs/${slug}`} target="_blank" rel="noreferrer">
             <ExternalLink />
-            View public page
-          </a>
+            {"Посмотреть общедоступную страницу "}</a>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={copyLink}>
           <Link2 />
-          Copy link
-        </DropdownMenuItem>
+          {"Копировать ссылку "}</DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`/dashboard/jobs/${jobId}/headhunter-demo`}>
             <Users />
@@ -115,8 +112,7 @@ export function JobActionsMenu({
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={moveToTrash}>
           <Trash2 />
-          Move to trash
-        </DropdownMenuItem>
+          {"Переместить в корзину "}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

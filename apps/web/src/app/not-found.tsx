@@ -7,17 +7,14 @@ export default function NotFound() {
         404
       </span>
       <h1 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-        Page not found
-      </h1>
+        {"Страница не найдена "}</h1>
       <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-        The page you&apos;re looking for doesn&apos;t exist or has been moved.
-      </p>
+        {"Страница, которую вы ищете, не существует или была перемещена. "}</p>
       <Link
         href="/"
         className="mt-6 inline-flex h-9 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-pine-strong"
       >
-        Back to careers
-      </Link>
+        {"Вернуться к карьере "}</Link>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
@@ -52,9 +53,9 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
             notificationId: item.id,
           });
           if (!result.success)
-            setError("Could not mark the notification as read.");
+            setError("Не удалось пометить уведомление как прочитанное.");
         } catch {
-          setError("Could not mark the notification as read.");
+          setError("Не удалось пометить уведомление как прочитанное.");
         }
       }
       if (item.href) {
@@ -73,11 +74,11 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
           ? await markNotificationUnread({ notificationId: item.id })
           : await markNotificationRead({ notificationId: item.id });
         if (!result.success) {
-          setError("Could not update the notification.");
+          setError("Не удалось обновить уведомление.");
           return;
         }
       } catch {
-        setError("Could not update the notification.");
+        setError("Не удалось обновить уведомление.");
         return;
       }
       router.refresh();
@@ -90,11 +91,11 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
       try {
         const result = await deleteNotification({ notificationId: item.id });
         if (!result.success) {
-          setError("Could not delete the notification.");
+          setError("Не удалось удалить уведомление.");
           return;
         }
       } catch {
-        setError("Could not delete the notification.");
+        setError("Не удалось удалить уведомление.");
         return;
       }
       router.refresh();
@@ -107,11 +108,11 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
       try {
         const result = await markAllNotificationsRead();
         if (!result.success) {
-          setError("Could not mark all notifications as read.");
+          setError("Не удалось пометить все уведомления как прочитанные.");
           return;
         }
       } catch {
-        setError("Could not mark all notifications as read.");
+        setError("Не удалось пометить все уведомления как прочитанные.");
         return;
       }
       router.refresh();
@@ -119,18 +120,18 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
   }
 
   function removeAll() {
-    if (!window.confirm("Delete all notifications? This cannot be undone."))
+    if (!window.confirm("Удалить все уведомления? Это невозможно отменить."))
       return;
     setError(null);
     startTransition(async () => {
       try {
         const result = await deleteAllNotifications();
         if (!result.success) {
-          setError("Could not delete all notifications.");
+          setError("Не удалось удалить все уведомления.");
           return;
         }
       } catch {
-        setError("Could not delete all notifications.");
+        setError("Не удалось удалить все уведомления.");
         return;
       }
       router.refresh();
@@ -156,10 +157,9 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
             <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
           </svg>
         </span>
-        <p className="text-sm font-medium">You&apos;re all caught up</p>
+        <p className="text-sm font-medium">{"Вы все в плену"}</p>
         <p className="max-w-sm text-sm text-muted-foreground">
-          Mentions and updates from your team will land here.
-        </p>
+          {"Здесь будут появляться упоминания и обновления от вашей команды. "}</p>
       </div>
     );
   }
@@ -169,9 +169,9 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
       <div className="flex items-center justify-between gap-3">
         <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)}>
           <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="all">{"Все"}</TabsTrigger>
             <TabsTrigger value="unread">
-              Unread{unread > 0 ? ` (${unread})` : ""}
+              {"Непрочитано"}{unread > 0 ? ` (${unread})` : ""}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -185,8 +185,7 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
               disabled={isPending}
             >
               <CheckCheck className="size-4" />
-              Mark all as read
-            </Button>
+              {"Отметить все как прочитанное "}</Button>
           ) : null}
           <Button
             size="sm"
@@ -195,23 +194,21 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
             disabled={isPending}
           >
             <Trash2 className="size-4" />
-            Delete all
-          </Button>
+            {"Удалить все "}</Button>
         </div>
       </div>
 
       {error ? (
         <p role="alert" className="text-sm text-destructive">
-          {error}
+          {localizeSystemText(error)}
         </p>
       ) : null}
 
       {visible.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-12 text-center">
-          <p className="text-sm font-medium">No unread notifications</p>
+          <p className="text-sm font-medium">{"Нет непрочитанных уведомлений"}</p>
           <p className="text-sm text-muted-foreground">
-            Switch to &ldquo;All&rdquo; to see past notifications.
-          </p>
+            {"Переключитесь на «Все», чтобы просмотреть прошлые уведомления. "}</p>
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border bg-card">
@@ -281,7 +278,7 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
                     className="size-8 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
                   >
                     <EllipsisVertical className="size-4" />
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">{"Действия"}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -292,13 +289,11 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
                     {item.read ? (
                       <>
                         <EyeOff className="size-4" />
-                        Mark as unread
-                      </>
+                        {"Отметить как непрочитанное "}</>
                     ) : (
                       <>
                         <Eye className="size-4" />
-                        Mark as read
-                      </>
+                        {"Отметить как прочитанное "}</>
                     )}
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -307,8 +302,7 @@ export function InboxList({ items }: { items: NotificationItem[] }) {
                     className="text-destructive focus:text-destructive"
                   >
                     <Trash2 className="size-4" />
-                    Delete
-                  </DropdownMenuItem>
+                    {"Удалить "}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

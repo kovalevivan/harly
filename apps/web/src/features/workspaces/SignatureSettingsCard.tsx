@@ -43,22 +43,22 @@ const TOGGLES: Array<{
   {
     key: "nativeSignEnabled",
     title: "Self-sign",
-    description: "Let members draw or type a signature and sign PDFs directly in the dashboard.",
+    description: "Позвольте участникам рисовать или печатать подпись и подписывать PDF-файлы прямо на панели управления.",
   },
   {
     key: "remoteSignEnabled",
-    title: "Remote signing links",
-    description: "Send a secure link so an external recipient can sign without an account.",
+    title: "Ссылки для удаленной подписи",
+    description: "Отправьте безопасную ссылку, чтобы внешний получатель мог подписать документ без учетной записи.",
   },
   {
     key: "savedSignaturesEnabled",
-    title: "Saved signatures",
-    description: "Let members reuse a saved signature instead of drawing one each time.",
+    title: "Сохраненные подписи",
+    description: "Позвольте участникам повторно использовать сохраненную подпись вместо того, чтобы каждый раз рисовать ее.",
   },
   {
     key: "signatureTimelineEnabled",
-    title: "Signing timeline",
-    description: "Show the audit timeline (viewed, verified, signed) on signed documents.",
+    title: "График подписания",
+    description: "Покажите график аудита (просмотрен, проверен, подписан) в подписанных документах.",
   },
 ];
 
@@ -74,7 +74,7 @@ export function SignatureSettingsCard({ settings }: { settings: Settings }) {
     startTransition(async () => {
       const result = await saveSignatureSettings(value);
       if (!result.ok) toast.error(result.error);
-      else toast.success("Signature settings saved");
+      else toast.success("Настройки подписи сохранены.");
     });
   }
 
@@ -83,11 +83,11 @@ export function SignatureSettingsCard({ settings }: { settings: Settings }) {
       <Card className="gap-5 p-6">
         <SectionHeader
           icon={PencilIcon}
-          title="Harly Signature"
-          description="Control which native signing capabilities are available to this workspace. Native signing is compliance-ready and does not replace your legal policies."
+          title={"Харли Подпись"}
+          description={"Управляйте тем, какие собственные возможности подписи доступны для этой рабочей области. Собственная подпись соответствует требованиям и не заменяет вашу юридическую политику."}
           badge={
             <StatusPill tone={value.nativeSignEnabled ? "on" : "off"}>
-              {value.nativeSignEnabled ? "Active" : "Disabled"}
+              {value.nativeSignEnabled ? "Активные" : "Отключено"}
             </StatusPill>
           }
         />
@@ -113,12 +113,9 @@ export function SignatureSettingsCard({ settings }: { settings: Settings }) {
           <label className="flex items-start justify-between gap-4 px-4 py-3.5">
             <span>
               <span className="block text-sm font-medium">
-                Require email OTP for remote signing
-              </span>
+                {"Требовать OTP по электронной почте для удаленного подписания "}</span>
               <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
-                Recipients must verify a one-time code sent to their email before
-                signing a remote link.
-              </span>
+                {"Получатели должны подтвердить одноразовый код, отправленный на их электронную почту, прежде чем подписывать удаленную ссылку. "}</span>
             </span>
             <Switch
               checked={value.signatureOtpEnabled}
@@ -129,8 +126,7 @@ export function SignatureSettingsCard({ settings }: { settings: Settings }) {
 
         <div className="max-w-xs space-y-2">
           <Label htmlFor="signature-expiration">
-            Remote link expiration (days)
-          </Label>
+            {"Срок действия удаленной ссылки (дни) "}</Label>
           <Input
             id="signature-expiration"
             type="number"
@@ -145,13 +141,12 @@ export function SignatureSettingsCard({ settings }: { settings: Settings }) {
             }
           />
           <p className="text-xs text-muted-foreground">
-            Default is 30 days. Maximum is 365 days.
-          </p>
+            {"По умолчанию — 30 дней. Максимум — 365 дней. "}</p>
         </div>
 
         <div>
           <Button onClick={save} disabled={pending}>
-            {pending ? "Saving…" : "Save settings"}
+            {pending ? "Сохранение…" : "Сохранить настройки"}
           </Button>
         </div>
       </Card>
@@ -174,11 +169,11 @@ function SavedSignaturesCard() {
   function remove(id: string) {
     void deleteSavedSignature({ id }).then((result) => {
       if (!result.ok) {
-        toast.error(result.error ?? "Could not delete the signature.");
+        toast.error(result.error ?? "Не удалось удалить подпись.");
         return;
       }
       setSignatures((current) => current.filter((item) => item.id !== id));
-      toast.success("Signature removed");
+      toast.success("Подпись удалена");
     });
   }
 
@@ -186,12 +181,9 @@ function SavedSignaturesCard() {
     <Card className="gap-4 p-6">
       <div>
         <h2 className="font-display text-lg font-semibold tracking-tight">
-          Your saved signatures
-        </h2>
+          {"Ваши сохраненные подписи "}</h2>
         <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-          Signatures you save while signing a document appear here. They are
-          private to your account and reusable across every document.
-        </p>
+          {"Здесь отображаются подписи, которые вы сохраняете при подписании документа. Они являются личными для вашей учетной записи и могут использоваться повторно в каждом документе. "}</p>
       </div>
       <CardContent className="px-0">
         {loading ? (
@@ -205,9 +197,7 @@ function SavedSignaturesCard() {
           </div>
         ) : signatures.length === 0 ? (
           <div className="rounded-xl border border-dashed px-6 py-10 text-center text-sm leading-6 text-muted-foreground">
-            No saved signatures yet. Save one from the signing screen the next
-            time you sign a document.
-          </div>
+            {"Сохраненных подписей пока нет. Сохраните его на экране подписи в следующий раз, когда будете подписывать документ. "}</div>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {signatures.map((signature) => (
@@ -218,14 +208,14 @@ function SavedSignaturesCard() {
                   ) : (
                     <img
                       src={signature.dataUrl}
-                      alt="Saved signature"
+                      alt={"Сохраненная подпись"}
                       className="max-h-full max-w-full object-contain"
                     />
                   )}
                 </div>
                 <button
                   type="button"
-                  aria-label="Delete saved signature"
+                  aria-label={"Удалить сохраненную подпись"}
                   onClick={() => remove(signature.id)}
                   className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full border bg-card text-muted-foreground opacity-0 shadow-xs transition-opacity hover:text-destructive group-hover:opacity-100"
                 >

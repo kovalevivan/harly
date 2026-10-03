@@ -50,7 +50,7 @@ export function JobShareButton({
   async function copyUrl() {
     await navigator.clipboard.writeText(url);
     setCopied(true);
-    toast.success("Public link copied to clipboard.");
+    toast.success("Публичная ссылка скопирована в буфер обмена.");
     window.setTimeout(() => setCopied(false), 1800);
   }
 
@@ -64,11 +64,11 @@ export function JobShareButton({
     if (!embedSnippet) return;
     await navigator.clipboard.writeText(embedSnippet);
     setEmbedCopied(true);
-    toast.success("Embed snippet copied.");
+    toast.success("Фрагмент вставки скопирован.");
     window.setTimeout(() => setEmbedCopied(false), 1800);
   }
 
-  const shareText = `We're hiring: ${title}`;
+  const shareText = `Мы набираем: ${title}`;
   const linkedin = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
   const x = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
   const email = `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(`${shareText}\n\n${url}`)}`;
@@ -78,15 +78,13 @@ export function JobShareButton({
       <PopoverTrigger asChild>
         <Button type="button" variant="outline" size="sm" className="w-full justify-start">
           <Link2 className="size-4" />
-          Share job
-        </Button>
+          {"Поделиться работой "}</Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
         <div className="border-b p-3">
-          <p className="text-sm font-medium">Share this role</p>
+          <p className="text-sm font-medium">{"Поделиться этой ролью"}</p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Post it, send it, or embed it on your own site.
-          </p>
+            {"Опубликуйте его, отправьте или вставьте на свой сайт. "}</p>
         </div>
 
         <div className="p-3">
@@ -107,7 +105,7 @@ export function JobShareButton({
               ) : (
                 <CopyIcon className="size-3.5" />
               )}
-              {copied ? "Copied" : "Copy"}
+              {copied ? "Скопировано" : "Копировать"}
             </Button>
           </div>
 
@@ -120,12 +118,12 @@ export function JobShareButton({
             <ShareChannel
               href={x}
               icon={<XLogo className="size-4" />}
-              label="X"
+              label={"Х"}
             />
             <ShareChannel
               href={email}
               icon={<EnvelopeSimpleDuotoneIcon className="size-4" />}
-              label="Email"
+              label={"Электронная почта"}
               external={false}
             />
           </div>
@@ -140,10 +138,9 @@ export function JobShareButton({
                 <CodeDuotoneIcon className="size-4" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-medium">Embed on your site</span>
+                <span className="block text-sm font-medium">{"Встроить на свой сайт"}</span>
                 <span className="block text-xs text-muted-foreground">
-                  Copy the single-job widget snippet
-                </span>
+                  {"Скопируйте фрагмент виджета для одного задания "}</span>
               </span>
               {embedCopied ? (
                 <Check className="size-4 shrink-0 text-pine" />

@@ -28,7 +28,7 @@ export default async function OnboardingLayout({
         {logo ? (
           <Image
             src={logo}
-            alt={orgName ?? "Workspace"}
+            alt={orgName ?? "Рабочая область"}
             width={140}
             height={40}
             className="h-10 w-auto object-contain"
@@ -39,13 +39,13 @@ export default async function OnboardingLayout({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/harly-full-black.svg"
-              alt="Harly"
+              alt={"Харли"}
               className="h-12 w-auto dark:hidden"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/harly-full-white.svg"
-              alt="Harly"
+              alt={"Харли"}
               className="hidden h-12 w-auto dark:block"
             />
           </>

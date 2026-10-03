@@ -20,7 +20,7 @@ export function SocialSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as SocialPlatform)}
-        aria-label="Platform"
+        aria-label={"Платформа"}
         className="h-10 w-32 appearance-none rounded-md border bg-background pl-8 pr-3 text-sm transition-colors duration-150 ease hover:border-zinc-300 focus:border-pine focus:outline-none focus:ring-2 focus:ring-pine/20"
       >
         {socialPlatforms.map((p) => (

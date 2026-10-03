@@ -1,3 +1,4 @@
+import { formatEnumLabel } from "@/lib/format";
 /**
  * Natural-language preview of a workflow draft. Pure, client-safe — takes the
  * builder's draft shape (same as `WorkflowDefinitionInput`) and renders a single
@@ -19,13 +20,13 @@ function quote(value: string): string {
 }
 
 function describeValue(value: unknown): string {
-  if (value === null || value === undefined) return "nothing";
+  if (value === null || value === undefined) return "ничего";
   if (typeof value === "string") return quote(value);
   if (typeof value === "number" || typeof value === "boolean") return String(value);
   if (Array.isArray(value)) {
-    if (value.length === 0) return "nothing";
+    if (value.length === 0) return "ничего";
     const items = value.map((v) => (typeof v === "string" ? quote(v) : String(v)));
-    return items.length === 1 ? items[0]! : `${items.slice(0, -1).join(", ")} or ${items.at(-1)}`;
+    return items.length === 1 ? items[0]! : `${items.slice(0, -1).join(", ")} или ${items.at(-1)}`;
   }
   return String(value);
 }
@@ -52,41 +53,40 @@ function describeNode(node: ConditionNode): string {
     case "leaf":
       return describeLeaf(node);
     case "and":
-      if (node.children.length === 0) return "always";
+      if (node.children.length === 0) return "всегда";
       return node.children.map((c, i) => {
         const text = describeNode(c);
         // Wrap sub-groups (and/or/not) in parens so precedence reads.
         return i > 0 && (c.type === "and" || c.type === "or") ? `(${text})` : text;
-      }).join(" and ");
+      }).join(" и ");
     case "or":
-      if (node.children.length === 0) return "never";
+      if (node.children.length === 0) return "никогда";
       return node.children.map((c) => {
         const text = describeNode(c);
         return c.type === "and" ? `(${text})` : text;
-      }).join(" or ");
+      }).join(" или ");
     case "not":
-      return `not ${describeNode(node.child)}`;
+      return `не ${describeNode(node.child)}`;
   }
 }
 
-/** Render a list of root condition nodes as "if …" text. Empty = "always". */
+/** Render a list of root condition nodes as "if …" text. Empty = "всегда". */
 export function describeConditions(roots: ConditionNode[] | undefined): string {
-  if (!roots || roots.length === 0) return "always";
+  if (!roots || roots.length === 0) return "всегда";
   if (roots.length === 1) return describeNode(roots[0]!);
   // Multiple roots = implicit AND (conditionsSchema normalizes to array).
-  return roots.map((r) => describeNode(r)).join(" and ");
+  return roots.map((r) => describeNode(r)).join(" и ");
 }
 
 /** "When <event>" with the filter, if any, appended. */
 export function describeTrigger(trigger: Trigger): string {
   const meta = triggerMeta(trigger.event as WorkflowEvent);
   const lower = meta.label.toLowerCase();
-  const article = /^[aeiou]/.test(lower) ? "an" : "a";
-  const base = `${article} ${lower}`;
+  const base = lower;
   const filter = trigger.filter;
   if (!filter || Object.keys(filter).length === 0) return base;
-  const parts = Object.entries(filter).map(([k, v]) => `${k} is ${describeValue(v)}`);
-  return `${base} where ${parts.join(" and ")}`;
+  const parts = Object.entries(filter).map(([k, v]) => `${k} равно ${describeValue(v)}`);
+  return `${base}, где ${parts.join(" и ")}`;
 }
 
 /** One-line summary of an action's config, e.g. "move to Phone screen". */
@@ -96,35 +96,35 @@ export function describeAction(action: Action): string {
   const c = action.config as Record<string, unknown>;
   switch (action.type) {
     case "move_stage":
-      return `move to ${c.toStageName ?? c.toStageId ?? "a stage"}`;
+      return `переместить в ${c.toStageName ?? c.toStageId ?? "этап"}`;
     case "set_status":
-      return `set status to ${c.status ?? "—"}`;
+      return `изменить статус на ${c.status ? formatEnumLabel(String(c.status)) : "—"}`;
     case "add_note":
-      return `add a note ${describeValue(c.body)}`;
+      return `добавить заметку ${describeValue(c.body)}`;
     case "add_tag":
-      return `add the ${describeValue(c.label)} tag`;
+      return `добавить тег ${describeValue(c.label)}`;
     case "remove_tag":
-      return `remove the ${describeValue(c.label)} tag`;
+      return `удалить тег ${describeValue(c.label)}`;
     case "create_task":
-      return `create a task${c.title ? ` ${quote(String(c.title))}` : ""}${c.ownerId ? " and assign it" : ""}`;
+      return `создать задачу${c.title ? ` ${quote(String(c.title))}` : ""}${c.ownerId ? " и назначить её" : ""}`;
     case "send_slack":
-      return `send a chat message ${describeValue(c.message)}`;
+      return `отправить сообщение в чат ${describeValue(c.message)}`;
     case "send_email":
-      return `email ${c.toEmail ? quote(String(c.toEmail)) : "the candidate"} ${c.subject ? `re: ${quote(String(c.subject))}` : ""}`;
+      return `отправить письмо ${c.toEmail ? quote(String(c.toEmail)) : "кандидату"} ${c.subject ? `тема: ${quote(String(c.subject))}` : ""}`;
     case "send_booking_link":
-      return `send a self-scheduling link ${c.toEmail ? `to ${quote(String(c.toEmail))}` : "to the candidate"}`;
+      return `отправить ссылку для записи ${c.toEmail ? quote(String(c.toEmail)) : "кандидату"}`;
     case "request_documents": {
       const items = Array.isArray(c.items) ? c.items.length : 0;
-      return `request ${items || "some"} document${items === 1 ? "" : "s"} from the candidate`;
+      return `запросить документы у кандидата (количество: ${items || "не задано"})`;
     }
     case "generate_document":
-      return `generate ${c.title ? quote(String(c.title)) : "a document"}`;
+      return `создать ${c.title ? quote(String(c.title)) : "документ"}`;
     case "send_document_for_signature":
-      return `send ${c.documentRequestId ? "the uploaded document" : "a document"} for signature`;
+      return `отправить ${c.documentRequestId ? "загруженный документ" : "документ"} на подпись`;
     case "erase_candidate_data":
-      return "queue complete erasure of candidate data";
+      return "запланировать полное удаление данных кандидата";
     case "http_request":
-      return `${c.method ?? "POST"} ${c.url ?? "an external URL"}`;
+      return `${c.method ?? "POST"} ${c.url ?? "внешний адрес"}`;
     default:
       return meta.label.toLowerCase();
   }
@@ -139,13 +139,13 @@ export function describeWorkflow(input: {
   const when = describeTrigger(input.trigger);
   const cond = describeConditions(input.conditions);
   const thenPart = input.actions.length === 0
-    ? "do nothing"
+    ? "ничего не делать"
     : input.actions.length === 1
       ? describeAction(input.actions[0]!)
-      : `${input.actions.slice(0, -1).map(describeAction).join(", ")} and ${describeAction(input.actions.at(-1)!)}`;
+      : `${input.actions.slice(0, -1).map(describeAction).join(", ")} и ${describeAction(input.actions.at(-1)!)}`;
 
-  const ifClause = cond === "always" ? "" : ` if ${cond},`;
-  return `When ${when},${ifClause} then ${thenPart}.`;
+  const ifClause = cond === "всегда" ? "" : ` если ${cond},`;
+  return `Когда ${when},${ifClause} то ${thenPart}.`;
 }
 
 function graphTrigger(graph: WorkflowGraphV2): Trigger {
@@ -170,14 +170,14 @@ export function describeGraphWorkflow(graph: WorkflowGraphV2): string {
     { action: 0, condition: 0, delay: 0, approval: 0, wait: 0, end: 0, trigger: 0 },
   );
   const details = [
-    counts.action > 0 ? `${counts.action} action${counts.action === 1 ? "" : "s"}` : null,
-    counts.condition > 0 ? "branching" : null,
-    counts.delay > 0 ? "a delay" : null,
-    counts.approval > 0 ? "an approval" : null,
-    counts.wait > 0 ? "an event wait" : null,
+    counts.action > 0 ? `действий: ${counts.action}` : null,
+    counts.condition > 0 ? "ветвление" : null,
+    counts.delay > 0 ? "задержка" : null,
+    counts.approval > 0 ? "согласование" : null,
+    counts.wait > 0 ? "ожидание события" : null,
   ].filter((value): value is string => Boolean(value));
-  const plan = details.length > 0 ? details.join(", ") : "no configured steps";
-  return `When ${trigger}, then ${plan}.`;
+  const plan = details.length > 0 ? details.join(", ") : "нет настроенных шагов";
+  return `Когда ${trigger}, то ${plan}.`;
 }
 
 export function graphActionCount(graph: WorkflowGraphV2): number {

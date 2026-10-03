@@ -87,13 +87,13 @@ const STATUS_ACTIONS: Array<{
 }> = [
   {
     status: "hired",
-    label: "Mark as hired",
+    label: "Отметить как нанятого",
     icon: CheckCircle2,
     confirm: "Mark {name}'s application for {job} as hired?",
   },
   {
     status: "active",
-    label: "Reactivate",
+    label: "Повторно активировать",
     icon: RotateCcw,
     confirm: "Reactivate {name}'s application for {job}?",
   },
@@ -137,10 +137,9 @@ function DecisionApplicationSelector({
   return (
     <label className="flex min-w-0 items-center gap-2 rounded-xl border border-border/70 bg-background px-2.5 py-1.5">
       <span className="shrink-0 text-xs font-medium text-muted-foreground">
-        Decide for
-      </span>
+        {"Действие для "}</span>
       <select
-        aria-label="Application to update"
+        aria-label={"Отклик для обновления"}
         className="min-w-0 max-w-52 bg-transparent text-sm font-medium text-foreground outline-none"
         value={selected?.applicationId ?? ""}
         onChange={(event) => onChange(event.target.value)}
@@ -173,12 +172,12 @@ function RejectButton({
 
   function run(status: "rejected" | "withdrawn", pastTense: string) {
     if (!application) {
-      toast.error("This candidate has no application to update.");
+      toast.error("У этого кандидата нет отклика для обновления.");
       return;
     }
     if (
       !window.confirm(
-        `${pastTense === "withdrawn" ? "Mark" : "Reject"} ${name}'s application for ${application.jobTitle}?`,
+        `Отклик ${pastTense === "withdrawn" ? "Отметить" : "Отклонить"} ${name} на ${application.jobTitle}?`,
       )
     ) {
       return;
@@ -192,7 +191,7 @@ function RejectButton({
         toast.success(`${name} ${pastTense}.`);
         (router as { refresh?: () => void }).refresh?.();
       } else {
-        toast.error(result.error ?? "Could not update candidate.");
+        toast.error(result.error ?? "Не удалось обновить кандидата.");
       }
     });
   }
@@ -205,10 +204,10 @@ function RejectButton({
         disabled={isPending}
         onClick={() => run("rejected", "rejected")}
         className="rounded-r-none border-destructive/30 text-destructive hover:border-destructive/50 hover:bg-destructive/10 hover:text-destructive"
-        title="Reject candidate"
+        title={"Отклонить кандидата"}
       >
         <ProhibitIcon className="size-4" />
-        {compact ? <span className="sr-only">Reject</span> : "Reject"}
+        {compact ? <span className="sr-only">{"Отклонить"}</span> : "Отклонить"}
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -217,10 +216,10 @@ function RejectButton({
             variant="outline"
             disabled={isPending}
             className="rounded-l-none border-l-0 border-destructive/30 px-1.5 text-destructive hover:border-destructive/50 hover:bg-destructive/10 hover:text-destructive"
-            title="More reject options"
+            title={"Дополнительные варианты отклонения"}
           >
             <ChevronDown className="size-4" />
-            <span className="sr-only">Reject options</span>
+            <span className="sr-only">{"Отклонить варианты"}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -229,12 +228,10 @@ function RejectButton({
             onSelect={() => run("rejected", "rejected")}
           >
             <ProhibitIcon className="size-4" />
-            Reject candidate
-          </DropdownMenuItem>
+            {"Отклонить кандидата "}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => run("withdrawn", "withdrawn")}>
             <UserMinus className="size-4" />
-            Mark withdrawn
-          </DropdownMenuItem>
+            {"Отметить снято "}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -257,7 +254,7 @@ function CandidateStatusMenu({
     confirmMessage: string,
   ) {
     if (!application) {
-      toast.error("This candidate has no application to update.");
+      toast.error("У этого кандидата нет отклика для обновления.");
       return;
     }
     if (
@@ -279,7 +276,7 @@ function CandidateStatusMenu({
         toast.success(`${name} ${label.toLowerCase()}.`);
         (router as { refresh?: () => void }).refresh?.();
       } else {
-        toast.error(result.error ?? "Could not update candidate status.");
+        toast.error(result.error ?? "Не удалось обновить статус кандидата.");
       }
     });
   }
@@ -288,8 +285,7 @@ function CandidateStatusMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button size="sm" variant="outline" disabled={isPending}>
-          Status
-          <ChevronDown className="size-4" />
+          {"Статус "}<ChevronDown className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -327,11 +323,11 @@ function DeleteCandidateButton({
     startTransition(async () => {
       const result = await trashCandidateAction(candidateId);
       if (!result.success) {
-        toast.error(result.error ?? "Could not delete candidate.");
+        toast.error(result.error ?? "Не удалось удалить кандидата.");
         return;
       }
       setConfirmOpen(false);
-      toast.success(`${name} moved to trash.`);
+      toast.success(`${name} перемещено в корзину.`);
       router.push("/dashboard/candidates");
     });
   }
@@ -346,17 +342,14 @@ function DeleteCandidateButton({
             className="text-destructive hover:text-destructive"
           >
             <Trash2 className="size-4" />
-            Delete
-          </Button>
+            {"Удалить "}</Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete candidate?</DialogTitle>
+          <DialogTitle>{"Удалить кандидата?"}</DialogTitle>
           <DialogDescription>
-            {name} will be moved to the trash. You can restore them later, or
-            delete permanently from the Trash tab on the candidates list.
-          </DialogDescription>
+            {name} {"будет перемещено в корзину. Вы можете восстановить их позже или навсегда удалить из вкладки «Корзина» в списке кандидатов. "}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
@@ -364,14 +357,13 @@ function DeleteCandidateButton({
             onClick={() => setConfirmOpen(false)}
             disabled={isPending}
           >
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button
             variant="destructive"
             onClick={deleteCandidate}
             disabled={isPending}
           >
-            {isPending ? "Deleting…" : "Delete candidate"}
+            {isPending ? "Удаление…" : "Удалить кандидата"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -452,16 +444,15 @@ export function CandidateActionBar({
             size="sm"
             variant="ghost"
             className="size-8 p-0 text-muted-foreground hover:text-foreground"
-            title="Email"
+            title={"Электронная почта"}
           >
             <Mail className="size-4" />
-            <span className="sr-only">Email</span>
+            <span className="sr-only">{"Электронная почта"}</span>
           </Button>
         ) : (
           <Button size="sm" variant="outline">
             <Mail className="size-4" />
-            Email
-          </Button>
+            {"Электронная почта "}</Button>
         )
       }
     />
@@ -482,16 +473,15 @@ export function CandidateActionBar({
             size="sm"
             variant="ghost"
             className="size-8 p-0 text-muted-foreground hover:text-foreground"
-            title="Schedule"
+            title={"Расписание"}
           >
             <CalendarClock className="size-4" />
-            <span className="sr-only">Schedule</span>
+            <span className="sr-only">{"Расписание"}</span>
           </Button>
         ) : (
           <Button size="sm" variant="outline">
             <CalendarClock className="size-4" />
-            Schedule
-          </Button>
+            {"Расписание "}</Button>
         )
       }
     />
@@ -509,16 +499,15 @@ export function CandidateActionBar({
             size="sm"
             variant="ghost"
             className="size-8 p-0 text-muted-foreground hover:text-foreground"
-            title="Evaluate"
+            title={"Оценить"}
           >
             <ClipboardCheck className="size-4" />
-            <span className="sr-only">Evaluate</span>
+            <span className="sr-only">{"Оценить"}</span>
           </Button>
         ) : (
           <Button size="sm" variant="outline">
             <ClipboardCheck className="size-4" />
-            Evaluate
-          </Button>
+            {"Оценить "}</Button>
         )
       }
     />
@@ -596,10 +585,10 @@ export function CandidateActionBar({
               size="sm"
               variant="ghost"
               className="size-8 p-0 text-muted-foreground hover:text-foreground"
-              title="Edit candidate"
+              title={"Изменить кандидата"}
             >
               <Pencil className="size-4" />
-              <span className="sr-only">Edit</span>
+              <span className="sr-only">{"Редактировать"}</span>
             </Button>
           }
         />
@@ -611,27 +600,26 @@ export function CandidateActionBar({
                   size="sm"
                   variant="ghost"
                   className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                  title="View resume"
+                  title={"Посмотреть резюме"}
                 >
                   <FileText className="size-4" />
-                  <span className="sr-only">Resume</span>
+                  <span className="sr-only">{"Резюме"}</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-3xl">
                 <DialogHeader>
                   <DialogTitle className="flex items-center justify-between gap-3 pr-8">
                     <span className="truncate">
-                      {resumeFileName ?? `${name}'s resume`}
+                      {resumeFileName ?? `резюме ${name}`}
                     </span>
                     <Button asChild size="sm" variant="outline">
                       <a href={resumeUrl} target="_blank" rel="noreferrer">
                         <Download className="size-4" />
-                        Download
-                      </a>
+                        {"Скачать "}</a>
                     </Button>
                   </DialogTitle>
                   <DialogDescription className="sr-only">
-                    Resume preview for {name}
+                    {"Возобновить предварительный просмотр для "}{name}
                   </DialogDescription>
                 </DialogHeader>
                 <PdfViewer
@@ -647,11 +635,11 @@ export function CandidateActionBar({
               size="sm"
               variant="ghost"
               className="size-8 p-0 text-muted-foreground hover:text-foreground"
-              title="View resume"
+              title={"Посмотреть резюме"}
             >
               <a href={resumeUrl} target="_blank" rel="noreferrer">
                 <FileText className="size-4" />
-                <span className="sr-only">Resume</span>
+                <span className="sr-only">{"Резюме"}</span>
               </a>
             </Button>
           )
@@ -667,10 +655,10 @@ export function CandidateActionBar({
                 size="sm"
                 variant="ghost"
                 className="size-8 p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                title="Delete candidate"
+                title={"Удалить кандидата"}
               >
                 <Trash2 className="size-4" />
-                <span className="sr-only">Delete</span>
+                <span className="sr-only">{"Удалить"}</span>
               </Button>
             }
           />

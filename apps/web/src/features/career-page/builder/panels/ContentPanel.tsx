@@ -20,25 +20,25 @@ type ContentPanelProps = {
 export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
   return (
     <div className="space-y-6">
-      <PanelHeader title="Content" subtitle="Headlines, images, and intro content." />
+      <PanelHeader title={"Содержание"} subtitle={"Заголовки, изображения и вступительный контент."} />
 
-      <Section title="Hero" defaultOpen>
-        <Field label="Headline">
+      <Section title={"Герой"} defaultOpen>
+        <Field label={"Заголовок"}>
           <Input
             value={config.hero.headline}
             onChange={(e) => update((d) => (d.hero.headline = e.target.value))}
-            placeholder="Join us"
+            placeholder={"Присоединяйтесь к нам"}
           />
         </Field>
-        <Field label="Subhead">
+        <Field label={"Подзаголовок"}>
           <Input
             value={config.hero.subhead}
             onChange={(e) => update((d) => (d.hero.subhead = e.target.value))}
-            placeholder="A short tagline or mission statement"
+            placeholder={"Короткий слоган или формулировка миссии"}
           />
         </Field>
         <ToggleRow
-          label="Show headline"
+          label={"Показать заголовок"}
           checked={config.hero.showHeadline}
           onCheckedChange={(v) => update((d) => (d.hero.showHeadline = v))}
         />
@@ -47,20 +47,20 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
         {config.template === "minimal" && (
           <>
             <ToggleRow
-              label="Use banner image instead of topbar"
+              label={"Используйте изображение баннера вместо верхней панели"}
               checked={config.hero.bannerEnabled}
               onCheckedChange={(v) => update((d) => (d.hero.bannerEnabled = v))}
             />
             {config.hero.bannerEnabled && (
               <>
-                <Field label="Banner image">
+                <Field label={"Изображение баннера"}>
                   <FileDropzone
                     aspect="banner"
                     value={config.hero.imageUrl}
                     onChange={(url) => update((d) => (d.hero.imageUrl = url))}
                   />
                 </Field>
-                <Field label={`Overlay opacity, ${config.hero.overlayOpacity}%`}>
+                <Field label={`Непрозрачность наложения, ${config.hero.overlayOpacity}%`}>
                   <input
                     type="range"
                     min={0}
@@ -73,24 +73,24 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
                     className="w-full accent-pine"
                   />
                 </Field>
-                <Field label="Banner logo variant">
+                <Field label={"Вариант логотипа баннера"}>
                   <Segmented
                     value={config.hero.bannerLogoVariant}
                     onChange={(v) => update((d) => (d.hero.bannerLogoVariant = v))}
                     options={[
-                      { value: "dark", label: "White letters" },
-                      { value: "light", label: "Dark letters" },
+                      { value: "dark", label: "Белые буквы" },
+                      { value: "light", label: "Темные буквы" },
                     ]}
                   />
                 </Field>
-                <Field label="Full logo, white letters for dark banners">
+                <Field label={"Полный логотип, белые буквы для темных баннеров."}>
                   <FileDropzone
                     aspect="banner"
                     value={config.hero.bannerLogoDark}
                     onChange={(url) => update((d) => (d.hero.bannerLogoDark = url))}
                   />
                 </Field>
-                <Field label="Full logo, dark letters for light banners">
+                <Field label={"Полный логотип, темные буквы для светлых баннеров."}>
                   <FileDropzone
                     aspect="banner"
                     value={config.hero.bannerLogoLight}
@@ -105,21 +105,21 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
         {/* Logo type + CTA text , Minimal and Join (topbar-based heroes) */}
         {(config.template === "minimal" || config.template === "join") && (
           <>
-            <Field label="Logo to display">
+            <Field label={"Логотип для отображения"}>
               <Segmented
                 value={config.hero.logoType}
                 onChange={(v) => update((d) => (d.hero.logoType = v))}
                 options={[
-                  { value: "logo", label: "Square mark" },
-                  { value: "fullLogo", label: "Full wordmark" },
+                  { value: "logo", label: "Квадратный знак" },
+                  { value: "fullLogo", label: "Полный текстовый знак" },
                 ]}
               />
             </Field>
-            <Field label="Button text">
+            <Field label={"Текст кнопки"}>
               <Input
                 value={config.hero.ctaButtonText}
                 onChange={(e) => update((d) => (d.hero.ctaButtonText = e.target.value))}
-                placeholder="View jobs"
+                placeholder={"Посмотреть вакансии"}
               />
             </Field>
           </>
@@ -128,7 +128,7 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
         {/* Banner image + overlay , Playful & Ashby */}
         {(config.template === "playful" || config.template === "ashby") && (
           <>
-            <Field label="Banner image">
+            <Field label={"Изображение баннера"}>
               <FileDropzone
                 aspect="banner"
                 value={config.hero.imageUrl}
@@ -136,7 +136,7 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
               />
             </Field>
             <ToggleRow
-              label="Gradient overlay"
+              label={"Наложение градиента"}
               checked={config.hero.overlay === "gradient"}
               onCheckedChange={(v) =>
                 update((d) => (d.hero.overlay = v ? "gradient" : "none"))
@@ -145,13 +145,13 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
             {config.hero.overlay === "gradient" && (
               <div className="grid grid-cols-2 gap-2">
                 <ColorField
-                  label="From"
+                  label={"От"}
                   value={config.hero.overlayFrom}
                   fallback={config.theme.accent ?? workspace.primaryColor}
                   onChange={(c) => update((d) => (d.hero.overlayFrom = c))}
                 />
                 <ColorField
-                  label="To"
+                  label={"Кому"}
                   value={config.hero.overlayTo}
                   fallback="#ffffff"
                   onChange={(c) => update((d) => (d.hero.overlayTo = c))}
@@ -161,40 +161,40 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
           </>
         )}
 
-        <Field label="Logo position">
+        <Field label={"Расположение логотипа"}>
           <Segmented
             value={config.hero.logoPosition}
             onChange={(v) => update((d) => (d.hero.logoPosition = v))}
             options={[
-              { value: "left", label: "Left", icon: <AlignLeftIcon className="size-3.5" strokeWidth={1.8} /> },
-              { value: "center", label: "Center", icon: <AlignCenterIcon className="size-3.5" strokeWidth={1.8} /> },
-              { value: "right", label: "Right", icon: <AlignRightIcon className="size-3.5" strokeWidth={1.8} /> },
+              { value: "left", label: "Левый", icon: <AlignLeftIcon className="size-3.5" strokeWidth={1.8} /> },
+              { value: "center", label: "Центр", icon: <AlignCenterIcon className="size-3.5" strokeWidth={1.8} /> },
+              { value: "right", label: "Правильно", icon: <AlignRightIcon className="size-3.5" strokeWidth={1.8} /> },
             ]}
           />
         </Field>
         <ToggleRow
-          label="Show company name next to logo"
+          label={"Показывать название компании рядом с логотипом"}
           checked={config.hero.showName}
           onCheckedChange={(v) => update((d) => { d.hero.showName = v; })}
         />
       </Section>
 
-      <Section title="Intro & content">
-        <Field label="Intro / about us">
+      <Section title={"Введение и содержание"}>
+        <Field label={"Введение / о нас"}>
           <RichTextEditor
             key={config.template}
             defaultValue={config.intro.body}
-            placeholder="Tell candidates about your company, culture, mission…"
+            placeholder={"Расскажите кандидатам о вашей компании, культуре, миссии…"}
             minHeight="10rem"
             onChange={(html) => update((d) => (d.intro.body = html))}
           />
         </Field>
         {config.template === "playful" && (
           <ListEditor
-            label="Chips"
+            label={"Чипсы"}
             items={config.intro.chips}
             onAdd={() =>
-              update((d) => d.intro.chips.push({ label: "New", icon: "" }))
+              update((d) => d.intro.chips.push({ label: "Новый", icon: "" }))
             }
             onRemove={(i) => update((d) => d.intro.chips.splice(i, 1))}
             onMove={(i, dir) => update((d) => move(d.intro.chips, i, dir))}
@@ -205,7 +205,7 @@ export function ContentPanel({ config, update, workspace }: ContentPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.intro.chips[i].label = e.target.value))
                   }
-                  placeholder="Label"
+                  placeholder={"Этикетка"}
                   className="min-w-0"
                 />
                 <IconSelect

@@ -7,11 +7,11 @@ import { SocialIcon, socialLabel } from "@/features/career-page/social-icons";
 import type { CareerSocialLink } from "@/features/career-page/config";
 
 const LEGAL_LINK_LABELS: Record<string, string> = {
-  "privacy-policy": "Privacy Policy",
-  "terms-of-service": "Terms of Service",
-  "cookie-policy": "Cookie Policy",
-  "candidate-notice": "Candidate Notice",
-  "ai-transparency-notice": "AI Transparency",
+  "privacy-policy": "Политика конфиденциальности",
+  "terms-of-service": "Условия использования",
+  "cookie-policy": "Политика использования файлов cookie",
+  "candidate-notice": "Уведомление кандидата",
+  "ai-transparency-notice": "Прозрачность ИИ",
 };
 
 type PortalFooterProps = {
@@ -126,8 +126,8 @@ export function PortalFooter({
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
           >
-            <span className="font-medium">Powered by</span>
-            <span className="font-display font-semibold text-foreground">Harly</span>
+            <span className="font-medium">{"При поддержке"}</span>
+            <span className="font-display font-semibold text-foreground">{"Харли"}</span>
           </a>
         </div>
       </div>

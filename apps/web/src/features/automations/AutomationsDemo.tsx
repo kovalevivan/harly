@@ -1,3 +1,4 @@
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { cn } from "@/lib/utils";
 import {
   ArrowUpRightIcon,
@@ -27,26 +28,26 @@ const SAMPLE_RECIPES: SampleRecipe[] = [
   {
     templateId: "notify-slack-on-apply",
     summary:
-      "When a candidate applies, post a message to the team channel with their name and the role.",
-    lastRun: "12 min ago",
+      "Когда кандидат подаст заявку, опубликуйте сообщение на канале команды с его именем и ролью.",
+    lastRun: "12 минут назад",
   },
   {
     templateId: "screening-task-on-stage",
     summary:
-      "When a candidate moves to Phone screen, create a task for the recruiter to book the call.",
-    lastRun: "1 hour ago",
+      "Когда кандидат перейдет на экран «Телефон», создайте задачу рекрутеру забронировать звонок.",
+    lastRun: "1 час назад",
   },
   {
     templateId: "interview-prep-task",
     summary:
-      "When an interview is scheduled, create a prep task so the interviewer reviews the profile first.",
+      "Когда назначено собеседование, создайте подготовительную задачу, чтобы интервьюер сначала проверил профиль.",
     lastRun: "yesterday",
   },
   {
     templateId: "tag-vip-candidates",
     summary:
-      "When a candidate applies with a match score of 80 or more, tag them as high-fit and tell the team.",
-    lastRun: "3 days ago",
+      "Если кандидат подает заявку с оценкой совпадения 80 или более, отметьте его как подходящего и сообщите об этом команде.",
+    lastRun: "3 дня назад",
   },
 ];
 
@@ -78,16 +79,12 @@ export function AutomationsDemo() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-semibold tracking-tight text-near-ink">
-            Automations
-          </h1>
+            {"Автоматизация "}</h1>
           <p className="mt-1 text-sm text-soft-ink">
-            {recipes.length} recipes · when something happens, Harly can email, tag,
-            task, or move a candidate.
-          </p>
+            {recipes.length} {"сценария · Harly может отправить письмо, добавить тег, поставить задачу или переместить кандидата при наступлении события. "}</p>
         </div>
         <span className="font-chrome inline-flex items-center gap-1.5 rounded-full bg-soft-kraft px-3 py-1 text-[12px] text-soft-ink">
-          <LockSimpleIcon className="size-3.5" /> View only
-        </span>
+          <LockSimpleIcon className="size-3.5" /> {"Только просмотр "}</span>
       </div>
 
       <p
@@ -96,23 +93,21 @@ export function AutomationsDemo() {
       >
         <InfoIcon className="size-4 shrink-0 text-near-ink" />
         <span>
-          These are sample recipes. In the demo nothing runs and editing is off.
-        </span>
+          {"Это примеры сценариев. В демо ничего не запускается и редактирование отключено. "}</span>
         <a
           href="https://docs.harly.dev/self-hosting/overview"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-0.5 font-medium text-near-ink underline-offset-4 hover:underline"
         >
-          Self-host Harly
-          <ArrowUpRightIcon className="size-3.5" />
-          <span className="sr-only"> (opens in a new tab)</span>
+          {"Развернуть Harly у себя "}<ArrowUpRightIcon className="size-3.5" />
+          <span className="sr-only"> {"(откроется в новой вкладке)"}</span>
         </a>
-        <span>to build your own.</span>
+        <span>{"построить свой собственный."}</span>
       </p>
 
       <section
-        aria-label="Sample automations"
+        aria-label={"Примеры автоматизации"}
         className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2"
       >
         {recipes.map((recipe) => (
@@ -159,10 +154,10 @@ export function AutomationsDemo() {
                     : "bg-soft-kraft text-soft-ink",
                 )}
               >
-                {recipe.enabled ? "On" : "Paused"}
+                {recipe.enabled ? "Вкл." : "Приостановлено"}
               </span>
               <span className="ml-auto text-[11px] text-soft-ink">
-                last run {recipe.lastRun}
+                {"последний запуск "}{recipe.lastRun}
               </span>
             </div>
           </article>
@@ -177,11 +172,9 @@ export function AutomationsDemo() {
           id="demo-starter-recipes-title"
           className="font-display text-lg font-semibold text-near-ink"
         >
-          Starter recipes
-        </h2>
+          {"Готовые сценарии "}</h2>
         <p className="mt-0.5 text-xs text-soft-ink">
-          Every workspace ships with these. On your own install you can start from one and adjust each step.
-        </p>
+          {"Каждое рабочее место поставляется с ними. При самостоятельной установке вы можете начать с одного и корректировать каждый шаг. "}</p>
         <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {starterRecipes.map((template) => (
             <li
@@ -189,7 +182,7 @@ export function AutomationsDemo() {
               className="flex flex-col rounded-xl border border-mist-border/80 bg-warm-paper p-4"
             >
               <span className="font-chrome text-[11px] uppercase tracking-[0.04em] text-soft-ink">
-                {template.category}
+                {localizeSystemText(template.category)}
               </span>
               <span className="font-display mt-1 text-sm font-semibold text-near-ink">
                 {template.name}

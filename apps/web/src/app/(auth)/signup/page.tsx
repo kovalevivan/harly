@@ -28,32 +28,26 @@ export default async function SignupPage() {
           href="/login"
           className="font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
-          Sign in
-        </Link>
+          {"Войти "}</Link>
       }
     >
       <AuthCard
-        title="Create your account"
-        subtitle="Set up your ATS in minutes. No credit card required."
+        title={"Создайте свою учетную запись"}
+        subtitle={"Настройте свою АТС за считанные минуты. Кредитная карта не требуется."}
         footer={
           <>
-            Already have an account?{" "}
+            {"У вас уже есть аккаунт?"}{" "}
             <Link href="/login" className="font-semibold text-foreground hover:underline">
-              Sign in
-            </Link>
+              {"Войти "}</Link>
           </>
         }
       >
         {inviteOnly ? (
           <div className="rounded-lg bg-muted px-4 py-3">
             <p className="text-sm font-medium text-foreground">
-              Signups are invite-only.
-            </p>
+              {"Регистрация возможна только по приглашению. "}</p>
             <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              This Harly workspace is already set up. Ask an admin to
-              invite you — your invite link drops you straight into the
-              right role.
-            </p>
+              {"Это рабочее пространство Harly уже настроено. Попросите администратора пригласить вас — ваша ссылка-приглашение приведет вас прямо к нужной роли. "}</p>
           </div>
         ) : (
           <SignupForm googleEnabled={googleEnabled} />

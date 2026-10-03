@@ -22,9 +22,9 @@ import {
 import { cn } from "@/lib/utils";
 
 const RATINGS = [
-  { key: "strong", label: "Strong", icon: ThumbsUp },
-  { key: "mixed", label: "Mixed", icon: Minus },
-  { key: "weak", label: "Weak", icon: ThumbsDown },
+  { key: "strong", label: "Сильный", icon: ThumbsUp },
+  { key: "mixed", label: "Смешанный", icon: Minus },
+  { key: "weak", label: "Слабый", icon: ThumbsDown },
 ] as const;
 
 type RatingKey = (typeof RATINGS)[number]["key"];
@@ -60,12 +60,12 @@ export function EvaluationDrawer({
     startSuggest(async () => {
       const result = await suggestScorecardAttributesAction({ candidateId });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not suggest attributes.");
+        toast.error(result.error ?? "Не удалось предложить атрибуты.");
         return;
       }
       if (result.attributes.length === 0) {
-        toast.message("No attributes suggested", {
-          description: "Try again or add your own below.",
+        toast.message("Атрибуты не предложены", {
+          description: "Попробуйте еще раз или добавьте свой ниже.",
         });
         return;
       }
@@ -97,23 +97,23 @@ export function EvaluationDrawer({
 
   function refine() {
     if (!comment.trim()) {
-      toast.error("Write a comment to refine first.");
+      toast.error("Напишите комментарий, чтобы уточнить его в первую очередь.");
       return;
     }
     startRefine(async () => {
       const result = await refineScorecardTextAction({ comment, candidateId });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not refine.");
+        toast.error(result.error ?? "Не удалось уточнить.");
         return;
       }
       setComment(result.refined);
-      toast.success("Comment refined");
+      toast.success("Комментарий уточнен");
     });
   }
 
   function submit() {
     if (!rating) {
-      toast.error("Pick an overall rating first.");
+      toast.error("Сначала выберите общий рейтинг.");
       return;
     }
     startTransition(async () => {
@@ -126,10 +126,10 @@ export function EvaluationDrawer({
         comment: comment.trim() || undefined,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not save the evaluation.");
+        toast.error(result.error ?? "Не удалось сохранить оценку.");
         return;
       }
-      toast.success("Evaluation saved");
+      toast.success("Оценка сохранена.");
       setOpen(false);
       setRating(null);
       setComment("");
@@ -143,8 +143,8 @@ export function EvaluationDrawer({
       open={open}
       onOpenChange={setOpen}
       trigger={trigger}
-      title={`Add evaluation${stageName ? ` · ${stageName}` : ""}`}
-      description="Rate this candidate and leave feedback for the team."
+      title={`Добавить оценку${stageName ? ` · ${stageName}` : ""}`}
+      description={"Оцените этого кандидата и оставьте отзыв для команды."}
       footer={
         <>
           <Button
@@ -152,10 +152,9 @@ export function EvaluationDrawer({
             disabled={isPending}
             onClick={() => setOpen(false)}
           >
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button onClick={submit} disabled={isPending}>
-            {isPending ? "Saving…" : "Save evaluation"}
+            {isPending ? "Сохранение…" : "Сохранить оценку"}
           </Button>
         </>
       }
@@ -163,8 +162,7 @@ export function EvaluationDrawer({
       <div className="space-y-5">
         <div className="space-y-2">
           <p className="text-[13px] font-medium tracking-tight text-foreground/90">
-            Overall rating
-          </p>
+            {"Общий рейтинг "}</p>
           <div className="grid grid-cols-3 gap-2">
             {RATINGS.map((r) => {
               const active = rating === r.key;
@@ -194,8 +192,7 @@ export function EvaluationDrawer({
               htmlFor="evaluation-comment"
               className="text-[13px] font-medium tracking-tight text-foreground/90"
             >
-              Comments
-            </label>
+              {"Комментарии "}</label>
             <button
               type="button"
               onClick={suggestAttributes}
@@ -212,7 +209,7 @@ export function EvaluationDrawer({
               ) : (
                 <SparkleFillIcon className="size-3.5" />
               )}
-              {suggesting ? "Thinking…" : "Suggest attributes"}
+              {suggesting ? "Думая…" : "Предложить атрибуты"}
             </button>
           </div>
 
@@ -244,7 +241,7 @@ export function EvaluationDrawer({
               id="evaluation-comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Strengths, concerns, and your recommendation…"
+              placeholder={"Сильные стороны, проблемы и ваши рекомендации…"}
               className="min-h-32 pb-11"
             />
             <button
@@ -263,12 +260,11 @@ export function EvaluationDrawer({
               ) : (
                 <MagicWandDuotoneIcon className="size-3.5" />
               )}
-              {refining ? "Refining…" : "Refine with AI"}
+              {refining ? "Переработка…" : "Уточняйте с помощью ИИ"}
             </button>
           </div>
           <p className="text-xs text-muted-foreground">
-            AI cleans up grammar and clarity without changing your judgement.
-          </p>
+            {"ИИ очищает грамматику и ясность, не меняя вашего суждения. "}</p>
         </div>
       </div>
     </SidePanel>

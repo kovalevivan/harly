@@ -13,8 +13,8 @@ export function PipelineViewToggle({
   view: "board" | "list";
 }) {
   const items = [
-    { key: "list" as const, label: "List", icon: List },
-    { key: "board" as const, label: "Board", icon: LayoutGrid },
+    { key: "list" as const, label: "Список", icon: List },
+    { key: "board" as const, label: "Совет", icon: LayoutGrid },
   ];
   return (
     <div className="inline-flex items-center gap-1 rounded-lg border bg-card p-1">

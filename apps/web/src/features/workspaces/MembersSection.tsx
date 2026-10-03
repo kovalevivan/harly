@@ -102,7 +102,7 @@ const initialActionState = { success: false } as {
 };
 
 function formatInvitationDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -150,8 +150,7 @@ export function MembersAndRoles({
             className="gap-2 rounded-lg px-4 data-[state=active]:shadow-sm"
           >
             <UsersThreeIcon className="size-4" />
-            Members
-            <CountChip active={tab === "members"}>{members.length}</CountChip>
+            {"Члены "}<CountChip active={tab === "members"}>{members.length}</CountChip>
           </TabsTrigger>
           {canManageRoles ? (
             <TabsTrigger
@@ -159,8 +158,7 @@ export function MembersAndRoles({
               className="gap-2 rounded-lg px-4 data-[state=active]:shadow-sm"
             >
               <ShieldCheckDuotoneIcon className="size-4" />
-              Roles
-              <CountChip active={tab === "roles"}>{roles.length}</CountChip>
+              {"Роли "}<CountChip active={tab === "roles"}>{roles.length}</CountChip>
             </TabsTrigger>
           ) : null}
         </TabsList>
@@ -170,8 +168,7 @@ export function MembersAndRoles({
             <SheetTrigger asChild>
               <Button>
                 <PlusIcon className="size-4" />
-                New role
-              </Button>
+                {"Новая роль "}</Button>
             </SheetTrigger>
             <RoleEditor mode="create" onDone={() => setCreatingRole(false)} />
           </Sheet>
@@ -329,11 +326,11 @@ function MembersPanel({
         changes: dirty.map((m) => ({ memberId: m.id, role: overrides[m.id] })),
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not save changes.");
+        toast.error(result.error ?? "Не удалось сохранить изменения.");
         return;
       }
       toast.success(
-        `Saved ${dirty.length} role ${dirty.length === 1 ? "change" : "changes"}`,
+        `Сохранена роль ${dirty.length} ${dirty.length === 1 ? "change" : "changes"}`,
       );
       setOverrides({});
       router.refresh();
@@ -351,12 +348,12 @@ function MembersPanel({
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search name or email…"
+              placeholder={"Поиск по имени или адресу электронной почты…"}
               className="pl-9"
             />
           </div>
           <p className="hidden shrink-0 text-xs text-muted-foreground md:block">
-            Showing {visible.length} member{visible.length !== 1 ? "s" : ""}
+            {"Показаны "}{visible.length} {"участников"}{visible.length !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -365,7 +362,7 @@ function MembersPanel({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All roles</SelectItem>
+              <SelectItem value="all">{"Все роли"}</SelectItem>
               {assignableRoles.map((r) => (
                 <SelectItem key={r.key} value={r.key}>
                   {r.name}
@@ -391,8 +388,7 @@ function MembersPanel({
                   trigger={
                     <Button>
                       <UserPlusIcon className="size-4" />
-                      Invite
-                    </Button>
+                      {"Пригласить "}</Button>
                   }
                 />
               ) : null}
@@ -407,8 +403,7 @@ function MembersPanel({
             {visible.length} {visible.length === 1 ? "member" : "members"}
           </p>
           <p className="hidden text-xs font-medium uppercase tracking-wide text-muted-foreground sm:block">
-            Role
-          </p>
+            {"Роль "}</p>
         </div>
         <CardContent className="p-0">
           <ul className="divide-y">
@@ -431,8 +426,7 @@ function MembersPanel({
                       ) : null}
                       {member.isCurrentUser ? (
                         <Badge variant="secondary" className="shrink-0">
-                          You
-                        </Badge>
+                          {"ты "}</Badge>
                       ) : null}
                     </p>
                     <p className="truncate text-xs text-muted-foreground">
@@ -440,7 +434,7 @@ function MembersPanel({
                     </p>
                     {member.status !== "active" ? (
                       <Badge variant={member.status === "suspended" ? "warning" : "outline"} className="mt-1 text-[10px]">
-                        {member.status === "suspended" ? "Suspended" : "Inactive"}
+                        {member.status === "suspended" ? "Приостановлено" : "Неактивный"}
                       </Badge>
                     ) : null}
                     {emailIdentity.enabled ? (
@@ -454,7 +448,7 @@ function MembersPanel({
                               type="button"
                               onClick={() => setEditingIdentity(member)}
                               className="shrink-0 text-muted-foreground/70 hover:text-foreground"
-                              title="Edit sender address"
+                              title={"Изменить адрес отправителя"}
                             >
                               <PencilIcon className="size-3" />
                             </button>
@@ -470,7 +464,7 @@ function MembersPanel({
                               });
                               if (!result.success) {
                                 toast.error(
-                                  result.error ?? "Could not generate a sender address.",
+                                  result.error ?? "Не удалось создать адрес отправителя.",
                                 );
                                 return;
                               }
@@ -479,8 +473,7 @@ function MembersPanel({
                           }
                           className="text-[11px] text-muted-foreground underline-offset-2 hover:underline"
                         >
-                          Not set — generate
-                        </button>
+                          {"Не установлено — сгенерировать "}</button>
                       ) : null
                     ) : null}
                   </div>
@@ -535,10 +528,9 @@ function MembersPanel({
                 <span className="flex size-11 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
                   <UsersThreeIcon className="size-5" />
                 </span>
-                <p className="text-sm font-medium">No members match</p>
+                <p className="text-sm font-medium">{"Ни один из участников не соответствует"}</p>
                 <p className="text-xs text-muted-foreground">
-                  Try a different search or role filter.
-                </p>
+                  {"Попробуйте другой фильтр поиска или роли. "}</p>
               </li>
             ) : null}
           </ul>
@@ -548,8 +540,7 @@ function MembersPanel({
       {pendingInvitations.length > 0 ? (
         <div className="space-y-2.5">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Pending invitations
-          </p>
+            {"Ожидаемые приглашения "}</p>
           <Card className="gap-0 overflow-hidden py-0">
             <ul className="divide-y">
               {pendingInvitations.map((item) => (
@@ -565,11 +556,10 @@ function MembersPanel({
                       <p className="flex items-center gap-2 truncate text-sm font-medium">
                         <span className="truncate">{item.email}</span>
                         <Badge variant="warning" className="shrink-0">
-                          Invited
-                        </Badge>
+                          {"Приглашенный "}</Badge>
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {roleName(item.role)} · expires{" "}
+                        {roleName(item.role)} {"· истекает"}{" "}
                         {formatInvitationDate(item.expiresAt)}
                       </p>
                     </div>
@@ -590,7 +580,7 @@ function MembersPanel({
       {canEditMembers && dirty.length > 0 ? (
         <div className="sticky bottom-4 z-10 flex items-center justify-between gap-3 rounded-2xl border border-pine/30 bg-card px-4 py-3 shadow-[0_8px_24px_-12px_rgba(31,41,38,0.25)]">
           <p className="text-sm">
-            <span className="font-medium">{dirty.length}</span> unsaved role{" "}
+            <span className="font-medium">{dirty.length}</span> {"несохраненная роль"}{" "}
             {dirty.length === 1 ? "change" : "changes"}
           </p>
           <div className="flex items-center gap-2">
@@ -600,10 +590,9 @@ function MembersPanel({
               disabled={saving}
               onClick={() => setOverrides({})}
             >
-              Discard
-            </Button>
+              {"Отбросить "}</Button>
             <Button size="sm" disabled={saving} onClick={saveChanges}>
-              {saving ? "Saving…" : "Save changes"}
+              {saving ? "Сохранение…" : "Сохранить изменения"}
             </Button>
           </div>
         </div>
@@ -653,7 +642,7 @@ function SenderIdentityDialog({
           }}
         >
           <DialogHeader>
-            <DialogTitle>Sender address for {member.name}</DialogTitle>
+            <DialogTitle>{"Адрес отправителя для "}{member.name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1.5">
@@ -669,8 +658,7 @@ function SenderIdentityDialog({
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="sender-display-name" className="text-xs text-muted-foreground">
-                Display name
-              </Label>
+                {"Отображаемое имя "}</Label>
               <Input
                 id="sender-display-name"
                 value={displayName}
@@ -681,8 +669,7 @@ function SenderIdentityDialog({
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={onClose} disabled={saving}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button
               disabled={saving}
               onClick={() =>
@@ -693,15 +680,15 @@ function SenderIdentityDialog({
                     displayName,
                   });
                   if (!result.success) {
-                    toast.error(result.error ?? "Could not update the sender address.");
+                    toast.error(result.error ?? "Не удалось обновить адрес отправителя.");
                     return;
                   }
-                  toast.success("Sender address updated.");
+                  toast.success("Адрес отправителя обновлен.");
                   onSaved();
                 })
               }
             >
-              {saving ? "Saving…" : "Save"}
+              {saving ? "Сохранение…" : "Сохранить"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -738,7 +725,7 @@ function MemberRowActions({
             variant="ghost"
             size="icon"
             className="text-muted-foreground hover:text-foreground"
-            aria-label={`Actions for ${member.name}`}
+            aria-label={`Действия для ${member.name}`}
           >
             <DotsThreeVerticalIcon className="size-4" />
           </Button>
@@ -747,14 +734,12 @@ function MemberRowActions({
           {canEditMemberAccess ? (
             <DropdownMenuItem onSelect={() => setAccessOpen(true)}>
               <ShieldCheckDuotoneIcon className="size-4" />
-              Access profile
-            </DropdownMenuItem>
+              {"Профиль доступа "}</DropdownMenuItem>
           ) : null}
           {canManageMemberAccounts ? (
             <DropdownMenuItem onSelect={() => setManageOpen(true)}>
               <GearSixIcon className="size-4" />
-              Manage account
-            </DropdownMenuItem>
+              {"Управление аккаунтом "}</DropdownMenuItem>
           ) : null}
           {canManageMemberAccounts && canRemoveMembers ? (
             <DropdownMenuSeparator />
@@ -765,8 +750,7 @@ function MemberRowActions({
               onSelect={() => setConfirmOpen(true)}
             >
               <TrashIcon className="size-4" />
-              Remove
-            </DropdownMenuItem>
+              {"Удалить "}</DropdownMenuItem>
           ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
@@ -781,7 +765,7 @@ function MemberRowActions({
       ) : null}
       {canEditMemberAccess ? (
         <Sheet open={accessOpen} onOpenChange={setAccessOpen} mobilePresentation="bottom-on-mobile">
-          <DrawerLayout title={`Access profile · ${member.name}`} className="sm:max-w-lg" description="Manage this member's organizational scope and lifecycle status.">
+          <DrawerLayout title={`Профиль доступа · ${member.name}`} className="sm:max-w-lg" description={"Управляйте организационной сферой и статусом жизненного цикла этого участника."}>
             <MemberAccessForm member={member} workspaceMembers={workspaceMembers} onDone={() => setAccessOpen(false)} />
           </DrawerLayout>
         </Sheet>
@@ -815,11 +799,11 @@ function RemoveMemberDialog({
       fd.set("memberId", member.id);
       const result = await removeWorkspaceMemberAction(initialActionState, fd);
       if (!result.success) {
-        toast.error(result.error ?? "Unable to remove member.");
+        toast.error(result.error ?? "Не удалось удалить участника.");
         return;
       }
       onOpenChange(false);
-      toast.success(`${member.name} removed.`);
+      toast.success(`${member.name} удалено.`);
       router.refresh();
     });
   }
@@ -828,12 +812,9 @@ function RemoveMemberDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Remove {member.name}?</DialogTitle>
+          <DialogTitle>{"Удалить "}{member.name}?</DialogTitle>
           <DialogDescription>
-            {member.name} ({member.email}) loses access to this workspace
-            immediately. Their candidate notes and activity stay. You can invite
-            them back later.
-          </DialogDescription>
+            {member.name} ({member.email}{") немедленно теряет доступ к этому рабочему пространству. Их кандидатские заметки и активность остаются. Вы можете пригласить их позже. "}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
@@ -841,10 +822,9 @@ function RemoveMemberDialog({
             onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button variant="destructive" onClick={remove} disabled={isPending}>
-            {isPending ? "Removing…" : "Remove member"}
+            {isPending ? "Удаление…" : "Удалить участника"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -866,15 +846,15 @@ function ResendInvitationButton({ invitationId }: { invitationId: string }) {
         startTransition(async () => {
           const result = await resendWorkspaceInvitationAction(invitationId);
           if (result.success) {
-            toast.success("Invitation resent.");
+            toast.success("Приглашение отклонено.");
             router.refresh();
           } else {
-            toast.error(result.error ?? "Unable to resend invitation.");
+            toast.error(result.error ?? "Невозможно повторно отправить приглашение.");
           }
         });
       }}
     >
-      {isPending ? "Sending…" : "Resend"}
+      {isPending ? "Отправка…" : "Отправить повторно"}
     </Button>
   );
 }
@@ -893,15 +873,15 @@ function CancelInvitationButton({ invitationId }: { invitationId: string }) {
         startTransition(async () => {
           const result = await cancelWorkspaceInvitationAction(invitationId);
           if (result.success) {
-            toast.success("Invitation canceled.");
+            toast.success("Приглашение отменено.");
             router.refresh();
           } else {
-            toast.error(result.error ?? "Unable to cancel invitation.");
+            toast.error(result.error ?? "Невозможно отменить приглашение.");
           }
         });
       }}
     >
-      {isPending ? "Canceling…" : "Cancel"}
+      {isPending ? "Отмена…" : "Отмена"}
     </Button>
   );
 }
@@ -922,24 +902,21 @@ function ManageMemberAccountSheet({
   return (
     <Sheet open={open} onOpenChange={onOpenChange} mobilePresentation="bottom-on-mobile">
       <DrawerLayout
-        title={`Manage ${member.name}`}
+        title={`Управлять ${member.name}`}
         className="sm:max-w-lg"
-        description="Update this member's profile or reset their password. Changes take effect immediately."
+        description={"Обновите профиль этого участника или сбросьте его пароль. Изменения вступают в силу немедленно."}
       >
         <Tabs defaultValue="profile" className="gap-5">
           <TabsList className="w-full">
             <TabsTrigger value="profile" className="flex-1 gap-2">
               <GearSixIcon className="size-4" />
-              Profile
-            </TabsTrigger>
+              {"Профиль "}</TabsTrigger>
             <TabsTrigger value="password" className="flex-1 gap-2">
               <KeyDuotoneIcon className="size-4" />
-              Password
-            </TabsTrigger>
+              {"Пароль "}</TabsTrigger>
             <TabsTrigger value="access" className="flex-1 gap-2">
               <ShieldCheckDuotoneIcon className="size-4" />
-              Access
-            </TabsTrigger>
+              {"Доступ "}</TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
             <EditMemberProfileForm
@@ -973,23 +950,23 @@ function MemberAccessForm({ member, workspaceMembers, onDone }: { member: Worksp
     startSave(async () => {
       const result = await updateMemberAccessAction({ memberId: member.id, ...form, managerMemberId: form.managerMemberId === "none" ? null : form.managerMemberId });
       if (!result.success) {
-        toast.error(result.error ?? "Could not update access profile.");
+        toast.error(result.error ?? "Не удалось обновить профиль доступа.");
         return;
       }
-      toast.success("Access profile updated."); onDone(); router.refresh();
+      toast.success("Профиль доступа обновлен."); onDone(); router.refresh();
     });
   }
   return <div className="space-y-4">
-    <p className="text-sm text-muted-foreground">These attributes control contextual access and reporting inside this workspace.</p>
+    <p className="text-sm text-muted-foreground">{"Эти атрибуты управляют контекстным доступом и отчетами внутри этой рабочей области."}</p>
     <div className="grid gap-4 sm:grid-cols-2">
-      <div className="space-y-1.5"><Label htmlFor="mm-department">Department</Label><Input id="mm-department" value={form.department} onChange={(e) => setForm((p) => ({ ...p, department: e.target.value }))} placeholder="Engineering" /></div>
-      <div className="space-y-1.5"><Label htmlFor="mm-region">Region</Label><Input id="mm-region" value={form.region} onChange={(e) => setForm((p) => ({ ...p, region: e.target.value }))} placeholder="LATAM" /></div>
-      <div className="space-y-1.5"><Label htmlFor="mm-team">Team</Label><Input id="mm-team" value={form.team} onChange={(e) => setForm((p) => ({ ...p, team: e.target.value }))} placeholder="People Operations" /></div>
-      <div className="space-y-1.5"><Label htmlFor="mm-manager">Manager</Label><Select value={form.managerMemberId} onValueChange={(value) => setForm((p) => ({ ...p, managerMemberId: value }))}><SelectTrigger id="mm-manager"><SelectValue placeholder="No manager" /></SelectTrigger><SelectContent><SelectItem value="none">No manager</SelectItem>{workspaceMembers.filter((candidate) => candidate.id !== member.id && candidate.status === "active").map((candidate) => <SelectItem key={candidate.id} value={candidate.id}>{candidate.name}</SelectItem>)}</SelectContent></Select></div>
+      <div className="space-y-1.5"><Label htmlFor="mm-department">{"Отдел"}</Label><Input id="mm-department" value={form.department} onChange={(e) => setForm((p) => ({ ...p, department: e.target.value }))} placeholder={"Инженерное дело"} /></div>
+      <div className="space-y-1.5"><Label htmlFor="mm-region">{"Регион"}</Label><Input id="mm-region" value={form.region} onChange={(e) => setForm((p) => ({ ...p, region: e.target.value }))} placeholder={"Латинская Америка"} /></div>
+      <div className="space-y-1.5"><Label htmlFor="mm-team">{"Команда"}</Label><Input id="mm-team" value={form.team} onChange={(e) => setForm((p) => ({ ...p, team: e.target.value }))} placeholder={"Управление персоналом"} /></div>
+      <div className="space-y-1.5"><Label htmlFor="mm-manager">{"Менеджер"}</Label><Select value={form.managerMemberId} onValueChange={(value) => setForm((p) => ({ ...p, managerMemberId: value }))}><SelectTrigger id="mm-manager"><SelectValue placeholder={"Нет менеджера"} /></SelectTrigger><SelectContent><SelectItem value="none">{"Нет менеджера"}</SelectItem>{workspaceMembers.filter((candidate) => candidate.id !== member.id && candidate.status === "active").map((candidate) => <SelectItem key={candidate.id} value={candidate.id}>{candidate.name}</SelectItem>)}</SelectContent></Select></div>
     </div>
-    <div className="space-y-1.5"><Label htmlFor="mm-status">Membership status</Label><Select value={form.status} onValueChange={(value: typeof form.status) => setForm((p) => ({ ...p, status: value }))}><SelectTrigger id="mm-status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="active">Active</SelectItem><SelectItem value="suspended">Suspended</SelectItem><SelectItem value="inactive">Inactive</SelectItem></SelectContent></Select></div>
-    <div className="space-y-2 border-t pt-4"><div><p className="text-sm font-medium">Active devices</p><p className="text-xs text-muted-foreground">Revoke a session if this member loses a device or leaves the team.</p></div>{sessions === null ? <p className="text-xs text-muted-foreground">Loading sessions…</p> : sessions.length === 0 ? <p className="text-xs text-muted-foreground">No active sessions.</p> : <div className="divide-y rounded-lg border">{sessions.map((item) => <div key={item.id} className="flex items-center gap-3 px-3 py-2.5"><div className="min-w-0 flex-1"><p className="truncate text-xs font-medium">{item.userAgent ?? "Unknown device"}</p><p className="text-[11px] text-muted-foreground">{item.ipAddress ?? "Unknown IP"} · {item.updatedAt.toLocaleString()}</p></div><Button type="button" size="sm" variant="outline" disabled={sessionPending} onClick={() => startSession(async () => { const result = await revokeMemberSessionAction(member.id, item.id); if (!result.ok) { toast.error(result.error); return; } setSessions((previous) => previous?.filter((session) => session.id !== item.id) ?? []); toast.success("Session revoked."); })}>Revoke</Button></div>)}</div>}</div>
-    <div className="flex justify-end gap-2 border-t pt-4"><SheetClose asChild><Button variant="ghost" disabled={saving}>Cancel</Button></SheetClose><Button onClick={submit} disabled={saving}>{saving ? "Saving…" : "Save access"}</Button></div>
+    <div className="space-y-1.5"><Label htmlFor="mm-status">{"Статус членства"}</Label><Select value={form.status} onValueChange={(value: typeof form.status) => setForm((p) => ({ ...p, status: value }))}><SelectTrigger id="mm-status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="active">{"Активные"}</SelectItem><SelectItem value="suspended">{"Приостановлено"}</SelectItem><SelectItem value="inactive">{"Неактивный"}</SelectItem></SelectContent></Select></div>
+    <div className="space-y-2 border-t pt-4"><div><p className="text-sm font-medium">{"Активные устройства"}</p><p className="text-xs text-muted-foreground">{"Отмените сеанс, если этот участник потеряет устройство или покинет команду."}</p></div>{sessions === null ? <p className="text-xs text-muted-foreground">{"Загрузка сеансов…"}</p> : sessions.length === 0 ? <p className="text-xs text-muted-foreground">{"Нет активных сессий."}</p> : <div className="divide-y rounded-lg border">{sessions.map((item) => <div key={item.id} className="flex items-center gap-3 px-3 py-2.5"><div className="min-w-0 flex-1"><p className="truncate text-xs font-medium">{item.userAgent ?? "Неизвестное устройство"}</p><p className="text-[11px] text-muted-foreground">{item.ipAddress ?? "Неизвестный IP"} · {item.updatedAt.toLocaleString("ru-RU")}</p></div><Button type="button" size="sm" variant="outline" disabled={sessionPending} onClick={() => startSession(async () => { const result = await revokeMemberSessionAction(member.id, item.id); if (!result.ok) { toast.error(result.error); return; } setSessions((previous) => previous?.filter((session) => session.id !== item.id) ?? []); toast.success("Сессия отменена."); })}>{"Отозвать"}</Button></div>)}</div>}</div>
+    <div className="flex justify-end gap-2 border-t pt-4"><SheetClose asChild><Button variant="ghost" disabled={saving}>{"Отмена"}</Button></SheetClose><Button onClick={submit} disabled={saving}>{saving ? "Сохранение…" : "Сохранить доступ"}</Button></div>
   </div>;
 }
 
@@ -1024,10 +1001,10 @@ function EditMemberProfileForm({
         ...form,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not update profile.");
+        toast.error(result.error ?? "Не удалось обновить профиль.");
         return;
       }
-      toast.success("Profile updated.");
+      toast.success("Профиль обновлен.");
       onDone();
       router.refresh();
     });
@@ -1037,7 +1014,7 @@ function EditMemberProfileForm({
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="mm-name">Name</Label>
+          <Label htmlFor="mm-name">{"Имя"}</Label>
           <Input
             id="mm-name"
             value={form.name}
@@ -1045,7 +1022,7 @@ function EditMemberProfileForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="mm-email">Login email</Label>
+          <Label htmlFor="mm-email">{"Адрес электронной почты для входа"}</Label>
           <Input
             id="mm-email"
             type="email"
@@ -1057,16 +1034,16 @@ function EditMemberProfileForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="mm-title">Job title</Label>
+          <Label htmlFor="mm-title">{"Должность"}</Label>
           <Input
             id="mm-title"
             value={form.jobTitle}
             onChange={(e) => set("jobTitle")(e.target.value)}
-            placeholder="Technical Recruiter"
+            placeholder={"Технический рекрутер"}
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="mm-phone">Phone</Label>
+          <Label htmlFor="mm-phone">{"Телефон"}</Label>
           <Input
             id="mm-phone"
             value={form.phone}
@@ -1076,7 +1053,7 @@ function EditMemberProfileForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="mm-location">Location</Label>
+        <Label htmlFor="mm-location">{"Расположение"}</Label>
         <Input
           id="mm-location"
           value={form.location}
@@ -1085,7 +1062,7 @@ function EditMemberProfileForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="mm-bio">Bio</Label>
+        <Label htmlFor="mm-bio">{"Био"}</Label>
         <Textarea
           id="mm-bio"
           value={form.bio}
@@ -1114,7 +1091,7 @@ function EditMemberProfileForm({
         <SocialLinkField
           id="mm-website"
           icon={GlobeIcon}
-          label="Website"
+          label={"Веб-сайт"}
           placeholder="https://yoursite.com"
           value={form.websiteUrl}
           onChange={set("websiteUrl")}
@@ -1124,11 +1101,10 @@ function EditMemberProfileForm({
       <div className="flex justify-end gap-2 border-t pt-4">
         <SheetClose asChild>
           <Button variant="ghost" disabled={saving}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
         </SheetClose>
         <Button onClick={submit} disabled={saving || !form.name || !form.email}>
-          {saving ? "Saving…" : "Save profile"}
+          {saving ? "Сохранение…" : "Сохранить профиль"}
         </Button>
       </div>
     </div>
@@ -1151,7 +1127,7 @@ function ResetMemberPasswordForm({
 
   function submit() {
     if (password !== confirm) {
-      toast.error("Passwords do not match.");
+      toast.error("Пароли не совпадают.");
       return;
     }
     startSave(async () => {
@@ -1160,10 +1136,10 @@ function ResetMemberPasswordForm({
         password,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not reset password.");
+        toast.error(result.error ?? "Не удалось сбросить пароль.");
         return;
       }
-      toast.success(`Password reset. ${member.name} must sign in again.`);
+      toast.success(`Сброс пароля. ${member.name} необходимо снова войти в систему.`);
       setPassword("");
       setConfirm("");
       onDone();
@@ -1173,11 +1149,9 @@ function ResetMemberPasswordForm({
   return (
     <div className="space-y-4">
       <div className="rounded-lg border border-clay/25 bg-clay/5 px-3 py-2.5 text-xs text-muted-foreground">
-        Setting a new password signs {member.name} out of all sessions. Share
-        the new password with them over a secure channel.
-      </div>
+        {"Установка новых знаков пароля "}{member.name} {"из всех сессий. Поделитесь с ними новым паролем по защищенному каналу. "}</div>
       <div className="space-y-1.5">
-        <Label htmlFor="mm-pw">New password</Label>
+        <Label htmlFor="mm-pw">{"Новый пароль"}</Label>
         <Input
           id="mm-pw"
           type="password"
@@ -1187,12 +1161,11 @@ function ResetMemberPasswordForm({
         />
         {tooShort ? (
           <p className="text-xs text-destructive">
-            Use at least 8 characters.
-          </p>
+            {"Используйте не менее 8 символов. "}</p>
         ) : null}
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="mm-pw2">Confirm password</Label>
+        <Label htmlFor="mm-pw2">{"Подтвердите пароль"}</Label>
         <Input
           id="mm-pw2"
           type="password"
@@ -1201,21 +1174,20 @@ function ResetMemberPasswordForm({
           autoComplete="new-password"
         />
         {mismatch ? (
-          <p className="text-xs text-destructive">Passwords do not match.</p>
+          <p className="text-xs text-destructive">{"Пароли не совпадают."}</p>
         ) : null}
       </div>
       <div className="flex justify-end gap-2 border-t pt-4">
         <SheetClose asChild>
           <Button variant="ghost" disabled={saving}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
         </SheetClose>
         <Button
           variant="destructive"
           onClick={submit}
           disabled={saving || password.length < 8 || password !== confirm}
         >
-          {saving ? "Resetting…" : "Reset password"}
+          {saving ? "Сброс…" : "Сбросить пароль"}
         </Button>
       </div>
     </div>
@@ -1244,13 +1216,12 @@ function CreateMemberButton({
       <SheetTrigger asChild>
         <Button variant="outline">
           <PlusIcon className="size-4" />
-          Create member
-        </Button>
+          {"Создать участника "}</Button>
       </SheetTrigger>
       <DrawerLayout
-        title="Create a member"
+        title={"Создать участника"}
         className="sm:max-w-lg"
-        description="Provision an account directly. The member signs in with the password you set, then must choose a new one."
+        description={"Предоставьте учетную запись напрямую. Участник входит в систему с установленным вами паролем, а затем должен выбрать новый."}
       >
         <CreateMemberForm
           assignableRoles={assignableRoles}
@@ -1288,7 +1259,7 @@ function CreateMemberForm({
 
   function copyPassword() {
     navigator.clipboard.writeText(form.password);
-    toast.success("Password copied");
+    toast.success("Пароль скопирован");
   }
 
   function submit() {
@@ -1302,10 +1273,10 @@ function CreateMemberForm({
         jobTitle: form.jobTitle || undefined,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not create member.");
+        toast.error(result.error ?? "Не удалось создать участника.");
         return;
       }
-      toast.success(`${form.name} added. Share their password securely.`);
+      toast.success(`${form.name} добавлено. Надежно поделитесь своим паролем.`);
       onDone();
       router.refresh();
     });
@@ -1318,22 +1289,22 @@ function CreateMemberForm({
           value={form.image || null}
           onChange={(url) => set("image")(url ?? "")}
           variant="avatar"
-          hint="Photo · optional"
+          hint={"Фото · по желанию"}
         />
         <div className="flex-1 space-y-1.5">
-          <Label htmlFor="cm-name">Full name</Label>
+          <Label htmlFor="cm-name">{"Полное имя"}</Label>
           <Input
             id="cm-name"
             value={form.name}
             onChange={(e) => set("name")(e.target.value)}
-            placeholder="Jordan Rivera"
+            placeholder={"Джордан Ривера"}
           />
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="cm-email">Login email</Label>
+          <Label htmlFor="cm-email">{"Адрес электронной почты для входа"}</Label>
           <Input
             id="cm-email"
             type="email"
@@ -1343,7 +1314,7 @@ function CreateMemberForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="cm-role">Role</Label>
+          <Label htmlFor="cm-role">{"Роль"}</Label>
           <Select value={form.role} onValueChange={set("role")}>
             <SelectTrigger id="cm-role" className="w-full">
               <SelectValue />
@@ -1360,17 +1331,17 @@ function CreateMemberForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cm-title">Job title</Label>
+        <Label htmlFor="cm-title">{"Должность"}</Label>
         <Input
           id="cm-title"
           value={form.jobTitle}
           onChange={(e) => set("jobTitle")(e.target.value)}
-          placeholder="Technical Recruiter"
+          placeholder={"Технический рекрутер"}
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cm-pw">Temporary password</Label>
+        <Label htmlFor="cm-pw">{"Временный пароль"}</Label>
         <div className="flex gap-2">
           <Input
             id="cm-pw"
@@ -1383,7 +1354,7 @@ function CreateMemberForm({
             variant="outline"
             size="icon"
             onClick={() => set("password")(generatePassword())}
-            aria-label="Regenerate password"
+            aria-label={"Восстановить пароль"}
           >
             <ArrowsClockwiseIcon className="size-4" />
           </Button>
@@ -1392,21 +1363,19 @@ function CreateMemberForm({
             variant="outline"
             size="icon"
             onClick={copyPassword}
-            aria-label="Copy password"
+            aria-label={"Скопировать пароль"}
           >
             <CopyIcon className="size-4" />
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          The member is forced to set their own password on first sign-in.
-        </p>
+          {"Участник вынужден установить свой собственный пароль при первом входе в систему. "}</p>
       </div>
 
       <div className="flex justify-end gap-2 border-t pt-4">
         <SheetClose asChild>
           <Button variant="ghost" disabled={saving}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
         </SheetClose>
         <Button
           onClick={submit}
@@ -1414,7 +1383,7 @@ function CreateMemberForm({
             saving || !form.name || !form.email || form.password.length < 8
           }
         >
-          {saving ? "Creating…" : "Create member"}
+          {saving ? "Создание…" : "Создать участника"}
         </Button>
       </div>
     </div>

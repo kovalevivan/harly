@@ -32,17 +32,17 @@ import { UserAvatar } from "@/components/ui/UserAvatar";
 import { cn } from "@/lib/utils";
 
 const SOURCE_META: Record<string, { label: string; className: string }> = {
-  applied: { label: "Applied", className: "bg-blue-500/10 text-blue-600" },
-  imported: { label: "Imported", className: "bg-purple-500/10 text-purple-600" },
-  sourced: { label: "Sourced", className: "bg-emerald-500/10 text-emerald-600" },
-  referred: { label: "Referred", className: "bg-amber-500/10 text-amber-600" },
+  applied: { label: "Отклик", className: "bg-blue-500/10 text-blue-600" },
+  imported: { label: "Импортировано", className: "bg-purple-500/10 text-purple-600" },
+  sourced: { label: "Источник", className: "bg-emerald-500/10 text-emerald-600" },
+  referred: { label: "Направленный", className: "bg-amber-500/10 text-amber-600" },
 };
 
 const RECOMMENDATION_META: Record<string, { label: string; className: string }> = {
-  strong_yes: { label: "Strong yes", className: "bg-primary/10 text-primary" },
-  yes: { label: "Yes", className: "bg-primary/10 text-primary" },
-  maybe: { label: "Maybe", className: "bg-clay/15 text-clay" },
-  no: { label: "No", className: "bg-destructive/10 text-destructive" },
+  strong_yes: { label: "Сильный да", className: "bg-primary/10 text-primary" },
+  yes: { label: "Да", className: "bg-primary/10 text-primary" },
+  maybe: { label: "Может быть", className: "bg-clay/15 text-clay" },
+  no: { label: "Нет", className: "bg-destructive/10 text-destructive" },
 };
 
 function scoreTone(score: number) {
@@ -120,7 +120,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
     startTransition(async () => {
       const result = await removeFromPoolAction({ candidateId });
       if (!result.success) {
-        toast.error(result.error ?? "Could not remove from pool.");
+        toast.error(result.error ?? "Не удалось удалить из пула.");
         return;
       }
       setSelectedIds((prev) => {
@@ -128,7 +128,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
         next.delete(candidateId);
         return next;
       });
-      toast.success("Removed from pool.");
+      toast.success("Удален из бассейна.");
       router.refresh();
     });
   }
@@ -140,11 +140,11 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
         candidateIds: Array.from(selectedIds),
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not remove candidates.");
+        toast.error(result.error ?? "Не удалось удалить кандидатов.");
         return;
       }
       setSelectedIds(new Set());
-      toast.success(`Removed ${selectedIds.size} candidate${selectedIds.size === 1 ? "" : "s"} from pool.`);
+      toast.success(`Удален ${selectedIds.size} кандидат${selectedIds.size === 1 ? "" : "s"} из пула.`);
       router.refresh();
     });
   }
@@ -155,11 +155,9 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
         <div className="rounded-full bg-muted p-4 mb-4">
           <Bookmark className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold mb-1">No candidates in pool</h3>
+        <h3 className="text-lg font-semibold mb-1">{"Нет кандидатов в пуле"}</h3>
         <p className="text-sm text-muted-foreground max-w-sm">
-          Add candidates to the pool from their profile or the candidates list to
-          keep them available for future roles.
-        </p>
+          {"Добавляйте кандидатов в пул из своего профиля или списка кандидатов, чтобы они были доступны для будущих должностей. "}</p>
       </div>
     );
   }
@@ -171,7 +169,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name, email, or skill..."
+            placeholder={"Поиск по имени, адресу электронной почты или навыку..."}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -188,8 +186,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                 : "border-border bg-card text-muted-foreground hover:bg-muted",
             )}
           >
-            Source
-            <ChevronDown className={cn("h-4 w-4 transition-transform", sourceOpen && "rotate-180")} />
+            {"Источник "}<ChevronDown className={cn("h-4 w-4 transition-transform", sourceOpen && "rotate-180")} />
           </button>
           {sourceOpen && (
             <>
@@ -204,8 +201,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                       : "text-muted-foreground hover:bg-muted",
                   )}
                 >
-                  All sources
-                </button>
+                  {"Все источники "}</button>
                 {allSources.map((src) => (
                   <button
                     key={src}
@@ -227,8 +223,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">
-              {selectedIds.size} selected
-            </span>
+              {selectedIds.size} {"выбрано "}</span>
             {openJobs.length > 0 && (
               <Button
                 variant="outline"
@@ -237,8 +232,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                 disabled={isPending}
               >
                 <Briefcase className="h-4 w-4 mr-1.5" />
-                Assign to Job
-              </Button>
+                {"Назначить заданию "}</Button>
             )}
             <Button
               variant="destructive"
@@ -247,12 +241,11 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
               disabled={isPending}
             >
               <Trash2 className="h-4 w-4 mr-1.5" />
-              Remove
-            </Button>
+              {"Удалить "}</Button>
           </div>
         )}
         <div className="ml-auto text-sm text-muted-foreground">
-          {filtered.length} candidate{filtered.length === 1 ? "" : "s"}
+          {filtered.length} {"кандидат"}{filtered.length === 1 ? "" : "s"}
         </div>
         {(search || sourceFilter !== "all") && (
           <Button
@@ -264,8 +257,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
             }}
           >
             <X className="h-4 w-4 mr-1" />
-            Clear
-          </Button>
+            {"Очистить "}</Button>
         )}
       </div>
 
@@ -280,11 +272,11 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                   onCheckedChange={toggleSelectAll}
                 />
               </th>
-              <th className="text-left px-3 py-2.5 font-medium">Candidate</th>
-              <th className="text-left px-3 py-2.5 font-medium">Skills</th>
-              <th className="text-left px-3 py-2.5 font-medium">Score</th>
-              <th className="text-left px-3 py-2.5 font-medium">Source</th>
-              <th className="text-left px-3 py-2.5 font-medium">Added</th>
+              <th className="text-left px-3 py-2.5 font-medium">{"Кандидат"}</th>
+              <th className="text-left px-3 py-2.5 font-medium">{"Навыки"}</th>
+              <th className="text-left px-3 py-2.5 font-medium">{"Оценка"}</th>
+              <th className="text-left px-3 py-2.5 font-medium">{"Источник"}</th>
+              <th className="text-left px-3 py-2.5 font-medium">{"Добавлено"}</th>
               <th className="w-10 px-3 py-2.5" />
             </tr>
           </thead>
@@ -361,7 +353,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                       )}
                     </div>
                   ) : (
-                    <span className="text-muted-foreground">Not scored</span>
+                    <span className="text-muted-foreground">{"Не засчитано"}</span>
                   )}
                 </td>
                 <td className="px-3 py-3">
@@ -370,7 +362,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                   </Badge>
                 </td>
                 <td className="px-3 py-3 text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
-                  {new Date(candidate.addedAt).toLocaleDateString()}
+                  {new Date(candidate.addedAt).toLocaleDateString("ru-RU")}
                 </td>
                 <td className="px-3 py-3">
                   <DropdownMenu>
@@ -382,8 +374,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <Link href={`/dashboard/candidates/${candidate.candidateId}`}>
-                          View profile
-                        </Link>
+                          {"Посмотреть профиль "}</Link>
                       </DropdownMenuItem>
                       {openJobs.length > 0 && (
                         <>
@@ -399,8 +390,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                             }
                           >
                             <Briefcase className="h-4 w-4 mr-2" />
-                            Assign to Job
-                          </DropdownMenuItem>
+                            {"Назначить заданию "}</DropdownMenuItem>
                         </>
                       )}
                       <DropdownMenuSeparator />
@@ -410,8 +400,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
                         disabled={isPending}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Remove from pool
-                      </DropdownMenuItem>
+                        {"Удалить из пула "}</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </td>
@@ -439,7 +428,7 @@ export function PoolView({ candidates, openJobs = [] }: PoolViewProps) {
             if (!open) setSelectedIds(new Set());
           }}
           candidateId={Array.from(selectedIds)[0] ?? ""}
-          candidateName={`${selectedIds.size} candidates`}
+          candidateName={`${selectedIds.size} кандидатов`}
           candidateEmail=""
           jobs={openJobs}
           isBulk

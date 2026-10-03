@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Route } from "next";
@@ -55,35 +56,35 @@ import {
 const PINE = "#3f6212";
 
 const STEPS: OnboardingStepMeta[] = [
-  { key: "workspace", label: "Company", desc: "Name your hiring workspace", icon: BuildingsIcon },
-  { key: "branding", label: "Branding", desc: "Logo, color & tagline", icon: MagicWandDuotoneIcon },
-  { key: "about", label: "About you", desc: "Your role & how you found us", icon: MegaphoneDuotoneIcon },
-  { key: "security", label: "Security", desc: "Protect your team's data", icon: ShieldCheckDuotoneIcon },
-  { key: "team", label: "Invite team", desc: "Bring in teammates", icon: UsersThreeDuotoneIcon },
+  { key: "workspace", label: "Компания", desc: "Назовите свое рабочее место для найма", icon: BuildingsIcon },
+  { key: "branding", label: "Брендинг", desc: "Логотип, цвет и слоган", icon: MagicWandDuotoneIcon },
+  { key: "about", label: "О тебе", desc: "Ваша роль и как вы нас нашли", icon: MegaphoneDuotoneIcon },
+  { key: "security", label: "Безопасность", desc: "Защитите данные своей команды", icon: ShieldCheckDuotoneIcon },
+  { key: "team", label: "Пригласить команду", desc: "Привлекайте товарищей по команде", icon: UsersThreeDuotoneIcon },
 ];
 
 const ACQUISITION = [
-  "Search engine",
-  "Social media",
-  "Friend or colleague",
-  "GitHub / Open source",
-  "Blog or article",
-  "Other",
+  "Поисковая система",
+  "Социальные сети",
+  "Друг или коллега",
+  "GitHub/Открытый исходный код",
+  "Блог или статья",
+  "Другое",
 ] as const;
 
 // Structured self-described role, persisted to user.onboardingRole (enum).
 const SELF_ROLES = [
-  { value: "founder", label: "Founder / CEO" },
-  { value: "recruiter", label: "Recruiter" },
-  { value: "hr_manager", label: "HR / People manager" },
-  { value: "hiring_manager", label: "Hiring manager" },
-  { value: "other", label: "Something else" },
+  { value: "founder", label: "Основатель/генеральный директор" },
+  { value: "recruiter", label: "Рекрутер" },
+  { value: "hr_manager", label: "Менеджер по персоналу/HR" },
+  { value: "hiring_manager", label: "Менеджер по найму" },
+  { value: "other", label: "Что-то еще" },
 ] as const;
 
 const INVITE_ROLES = [
-  { value: "recruiter", label: "Recruiter" },
-  { value: "hiring_manager", label: "Hiring Manager" },
-  { value: "admin", label: "Admin" },
+  { value: "recruiter", label: "Рекрутер" },
+  { value: "hiring_manager", label: "Менеджер по найму" },
+  { value: "admin", label: "Админ" },
 ] as const;
 
 // Balanced accent palette with evergreen, cool, warm and neutral options.
@@ -162,9 +163,9 @@ export function OwnerOnboarding({
   // so there is no public /board/<slug> to choose. The board lives at the root.
   function createWorkspace() {
     const trimmed = name.trim();
-    if (!trimmed) return setError("Enter your company name.");
+    if (!trimmed) return setError("Введите название вашей компании.");
     const slug = slugify(trimmed);
-    if (!slug) return setError("Company name needs at least one letter or number.");
+    if (!slug) return setError("В названии компании должна быть хотя бы одна буква или цифра.");
     startTransition(async () => {
       if (!orgId) {
         const response = await fetch("/api/setup/complete", {
@@ -174,7 +175,7 @@ export function OwnerOnboarding({
         });
         const created = (await response.json()) as { id?: string; error?: string };
         if (!response.ok || !created.id) {
-          return setError(created.error ?? "Couldn't create your workspace.");
+          return setError(created.error ?? "Не удалось создать рабочую область.");
         }
         setOrgId(created.id);
         await authClient.organization.setActive({ organizationId: created.id });
@@ -188,7 +189,7 @@ export function OwnerOnboarding({
   async function persistCurrent(): Promise<boolean> {
     if (step === 1) {
       const res = await saveOnboardingBrandingAction({ logoUrl, tagline, primaryColor: color });
-      if (!res.ok) { setError(res.error ?? "Couldn't save branding."); return false; }
+      if (!res.ok) { setError(res.error ?? "Не удалось сохранить брендинг."); return false; }
     }
     if (step === 2) {
       const res = await saveOnboardingAboutAction({
@@ -196,13 +197,13 @@ export function OwnerOnboarding({
         jobTitle: jobTitle.trim() || undefined,
         source: source || undefined,
       });
-      if (!res.ok) { setError(res.error ?? "Couldn't save your details."); return false; }
+      if (!res.ok) { setError(res.error ?? "Не удалось сохранить ваши данные."); return false; }
       const avatarRes = await saveOnboardingAvatarAction(avatar || null);
-      if (!avatarRes.ok) { setError(avatarRes.error ?? "Couldn't save your photo."); return false; }
+      if (!avatarRes.ok) { setError(avatarRes.error ?? "Не удалось сохранить фотографию."); return false; }
     }
     if (step === 3) {
       const res = await setRequire2faAction(require2fa);
-      if (!res.ok) { setError(res.error ?? "Couldn't save security settings."); return false; }
+      if (!res.ok) { setError(res.error ?? "Не удалось сохранить настройки безопасности."); return false; }
     }
     return true;
   }
@@ -227,10 +228,10 @@ export function OwnerOnboarding({
       // Security already persisted on navigation; persist again defensively,
       // then mark onboarding complete.
       const sec = await setRequire2faAction(require2fa);
-      if (!sec.ok) return setError(sec.error ?? "Couldn't save security settings.");
+      if (!sec.ok) return setError(sec.error ?? "Не удалось сохранить настройки безопасности.");
 
       const res = await completeOnboardingAction();
-      if (!res.ok) return setError(res.error ?? "Couldn't finish setup.");
+      if (!res.ok) return setError(res.error ?? "Не удалось завершить настройку.");
       setDone(true);
     });
   }
@@ -252,13 +253,13 @@ export function OwnerOnboarding({
       steps={STEPS}
       current={step}
       onJump={(i) => { if (i < step) { setStep(i); setError(null); } }}
-      error={error}
+      error={localizeSystemText(error)}
       pending={pending}
       isLast={isLast}
       onBack={() => { setStep((s) => s - 1); setError(null); }}
       onNext={next}
       onSkip={step >= 1 && step < STEPS.length - 1 ? skip : undefined}
-      nextLabel={isLast ? "Finish setup" : "Continue"}
+      nextLabel={isLast ? "Завершить настройку" : "Продолжить"}
     >
       {step === 0 && (
         <StepCompany userName={userName} name={name} onName={setName} locked={Boolean(orgId)} />
@@ -298,9 +299,9 @@ function StepCompany({ userName, name, onName, locked }: { userName: string; nam
     <StepStagger>
       <StepField>
         <StepHeading
-          eyebrow={`Welcome, ${userName}`}
-          title="What's your company called?"
-          subtitle="This is the name candidates see on your careers page and in application emails."
+          eyebrow={`Добро пожаловать, ${userName}`}
+          title={"Как называется ваша компания?"}
+          subtitle={"Это имя кандидаты видят на вашей странице вакансий и в электронных письмах с заявками."}
         />
       </StepField>
       <StepField className="mt-7 space-y-3">
@@ -308,7 +309,7 @@ function StepCompany({ userName, name, onName, locked }: { userName: string; nam
           autoFocus
           value={name}
           onChange={(e) => onName(e.target.value)}
-          placeholder="Acme Recruiting"
+          placeholder={"Акме Рекрутинг"}
           className="h-11"
           disabled={locked}
         />
@@ -324,8 +325,8 @@ function StepBranding({ logoUrl, onLogo, tagline, onTagline, color, onColor }: {
     <StepStagger>
       <StepField>
         <StepHeading
-          title="Make it yours"
-          subtitle="Add your logo, a tagline and an accent color. Everything is optional and editable later."
+          title={"Сделайте это своим"}
+          subtitle={"Добавьте свой логотип, слоган и цвет акцента. Все является необязательным и редактируемым позже."}
         />
       </StepField>
       <StepField className="mt-7 flex items-center gap-5">
@@ -333,34 +334,33 @@ function StepBranding({ logoUrl, onLogo, tagline, onTagline, color, onColor }: {
           value={logoUrl || null}
           onChange={(url) => onLogo(url ?? "")}
           variant="avatar"
-          hint="Square logo · PNG, JPG, SVG or WEBP"
+          hint={"Квадратный логотип · PNG, JPG, SVG или WEBP"}
         />
         <div className="flex-1 space-y-1">
-          <Label>Company logo</Label>
+          <Label>{"Логотип компании"}</Label>
           <p className="text-xs text-muted-foreground">
-            Shown as your app icon and on the careers page. Square works best.
-          </p>
+            {"Отображается как значок вашего приложения и на странице вакансий. Квадрат работает лучше всего. "}</p>
         </div>
       </StepField>
       <StepField className="mt-6 space-y-2">
-        <Label htmlFor="ob-tagline">Careers page tagline</Label>
+        <Label htmlFor="ob-tagline">{"Слоган страницы «Карьера»"}</Label>
         <Input
           id="ob-tagline"
           value={tagline}
           onChange={(e) => onTagline(e.target.value)}
-          placeholder="A short line about your company"
+          placeholder={"Короткая строка о вашей компании"}
           maxLength={120}
         />
       </StepField>
       <StepField className="mt-6 space-y-2">
-        <Label>Accent color</Label>
+        <Label>{"Акцентный цвет"}</Label>
         <div className="flex flex-wrap items-center gap-2">
           {SWATCHES.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => onColor(s)}
-              aria-label={`Use ${s}`}
+              aria-label={`Используйте ${s}`}
               className={cn(
                 "size-8 rounded-full ring-2 ring-offset-2 ring-offset-card transition active:scale-95 motion-reduce:active:scale-100",
                 color.toLowerCase() === s.toLowerCase() ? "ring-pine" : "ring-transparent",
@@ -374,7 +374,7 @@ function StepBranding({ logoUrl, onLogo, tagline, onTagline, color, onColor }: {
               "relative flex h-8 shrink-0 cursor-pointer items-center gap-2 overflow-hidden rounded-full border bg-card px-2.5 text-xs font-medium text-foreground transition hover:border-ring/40 focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/30",
               isCustomColor && "border-ring ring-2 ring-ring/20",
             )}
-            aria-label="Custom color"
+            aria-label={"Пользовательский цвет"}
           >
             <input
               type="color"
@@ -387,7 +387,7 @@ function StepBranding({ logoUrl, onLogo, tagline, onTagline, color, onColor }: {
               style={{ backgroundColor: color }}
             />
             <PaletteDuotoneIcon className="pointer-events-none size-3.5 text-muted-foreground" />
-            <span className="pointer-events-none">Custom</span>
+            <span className="pointer-events-none">{"Пользовательский"}</span>
           </label>
         </div>
       </StepField>
@@ -400,8 +400,8 @@ function StepAbout({ selfRole, onSelfRole, source, onSource, jobTitle, onJobTitl
     <StepStagger>
       <StepField>
         <StepHeading
-          title="Tell us about you"
-          subtitle="Helps us tailor Harly. Optional. Skip anything you'd rather not share."
+          title={"Расскажи нам о себе"}
+          subtitle={"Помогает нам адаптировать Харли. Необязательный. Пропустите все, чем не хотите делиться."}
         />
       </StepField>
       <StepField className="mt-7 flex items-center gap-5">
@@ -409,39 +409,38 @@ function StepAbout({ selfRole, onSelfRole, source, onSource, jobTitle, onJobTitl
           value={avatar || null}
           onChange={(url) => onAvatar(url ?? "")}
           variant="avatar"
-          hint="Profile photo · PNG, JPG or WEBP"
+          hint={"Фотография профиля · PNG, JPG или WEBP"}
         />
         <div className="flex-1 space-y-1">
-          <Label>Profile photo</Label>
+          <Label>{"Фото профиля"}</Label>
           <p className="text-xs text-muted-foreground">
-            Shown on your profile and next to your activity.
-          </p>
+            {"Отображается в вашем профиле и рядом с вашими действиями. "}</p>
         </div>
       </StepField>
       <StepField className="mt-6 space-y-2">
-        <Label>What best describes you?</Label>
+        <Label>{"Что лучше всего описывает вас?"}</Label>
         <Select value={selfRole} onValueChange={onSelfRole}>
-          <SelectTrigger className="w-full"><SelectValue placeholder="Choose one" /></SelectTrigger>
+          <SelectTrigger className="w-full"><SelectValue placeholder={"Выберите один"} /></SelectTrigger>
           <SelectContent>
             {SELF_ROLES.map((r) => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
           </SelectContent>
         </Select>
       </StepField>
       <StepField className="mt-5 space-y-2">
-        <Label htmlFor="ob-title">Your job title</Label>
+        <Label htmlFor="ob-title">{"Ваша должность"}</Label>
         <Input
           id="ob-title"
           value={jobTitle}
           onChange={(e) => onJobTitle(e.target.value)}
-          placeholder="Head of Talent"
+          placeholder={"Руководитель отдела талантов"}
           maxLength={80}
         />
-        <p className="text-xs text-muted-foreground">Shown on your profile and to the hiring team.</p>
+        <p className="text-xs text-muted-foreground">{"Отображается в вашем профиле и команде по найму."}</p>
       </StepField>
       <StepField className="mt-5 space-y-2">
-        <Label>How did you hear about us?</Label>
+        <Label>{"Как вы узнали о нас?"}</Label>
         <Select value={source} onValueChange={onSource}>
-          <SelectTrigger className="w-full"><SelectValue placeholder="Choose one" /></SelectTrigger>
+          <SelectTrigger className="w-full"><SelectValue placeholder={"Выберите один"} /></SelectTrigger>
           <SelectContent>
             {ACQUISITION.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
           </SelectContent>
@@ -456,8 +455,8 @@ function StepSecurity({ require2fa, onToggle }: { require2fa: boolean; onToggle:
     <StepStagger>
       <StepField>
         <StepHeading
-          title="Secure your workspace"
-          subtitle="Recommended for teams handling candidate data."
+          title={"Защитите свое рабочее пространство"}
+          subtitle={"Рекомендуется для команд, работающих с данными кандидатов."}
         />
       </StepField>
       <StepField>
@@ -465,11 +464,11 @@ function StepSecurity({ require2fa, onToggle }: { require2fa: boolean; onToggle:
           <span className="flex items-start gap-3">
             <ShieldCheckDuotoneIcon className="mt-0.5 size-5 text-pine" />
             <span>
-              <span className="block text-sm font-medium text-foreground">Require 2FA for all members</span>
-              <span className="mt-0.5 block text-xs text-muted-foreground">Everyone must set up two-factor auth before accessing the dashboard. You can enable your own 2FA from your account.</span>
+              <span className="block text-sm font-medium text-foreground">{"Требовать 2FA для всех участников"}</span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">{"Перед доступом к панели управления каждый должен настроить двухфакторную аутентификацию. Вы можете включить свой собственный 2FA из своей учетной записи."}</span>
             </span>
           </span>
-          <Switch checked={require2fa} onCheckedChange={onToggle} aria-label="Require 2FA" />
+          <Switch checked={require2fa} onCheckedChange={onToggle} aria-label={"Требовать 2FA"} />
         </label>
       </StepField>
     </StepStagger>
@@ -481,8 +480,8 @@ function StepInvite({ assignableRoles }: { assignableRoles: AssignableRole[] }) 
     <StepStagger>
       <StepField>
         <StepHeading
-          title="Invite your team"
-          subtitle="Invite one person or a whole team. You can also do this later from Settings."
+          title={"Пригласите свою команду"}
+          subtitle={"Пригласите одного человека или целую команду. Вы также можете сделать это позже в настройках."}
         />
       </StepField>
       <StepField className="mt-7 space-y-3">
@@ -492,13 +491,11 @@ function StepInvite({ assignableRoles }: { assignableRoles: AssignableRole[] }) 
           trigger={
             <Button type="button" variant="secondary">
               <UserPlusIcon className="size-4" />
-              Invite teammates
-            </Button>
+              {"Пригласить товарищей по команде "}</Button>
           }
         />
         <p className="text-xs text-muted-foreground">
-          Add emails one by one, paste a list, or import a CSV file.
-        </p>
+          {"Добавляйте электронные письма одно за другим, вставляйте список или импортируйте файл CSV. "}</p>
       </StepField>
     </StepStagger>
   );
@@ -509,16 +506,16 @@ function StepInvite({ assignableRoles }: { assignableRoles: AssignableRole[] }) 
 function Launchpad({ workspaceName, require2fa, onEnter }: { workspaceName: string; require2fa: boolean; onEnter: () => void }) {
   const nextSteps = useMemo(
     () => [
-      { icon: RobotDuotoneIcon, label: "Connect an AI provider", hint: "Auto-screen & draft outreach", href: "/settings/ai" as Route },
-      { icon: PlugsConnectedIcon, label: "Connect integrations", hint: "Cal.com, Slack, Discord", href: "/settings/integrations" as Route },
-      { icon: DownloadDuotoneIcon, label: "Import candidates", hint: "From CSV or Greenhouse", href: "/dashboard/candidates" as Route },
+      { icon: RobotDuotoneIcon, label: "Подключите поставщика ИИ", hint: "Автоматическая проверка и черновик", href: "/settings/ai" as Route },
+      { icon: PlugsConnectedIcon, label: "Подключите интеграции", hint: "Cal.com, Slack, Discord", href: "/settings/integrations" as Route },
+      { icon: DownloadDuotoneIcon, label: "Импортировать кандидатов", hint: "Из CSV или Greenhouse", href: "/dashboard/candidates" as Route },
     ],
     [],
   );
   const done = [
-    "Workspace created",
-    "Careers page branded",
-    require2fa ? "2FA required for everyone" : null,
+    "Рабочая область создана",
+    "Брендированная страница вакансий",
+    require2fa ? "2FA обязателен для всех" : null,
   ].filter(Boolean) as string[];
 
   return (
@@ -532,11 +529,9 @@ function Launchpad({ workspaceName, require2fa, onEnter }: { workspaceName: stri
         <SealCheckDuotoneIcon className="size-8" />
       </motion.span>
       <h2 className="mt-5 font-display text-2xl tracking-tight text-foreground">
-        {workspaceName || "Your workspace"} is ready
-      </h2>
+        {workspaceName || "Ваше рабочее пространство"} {"готов "}</h2>
       <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-        You&apos;re all set to start hiring. Here&apos;s what you&apos;ve done and a few things worth doing next.
-      </p>
+        {"Все готово, чтобы начать нанимать сотрудников. Вот что вы сделали и несколько вещей, которые стоит сделать дальше. "}</p>
 
       <div className="mt-7 space-y-2 text-left">
         {done.map((d) => (
@@ -561,8 +556,7 @@ function Launchpad({ workspaceName, require2fa, onEnter }: { workspaceName: stri
       </div>
 
       <Button className="mt-7 w-full" size="lg" onClick={onEnter}>
-        Go to dashboard
-      </Button>
+        {"Перейти на панель управления "}</Button>
     </div>
   );
 }

@@ -50,8 +50,8 @@ type ReplyMode = "mailbox" | "threaded";
 type InboundProviderId = "resend" | "postmark";
 
 const INBOUND_PROVIDER_LABEL: Record<InboundProviderId, string> = {
-  resend: "Resend",
-  postmark: "Postmark",
+  resend: "Отправить повторно",
+  postmark: "Почтовый штемпель",
 };
 
 export function ReplyHandlingSettingsCard({
@@ -79,13 +79,13 @@ export function ReplyHandlingSettingsCard({
     mode === "mailbox" ? mailboxStatus.enabled : inboundStatus.enabled;
 
   const badge = bothEnabled ? (
-    <StatusPill tone="warn">Choose one mode</StatusPill>
+    <StatusPill tone="warn">{"Выберите один режим"}</StatusPill>
   ) : configured ? (
     <StatusPill tone={enabled ? "on" : "off"}>
-      {enabled ? "Connected" : "Disabled"}
+      {enabled ? "Подключено" : "Отключено"}
     </StatusPill>
   ) : (
-    <StatusPill tone="neutral">Not connected</StatusPill>
+    <StatusPill tone="neutral">{"Не подключено"}</StatusPill>
   );
 
   return (
@@ -93,23 +93,22 @@ export function ReplyHandlingSettingsCard({
       <div className="p-6">
         <SectionHeader
           icon={EnvelopeIcon}
-          title="Reply handling"
+          title={"Обработка ответов"}
           badge={badge}
-          description="Choose how candidate replies return to your team: a shared mailbox or threaded replies via webhook."
+          description={"Выберите, как ответы кандидатов будут возвращаться в вашу команду: общий почтовый ящик или цепочки ответов через веб-перехватчик."}
           action={
             canEdit ? (
               mailboxStatus.encryptionReady ? (
                 <Button asChild variant={configured ? "outline" : "default"}>
                   <Link href={"/settings/email/replies" as Route}>
                     <KeyDuotoneIcon className="size-4" />
-                    {configured ? "Manage" : "Connect"}
+                    {configured ? "Управление" : "Подключиться"}
                   </Link>
                 </Button>
               ) : (
                 <Button variant="default" disabled>
                   <KeyDuotoneIcon className="size-4" />
-                  Connect
-                </Button>
+                  {"Подключиться "}</Button>
               )
             ) : null
           }
@@ -120,29 +119,27 @@ export function ReplyHandlingSettingsCard({
         <div className="mx-6 mb-6 flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on
-            the server to store reply credentials.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере для хранения учетных данных ответа. "}</p>
         </div>
       ) : null}
 
       {configured || bothEnabled ? (
         <div className="grid grid-cols-1 divide-y border-t bg-muted/20 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-          <StatCell label="Mode">
+          <StatCell label={"Режим"}>
             {bothEnabled
-              ? "Two modes active"
+              ? "Два режима активны"
               : mode === "mailbox"
-                ? "Shared mailbox"
-                : "Threaded replies"}
+                ? "Общий почтовый ящик"
+                : "Вложенные ответы"}
           </StatCell>
-          <StatCell label={mode === "mailbox" ? "Mailbox" : "Reply domain"}>
+          <StatCell label={mode === "mailbox" ? "Почтовый ящик" : "Домен ответа"}>
             <span className="truncate font-mono text-[13px]">
               {mode === "mailbox"
                 ? mailboxStatus.address
                 : inboundStatus.replyDomain}
             </span>
           </StatCell>
-          <StatCell label="Delivery status">
+          <StatCell label={"Статус доставки"}>
             {mode === "mailbox" ? (
               mailboxStatus.lastSyncedAt ? (
                 <span className="inline-flex items-center gap-1.5">
@@ -153,10 +150,10 @@ export function ReplyHandlingSettingsCard({
                         : "size-1.5 rounded-full bg-pine"
                     }
                   />
-                  Synced {formatRelative(mailboxStatus.lastSyncedAt)}
+                  {"Синхронизировано "}{formatRelative(mailboxStatus.lastSyncedAt)}
                 </span>
               ) : (
-                "Never synced"
+                "Никогда не синхронизировалось"
               )
             ) : inboundStatus.provider ? (
               <span className="inline-flex items-center gap-1.5">
@@ -168,7 +165,7 @@ export function ReplyHandlingSettingsCard({
                 {INBOUND_PROVIDER_LABEL[inboundStatus.provider]}
               </span>
             ) : (
-              "Not configured"
+              "Не настроено"
             )}
           </StatCell>
         </div>
@@ -177,7 +174,7 @@ export function ReplyHandlingSettingsCard({
       {mailboxStatus.lastError && mode === "mailbox" ? (
         <div className="mx-6 mb-6 flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
-          <p>Last mailbox sync error: {mailboxStatus.lastError}</p>
+          <p>{"Последняя ошибка синхронизации почтового ящика: "}{mailboxStatus.lastError}</p>
         </div>
       ) : null}
     </Card>
@@ -214,7 +211,7 @@ export function ReplyHandlingSettingsForm({
     smtpTls: mailboxStatus.smtpTls || !mailboxStatus.configured,
     smtpUser: mailboxStatus.smtpUser ?? "",
     smtpPassword: "",
-    sentFolder: mailboxStatus.sentFolder ?? "Sent",
+    sentFolder: mailboxStatus.sentFolder ?? "Отправлено",
   });
   const [mailboxEnabled, setMailboxEnabled] = useState(
     mailboxStatus.enabled || !mailboxStatus.configured,
@@ -245,7 +242,7 @@ export function ReplyHandlingSettingsForm({
           enabled: mailboxEnabled,
         });
         if (!result.ok) {
-          toast.error(result.error ?? "Could not save reply handling.");
+          toast.error(result.error ?? "Не удалось сохранить обработку ответа.");
           return;
         }
 
@@ -254,7 +251,7 @@ export function ReplyHandlingSettingsForm({
         // had both legacy settings enabled.
         const disabled = await disableInboundEmailAction();
         if (!disabled.ok) {
-          toast.error(disabled.error ?? "Could not disable threaded replies.");
+          toast.error(disabled.error ?? "Не удалось отключить ветку ответов.");
           return;
         }
       } else {
@@ -267,28 +264,28 @@ export function ReplyHandlingSettingsForm({
             provider === "resend" ? resendApiKey || undefined : undefined,
         });
         if (!result.ok) {
-          toast.error(result.error ?? "Could not save reply handling.");
+          toast.error(result.error ?? "Не удалось сохранить обработку ответа.");
           return;
         }
 
         const disabled = await disableMailboxSettingsAction();
         if (!disabled.ok) {
           toast.error(
-            disabled.error ?? "Could not disable the shared mailbox.",
+            disabled.error ?? "Не удалось отключить общий почтовый ящик.",
           );
           return;
         }
       }
 
-      toast.success("Reply handling settings saved");
+      toast.success("Настройки обработки ответов сохранены.");
       router.refresh();
     });
   }
 
   return (
     <DrawerLayout
-      title="Set up incoming candidate email"
-      description="Choose how Harly receives replies. A shared mailbox lets you read and send from Inbox; threaded replies import new messages through Resend or Postmark."
+      title={"Настройка входящей электронной почты кандидата"}
+      description={"Выберите, как Харли будет получать ответы. Общий почтовый ящик позволяет читать и отправлять сообщения из папки «Входящие»; вложенные ответы импортируют новые сообщения через функцию «Повторная отправка» или «Почтовая марка»."}
       surface="page"
       footer={
         <Button
@@ -296,13 +293,12 @@ export function ReplyHandlingSettingsForm({
           disabled={saving || !mailboxStatus.encryptionReady}
         >
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save changes
-        </Button>
+          {"Сохранить изменения "}</Button>
       }
     >
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label>Reply route</Label>
+          <Label>{"Маршрут ответа"}</Label>
           <Select
             value={mode}
             onValueChange={(value) => setMode(value as ReplyMode)}
@@ -311,16 +307,13 @@ export function ReplyHandlingSettingsForm({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="mailbox">Shared mailbox (IMAP + SMTP)</SelectItem>
+              <SelectItem value="mailbox">{"Общий почтовый ящик (IMAP + SMTP)"}</SelectItem>
               <SelectItem value="threaded">
-                Threaded replies (Resend/Postmark webhook)
-              </SelectItem>
+                {"Вложенные ответы (вебхук «Повторная отправка/отметка») "}</SelectItem>
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground">
-            Only one route is active at a time. You can switch later without
-            losing the saved configuration for the other route.
-          </p>
+            {"Одновременно активен только один маршрут. Вы можете переключиться позже, не теряя сохраненную конфигурацию для другого маршрута. "}</p>
         </div>
 
         {mode === "mailbox" ? (
@@ -385,21 +378,21 @@ function SharedMailboxFields({
     startTest(async () => {
       const result = await testMailboxConnectionAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Connection test failed.");
+        toast.error(result.error ?? "Проверка соединения не удалась.");
         return;
       }
-      toast.success("IMAP connection is healthy");
+      toast.success("Соединение IMAP исправно");
     });
   }
 
   const set = onFieldChange;
   const passwordPlaceholder = (hasSecret: boolean) =>
-    hasSecret ? "•••••••• (stored, leave blank to keep)" : undefined;
+    hasSecret ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)" : undefined;
 
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="reply-mailbox-address">Mailbox address</Label>
+        <Label htmlFor="reply-mailbox-address">{"Адрес почтового ящика"}</Label>
         <Input
           id="reply-mailbox-address"
           type="email"
@@ -408,17 +401,14 @@ function SharedMailboxFields({
           placeholder="jobs@yourcompany.com"
         />
         <p className="text-xs text-muted-foreground">
-          New messages are imported from this shared mailbox and replies sent
-          from the inbox use its SMTP account.
-        </p>
+          {"Новые сообщения импортируются из этого общего почтового ящика, а ответы, отправляемые из этого почтового ящика, используют его учетную запись SMTP. "}</p>
       </div>
 
       <div className="space-y-2">
         <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-          Incoming (IMAP)
-        </p>
+          {"Входящий (IMAP) "}</p>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Host" htmlFor="reply-imap-host">
+          <Field label={"Хост"} htmlFor="reply-imap-host">
             <Input
               id="reply-imap-host"
               value={form.imapHost}
@@ -427,7 +417,7 @@ function SharedMailboxFields({
               className="font-mono text-xs"
             />
           </Field>
-          <Field label="Port" htmlFor="reply-imap-port">
+          <Field label={"Порт"} htmlFor="reply-imap-port">
             <Input
               id="reply-imap-port"
               inputMode="numeric"
@@ -437,7 +427,7 @@ function SharedMailboxFields({
             />
           </Field>
         </div>
-        <Field label="Username" htmlFor="reply-imap-user">
+        <Field label={"Имя пользователя"} htmlFor="reply-imap-user">
           <Input
             id="reply-imap-user"
             value={form.imapUser}
@@ -445,7 +435,7 @@ function SharedMailboxFields({
             autoComplete="off"
           />
         </Field>
-        <Field label="Password" htmlFor="reply-imap-password">
+        <Field label={"Пароль"} htmlFor="reply-imap-password">
           <Input
             id="reply-imap-password"
             type="password"
@@ -455,16 +445,16 @@ function SharedMailboxFields({
             autoComplete="off"
           />
         </Field>
-        <Field label="Source folder" htmlFor="reply-source-folder">
+        <Field label={"Исходная папка"} htmlFor="reply-source-folder">
           <Input
             id="reply-source-folder"
             value={form.sourceFolder}
             onChange={(event) => set("sourceFolder", event.target.value)}
-            placeholder="INBOX"
+            placeholder={"Входящие"}
           />
         </Field>
         <TlsToggle
-          label="Use TLS"
+          label={"Используйте TLS"}
           checked={form.imapTls}
           onCheckedChange={(value) => set("imapTls", value)}
           ariaLabel="Use IMAP TLS"
@@ -473,14 +463,11 @@ function SharedMailboxFields({
 
       <div className="space-y-2">
         <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-          Reply transport (SMTP)
-        </p>
+          {"Транспорт ответа (SMTP) "}</p>
         <p className="text-xs text-muted-foreground">
-          Used only for replies sent from the shared inbox. General candidate
-          emails use the Email delivery settings above.
-        </p>
+          {"Используется только для ответов, отправленных из общего почтового ящика. Для общих электронных писем кандидатов используются указанные выше настройки доставки электронной почты. "}</p>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Host" htmlFor="reply-smtp-host">
+          <Field label={"Хост"} htmlFor="reply-smtp-host">
             <Input
               id="reply-smtp-host"
               value={form.smtpHost}
@@ -489,7 +476,7 @@ function SharedMailboxFields({
               className="font-mono text-xs"
             />
           </Field>
-          <Field label="Port" htmlFor="reply-smtp-port">
+          <Field label={"Порт"} htmlFor="reply-smtp-port">
             <Input
               id="reply-smtp-port"
               inputMode="numeric"
@@ -499,7 +486,7 @@ function SharedMailboxFields({
             />
           </Field>
         </div>
-        <Field label="Username" htmlFor="reply-smtp-user">
+        <Field label={"Имя пользователя"} htmlFor="reply-smtp-user">
           <Input
             id="reply-smtp-user"
             value={form.smtpUser}
@@ -507,7 +494,7 @@ function SharedMailboxFields({
             autoComplete="off"
           />
         </Field>
-        <Field label="Password" htmlFor="reply-smtp-password">
+        <Field label={"Пароль"} htmlFor="reply-smtp-password">
           <Input
             id="reply-smtp-password"
             type="password"
@@ -517,16 +504,16 @@ function SharedMailboxFields({
             autoComplete="off"
           />
         </Field>
-        <Field label="Sent folder" htmlFor="reply-sent-folder">
+        <Field label={"Отправленная папка"} htmlFor="reply-sent-folder">
           <Input
             id="reply-sent-folder"
             value={form.sentFolder}
             onChange={(event) => set("sentFolder", event.target.value)}
-            placeholder="Sent"
+            placeholder={"Отправлено"}
           />
         </Field>
         <TlsToggle
-          label="Use TLS"
+          label={"Используйте TLS"}
           checked={form.smtpTls}
           onCheckedChange={(value) => set("smtpTls", value)}
           ariaLabel="Use SMTP TLS"
@@ -535,10 +522,9 @@ function SharedMailboxFields({
 
       <div className="flex items-center justify-between rounded-xl border px-3 py-2.5">
         <div>
-          <p className="text-sm font-medium">Enable shared mailbox</p>
+          <p className="text-sm font-medium">{"Включить общий почтовый ящик"}</p>
           <p className="text-xs text-muted-foreground">
-            New mail is polled by the self-hosted cron.
-          </p>
+            {"Новая почта опрашивается локальным cron. "}</p>
         </div>
         <Switch checked={enabled} onCheckedChange={onEnabledChange} />
       </div>
@@ -555,8 +541,7 @@ function SharedMailboxFields({
         ) : (
           <ArrowsClockwiseIcon className="size-4" />
         )}
-        Test IMAP connection
-      </Button>
+        {"Проверить соединение IMAP "}</Button>
     </div>
   );
 }
@@ -591,7 +576,7 @@ function ThreadedReplyFields({
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label>Provider</Label>
+        <Label>{"Поставщик"}</Label>
         <Select
           value={provider}
           onValueChange={(value) =>
@@ -605,20 +590,18 @@ function ThreadedReplyFields({
             <SelectItem value="resend">
               <span className="inline-flex items-center gap-2">
                 <ResendLogo className="size-4" />
-                Resend
-              </span>
+                {"Отправить повторно "}</span>
             </SelectItem>
             <SelectItem value="postmark">
               <span className="inline-flex items-center gap-2">
                 <PostmarkLogo className="size-4" />
-                Postmark
-              </span>
+                {"Почтовый штемпель "}</span>
             </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <Field label="Reply domain" htmlFor="reply-domain">
+      <Field label={"Домен ответа"} htmlFor="reply-domain">
         <Input
           id="reply-domain"
           value={replyDomain}
@@ -627,16 +610,14 @@ function ThreadedReplyFields({
           className="font-mono text-xs"
         />
           <p className="text-xs text-muted-foreground">
-          Point an MX record here at your provider. Harly gives each application
-          its own reply address under this domain.
-        </p>
+          {"Укажите запись MX здесь у своего провайдера. Харли предоставляет каждому приложению собственный ответный адрес в этом домене. "}</p>
       </Field>
 
       <Field
         label={
           provider === "postmark"
-            ? "Basic auth password"
-            : "Webhook signing secret"
+            ? "Основной пароль авторизации"
+            : "Секрет подписи вебхука"
         }
         htmlFor="reply-webhook-secret"
       >
@@ -647,22 +628,22 @@ function ThreadedReplyFields({
           onChange={(event) => onWebhookSecretChange(event.target.value)}
           placeholder={
             status.hasWebhookSecret
-              ? "•••••••• (stored, leave blank to keep)"
+              ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
               : provider === "postmark"
-                ? "Set this as the URL's Basic Auth password"
-                : "whsec_…"
+                ? "Установите это как пароль базовой аутентификации URL-адреса."
+                : "где_…"
           }
           autoComplete="off"
         />
         <p className="text-xs text-muted-foreground">
           {provider === "postmark"
-            ? "Postmark has no webhook signature scheme. Secure the URL with Basic Auth."
-            : "From Resend → Webhooks, after selecting the email.received event."}
+            ? "В Postmark нет схемы подписи веб-перехватчика. Защитите URL-адрес с помощью базовой аутентификации."
+            : "Откройте «Повторная отправка» → «Вебхуки» после выбора события email.received."}
         </p>
       </Field>
 
       {provider === "resend" ? (
-        <Field label="Resend API key" htmlFor="reply-resend-key">
+        <Field label={"Повторно отправить ключ API"} htmlFor="reply-resend-key">
           <Input
             id="reply-resend-key"
             type="password"
@@ -670,21 +651,19 @@ function ThreadedReplyFields({
             onChange={(event) => onResendApiKeyChange(event.target.value)}
             placeholder={
               status.hasResendApiKey
-                ? "•••••••• (stored, leave blank to keep)"
-                : "re_…"
+                ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
+                : "ре_…"
             }
             autoComplete="off"
           />
           <p className="text-xs text-muted-foreground">
-            Used to fetch the email body after the webhook fires. Needs the
-            Emails Receiving scope.
-          </p>
+            {"Используется для получения тела электронного письма после срабатывания веб-перехватчика. Требуется область получения электронной почты. "}</p>
         </Field>
       ) : null}
 
       {webhookUrl ? (
         <div className="space-y-2 rounded-xl border bg-muted/30 p-3">
-          <Label>Webhook URL</Label>
+          <Label>{"URL вебхука"}</Label>
           <div className="flex gap-2">
             <Input readOnly value={webhookUrl} className="font-mono text-xs" />
             <Button
@@ -693,25 +672,23 @@ function ThreadedReplyFields({
               size="icon"
               onClick={() => {
                 void navigator.clipboard.writeText(webhookUrl);
-                toast.success("Webhook URL copied");
+                toast.success("URL-адрес вебхука скопирован.");
               }}
-              aria-label="Copy webhook URL"
+              aria-label={"Скопировать URL-адрес вебхука"}
             >
               <CopyIcon className="size-4" />
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Add this URL under your provider&apos;s inbound webhook settings.
-          </p>
+            {"Добавьте этот URL-адрес в настройки входящего веб-перехватчика вашего провайдера. "}</p>
         </div>
       ) : null}
 
       <div className="flex items-center justify-between rounded-xl border px-3 py-2.5">
         <div>
-          <p className="text-sm font-medium">Receive candidate replies automatically</p>
+          <p className="text-sm font-medium">{"Получайте ответы кандидатов автоматически"}</p>
           <p className="text-xs text-muted-foreground">
-            Replies are routed directly to the candidate timeline.
-          </p>
+            {"Ответы направляются непосредственно на временную шкалу кандидата. "}</p>
         </div>
         <Switch checked={enabled} onCheckedChange={onEnabledChange} />
       </div>

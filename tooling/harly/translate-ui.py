@@ -29,7 +29,7 @@ def translate(chunk):
     command = [
         "curl", "-fsS", "--retry", "3", "--retry-delay", "1", "--max-time", "35", "-G",
         "https://translate.googleapis.com/translate_a/single",
-        "--data-urlencode", "client=gtx", "--data-urlencode", "sl=en",
+        "--data-urlencode", "client=dict-chrome-ex", "--data-urlencode", "sl=en",
         "--data-urlencode", "tl=ru", "--data-urlencode", "dt=t",
         "--data-urlencode", "q=" + separator.join(chunk),
     ]
@@ -46,9 +46,8 @@ def translate(chunk):
 existing = json.loads(target.read_text()) if target.exists() else {}
 pending = [[item for item in chunk if item not in existing] for chunk in chunks]
 pending = [chunk for chunk in pending if chunk]
-with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
     for index, part in enumerate(executor.map(translate, pending), 1):
         existing.update(part)
-        if index % 10 == 0 or index == len(pending):
-            target.write_text(json.dumps(dict(sorted(existing.items())), ensure_ascii=False, indent=2) + "\n")
-            print(f"Translated {len(existing)} strings ({index}/{len(pending)} batches)", flush=True)
+        target.write_text(json.dumps(dict(sorted(existing.items())), ensure_ascii=False, indent=2) + "\n")
+        print(f"Translated {len(existing)} strings ({index}/{len(pending)} batches)", flush=True)

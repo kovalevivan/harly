@@ -44,7 +44,7 @@ export function Setup2FAForm() {
         issuer: currentIssuer(),
       });
       if (res.error) {
-        toast.error(res.error.message ?? "Invalid password");
+        toast.error(res.error.message ?? "Неверный пароль");
         return;
       }
       const data = res.data as {
@@ -63,7 +63,7 @@ export function Setup2FAForm() {
     startTransition(async () => {
       const res = await authClient.twoFactor.verifyTotp({ code: otp });
       if (res.error) {
-        toast.error(res.error.message ?? "Invalid code , try again");
+        toast.error(res.error.message ?? "Неверный код, попробуйте еще раз");
         return;
       }
       setOtp("");
@@ -73,7 +73,7 @@ export function Setup2FAForm() {
 
   function copyBackupCodes() {
     navigator.clipboard.writeText(backupCodes.join("\n"));
-    toast.success("Backup codes copied");
+    toast.success("Резервные коды скопированы.");
   }
 
   function downloadBackupCodes() {
@@ -100,11 +100,9 @@ export function Setup2FAForm() {
             <CheckIcon className="size-3 text-pine" />
           </span>
           <div className="space-y-1">
-            <p className="text-sm font-medium">2FA is now active</p>
+            <p className="text-sm font-medium">{"2FA теперь активна"}</p>
             <p className="text-sm text-muted-foreground">
-              Store your backup codes in a safe place , each works once if you
-              lose access to your authenticator.
-            </p>
+              {"Храните резервные коды в надежном месте: каждый из них сработает один раз, если вы потеряете доступ к своему аутентификатору. "}</p>
           </div>
         </div>
 
@@ -116,8 +114,7 @@ export function Setup2FAForm() {
             router.refresh();
           }}
         >
-          Continue to dashboard
-        </Button>
+          {"Перейти к панели управления "}</Button>
       </div>
     );
   }
@@ -128,13 +125,12 @@ export function Setup2FAForm() {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex items-baseline justify-between">
-            <Label htmlFor="2fa-pw">Password</Label>
+            <Label htmlFor="2fa-pw">{"Пароль"}</Label>
             <Link
               href="/forgot-password"
               className="text-xs font-medium text-muted-foreground transition hover:text-pine"
             >
-              Forgot password?
-            </Link>
+              {"Забыли пароль? "}</Link>
           </div>
           <div className="relative">
             <Input
@@ -146,21 +142,20 @@ export function Setup2FAForm() {
                 e.key === "Enter" && password && handleEnable()
               }
               autoComplete="current-password"
-              placeholder="Enter your password"
+              placeholder={"Введите свой пароль"}
               className="pr-10"
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
             </button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Confirm your password to generate an authenticator QR code.
-          </p>
+            {"Подтвердите свой пароль, чтобы сгенерировать QR-код аутентификатора. "}</p>
         </div>
         <Button
           className="w-full"
@@ -169,8 +164,7 @@ export function Setup2FAForm() {
           disabled={!password || isPending}
         >
           {isPending && <SpinnerIcon className="mr-1.5 size-4" />}
-          Continue
-        </Button>
+          {"Продолжить "}</Button>
       </div>
     );
   }
@@ -179,9 +173,7 @@ export function Setup2FAForm() {
   return (
     <div className="space-y-5">
       <p className="text-sm text-muted-foreground">
-        Scan this QR code with your authenticator app (Authy, Google
-        Authenticator, 1Password…), then enter the 6-digit code to confirm.
-      </p>
+        {"Отсканируйте этот QR-код с помощью приложения для аутентификации (Authy, Google Authenticator, 1Password…), затем введите 6-значный код для подтверждения. "}</p>
 
       {/* QR code */}
       {totpUri && (
@@ -196,8 +188,7 @@ export function Setup2FAForm() {
       {backupCodes.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Backup codes
-          </p>
+            {"Резервные коды "}</p>
           <div className="grid grid-cols-2 gap-1 rounded-lg border bg-card p-2.5 font-mono text-xs">
             {backupCodes.map((c) => (
               <span key={c} className="select-all text-foreground/80">
@@ -213,8 +204,7 @@ export function Setup2FAForm() {
               onClick={copyBackupCodes}
             >
               <CopyIcon className="mr-1 size-3" />
-              Copy
-            </Button>
+              {"Копировать "}</Button>
             <Button
               variant="ghost"
               size="sm"
@@ -222,15 +212,14 @@ export function Setup2FAForm() {
               onClick={downloadBackupCodes}
             >
               <DownloadDuotoneIcon className="mr-1 size-3" />
-              Download
-            </Button>
+              {"Скачать "}</Button>
           </div>
         </div>
       )}
 
       {/* OTP input */}
       <div className="space-y-2">
-        <Label htmlFor="2fa-code">Enter code from app</Label>
+        <Label htmlFor="2fa-code">{"Введите код из приложения"}</Label>
         <div className="flex gap-2">
           <Input
             id="2fa-code"
@@ -253,8 +242,7 @@ export function Setup2FAForm() {
             disabled={otp.length !== 6 || isPending}
           >
             {isPending && <SpinnerIcon className="mr-1.5 size-3.5" />}
-            Verify & Enable
-          </Button>
+            {"Проверить и включить "}</Button>
         </div>
       </div>
     </div>

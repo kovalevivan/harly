@@ -140,7 +140,7 @@ function CloseButton(props: React.ComponentProps<typeof Button>) {
       variant="ghost"
       size="icon"
       className="size-8"
-      aria-label="Close panel"
+      aria-label={"Закрыть панель"}
       {...props}
     >
       <XIcon className="size-4" />

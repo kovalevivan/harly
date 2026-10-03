@@ -10,7 +10,6 @@ export function CookiePreferencesButton({ className }: { className?: string }) {
       onClick={openCookiePreferences}
       className={cn("transition-colors hover:text-zinc-700 dark:hover:text-zinc-300", className)}
     >
-      Cookie preferences
-    </button>
+      {"Настройки файлов cookie "}</button>
   );
 }

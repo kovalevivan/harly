@@ -4,11 +4,11 @@ import { CookiePreferencesButton } from "@/components/CookiePreferencesButton";
 import { LEGAL_PAGE_TITLES, type LegalIndexData } from "@/features/legal/data";
 
 const PAGE_DESCRIPTIONS: Record<string, string> = {
-  "privacy-policy": "How personal data is collected, used, and protected.",
-  "terms-of-service": "The rules and terms for using this service.",
-  "cookie-policy": "How cookies and similar technologies are used.",
-  "candidate-notice": "Privacy information specific to job applicants.",
-  "ai-transparency-notice": "How AI is used and reviewed in hiring decisions.",
+  "privacy-policy": "Как собираются, используются и защищаются персональные данные.",
+  "terms-of-service": "Правила и условия использования данного сервиса.",
+  "cookie-policy": "Как используются файлы cookie и аналогичные технологии.",
+  "candidate-notice": "Информация о конфиденциальности, предназначенная для соискателей работы.",
+  "ai-transparency-notice": "Как ИИ используется и анализируется при принятии решений о найме.",
 };
 
 /**
@@ -56,23 +56,19 @@ export function LegalIndexView({
             href={careersHref as Route}
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            ← Careers
-          </a>
+            {"← Карьера "}</a>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-12">
         <div className="auth-card-enter mb-10">
           <span className="inline-block rounded-full bg-sage/40 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-pine">
-            Legal
-          </span>
+            {"Юридический "}</span>
           <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Legal &amp; privacy
-          </h1>
+            {"Законность и конфиденциальность "}</h1>
           <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted-foreground">
-            The policies and notices that govern how {data.workspaceName}{" "}
-            handles data and works with candidates.
-          </p>
+            {"Политики и уведомления, регулирующие порядок "}{data.workspaceName}{" "}
+            {"обрабатывает данные и работает с кандидатами. "}</p>
         </div>
 
         {data.publishedSlugs.length > 0 ? (
@@ -95,7 +91,7 @@ export function LegalIndexView({
                   </span>
                 </div>
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  {PAGE_DESCRIPTIONS[slug] ?? "Read the full document."}
+                  {PAGE_DESCRIPTIONS[slug] ?? "Прочтите документ полностью."}
                 </p>
               </a>
             ))}
@@ -106,12 +102,9 @@ export function LegalIndexView({
               <ScaleIcon />
             </span>
             <h2 className="text-sm font-semibold text-foreground">
-              No legal pages published yet
-            </h2>
+              {"Юридические страницы пока не опубликованы "}</h2>
             <p className="mt-1.5 max-w-sm text-sm leading-6 text-muted-foreground">
-              {data.workspaceName} hasn&apos;t published any legal documents.
-              Check back later.
-            </p>
+              {data.workspaceName} {"не опубликовал никаких юридических документов. Зайдите позже. "}</p>
           </div>
         )}
       </main>
@@ -123,8 +116,7 @@ export function LegalIndexView({
           </span>
           <div className="flex items-center gap-4">
             <a href={careersHref as Route} className="transition hover:text-foreground">
-              Careers
-            </a>
+              {"Карьера "}</a>
             <CookiePreferencesButton className="hover:text-foreground" />
             {data.websiteUrl && (
               <a
@@ -133,20 +125,18 @@ export function LegalIndexView({
                 rel="noopener noreferrer"
                 className="transition hover:text-foreground"
               >
-                Website
-              </a>
+                {"Веб-сайт "}</a>
             )}
             <span className="text-hairline">·</span>
             <span>
-              Powered by{" "}
+              {"При поддержке"}{" "}
               <a
                 href="https://github.com/Vytral/harly"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-foreground transition hover:text-pine"
               >
-                Harly
-              </a>
+                {"Харли "}</a>
             </span>
           </div>
         </div>

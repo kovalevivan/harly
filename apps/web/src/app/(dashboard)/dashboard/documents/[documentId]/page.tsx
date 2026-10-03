@@ -25,8 +25,7 @@ export default async function DocumentDetailPage({
       <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit">
         <Link href="/dashboard/documents">
           <ArrowLeft className="size-4" />
-          Back to documents
-        </Link>
+          {"Вернуться к документам "}</Link>
       </Button>
       <DocumentDetailView data={data} document={document} />
     </div>

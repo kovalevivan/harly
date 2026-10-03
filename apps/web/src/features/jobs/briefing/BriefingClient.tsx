@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,7 +42,7 @@ export function NewBriefingClient() {
       <div className="rounded-2xl border bg-card p-6 space-y-4">
         <label htmlFor="brief-title" className="block font-medium">Кого планируете нанять?</label>
         <Input id="brief-title" value={title} maxLength={160} onChange={(event) => setTitle(event.target.value)} placeholder="Например, врач-стоматолог терапевт" onKeyDown={(event) => { if (event.key === "Enter") create(); }} />
-        {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+        {error ? <p role="alert" className="text-sm text-destructive">{localizeSystemText(error)}</p> : null}
         <Button onClick={create} disabled={busy || title.trim().length < 3}>Начать брифинг <ArrowRight className="size-4" /></Button>
       </div>
     </main>

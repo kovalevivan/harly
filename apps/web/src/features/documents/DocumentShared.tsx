@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FileArchive, FileImage, FileText, Plus, Upload } from "lucide-react";
@@ -48,13 +49,13 @@ export function validateDocumentFile(file: File): string | null {
       file.type as (typeof allowedDocumentContentTypes)[number],
     )
   ) {
-    return "Choose a PDF, DOC, DOCX, PNG, JPG, GIF, or WEBP file.";
+    return "Выберите файл PDF, DOC, DOCX, PNG, JPG, GIF или WEBP.";
   }
   if (file.size <= 0 || file.size > DOCUMENT_MAX_SIZE) {
-    return "Documents must be between 1 byte and 25 MB.";
+    return "Документы должны быть размером от 1 байта до 25 МБ.";
   }
   if (!documentExtensionMatches(file.name, file.type)) {
-    return "The file extension does not match its content type.";
+    return "Расширение файла не соответствует типу его содержимого.";
   }
   return null;
 }
@@ -91,12 +92,12 @@ export async function uploadToStorage(
     headers: { "Content-Type": file.type },
     body: file,
   });
-  if (!upload.ok) throw new Error("Could not upload the document.");
+  if (!upload.ok) throw new Error("Не удалось загрузить документ.");
   return { key: presign.key, checksum };
 }
 
 export function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -172,7 +173,7 @@ export function UploadDialog({
 
   function submit() {
     if (!file) {
-      setError("Choose a file to upload.");
+      setError("Выберите файл для загрузки.");
       return;
     }
     startTransition(async () => {
@@ -206,7 +207,7 @@ export function UploadDialog({
         if (!result.ok)
           throw new Error(result.error ?? "Could not save the document.");
         toast.success(
-          replaceDocument ? "New version uploaded" : "Document uploaded",
+          replaceDocument ? "Новая версия загружена" : "Документ загружен",
         );
         reset();
         onOpenChange(false);
@@ -215,7 +216,7 @@ export function UploadDialog({
         setError(
           caught instanceof Error
             ? caught.message
-            : "Could not upload the document.",
+            : "Не удалось загрузить документ.",
         );
       }
     });
@@ -232,17 +233,17 @@ export function UploadDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {replaceDocument ? "Upload new version" : "Upload document"}
+            {replaceDocument ? "Загрузите новую версию" : "Загрузить документ"}
           </DialogTitle>
           <DialogDescription>
             {replaceDocument
-              ? `Replaces the current file for “${replaceDocument.name}”. Previous versions remain in the audit trail.`
-              : "Keep contracts, credentials, and hiring files in one workspace-scoped vault."}
+              ? `Заменяет текущий файл на «${replaceDocument.name}». Предыдущие версии остаются в журнале аудита.`
+              : "Храните контракты, учетные данные и файлы о приеме на работу в одном хранилище на уровне рабочей области."}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="document-file">File</Label>
+            <Label htmlFor="document-file">{"Файл"}</Label>
             <input
               ref={fileInput}
               id="document-file"
@@ -273,35 +274,34 @@ export function UploadDialog({
                 <span className="block truncate text-sm font-medium">
                   {file?.name ??
                     (dragging
-                      ? "Drop to attach"
-                      : "Drag a file here or click to browse")}
+                      ? "Перетащите, чтобы прикрепить"
+                      : "Перетащите файл сюда или нажмите, чтобы просмотреть")}
                 </span>
                 <span className="mt-0.5 block text-xs text-muted-foreground">
-                  PDF, DOCX, or image · up to 25 MB
-                </span>
+                  {"PDF, DOCX или изображение · до 25 МБ "}</span>
               </span>
             </button>
           </div>
           {!replaceDocument ? (
             <>
               <div className="space-y-2">
-                <Label htmlFor="document-name">Display name</Label>
+                <Label htmlFor="document-name">{"Отображаемое имя"}</Label>
                 <Input
                   id="document-name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Offer letter — Taylor Okafor"
+                  placeholder={"Письмо с предложением — Тейлор Окафор"}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="document-category">Category</Label>
+                <Label htmlFor="document-category">{"Категория"}</Label>
                 <select
                   id="document-category"
                   value={categoryId}
                   onChange={(event) => setCategoryId(event.target.value)}
                   className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <option value="">No category</option>
+                  <option value="">{"Нет категории"}</option>
                   {data.categories
                     .filter((category) => category.active)
                     .map((category) => (
@@ -312,7 +312,7 @@ export function UploadDialog({
                 </select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="document-association">Associate with</Label>
+                <Label htmlFor="document-association">{"Связаться с"}</Label>
                 <select
                   id="document-association"
                   value={associationType}
@@ -326,15 +326,15 @@ export function UploadDialog({
                   }}
                   className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
                 >
-                  <option value="workspace">Workspace library</option>
-                  <option value="candidate">Candidate</option>
-                  <option value="job">Job</option>
+                  <option value="workspace">{"Библиотека рабочей области"}</option>
+                  <option value="candidate">{"Кандидат"}</option>
+                  <option value="job">{"Вакансия"}</option>
                 </select>
               </div>
               {associationType !== "workspace" ? (
                 <div className="space-y-2">
                   <Label htmlFor="document-association-target">
-                    Choose {associationType}
+                    {"Выберите "}{associationType}
                   </Label>
                   <select
                     id="document-association-target"
@@ -342,7 +342,7 @@ export function UploadDialog({
                     onChange={(event) => setAssociationId(event.target.value)}
                     className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
                   >
-                    <option value="">Select a {associationType}</option>
+                    <option value="">{"Выберите "}{associationType}</option>
                     {data.associationOptions
                       .filter((option) => option.type === associationType)
                       .map((option) => (
@@ -360,7 +360,7 @@ export function UploadDialog({
               className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
               role="alert"
             >
-              {error}
+              {localizeSystemText(error)}
             </p>
           ) : null}
         </div>
@@ -370,10 +370,9 @@ export function UploadDialog({
             disabled={isPending}
             onClick={() => onOpenChange(false)}
           >
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button onClick={submit} disabled={isPending}>
-            {isPending ? "Uploading…" : replaceDocument ? "Upload new version" : "Upload document"}
+            {isPending ? "Загрузка…" : replaceDocument ? "Загрузите новую версию" : "Загрузить документ"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -422,10 +421,10 @@ export function AccessDialog({
         members,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update access.");
+        toast.error(result.error ?? "Не удалось обновить доступ.");
         return;
       }
-      toast.success("Access updated");
+      toast.success("Доступ обновлен");
       onOpenChange(false);
       router.refresh();
     });
@@ -434,7 +433,7 @@ export function AccessDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Manage access</DialogTitle>
+          <DialogTitle>{"Управление доступом"}</DialogTitle>
           <DialogDescription>
             {document.name}. Members need both the global Documents permission
             and an ACL match.
@@ -443,8 +442,7 @@ export function AccessDialog({
         <div className="max-h-[55vh] space-y-5 overflow-y-auto py-2">
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Roles
-            </p>
+              {"Роли "}</p>
             <div className="space-y-1 rounded-lg border">
               {[...new Set(data.members.map((member) => member.role))].map(
                 (role) => {
@@ -468,8 +466,7 @@ export function AccessDialog({
           </div>
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Specific members
-            </p>
+              {"Конкретные участники "}</p>
             <div className="space-y-1 rounded-lg border">
               {data.members.map((member) => {
                 const checked = members.some(
@@ -497,17 +494,13 @@ export function AccessDialog({
             </div>
           </div>
           <p className="text-xs leading-5 text-muted-foreground">
-            If no roles or members are selected, the document follows the
-            workspace-level Documents permission. Once a rule is added, only
-            matching users can open it.
-          </p>
+            {"Если роли или участники не выбраны, документ соответствует разрешению «Документы» на уровне рабочей области. После добавления правила его смогут открыть только соответствующие пользователи. "}</p>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button onClick={save} disabled={isPending}>
-            {isPending ? "Saving…" : "Save access"}
+            {isPending ? "Сохранение…" : "Сохранить доступ"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -533,11 +526,11 @@ export function CategoryDialog({
     startTransition(async () => {
       const result = await createDocumentCategory({ name });
       if (!result.ok) {
-        setError(result.error ?? "Could not create category.");
+        setError(result.error ?? "Не удалось создать категорию.");
         return;
       }
       setName("");
-      toast.success("Category created");
+      toast.success("Категория создана");
       router.refresh();
     });
   }
@@ -545,30 +538,26 @@ export function CategoryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Document categories</DialogTitle>
+          <DialogTitle>{"Категории документов"}</DialogTitle>
           <DialogDescription>
-            Use a small, consistent vocabulary so filters stay useful as the
-            workspace grows.
-          </DialogDescription>
+            {"Используйте небольшой, последовательный словарный запас, чтобы фильтры оставались полезными по мере роста рабочего пространства. "}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="flex gap-2">
             <Input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Employment agreement"
+              placeholder={"Трудовой договор"}
             />
             <Button onClick={addCategory} disabled={isPending || !name.trim()}>
               <Plus className="size-4" />
-              Add
-            </Button>
+              {"Добавить "}</Button>
           </div>
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p className="text-sm text-destructive">{localizeSystemText(error)}</p> : null}
           <div className="divide-y rounded-lg border">
             {data.categories.length === 0 ? (
               <p className="px-3 py-5 text-center text-sm text-muted-foreground">
-                No custom categories yet.
-              </p>
+                {"Пользовательских категорий пока нет. "}</p>
             ) : (
               data.categories.map((category) => (
                 <CategoryRow key={category.id} category={category} />
@@ -594,7 +583,7 @@ function CategoryRow({ category }: { category: DocumentCategoryItem }) {
         accent: category.accent,
         active: category.active,
       });
-      if (!result.ok) toast.error(result.error ?? "Could not update category.");
+      if (!result.ok) toast.error(result.error ?? "Не удалось обновить категорию.");
       else {
         setEditing(false);
         router.refresh();
@@ -620,16 +609,14 @@ function CategoryRow({ category }: { category: DocumentCategoryItem }) {
             : "bg-muted text-muted-foreground"
         }
       >
-        {category.active ? "Active" : "Hidden"}
+        {category.active ? "Активные" : "Скрытый"}
       </StatusPill>
       {editing ? (
         <Button size="sm" onClick={save} disabled={isPending}>
-          Save
-        </Button>
+          {"Сохранить "}</Button>
       ) : (
         <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
-          Edit
-        </Button>
+          {"Редактировать "}</Button>
       )}
     </div>
   );

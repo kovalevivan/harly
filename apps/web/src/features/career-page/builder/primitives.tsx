@@ -176,8 +176,7 @@ export function ListEditor<T>({
           onClick={onAdd}
           className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-xs font-medium text-pine transition-colors hover:bg-sage/40"
         >
-          <PlusIcon className="size-3.5" /> Add
-        </button>
+          <PlusIcon className="size-3.5" /> {"Добавить "}</button>
       </div>
       {items.map((item, i) => (
         <div
@@ -187,17 +186,17 @@ export function ListEditor<T>({
           <div className="flex items-start gap-2">
             <div className="flex-1">{render(item, i)}</div>
             <div className="flex shrink-0 flex-col gap-0.5">
-              <IconBtn onClick={() => onMove(i, -1)} disabled={i === 0} label="Move up">
+              <IconBtn onClick={() => onMove(i, -1)} disabled={i === 0} label={"Вверх"}>
                 <ArrowUpIcon className="size-3.5" />
               </IconBtn>
               <IconBtn
                 onClick={() => onMove(i, 1)}
                 disabled={i === items.length - 1}
-                label="Move down"
+                label={"Двигаться вниз"}
               >
                 <ArrowDownIcon className="size-3.5" />
               </IconBtn>
-              <IconBtn onClick={() => onRemove(i)} label="Remove">
+              <IconBtn onClick={() => onRemove(i)} label={"Удалить"}>
                 <TrashIcon className="size-3.5 text-destructive" />
               </IconBtn>
             </div>
@@ -281,7 +280,7 @@ export function IconSelect({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label={value ? `Icon: ${value}. Change icon` : "Choose an icon"}
+        aria-label={value ? `Icon: ${value}. Change icon` : "Выберите значок"}
         className="flex size-10 items-center justify-center rounded-md border bg-background text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pine/40"
       >
         {hasIcon ? (
@@ -294,7 +293,7 @@ export function IconSelect({
       {open && (
         <div
           role="dialog"
-          aria-label="Icon picker"
+          aria-label={"Выбор значков"}
           className="absolute right-0 z-30 mt-1.5 w-64 origin-top-right rounded-xl border bg-popover p-2 shadow-lg duration-150 animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none"
         >
           <div className="flex items-center gap-2 rounded-md border px-2 py-1.5">
@@ -303,8 +302,8 @@ export function IconSelect({
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search icons"
-              aria-label="Search icons"
+              placeholder={"Значки поиска"}
+              aria-label={"Значки поиска"}
               className="w-full bg-transparent text-sm outline-none"
             />
           </div>
@@ -312,9 +311,9 @@ export function IconSelect({
             <button
               type="button"
               onClick={() => pick("")}
-              aria-label="No icon"
+              aria-label={"Нет значка"}
               aria-pressed={!value}
-              title="No icon"
+              title={"Нет значка"}
               className={cn(
                 "flex aspect-square items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pine/40",
                 !value ? "border-pine bg-sage/30" : "border-transparent",
@@ -346,8 +345,7 @@ export function IconSelect({
             })}
             {filtered.length === 0 ? (
               <p className="col-span-6 py-4 text-center text-xs text-muted-foreground">
-                No match.
-              </p>
+                {"Нет совпадений. "}</p>
             ) : null}
           </div>
         </div>

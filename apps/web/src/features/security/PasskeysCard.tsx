@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { startRegistration } from "@simplewebauthn/browser";
 import { toast } from "@/lib/notification-island/toast";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "@/lib/date-format";
 
 import { SectionHeader, StatusPill } from "@/features/workspaces/settings-ui";
 import {
@@ -64,7 +64,7 @@ export function PasskeysCard({
           throw new Error(err.error ?? "Registration failed");
         }
 
-        toast.success("Passkey registered successfully");
+        toast.success("Ключ доступа успешно зарегистрирован");
         setAdding(false);
         setPasskeyName("");
 
@@ -84,7 +84,7 @@ export function PasskeysCard({
           return;
         }
         toast.error(
-          err instanceof Error ? err.message : "Failed to register passkey",
+          err instanceof Error ? err.message : "Не удалось зарегистрировать ключ доступа",
         );
       }
     });
@@ -95,7 +95,7 @@ export function PasskeysCard({
     startTransition(async () => {
       await deletePasskeyAction(id);
       setPasskeyList((prev) => prev.filter((p) => p.id !== id));
-      toast.success("Passkey removed");
+      toast.success("Ключ доступа удален.");
     });
   }
 
@@ -103,26 +103,24 @@ export function PasskeysCard({
     <Card className="gap-5 p-6">
       {demoLocked ? (
         <DemoLockedNotice>
-          Passkeys stay off in the demo so the shared account cannot be gated.
-        </DemoLockedNotice>
+          {"Ключи доступа в демо-версии остаются отключенными, поэтому общую учетную запись нельзя закрыть. "}</DemoLockedNotice>
       ) : null}
       <SectionHeader
         icon={FingerPrintDuotoneIcon}
-        title="Passkeys"
-        description="Sign in with biometrics or a hardware security key. No password required."
+        title={"Ключи доступа"}
+        description={"Войдите в систему с помощью биометрических данных или аппаратного ключа безопасности. Пароль не требуется."}
         badge={
           <StatusPill tone={passkeyList.length > 0 ? "on" : "neutral"}>
             {passkeyList.length === 0
-              ? "None registered"
-              : `${passkeyList.length} passkey${passkeyList.length > 1 ? "s" : ""}`}
+              ? "Никто не зарегистрирован"
+              : `${passkeyList.length} пароль${passkeyList.length > 1 ? "s" : ""}`}
           </StatusPill>
         }
         action={
           !demoLocked && !adding ? (
             <Button size="sm" onClick={() => setAdding(true)}>
               <PlusIcon className="mr-1.5 size-3.5" />
-              Add passkey
-            </Button>
+              {"Добавить ключ доступа "}</Button>
           ) : null
         }
       />
@@ -131,16 +129,14 @@ export function PasskeysCard({
       {adding && (
         <div className="space-y-4 rounded-xl border bg-muted/30 p-4">
           <p className="text-sm text-muted-foreground">
-            Name this passkey so you can identify it later (e.g. &ldquo;MacBook&rdquo; or
-            &ldquo;iPhone 15&rdquo;).
-          </p>
+            {"Назовите этот ключ доступа, чтобы вы могли идентифицировать его позже (например, «MacBook» или «iPhone 15»). "}</p>
           <div className="space-y-2">
-            <Label htmlFor="passkey-name">Passkey name</Label>
+            <Label htmlFor="passkey-name">{"Имя пароля"}</Label>
             <Input
               id="passkey-name"
               value={passkeyName}
               onChange={(e) => setPasskeyName(e.target.value)}
-              placeholder="My MacBook"
+              placeholder={"Мой Макбук"}
               maxLength={50}
               onKeyDown={(e) => e.key === "Enter" && handleRegister()}
             />
@@ -156,15 +152,13 @@ export function PasskeysCard({
               ) : (
                 <FingerPrintDuotoneIcon className="mr-1.5 size-3.5" />
               )}
-              Register passkey
-            </Button>
+              {"Зарегистрировать ключ доступа "}</Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => { setAdding(false); setPasskeyName(""); }}
             >
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
           </div>
         </div>
       )}
@@ -182,14 +176,14 @@ export function PasskeysCard({
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{pk.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {pk.deviceType === "multiDevice" ? "Synced" : "Device-bound"}
-                    {pk.backedUp ? " · backed up" : ""}
-                    {" · added "}
+                    {pk.deviceType === "multiDevice" ? "Синхронизировано" : "Device-bound"}
+                    {pk.backedUp ? " · резервная копия" : ""}
+                    {" · добавлено "}
                     {formatDistanceToNow(new Date(pk.createdAt), {
                       addSuffix: true,
                     })}
                     {pk.lastUsedAt
-                      ? ` · last used ${formatDistanceToNow(new Date(pk.lastUsedAt), { addSuffix: true })}`
+                      ? ` · последний раз использовался ${formatDistanceToNow(new Date(pk.lastUsedAt), { addSuffix: true })}`
                       : ""}
                   </p>
                 </div>
@@ -202,7 +196,7 @@ export function PasskeysCard({
                 disabled={demoLocked || isPending}
               >
                 <TrashIcon className="size-4" />
-                <span className="sr-only">Remove</span>
+                <span className="sr-only">{"Удалить"}</span>
               </Button>
             </div>
           ))}
@@ -211,9 +205,7 @@ export function PasskeysCard({
 
       {passkeyList.length === 0 && !adding && (
         <p className="text-sm text-muted-foreground">
-          No passkeys yet. Add one to enable passwordless sign-in on this
-          device.
-        </p>
+          {"Кодов доступа пока нет. Добавьте его, чтобы включить вход без пароля на этом устройстве. "}</p>
       )}
     </Card>
   );

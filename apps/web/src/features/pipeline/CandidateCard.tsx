@@ -47,10 +47,10 @@ const recommendationLabel: Record<
   NonNullable<PipelineApplication["aiRecommendation"]>,
   string
 > = {
-  strong_yes: "Strong fit",
-  yes: "Good fit",
-  maybe: "Possible fit",
-  no: "Weak fit",
+  strong_yes: "Сильная посадка",
+  yes: "Хорошо подходит",
+  maybe: "Возможная посадка",
+  no: "Слабая посадка",
 };
 
 function AiFitNote({
@@ -62,7 +62,7 @@ function AiFitNote({
   recommendation: PipelineApplication["aiRecommendation"];
   source: PipelineApplication["evaluationSource"];
 }) {
-  const label = recommendation ? recommendationLabel[recommendation] : "Scored";
+  const label = recommendation ? recommendationLabel[recommendation] : "Забил";
 
   return (
     <Tooltip>
@@ -81,7 +81,7 @@ function AiFitNote({
         </span>
       </TooltipTrigger>
       <TooltipContent>
-        {source === "rules" ? "Harly Algorithm" : "Harly AI"} rates this a {score}/100 fit. A suggestion, not a decision.
+        {source === "rules" ? "Алгоритм Харли" : "Харли ИИ"} {"оценивает это как "}{score}/100 fit. A suggestion, not a decision.
       </TooltipContent>
     </Tooltip>
   );
@@ -99,7 +99,7 @@ function StageAge({ value }: { value: string }) {
         stale ? "text-warning-clay" : "text-quiet-mist",
       )}
     >
-      {stale ? `Stuck ${days}d` : `${days}d`}
+      {stale ? `Застрял ${days}d` : `${days}d`}
     </span>
   );
 }
@@ -131,7 +131,7 @@ export function CandidateCard({
       ref={setNodeRef}
       role="link"
       tabIndex={0}
-      aria-label={`Open ${fullName} profile`}
+      aria-label={`Открыть профиль ${fullName}`}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       onPointerDownCapture={(event) => {
         pointerStartRef.current = { x: event.clientX, y: event.clientY };
@@ -182,7 +182,7 @@ export function CandidateCard({
             onCheckedChange={(checked) =>
               onSelect(application.id, checked === true)
             }
-            aria-label={`Select ${fullName}`}
+            aria-label={`Выберите ${fullName}`}
           />
         </span>
         <Link
@@ -213,13 +213,13 @@ export function CandidateCard({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span
-                      aria-label="Featured referral"
+                      aria-label={"Рекомендуемый реферал"}
                       className="inline-flex shrink-0 items-center text-amber-600"
                     >
                       <Star className="size-3 fill-current" />
                     </span>
                   </TooltipTrigger>
-                  <TooltipContent>Featured referral</TooltipContent>
+                  <TooltipContent>{"Рекомендуемый реферал"}</TooltipContent>
                 </Tooltip>
               ) : null}
               {application.status !== "active" ? (
@@ -243,7 +243,7 @@ export function CandidateCard({
           disabled={disabled}
           onClick={(event) => event.stopPropagation()}
           className="shrink-0 touch-none cursor-grab rounded-md p-1 text-quiet-mist opacity-0 transition hover:text-near-ink group-hover:opacity-100 active:cursor-grabbing"
-          aria-label={`Drag ${fullName} to another stage`}
+          aria-label={`Перетащите ${fullName} на другой этап.`}
         >
           <DotsSixVerticalIcon className="size-3.5" />
         </button>

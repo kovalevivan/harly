@@ -57,17 +57,17 @@ const APPLICATION_SOURCE_META: Record<
   string,
   { label: string; icon: typeof Briefcase }
 > = {
-  public_form: { label: "Job board", icon: Briefcase },
-  csv_import: { label: "CSV import", icon: FileSpreadsheet },
-  referral: { label: "Referral", icon: Users },
+  public_form: { label: "Доска объявлений", icon: Briefcase },
+  csv_import: { label: "CSV-импорт", icon: FileSpreadsheet },
+  referral: { label: "Направление", icon: Users },
   linkedin: { label: "LinkedIn", icon: Briefcase },
-  career_page: { label: "Career page", icon: Globe },
-  agency: { label: "Agency", icon: Building },
-  direct_apply: { label: "Direct apply", icon: MousePointerClick },
-  internal: { label: "Internal", icon: UserPlus },
-  email: { label: "Email", icon: Mail },
-  event: { label: "Event", icon: Megaphone },
-  manual: { label: "Manual", icon: Upload },
+  career_page: { label: "Страница карьеры", icon: Globe },
+  agency: { label: "Агентство", icon: Building },
+  direct_apply: { label: "Прямая подача заявки", icon: MousePointerClick },
+  internal: { label: "Внутренний", icon: UserPlus },
+  email: { label: "Электронная почта", icon: Mail },
+  event: { label: "Событие", icon: Megaphone },
+  manual: { label: "Руководство", icon: Upload },
 };
 
 function SectionLabel({
@@ -123,8 +123,7 @@ function ExperienceHeadline({ years }: { years: number | null }) {
   return (
     <p className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/90">
       <Sparkles className="size-3.5 text-muted-foreground" strokeWidth={1.8} />
-      {years}+ years of experience
-    </p>
+      {years}{"+ многолетний опыт "}</p>
   );
 }
 
@@ -189,8 +188,7 @@ function ApplicationDisclosure({
         >
           <Link href={`/dashboard/pipeline?job=${application.jobId}` as Route}>
             <ExternalLink className="size-3.5" strokeWidth={1.8} />
-            Pipeline
-          </Link>
+            {"Воронка найма "}</Link>
         </Button>
       </div>
 
@@ -216,8 +214,7 @@ function ApplicationDisclosure({
             className="inline-flex items-center gap-1 rounded text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
           >
             <MessageSquareText className="size-3 shrink-0" strokeWidth={1.8} />
-            {application.answers.length} answer
-            {application.answers.length === 1 ? "" : "s"}
+            {application.answers.length} {"ответ "}{application.answers.length === 1 ? "" : "s"}
             {open ? (
               <ChevronUp className="size-3 shrink-0" strokeWidth={2} />
             ) : (
@@ -309,7 +306,7 @@ export function CandidateDetailsPanel({
         className="flex w-full items-center justify-between gap-3 bg-muted/40 px-5 py-3.5 text-left sm:px-6"
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold">Details</span>
+        <span className="text-sm font-semibold">{"Подробности"}</span>
         {open ? (
           <ChevronUp className="size-4 text-muted-foreground" strokeWidth={1.8} />
         ) : (
@@ -321,7 +318,7 @@ export function CandidateDetailsPanel({
         <div className="divide-y divide-border/70 border-t bg-card">
           <Section>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <SectionLabel>Resume</SectionLabel>
+              <SectionLabel>{"Резюме"}</SectionLabel>
               <p className="text-xs text-muted-foreground">
                 {files.length} {files.length === 1 ? "file" : "files"}
               </p>
@@ -336,23 +333,22 @@ export function CandidateDetailsPanel({
           </Section>
 
           <Section hidden={!profileSummary}>
-            <SectionLabel>Profile summary</SectionLabel>
+            <SectionLabel>{"Сводка профиля"}</SectionLabel>
             <p className="mt-3 max-w-4xl text-sm leading-6 text-foreground/85">
               {profileSummary}
             </p>
           </Section>
 
           <Section hidden={!summary || !resumeSummary || summary === resumeSummary}>
-            <SectionLabel>Resume summary</SectionLabel>
+            <SectionLabel>{"Краткое содержание резюме"}</SectionLabel>
             <p className="mt-3 max-w-4xl text-sm leading-6 text-foreground/85">
               {resumeSummary}
             </p>
           </Section>
 
           <Section hidden={experience.length === 0}>
-            <SectionLabel meta={`${experience.length} entries`}>
-              Work experience
-            </SectionLabel>
+            <SectionLabel meta={`${experience.length} записей`}>
+              {"Опыт работы "}</SectionLabel>
             <div className="mt-4">
               <ExperienceTimeline experience={experience} />
             </div>
@@ -362,7 +358,7 @@ export function CandidateDetailsPanel({
             hidden={education.length === 0 && !educationFallback && experienceYears === null}
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <SectionLabel>Education</SectionLabel>
+              <SectionLabel>{"Образование"}</SectionLabel>
               <ExperienceHeadline years={experienceYears} />
             </div>
             <div className="mt-4">
@@ -371,17 +367,17 @@ export function CandidateDetailsPanel({
           </Section>
 
           <Section hidden={skills.length === 0}>
-            <SectionLabel>Skills</SectionLabel>
+            <SectionLabel>{"Навыки"}</SectionLabel>
             <div className="mt-4">
               <SkillsList skills={skills} />
             </div>
           </Section>
 
           <Section hidden={!hasContactDetails}>
-            <SectionLabel>Contact details</SectionLabel>
+            <SectionLabel>{"Контактные данные"}</SectionLabel>
             <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-[11rem_minmax(0,1fr)]">
               <DetailRow
-                label="Email"
+                label={"Электронная почта"}
                 value={
                   <a
                     href={`mailto:${email}`}
@@ -394,7 +390,7 @@ export function CandidateDetailsPanel({
               />
               {phone ? (
                 <DetailRow
-                  label="Phone"
+                  label={"Телефон"}
                   value={
                     <a
                       href={`tel:${phone}`}
@@ -408,7 +404,7 @@ export function CandidateDetailsPanel({
               ) : null}
               {address ? (
                 <DetailRow
-                  label="Address"
+                  label={"Адрес"}
                   value={
                     <a
                       href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
@@ -456,7 +452,7 @@ export function CandidateDetailsPanel({
               ) : null}
               {websiteUrl ? (
                 <DetailRow
-                  label="Website"
+                  label={"Веб-сайт"}
                   value={
                     <a
                       href={websiteUrl}
@@ -475,9 +471,8 @@ export function CandidateDetailsPanel({
 
           {applications.length > 0 ? (
             <section className="px-5 py-5 sm:px-6">
-              <SectionLabel meta={`${applications.length} total`}>
-                Applications
-              </SectionLabel>
+              <SectionLabel meta={`${applications.length} всего`}>
+                {"Отклики "}</SectionLabel>
               <div className="mt-4 divide-y divide-border/60">
                 {applications.map((application) => (
                   <ApplicationDisclosure key={application.id} application={application} />
@@ -488,10 +483,9 @@ export function CandidateDetailsPanel({
 
           <Section hidden={applicationsWithAnswers.length === 0}>
             <SectionLabel
-              meta={`${applicationsWithAnswers.length} application${applicationsWithAnswers.length === 1 ? "" : "s"}`}
+              meta={`${applicationsWithAnswers.length} отклик${applicationsWithAnswers.length === 1 ? "" : "s"}`}
             >
-              Application answers
-            </SectionLabel>
+              {"Ответы в форме отклика "}</SectionLabel>
             <div className="mt-4 divide-y divide-border/60">
               {applicationsWithAnswers.map((application) => (
                 <div key={application.id} className="py-4 first:pt-0 last:pb-0">

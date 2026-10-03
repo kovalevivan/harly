@@ -37,22 +37,22 @@ export function WorkflowCanvasEdge({
         style={{
           stroke: "var(--foreground)",
           strokeWidth: selected ? 2 : 1.25,
-          transition: "stroke-width 150ms cubic-bezier(0.22, 1, 0.36, 1)",
+          transition: "ширина штриха 150 мс кубической Безье (0,22, 1, 0,36, 1)",
         }}
       />
       <EdgeLabelRenderer>
         <div
           className="nodrag nopan absolute -translate-x-1/2 -translate-y-1/2"
-          style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
+          style={{ transform: `перевести(-50%, -50%) перевести(${labelX}px, ${labelY}px)` }}
         >
           <StepSelector
-            title="Insert step"
+            title={"Вставить шаг"}
             onSelect={(kind, actionType) => insertOnEdge(id, kind, actionType)}
             trigger={
               <button
                 type="button"
                 className="flex size-5 items-center justify-center rounded-full border border-border bg-pure-snow text-xs font-medium text-foreground shadow-xs transition-transform hover:scale-110 active:scale-95"
-                aria-label="Insert a step on this connection"
+                aria-label={"Вставить шаг по этому соединению"}
                 onClick={(event) => {
                   event.stopPropagation();
                   selectEdge(id);

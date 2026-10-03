@@ -29,7 +29,7 @@ export function PendingApprovalsPanel({
           <div className="flex items-center gap-2">
             <ClockIcon className="size-4 text-warning" />
             <h2 id="pending-approvals-heading" className="font-display text-base font-semibold text-near-ink">
-              {activeApprovals.length > 0 ? "Needs your approval" : "Approval updates"}
+              {activeApprovals.length > 0 ? "Требуется ваше одобрение" : "Обновления одобрения"}
             </h2>
             <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[11px] font-semibold text-warning">
               {activeApprovals.length}
@@ -37,12 +37,12 @@ export function PendingApprovalsPanel({
           </div>
           <p className="mt-1 text-xs text-soft-ink">
             {activeApprovals.length > 0
-              ? "These workflows are paused until an eligible teammate makes a decision."
-              : "These approval requests are no longer actionable."}
+              ? "Эти рабочие процессы приостанавливаются до тех пор, пока соответствующий член команды не примет решение."
+              : "Эти запросы на одобрение больше не подлежат действию."}
           </p>
         </div>
         <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-warning">
-          {activeApprovals.length > 0 ? "Action required" : "Expired"}
+          {activeApprovals.length > 0 ? "Требуется действие" : "Срок действия истек"}
         </span>
       </div>
 
@@ -62,8 +62,7 @@ export function PendingApprovalsPanel({
         <div className={cn("divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-pure-snow", activeApprovals.length > 0 && "mt-3")}>
           {activeApprovals.length > 0 && (
             <div className="bg-kraft/20 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-soft-ink">
-              Expired requests
-            </div>
+              {"Запросы с истекшим сроком действия "}</div>
           )}
           {expiredApprovals.map((approval) => (
             <ApprovalRow
@@ -100,9 +99,9 @@ function ApprovalRow({
       });
       if (result.ok) {
         onResolved();
-        toast.success(decision === "approved" ? "Approval recorded." : "Workflow rejected.");
+        toast.success(decision === "approved" ? "Одобрение зарегистрировано." : "Рабочий процесс отклонен.");
       } else {
-        toast.error(result.error ?? "Could not resolve this approval.");
+        toast.error(result.error ?? "Не удалось разрешить это утверждение.");
       }
     });
   }
@@ -115,13 +114,13 @@ function ApprovalRow({
         </Link>
         <p className="mt-0.5 text-xs text-soft-ink">
           {approval.candidateName ? `${approval.candidateName} · ` : ""}
-          {approval.triggerEvent} · requested <RelativeTime value={approval.createdAt} />
+          {approval.triggerEvent} {"· запросил "}<RelativeTime value={approval.createdAt} />
         </p>
       </div>
       <div className="flex items-center gap-2">
         {approval.deadlineAt && (
           <span className={cn("hidden text-[11px] md:inline", expired ? "font-medium text-rust" : "text-soft-ink")}>
-            {expired ? "Expired" : "Due"} <RelativeTime value={approval.deadlineAt} />
+            {expired ? "Срок действия истек" : "Срок погашения"} <RelativeTime value={approval.deadlineAt} />
           </span>
         )}
         {!expired && <button
@@ -130,16 +129,14 @@ function ApprovalRow({
           onClick={() => decide("rejected")}
           className={cn("inline-flex items-center gap-1 rounded-lg border border-rust/25 px-2.5 py-1.5 text-xs font-medium text-rust hover:bg-rust/10 disabled:opacity-50")}
         >
-          <XCircleIcon className="size-3.5" /> Reject
-        </button>}
+          <XCircleIcon className="size-3.5" /> {"Отклонить "}</button>}
         {!expired && <button
           type="button"
           disabled={pending}
           onClick={() => decide("approved")}
           className="inline-flex items-center gap-1 rounded-lg bg-near-ink px-2.5 py-1.5 text-xs font-medium text-primary-foreground hover:bg-near-ink/90 disabled:opacity-50"
         >
-          <CheckCircleIcon className="size-3.5" /> Approve
-        </button>}
+          <CheckCircleIcon className="size-3.5" /> {"Утвердить "}</button>}
       </div>
     </div>
   );

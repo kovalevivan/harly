@@ -65,10 +65,10 @@ export function ReferCandidateDrawer({
         featured,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Unable to refer candidate.");
+        toast.error(result.error ?? "Невозможно порекомендовать кандидата.");
         return;
       }
-      toast.success("Referral added");
+      toast.success("Реферал добавлен");
       setOpen(false);
       reset();
       router.refresh();
@@ -83,22 +83,21 @@ export function ReferCandidateDrawer({
         if (!next) reset();
       }}
       trigger={trigger}
-      title="Refer candidate"
-      description="Credit whoever recommended this candidate."
+      title={"Пригласить кандидата"}
+      description={"Благодарим того, кто рекомендовал этого кандидата."}
       footer={
         <>
           <Button variant="outline" disabled={isPending} onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button onClick={submit} disabled={isPending}>
-            {isPending ? "Saving…" : "Add referral"}
+            {isPending ? "Сохранение…" : "Добавить реферала"}
           </Button>
         </>
       }
     >
       <div className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="refer-candidate-referrer">Referred by</Label>
+          <Label htmlFor="refer-candidate-referrer">{"По рекомендации"}</Label>
           <Select
             value={referredById}
             onValueChange={setReferredById}
@@ -111,23 +110,23 @@ export function ReferCandidateDrawer({
               {canAttributeToOthers ? (
                 members.map((member) => (
                   <SelectItem key={member.userId} value={member.userId}>
-                    {member.userId === currentUserId ? "You" : member.name}
+                    {member.userId === currentUserId ? "ты" : member.name}
                   </SelectItem>
                 ))
               ) : (
-                <SelectItem value={currentUserId}>You</SelectItem>
+                <SelectItem value={currentUserId}>{"ты"}</SelectItem>
               )}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="refer-candidate-job">Job (optional)</Label>
+          <Label htmlFor="refer-candidate-job">{"Работа (необязательно)"}</Label>
           <Select value={jobId} onValueChange={setJobId}>
             <SelectTrigger id="refer-candidate-job" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={NO_JOB}>No specific job</SelectItem>
+              <SelectItem value={NO_JOB}>{"Нет конкретной работы"}</SelectItem>
               {jobs.map((job) => (
                 <SelectItem key={job.id} value={job.id}>
                   {job.title}
@@ -137,13 +136,13 @@ export function ReferCandidateDrawer({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="refer-candidate-note">Note (optional)</Label>
+          <Label htmlFor="refer-candidate-note">{"Примечание (необязательно)"}</Label>
           <Textarea
             id="refer-candidate-note"
             rows={3}
             value={note}
             onChange={(event) => setNote(event.target.value)}
-            placeholder="Why are they a good fit?"
+            placeholder={"Почему они хорошо подходят?"}
           />
         </div>
         {canAttributeToOthers ? (
@@ -152,8 +151,7 @@ export function ReferCandidateDrawer({
               checked={featured}
               onCheckedChange={(checked) => setFeatured(checked === true)}
             />
-            Featured referral
-          </label>
+            {"Рекомендуемый реферал "}</label>
         ) : null}
       </div>
     </SidePanel>

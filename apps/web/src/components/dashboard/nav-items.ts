@@ -51,11 +51,11 @@ export type NavItem = {
  * demoting one of these , it is a hard ban, not a guideline.
  */
 export const primaryNav: NavItem[] = [
-  { label: "Home", href: "/dashboard", icon: Home, exact: true },
-  { label: "Inbox", href: "/dashboard/inbox", icon: Inbox, badge: "inbox" },
-  { label: "Pipeline", href: "/dashboard/pipeline", icon: KanbanSquare },
-  { label: "Candidates", href: "/dashboard/candidates", icon: Users },
-  { label: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
+  { label: "Главная", href: "/dashboard", icon: Home, exact: true },
+  { label: "Входящие", href: "/dashboard/inbox", icon: Inbox, badge: "inbox" },
+  { label: "Воронка найма", href: "/dashboard/pipeline", icon: KanbanSquare },
+  { label: "Кандидаты", href: "/dashboard/candidates", icon: Users },
+  { label: "Вакансии", href: "/dashboard/jobs", icon: Briefcase },
 ];
 
 export type MoreGroup = { label: string; items: NavItem[] };
@@ -66,78 +66,78 @@ export type MoreGroup = { label: string; items: NavItem[] };
  */
 export const moreNav: MoreGroup[] = [
   {
-    label: "People",
+    label: "Люди",
     items: [
       // Candidates was promoted to the rail; only the two surfaces that are
       // genuinely occasional stay here.
       {
-        label: "Talent Pool",
+        label: "Кадровый резерв",
         href: "/dashboard/talent-pool",
         icon: Bookmark,
-        hint: "Saved for later",
+        hint: "Сохранено на потом",
       },
       {
-        label: "Team",
+        label: "Команда",
         href: "/people" as Route,
         icon: UserRound,
-        hint: "Your colleagues",
+        hint: "Ваши коллеги",
       },
     ],
   },
   {
-    label: "Work",
+    label: "Работа",
     items: [
       {
-        label: "Tasks",
+        label: "Задачи",
         href: "/dashboard/tasks",
         icon: ListTodo,
         badge: "tasks",
-        hint: "Assigned to you",
+        hint: "Назначено вам",
       },
       {
-        label: "Calendar",
+        label: "Календарь",
         href: "/dashboard/calendars",
         icon: CalendarDays,
-        hint: "Interviews and availability",
+        hint: "Собеседования и доступность",
       },
       {
-        label: "Reports",
+        label: "Отчеты",
         href: "/dashboard/reports",
         icon: BarChart3,
-        hint: "Funnel, sources, time to hire",
+        hint: "Воронка, источники, время найма",
       },
     ],
   },
   {
-    label: "Set up",
+    label: "Настройка",
     items: [
       {
-        label: "Career Page",
+        label: "Страница карьеры",
         href: "/dashboard/career-page",
         icon: Globe,
         requiredPermission: "settings:edit",
-        hint: "Your public job board",
+        hint: "Ваша общедоступная доска вакансий",
       },
       {
-        label: "Templates",
+        label: "Шаблоны",
         href: "/dashboard/templates",
         icon: FileText,
         requiredPermission: "templates:manage",
-        hint: "Emails and scorecards",
+        hint: "Письма и оценочные формы",
       },
       {
-        label: "Automations",
+        label: "Автоматизация",
         href: "/dashboard/automations" as Route,
         icon: Workflow,
         requiredPermission: "automations:manage",
-        hint: "When something happens, do work automatically",
+        hint: "Когда что-то происходит, работайте автоматически",
       },
       {
-        label: "Documents",
+        label: "Документы",
         href: "/dashboard/documents" as Route,
         icon: NotebookTabs,
         requiredPermission: ["documents:read", "templates:manage"],
-        hint: "Files, signatures, workflow templates",
+        hint: "Файлы, подписи, шаблоны рабочих процессов",
       },
     ],
   },
@@ -145,7 +145,7 @@ export const moreNav: MoreGroup[] = [
 
 /** Settings is rail chrome pinned to the bottom, not a primary destination. */
 export const settingsNav: NavItem = {
-  label: "Settings",
+  label: "Настройки",
   href: "/settings",
   icon: Settings,
   requiredPermission: ["settings:edit", "dsar:manage"],

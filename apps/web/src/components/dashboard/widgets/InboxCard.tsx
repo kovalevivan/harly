@@ -44,9 +44,9 @@ export function InboxCard({
     <Tile className={className}>
       <TileHeader
         icon={Inbox}
-        title="Your inbox"
+        title={"Входящие"}
         count={items.length}
-        action={<TileLink href="/dashboard/inbox">View all</TileLink>}
+        action={<TileLink href="/dashboard/inbox">{"Посмотреть все"}</TileLink>}
       />
       <div className="flex flex-1 flex-col px-2 pb-2 pt-1">
         {items.length > 0 ? (
@@ -86,7 +86,7 @@ export function InboxCard({
                 )}
               >
                 <ChevronDown className="size-3.5" strokeWidth={1.8} />
-                {hiddenCount} more item{hiddenCount !== 1 ? "s" : ""}
+                {hiddenCount} {"больше товара"}{hiddenCount !== 1 ? "s" : ""}
               </button>
             ) : showAll && hiddenCount > 0 ? (
               <button
@@ -98,14 +98,13 @@ export function InboxCard({
                 )}
               >
                 <ChevronUp className="size-3.5" strokeWidth={1.8} />
-                Show less
-              </button>
+                {"Показать меньше "}</button>
             ) : null}
           </>
         ) : (
           <EmptyHint
             icon={Inbox}
-            text="You're all caught up. New requests will appear here."
+            text={"Вы все в плену. Здесь будут появляться новые запросы."}
           />
         )}
       </div>

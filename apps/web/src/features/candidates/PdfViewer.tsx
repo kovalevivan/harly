@@ -89,7 +89,7 @@ export function PdfViewer({
           setState({
             status: "error",
             message:
-              err instanceof Error ? err.message : "Unable to load this PDF",
+              err instanceof Error ? err.message : "Невозможно загрузить этот PDF-файл",
           });
         }
       }
@@ -191,8 +191,7 @@ export function PdfViewer({
         )}
       >
         <Loader2 className="size-4 animate-spin" />
-        Loading résumé…
-      </div>
+        {"Загрузка резюме… "}</div>
     );
   }
 
@@ -212,10 +211,10 @@ export function PdfViewer({
           className="size-8 p-0 text-muted-foreground hover:text-foreground"
           onClick={() => setZoom((z) => Math.max(0.5, +(z - 0.2).toFixed(2)))}
           disabled={!ready}
-          title="Zoom out"
+          title={"Уменьшить масштаб"}
         >
           <Minus className="size-4" />
-          <span className="sr-only">Zoom out</span>
+          <span className="sr-only">{"Уменьшить масштаб"}</span>
         </Button>
         <span className="w-11 text-center text-xs tabular-nums text-muted-foreground">
           {Math.round(zoom * 100)}%
@@ -226,10 +225,10 @@ export function PdfViewer({
           className="size-8 p-0 text-muted-foreground hover:text-foreground"
           onClick={() => setZoom((z) => Math.min(3, +(z + 0.2).toFixed(2)))}
           disabled={!ready}
-          title="Zoom in"
+          title={"Увеличить масштаб"}
         >
           <Plus className="size-4" />
-          <span className="sr-only">Zoom in</span>
+          <span className="sr-only">{"Увеличить масштаб"}</span>
         </Button>
         {zoom !== 1 ? (
           <Button
@@ -238,14 +237,13 @@ export function PdfViewer({
             className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
             onClick={() => setZoom(1)}
           >
-            Fit
-          </Button>
+            {"Подходит "}</Button>
         ) : null}
 
         <div className="ml-auto flex items-center gap-1">
           {ready ? (
             <span className="mr-1 text-xs tabular-nums text-muted-foreground">
-              {state.numPages} page{state.numPages === 1 ? "" : "s"}
+              {state.numPages} {"страница"}{state.numPages === 1 ? "" : "s"}
             </span>
           ) : null}
           <Button
@@ -253,7 +251,7 @@ export function PdfViewer({
             size="sm"
             variant="ghost"
             className="size-8 p-0 text-muted-foreground hover:text-foreground"
-            title="Download"
+            title={"Скачать"}
           >
             <a
               href={fileUrl}
@@ -262,7 +260,7 @@ export function PdfViewer({
               download={fileName ?? undefined}
             >
               <Download className="size-4" />
-              <span className="sr-only">Download</span>
+              <span className="sr-only">{"Скачать"}</span>
             </a>
           </Button>
           <Button
@@ -270,10 +268,10 @@ export function PdfViewer({
             variant="ghost"
             className="size-8 p-0 text-muted-foreground hover:text-foreground"
             onClick={() => rootRef.current?.requestFullscreen?.()}
-            title="Fullscreen"
+            title={"Полноэкранный режим"}
           >
             <Maximize2 className="size-4" />
-            <span className="sr-only">Fullscreen</span>
+            <span className="sr-only">{"Полноэкранный режим"}</span>
           </Button>
         </div>
       </div>
@@ -286,8 +284,7 @@ export function PdfViewer({
         {state.status === "loading" ? (
           <div className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
-            Loading résumé…
-          </div>
+            {"Загрузка резюме… "}</div>
         ) : state.status === "error" ? (
           <div className="flex h-full flex-col items-center justify-center gap-1 text-center">
             <p className="text-sm text-muted-foreground">{state.message}</p>
@@ -297,8 +294,7 @@ export function PdfViewer({
               rel="noreferrer"
               className="text-xs text-primary underline-offset-2 hover:underline"
             >
-              Download the file instead
-            </a>
+              {"Вместо этого скачайте файл "}</a>
           </div>
         ) : null}
         <div ref={pagesRef} className="flex flex-col items-center gap-4" />

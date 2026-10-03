@@ -75,10 +75,9 @@ export function TaskRow({ task, handlers }: { task: TaskItem; handlers: TaskHand
                 <FileText className="size-3" />
                 {task.candidateId ? (
                   <Link href={`/dashboard/candidates/${task.candidateId}`} className="hover:underline">
-                    Application
-                  </Link>
+                    {"Отклик "}</Link>
                 ) : (
-                  "Application"
+                  "Отклик"
                 )}
               </span>
             )}
@@ -87,10 +86,9 @@ export function TaskRow({ task, handlers }: { task: TaskItem; handlers: TaskHand
                 <CalendarClock className="size-3" />
                 {task.candidateId ? (
                   <Link href={`/dashboard/candidates/${task.candidateId}`} className="hover:underline">
-                    Interview
-                  </Link>
+                    {"Собеседование "}</Link>
                 ) : (
-                  "Interview"
+                  "Собеседование"
                 )}
               </span>
             )}

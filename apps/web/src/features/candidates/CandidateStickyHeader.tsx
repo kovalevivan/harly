@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import type { ReactNode } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Phone } from "lucide-react";
@@ -86,7 +87,7 @@ export function CandidateStickyHeader({
               <span className="truncate text-sm font-semibold">{name}</span>
               {stageName ? (
                 <span className="hidden shrink-0 rounded-full bg-accent px-2 py-0.5 text-xs font-medium text-accent-foreground sm:inline">
-                  {stageName}
+                  {localizeSystemText(stageName)}
                 </span>
               ) : null}
               {phone ? (

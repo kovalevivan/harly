@@ -11,11 +11,11 @@ import { ListEditor, move } from "../primitives";
 import { PanelHeader, Section } from "./PanelKit";
 
 const LEGAL_SLUG_LABELS: Record<string, string> = {
-  "privacy-policy": "Privacy Policy",
-  "terms-of-service": "Terms of Service",
-  "cookie-policy": "Cookie Policy",
-  "candidate-notice": "Candidate Notice",
-  "ai-transparency-notice": "AI Transparency",
+  "privacy-policy": "Политика конфиденциальности",
+  "terms-of-service": "Условия использования",
+  "cookie-policy": "Политика использования файлов cookie",
+  "candidate-notice": "Уведомление кандидата",
+  "ai-transparency-notice": "Прозрачность ИИ",
 };
 
 function SocialPlatformSelect({
@@ -51,15 +51,14 @@ export function FooterPanel({
 }) {
   return (
     <div className="space-y-6">
-      <PanelHeader title="Footer" subtitle="Social links and legal pages." />
+      <PanelHeader title={"Нижний колонтитул"} subtitle={"Социальные ссылки и юридические страницы."} />
 
-      <Section title="Footer" defaultOpen>
+      <Section title={"Нижний колонтитул"} defaultOpen>
         {availableLegalPages.length > 0 && (
           <div className="space-y-1.5">
-            <Label className="text-xs text-ink-soft">Legal links</Label>
+            <Label className="text-xs text-ink-soft">{"Юридические ссылки"}</Label>
             <p className="text-[11px] text-ink-soft">
-              Select which legal pages appear in the footer.
-            </p>
+              {"Выберите, какие юридические страницы будут отображаться в нижнем колонтитуле. "}</p>
             {availableLegalPages.map((slug) => {
               const label = LEGAL_SLUG_LABELS[slug] ?? slug;
               const checked = (config.footer.legalLinks ?? []).includes(slug);
@@ -87,7 +86,7 @@ export function FooterPanel({
           </div>
         )}
         <ListEditor
-          label="Social links"
+          label={"Социальные ссылки"}
           items={config.footer.socials}
           onAdd={() =>
             update((d) => d.footer.socials.push({ platform: "x", url: "" }))

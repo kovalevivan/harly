@@ -35,10 +35,10 @@ type PortalTopNavProps = {
 };
 
 const NAV_ITEMS = [
-  { href: "/portal/dashboard" as Route, label: "Home", icon: HouseIcon },
-  { href: "/portal/applications" as Route, label: "Applications", icon: FileTextIcon },
-  { href: "/portal/notifications" as Route, label: "Notifications", icon: BellIcon },
-  { href: "/portal/jobs" as Route, label: "Jobs", icon: BriefcaseIcon },
+  { href: "/portal/dashboard" as Route, label: "Главная", icon: HouseIcon },
+  { href: "/portal/applications" as Route, label: "Отклики", icon: FileTextIcon },
+  { href: "/portal/notifications" as Route, label: "Уведомления", icon: BellIcon },
+  { href: "/portal/jobs" as Route, label: "Вакансии", icon: BriefcaseIcon },
 ];
 
 export function PortalTopNav({
@@ -135,8 +135,8 @@ export function PortalTopNav({
             href={"/portal/notifications" as Route}
             aria-label={
               hasUnread
-                ? `Notifications, ${unreadNotificationCount} unread`
-                : "Notifications"
+                ? `Уведомления, ${unreadNotificationCount} непрочитанные`
+                : "Уведомления"
             }
             className="relative flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
@@ -168,26 +168,23 @@ export function PortalTopNav({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel className="font-normal">
                 <p className="text-sm font-medium text-foreground">{candidateName}</p>
-                <p className="text-xs text-muted-foreground">Candidate</p>
+                <p className="text-xs text-muted-foreground">{"Кандидат"}</p>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={"/portal/applications" as Route}>
                   <BriefcaseIcon className="size-4" />
-                  My applications
-                </Link>
+                  {"Мои приложения "}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={"/portal/profile" as Route}>
                   <UserCircleIcon className="size-4" />
-                  My profile
-                </Link>
+                  {"Мой профиль "}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={"/portal/notifications" as Route}>
                   <BellIcon className="size-4" />
-                  Notifications
-                </Link>
+                  {"Уведомления "}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild className="p-0">

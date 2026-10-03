@@ -4,12 +4,12 @@ import { portalInterviewStatusLabel } from "./portal-interview-status";
 
 describe("portal interview status", () => {
   it("does not label a scheduled interview in the past as completed", () => {
-    expect(portalInterviewStatusLabel("scheduled")).toBe("Scheduled");
+    expect(portalInterviewStatusLabel("scheduled")).toBe("Запланировано");
   });
 
   it.each([
-    ["completed", "Completed"],
-    ["canceled", "Canceled"],
+    ["completed", "Завершено"],
+    ["canceled", "Отменено"],
   ] as const)("preserves the %s terminal label", (status, label) => {
     expect(portalInterviewStatusLabel(status)).toBe(label);
   });

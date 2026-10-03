@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useMemo, useState } from "react";
 import {
   DndContext,
@@ -250,7 +251,7 @@ export function PipelineBoard({
     const found = findApplicationStage(columns, applicationId);
     return found
       ? `${found.application.candidateFirstName} ${found.application.candidateLastName}`
-      : "Candidate";
+      : "Кандидат";
   }
 
   function stageLabel(stageId: string) {
@@ -259,22 +260,22 @@ export function PipelineBoard({
 
   const dragAnnouncements: Announcements = {
     onDragStart({ active }) {
-      return `Picked up ${candidateLabel(String(active.id))}.`;
+      return `Взял ${candidateLabel(String(active.id))}.`;
     },
     onDragOver({ active, over }) {
       if (!over) return undefined;
       const target = getOverTarget(columns, stages, String(over.id));
       if (!target) return undefined;
-      return `${candidateLabel(String(active.id))} is over ${stageLabel(target.stageId)}.`;
+      return `${candidateLabel(String(active.id))} закончилось ${stageLabel(target.stageId)}.`;
     },
     onDragEnd({ active, over }) {
-      if (!over) return `${candidateLabel(String(active.id))} was not moved.`;
+      if (!over) return `${candidateLabel(String(active.id))} не был перемещен.`;
       const target = getOverTarget(columns, stages, String(over.id));
-      if (!target) return `${candidateLabel(String(active.id))} was not moved.`;
-      return `${candidateLabel(String(active.id))} moved to ${stageLabel(target.stageId)}.`;
+      if (!target) return `${candidateLabel(String(active.id))} не был перемещен.`;
+      return `${candidateLabel(String(active.id))} переместился на ${stageLabel(target.stageId)}.`;
     },
     onDragCancel({ active }) {
-      return `Moving ${candidateLabel(String(active.id))} was cancelled.`;
+      return `Переезд ${candidateLabel(String(active.id))} был отменен.`;
     },
   };
 
@@ -358,7 +359,7 @@ export function PipelineBoard({
 
       if (!result.success) {
         setColumns(previousColumns);
-        setError(result.error ?? "Unable to update pipeline.");
+        setError(result.error ?? "Невозможно обновить конвейер.");
       } else {
         router.refresh();
       }
@@ -418,7 +419,7 @@ export function PipelineBoard({
 
       if (!result.success) {
         setColumns(previousColumns);
-        setError(result.error ?? "Unable to update application status.");
+        setError(result.error ?? "Невозможно обновить статус отклика.");
         return;
       }
 
@@ -476,7 +477,7 @@ export function PipelineBoard({
 
       if (!result.success) {
         setColumns(previousColumns);
-        setError(result.error ?? "Unable to move selected candidates.");
+        setError(result.error ?? "Невозможно переместить выбранных кандидатов.");
         return;
       }
 
@@ -518,7 +519,7 @@ export function PipelineBoard({
 
       if (!result.success) {
         setStages(previousStages);
-        setError(result.error ?? "Unable to update stage email settings.");
+        setError(result.error ?? "Невозможно обновить настройки электронной почты этапа.");
       }
     } finally {
       setMutationPending(false);
@@ -536,7 +537,7 @@ export function PipelineBoard({
             setSearchQuery(event.target.value);
             setSelectedIds(new Set());
           }}
-          placeholder="Search candidates…"
+          placeholder={"Поиск кандидатов…"}
           className="w-full pl-9 sm:w-48"
         />
       </div>
@@ -551,11 +552,11 @@ export function PipelineBoard({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All statuses</SelectItem>
-          <SelectItem value="active">Active</SelectItem>
-          <SelectItem value="hired">Hired</SelectItem>
-          <SelectItem value="rejected">Rejected</SelectItem>
-          <SelectItem value="withdrawn">Withdrawn</SelectItem>
+          <SelectItem value="all">{"Все статусы"}</SelectItem>
+          <SelectItem value="active">{"Активные"}</SelectItem>
+          <SelectItem value="hired">{"Нанят"}</SelectItem>
+          <SelectItem value="rejected">{"Отказ"}</SelectItem>
+          <SelectItem value="withdrawn">{"снято"}</SelectItem>
         </SelectContent>
       </Select>
       <label className="hidden items-center gap-2 rounded-md border bg-muted/40 px-3 py-1.5 text-sm font-medium text-muted-foreground sm:flex">
@@ -563,22 +564,19 @@ export function PipelineBoard({
           checked={hideEmptyColumns}
           onCheckedChange={(checked) => setHideEmptyColumns(checked === true)}
         />
-        Hide empty
-      </label>
+        {"Скрыть пустое "}</label>
     </div>
   );
 
   const bulkBar = selectedApplications.length > 0 ? (
     <div className="flex flex-col gap-3 rounded-xl border bg-accent/40 p-3 sm:flex-row sm:items-center sm:justify-between">
       <Badge variant="secondary" className="w-fit">
-        {selectedApplications.length} selected
-      </Badge>
+        {selectedApplications.length} {"выбрано "}</Badge>
       <div className="flex flex-wrap gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" disabled={mutationPending}>
-              Move to stage
-              <CaretDownIcon className="size-4" />
+              {"Перейти на сцену "}<CaretDownIcon className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -587,7 +585,7 @@ export function PipelineBoard({
                 key={stage.id}
                 onClick={() => void handleBulkMove(stage.id)}
               >
-                {stage.name}
+                {localizeSystemText(stage.name)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -603,8 +601,7 @@ export function PipelineBoard({
           }
         >
           <CheckIcon className="size-4" />
-          Hire
-        </Button>
+          {"Нанять "}</Button>
         <Button
           size="sm"
           variant="destructive"
@@ -617,15 +614,13 @@ export function PipelineBoard({
           }
         >
           <XIcon className="size-4" />
-          Reject
-        </Button>
+          {"Отклонить "}</Button>
         <Button
           size="sm"
           variant="ghost"
           onClick={() => setSelectedIds(new Set())}
         >
-          Clear
-        </Button>
+          {"Очистить "}</Button>
       </div>
     </div>
   ) : null;
@@ -641,7 +636,7 @@ export function PipelineBoard({
           aria-live="assertive"
           className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm font-medium text-destructive"
         >
-          {error}
+          {localizeSystemText(error)}
         </div>
       ) : null}
 
@@ -649,7 +644,7 @@ export function PipelineBoard({
       <div className="sm:hidden">
         <Select value={mobileStage} onValueChange={setMobileStage}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select stage" />
+            <SelectValue placeholder={"Выберите этап"} />
           </SelectTrigger>
           <SelectContent>
             {stages.map((stage) => (
@@ -659,7 +654,7 @@ export function PipelineBoard({
                     className="size-2 shrink-0 rounded-full"
                     style={{ backgroundColor: stage.color ?? "#a1a1aa" }}
                   />
-                  {stage.name}
+                  {localizeSystemText(stage.name)}
                   <span className="text-muted-foreground">
                     ({filteredColumns.get(stage.id)?.length ?? 0})
                   </span>
@@ -680,8 +675,7 @@ export function PipelineBoard({
           ))}
           {mobileApplications.length === 0 ? (
             <div className="flex items-center justify-center rounded-[var(--radius-md)] bg-warm-paper p-8 text-center text-[13px] text-soft-ink">
-              No candidates in this stage
-            </div>
+              {"На данном этапе кандидатов нет "}</div>
           ) : null}
         </div>
       </div>

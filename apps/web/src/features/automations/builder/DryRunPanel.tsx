@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useMemo, useState, useTransition } from "react";
 import {
   CheckCircle2,
@@ -175,7 +176,7 @@ export function DryRunPanel({
       }
       if (!selectedEndpoint) {
         setWebhookPayloadError(
-          "Choose an inbound endpoint in the trigger step before testing.",
+          "Перед тестированием выберите входящую конечную точку на этапе триггера.",
         );
         setResult(null);
         return;
@@ -190,7 +191,7 @@ export function DryRunPanel({
     }
     const virtualStart = new Date(startedAt);
     if (!startedAt || !Number.isFinite(virtualStart.getTime())) {
-      setFixtureError("Choose a valid virtual start date and time.");
+      setFixtureError("Выберите допустимую дату и время виртуального начала.");
       setResult(null);
       return;
     }
@@ -221,7 +222,7 @@ export function DryRunPanel({
           triggerMatched: false,
           terminal: "invalid",
           steps: [],
-          error: r.error ?? "Could not run dry-run.",
+          error: r.error ?? "Не удалось запустить всухую.",
         });
       }
     });
@@ -251,7 +252,7 @@ export function DryRunPanel({
       }
       if (!selectedEndpoint) {
         setWebhookPayloadError(
-          "Choose an inbound endpoint in the trigger step before previewing.",
+          "Перед предварительным просмотром выберите входящую конечную точку на этапе триггера.",
         );
         setPayload(null);
         return;
@@ -273,7 +274,7 @@ export function DryRunPanel({
       setPayload(
         r.ok
           ? (r.payload ?? null)
-          : { error: r.error ?? "Could not preview payload." },
+          : { error: r.error ?? "Не удалось просмотреть полезную нагрузку." },
       );
     });
   }
@@ -284,33 +285,27 @@ export function DryRunPanel({
       <div className="rounded-2xl border border-border bg-pure-snow p-5 shadow-sm">
         <div className="space-y-1.5 text-sm">
           <p className="text-soft-ink">
-            <span className="font-semibold text-foreground">Trigger:</span>{" "}
+            <span className="font-semibold text-foreground">{"Событие:"}</span>{" "}
             {triggerMeta(trigger.event).label}
             {trigger.filter && Object.keys(trigger.filter).length > 0
-              ? " (with configured filters)"
+              ? " (с настроенными фильтрами)"
               : ""}
           </p>
           <p className="text-soft-ink">
-            <span className="font-semibold text-foreground">Simulation:</span>{" "}
-            Safely walks through each step using sample candidate data without
-            modifying real records. (No email, webhook, task, meeting, document,
-            or candidate is changed.)
-          </p>
+            <span className="font-semibold text-foreground">{"Проверка:"}</span>{" "}
+            {"Безопасно проходит каждый шаг, используя образцы данных-кандидатов, не изменяя реальные записи. (Ни один адрес электронной почты, веб-перехватчик, задача, собрание, документ или кандидат не изменяются.) "}</p>
           {selectedCandidate ? (
             <p className="text-xs text-soft-ink">
               <span className="font-medium text-foreground">
-                Testing candidate:
-              </span>{" "}
+                {"Кандидат на тестирование: "}</span>{" "}
               {selectedCandidate.name}{" "}
               <span className="text-soft-ink/80">({selectedCandidate.email})</span>
             </p>
           ) : (
             <p className="text-xs text-soft-ink">
               <span className="font-medium text-foreground">
-                Sample candidate:
-              </span>{" "}
-              Using synthetic sample data (no real candidates in workspace).
-            </p>
+                {"Пример кандидата: "}</span>{" "}
+              {"Использование синтетических выборочных данных (нет реальных кандидатов в рабочей области). "}</p>
           )}
         </div>
 
@@ -321,13 +316,12 @@ export function DryRunPanel({
               htmlFor="dry-run-candidate-select"
               className="text-xs font-medium text-soft-ink shrink-0"
             >
-              Test candidate
-            </label>
+              {"Тестовый кандидат "}</label>
             <div className="min-w-56">
               <ScopedSearchSelect
                 kind="candidates"
                 value={candidateId}
-                placeholder="Most recently updated"
+                placeholder={"Последнее обновление"}
                 emptyLabel="Most recently updated"
                 initialItems={candidates.map((candidate) => ({
                   id: candidate.id,
@@ -341,8 +335,7 @@ export function DryRunPanel({
 
           <div className="flex items-center gap-2">
             <label className="text-xs font-medium text-soft-ink shrink-0">
-              Scenario
-            </label>
+              {"Сценарий "}</label>
             <BuilderSelect
               value={scenario}
               onChange={(event) =>
@@ -351,9 +344,9 @@ export function DryRunPanel({
               disabled={pending}
               className="rounded-lg border border-border bg-warm-paper px-2.5 py-1.5 text-xs text-foreground outline-none transition-colors duration-150 ease-out focus:border-foreground/40"
             >
-              <option value="success">All steps succeed</option>
-              <option value="action_failure">Action failure</option>
-              <option value="uncertain_wait">Uncertain wait</option>
+              <option value="success">{"Все шаги успешны"}</option>
+              <option value="action_failure">{"Ошибка действия"}</option>
+              <option value="uncertain_wait">{"Неуверенное ожидание"}</option>
             </BuilderSelect>
           </div>
 
@@ -366,8 +359,8 @@ export function DryRunPanel({
             >
               <FileCode className="size-3.5 text-soft-ink" />
               {webhookTrigger
-                ? "Preview webhook event"
-                : "Preview event payload"}
+                ? "Предварительный просмотр события вебхука"
+                : "Предварительный просмотр полезных данных события"}
             </button>
 
             <button
@@ -384,13 +377,11 @@ export function DryRunPanel({
               {pending ? (
                 <>
                   <Loader2 className="size-3.5 animate-spin" />
-                  Simulating…
-                </>
+                  {"Моделирование… "}</>
               ) : (
                 <>
                   <Play className="size-3.5 fill-current" />
-                  Simulate workflow
-                </>
+                  {"Имитировать рабочий процесс "}</>
               )}
             </button>
           </div>
@@ -402,20 +393,16 @@ export function DryRunPanel({
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-semibold text-foreground">
-                  Webhook request body
-                </h3>
+                  {"Тело запроса вебхука "}</h3>
                 <p className="mt-1 max-w-2xl text-xs leading-relaxed text-soft-ink">
-                  Paste the JSON body your integration will send. Harly checks it
-                  against the selected endpoint schema; this test makes no request
-                  and has no external side effects.
-                </p>
+                  {"Вставьте тело JSON, которое отправит ваша интеграция. Харли сверяет его с выбранной схемой конечной точки; этот тест не требует запроса и не имеет внешних побочных эффектов. "}</p>
               </div>
               {selectedEndpoint ? (
                 <span className="rounded-full border border-border bg-warm-paper px-2.5 py-1 text-xs text-soft-ink">
                   {selectedEndpoint.name}
                   {selectedEndpoint.enabled
-                    ? " · active"
-                    : " · disabled for live requests"}
+                    ? " · активный"
+                    : " · отключено для живых запросов"}
                 </span>
               ) : null}
             </div>
@@ -424,16 +411,13 @@ export function DryRunPanel({
                 role="alert"
                 className="mt-3 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-soft-ink"
               >
-                Choose an inbound endpoint in the Trigger step before testing this
-                webhook.
-              </p>
+                {"Прежде чем тестировать этот веб-перехватчик, выберите входящую конечную точку на этапе триггера. "}</p>
             ) : null}
             <label className="mt-3 block">
               <span className="mb-1 block text-xs font-medium text-foreground">
-                Payload JSON
-              </span>
+                {"Полезная нагрузка JSON "}</span>
               <textarea
-                aria-label="Webhook request body JSON"
+                aria-label={"Тело запроса вебхука в формате JSON"}
                 aria-describedby="webhook-payload-help"
                 value={webhookPayloadText}
                 onChange={(event) => {
@@ -451,22 +435,19 @@ export function DryRunPanel({
               id="webhook-payload-help"
               className="mt-1 text-[11px] text-soft-ink"
             >
-              Enter a JSON object up to 32 KB. The schema is enforced again on the
-              server.
-            </p>
+              {"Введите объект JSON размером до 32 КБ. Схема снова применяется на сервере. "}</p>
             {webhookPayloadError ? (
               <p
                 role="alert"
                 className="mt-2 rounded-lg border border-danger-rust/30 bg-danger-rust/5 px-3 py-2 text-xs text-danger-rust"
               >
-                {webhookPayloadError}
+                {localizeSystemText(webhookPayloadError)}
               </p>
             ) : null}
             {selectedEndpoint ? (
               <details className="mt-3 rounded-lg border border-border bg-warm-paper/70 px-3 py-2">
                 <summary className="cursor-pointer text-xs font-medium text-foreground">
-                  View endpoint payload schema
-                </summary>
+                  {"Просмотр схемы полезных данных конечной точки "}</summary>
                 <pre className="mt-2 max-h-48 overflow-auto text-[11px] leading-relaxed text-soft-ink">
                   {JSON.stringify(selectedEndpoint.payloadSchema, null, 2)}
                 </pre>
@@ -484,9 +465,7 @@ export function DryRunPanel({
         >
           <Info className="size-4 shrink-0 text-warning" />
           <span>
-            The workflow steps have changed since this simulation was run. Run
-            simulation again to test the latest changes.
-          </span>
+            {"Шаги рабочего процесса изменились с момента запуска этого моделирования. Запустите симуляцию еще раз, чтобы проверить последние изменения. "}</span>
         </div>
       ) : null}
 
@@ -494,17 +473,15 @@ export function DryRunPanel({
       {result && (
         <section
           role="status"
-          aria-label="Simulation results"
+          aria-label={"Результаты моделирования"}
           className="rounded-2xl border border-border bg-pure-snow p-5 shadow-sm space-y-4"
         >
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-foreground">
-              Simulation Results
-            </h3>
+              {"Результаты моделирования "}</h3>
             <span className="text-xs text-soft-ink">
               {result.steps.length} {result.steps.length === 1 ? "step" : "steps"}{" "}
-              evaluated
-            </span>
+              {"проверено "}</span>
           </div>
 
           {result.error ? (
@@ -514,8 +491,8 @@ export function DryRunPanel({
             >
               <XCircle className="size-4 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold">Simulation encountered an error</p>
-                <p className="mt-0.5">{result.error}</p>
+                <p className="font-semibold">{"При моделировании произошла ошибка"}</p>
+                <p className="mt-0.5">{localizeSystemText(result.error)}</p>
               </div>
             </div>
           ) : (
@@ -541,13 +518,13 @@ export function DryRunPanel({
                 <div className="min-w-0">
                   <p className="font-semibold">
                     {result.triggerMatched
-                      ? `Simulation finished: ${result.terminal.replaceAll("_", " ")}.`
-                      : "The sample event did not pass the trigger filter."}
+                      ? `Моделирование завершено: ${result.terminal.replaceAll("_", " ")}.`
+                      : "Образец события не прошел триггерный фильтр."}
                   </p>
                   <p className="mt-0.5 text-[11px] opacity-90">
                     {result.triggerMatched
-                      ? "All evaluated steps completed without modifying real records or sending live communications."
-                      : "The simulated candidate attributes did not match the condition set on this trigger."}
+                      ? "Все оцененные шаги выполнены без изменения реальных записей или отправки сообщений в реальном времени."
+                      : "Имитированные атрибуты-кандидаты не соответствуют условию, установленному для этого триггера."}
                   </p>
                 </div>
               </div>
@@ -599,7 +576,7 @@ export function DryRunPanel({
                             )}
                           >
                             {step.status === "simulated" || step.status === "matched"
-                              ? "Simulated"
+                              ? "Имитация"
                               : step.status}
                           </span>
                         </div>
@@ -610,8 +587,8 @@ export function DryRunPanel({
                           <p className="mt-1.5 flex items-center gap-1 text-[10px] text-quiet-mist">
                             <Clock className="size-3" />
                             <span>
-                              Virtual time ·{" "}
-                              {new Date(step.virtualTime).toLocaleString()}
+                              {"Виртуальное время ·"}{" "}
+                              {new Date(step.virtualTime).toLocaleString("ru-RU")}
                             </span>
                           </p>
                         )}
@@ -630,15 +607,13 @@ export function DryRunPanel({
         <div className="rounded-2xl border border-border bg-pure-snow p-5 shadow-sm space-y-2">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-semibold text-foreground">
-              Evaluated Event Payload
-            </h4>
+              {"Оцениваемая полезная нагрузка события "}</h4>
             <button
               type="button"
               onClick={() => setPayload(null)}
               className="text-xs text-soft-ink hover:text-foreground"
             >
-              Dismiss
-            </button>
+              {"Уволить "}</button>
           </div>
           <pre className="max-h-64 overflow-auto rounded-lg border border-border bg-warm-paper p-3 text-[11px] font-mono leading-relaxed text-soft-ink">
             {JSON.stringify(payload, null, 2)}
@@ -650,10 +625,9 @@ export function DryRunPanel({
       <details className="group rounded-2xl border border-border bg-soft-kraft/20 p-4 transition-all">
         <summary className="flex cursor-pointer select-none items-center justify-between text-xs font-semibold text-soft-ink hover:text-foreground">
           <div className="flex items-center gap-2">
-            <span>Advanced simulation settings</span>
+            <span>{"Расширенные настройки моделирования"}</span>
             <span className="rounded-full border border-border bg-warm-paper px-2 py-0.5 text-[10px] font-normal text-soft-ink">
-              Virtual time & step fixtures
-            </span>
+              {"Виртуальное время и шаги "}</span>
           </div>
           <span className="text-[11px] text-soft-ink group-open:rotate-180 transition-transform duration-150">
             ▾
@@ -663,8 +637,7 @@ export function DryRunPanel({
         <div className="mt-4 space-y-4 border-t border-border pt-4">
           {/* Virtual Start Control */}
           <label className="flex flex-wrap items-center gap-2 text-xs font-medium text-soft-ink">
-            Virtual start
-            <input
+            {"Виртуальный старт "}<input
               type="datetime-local"
               value={startedAt}
               onChange={(event) => setStartedAt(event.target.value)}
@@ -675,9 +648,7 @@ export function DryRunPanel({
               })}
             />
             <span className="font-normal text-quiet-mist">
-              Used to make delays and local-time waits reproducible in the
-              simulator.
-            </span>
+              {"Используется для воспроизводимости задержек и ожиданий по местному времени в симуляторе. "}</span>
           </label>
 
           {/* Step Outcomes & Fixture Responses */}
@@ -685,12 +656,9 @@ export function DryRunPanel({
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-semibold text-foreground">
-                  Step outcomes
-                </h3>
+                  {"Результаты шагов "}</h3>
                 <p className="mt-0.5 text-xs text-soft-ink">
-                  Simulated step responses: Choose how external tools respond in
-                  this test. No real emails or messages are sent.
-                </p>
+                  {"Имитация пошаговых реакций: выберите, как внешние инструменты будут реагировать на этот тест. Никакие настоящие электронные письма или сообщения не отправляются. "}</p>
               </div>
               <button
                 type="button"
@@ -699,16 +667,13 @@ export function DryRunPanel({
                 className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-warm-paper px-2.5 py-1 text-xs font-medium text-soft-ink hover:bg-soft-kraft disabled:opacity-50"
               >
                 <RotateCcw className="size-3" />
-                Reset fixtures
-              </button>
+                {"Сбросить настройки "}</button>
             </div>
 
             <div className="space-y-2">
               {fixtureNodes.length === 0 ? (
                 <p className="rounded-lg border border-dashed border-border px-3 py-4 text-xs text-soft-ink">
-                  Add an action or wait to the graph to configure its simulated
-                  result.
-                </p>
+                  {"Добавьте действие или подождите на графике, чтобы настроить его смоделированный результат. "}</p>
               ) : (
                 fixtureNodes.map((node) => (
                   <FixtureEditor
@@ -733,7 +698,7 @@ export function DryRunPanel({
                 role="alert"
                 className="rounded-lg border border-danger-rust/30 bg-danger-rust/5 px-3 py-2 text-xs text-danger-rust"
               >
-                {fixtureError}
+                {localizeSystemText(fixtureError)}
               </p>
             )}
           </section>
@@ -777,9 +742,9 @@ function fixtureLabel(node: WorkflowGraphV2["nodes"][number]): string {
   if (node.name?.trim()) return node.name.trim();
   if (node.type === "action") return node.actionType.replaceAll("_", " ");
   if (node.type === "wait")
-    return node.kind === "document_package" ? "Document package" : "Event wait";
-  if (node.type === "approval") return "Approval";
-  return "Wait";
+    return node.kind === "document_package" ? "Пакет документов" : "Ожидание события";
+  if (node.type === "approval") return "Одобрение";
+  return "Подожди";
 }
 
 function parseFixtureDrafts(
@@ -803,12 +768,12 @@ function parseFixtureDrafts(
         };
       } catch {
         return {
-          error: `The result payload for “${fixtureLabel(node)}” must be valid JSON.`,
+          error: `Полезная нагрузка результата для «${fixtureLabel(node)}» должна быть действительным JSON.`,
         };
       }
     } else if (draft.status === "failed") {
       if (!draft.code.trim())
-        return { error: `Add an error code for “${fixtureLabel(node)}”.` };
+        return { error: `Добавьте код ошибки «${fixtureLabel(node)}».` };
       result[node.id] = {
         status: "failed",
         code: draft.code.trim(),
@@ -820,7 +785,7 @@ function parseFixtureDrafts(
     } else {
       if (!draft.code.trim())
         return {
-          error: `Add an uncertainty code for “${fixtureLabel(node)}”.`,
+          error: `Добавьте код неопределенности для «${fixtureLabel(node)}».`,
         };
       result[node.id] = { status: "uncertain", code: draft.code.trim() };
     }
@@ -850,8 +815,7 @@ function FixtureEditor({
             {fixtureLabel(node)}
           </p>
           <p className="mt-0.5 text-[11px] text-soft-ink">
-            Simulated response · Safe test
-          </p>
+            {"Имитация реакции · Безопасный тест "}</p>
         </div>
         <div className="flex items-center gap-2">
           <BuilderSelect
@@ -871,12 +835,12 @@ function FixtureEditor({
               compact: true,
               surface: "warm-paper",
             })}
-            aria-label={`Synthetic outcome for ${fixtureLabel(node)}`}
+            aria-label={`Синтетический результат для ${fixtureLabel(node)}`}
           >
-            <option value="succeeded">Succeeds</option>
-            <option value="failed">Fails</option>
-            <option value="uncertain">Uncertain</option>
-            <option value="missing">No fixture (show missing)</option>
+            <option value="succeeded">{"Успешно"}</option>
+            <option value="failed">{"Не удалось"}</option>
+            <option value="uncertain">{"Неопределенный"}</option>
+            <option value="missing">{"Нет приспособления (показать отсутствует)"}</option>
           </BuilderSelect>
           <button
             type="button"
@@ -884,16 +848,14 @@ function FixtureEditor({
             disabled={disabled || !value}
             className="text-[11px] font-medium text-soft-ink hover:text-danger-rust disabled:opacity-40"
           >
-            Clear
-          </button>
+            {"Очистить "}</button>
         </div>
       </div>
       {value?.status === "succeeded" ? (
         <div className="mt-3 grid gap-2 md:grid-cols-[minmax(0,1fr)_180px]">
           <label className="block">
             <span className="mb-1 block text-[11px] font-medium text-soft-ink">
-              Result payload (JSON)
-            </span>
+              {"Полезная нагрузка результата (JSON) "}</span>
             <textarea
               value={value.outputText}
               onChange={(event) => update({ outputText: event.target.value })}
@@ -905,15 +867,14 @@ function FixtureEditor({
           </label>
           <label className="block">
             <span className="mb-1 block text-[11px] font-medium text-soft-ink">
-              Continue through
-            </span>
+              {"Продолжить "}</span>
             <BuilderSelect
               value={value.port}
               onChange={(event) => update({ port: event.target.value })}
               disabled={disabled}
               className={builderFieldClass({ surface: "warm-paper" })}
             >
-              <option value="">Default success port</option>
+              <option value="">{"Порт успеха по умолчанию"}</option>
               {ports.map((port) => (
                 <option key={port} value={port}>
                   {port}
@@ -926,7 +887,7 @@ function FixtureEditor({
         <div className="mt-3 grid gap-2 md:grid-cols-[minmax(0,1fr)_auto]">
           <label className="block">
             <span className="mb-1 block text-[11px] font-medium text-soft-ink">
-              {value.status === "failed" ? "Error code" : "Uncertainty code"}
+              {value.status === "failed" ? "Код ошибки" : "Код неопределенности"}
             </span>
             <input
               value={value.code}
@@ -945,25 +906,23 @@ function FixtureEditor({
                 }
                 disabled={disabled}
               />
-              Retryable
-            </label>
+              {"Повторная попытка "}</label>
           ) : null}
         </div>
       ) : (
         <p className="mt-2 text-[11px] text-warning">
-          The simulator will stop here and report that this fixture is missing.
-        </p>
+          {"Симулятор остановится на этом этапе и сообщит, что данное приспособление отсутствует. "}</p>
       )}
       {value && value.status !== "uncertain" && (
         <label className="mt-2 block">
           <span className="mb-1 block text-[11px] font-medium text-soft-ink">
-            Provider reference <span className="font-normal">(optional)</span>
+            {"Ссылка на поставщика "}<span className="font-normal">(optional)</span>
           </span>
           <input
             value={value.providerRef}
             onChange={(event) => update({ providerRef: event.target.value })}
             disabled={disabled}
-            placeholder="e.g. slack:message:demo-123"
+            placeholder={"например слабина: сообщение: демо-123"}
             className={builderFieldClass({
               compact: true,
               surface: "warm-paper",

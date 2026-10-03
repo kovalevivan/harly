@@ -88,10 +88,9 @@ export function PortalNotificationsList({
     return (
       <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">
         <CalendarIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-        <p className="text-sm font-medium text-muted-foreground">No notifications yet</p>
+        <p className="text-sm font-medium text-muted-foreground">{"Уведомлений пока нет"}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          You&apos;ll see updates here when there&apos;s activity on your applications.
-        </p>
+          {"Здесь вы увидите обновления, когда в ваших приложениях будет активность. "}</p>
       </div>
     );
   }
@@ -101,12 +100,10 @@ export function PortalNotificationsList({
       <div className="flex justify-end gap-2">
         {unreadCount > 0 ? (
           <Button variant="ghost" size="sm" onClick={markAllRead} disabled={isPending}>
-            Mark all as read
-          </Button>
+            {"Отметить все как прочитанное "}</Button>
         ) : null}
         <Button variant="ghost" size="sm" onClick={deleteAll} disabled={isPending}>
-          Clear all
-        </Button>
+          {"Очистить все "}</Button>
       </div>
       {notifications.map((notification) => (
         <div
@@ -146,12 +143,12 @@ export function PortalNotificationsList({
               onClick={() => markRead(notification.id, notification.read)}
               disabled={isPending}
             >
-              {notification.read ? "Mark unread" : "Mark read"}
+              {notification.read ? "Отметить как непрочитанное" : "Отметить прочитанным"}
             </Button>
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-label="Delete notification"
+              aria-label={"Удалить уведомление"}
               className="text-muted-foreground hover:text-destructive"
               onClick={() => deleteOne(notification.id)}
               disabled={isPending}

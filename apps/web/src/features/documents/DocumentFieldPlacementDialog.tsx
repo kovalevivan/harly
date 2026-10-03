@@ -120,10 +120,10 @@ export function DocumentFieldPlacementDialog({
         recipients,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not send the document.");
+        toast.error(result.error ?? "Не удалось отправить документ.");
         return;
       }
-      toast.success("Native signing link sent");
+      toast.success("Нативная ссылка для подписи отправлена");
       onOpenChange(false);
       router.refresh();
     });
@@ -136,55 +136,49 @@ export function DocumentFieldPlacementDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Send with Harly Signature</DialogTitle>
+            <DialogTitle>{"Отправить с подписью Харли"}</DialogTitle>
             <DialogDescription>
-              Send a secure signing link to any email address. The candidate
-              only fills in the {placements.length} field
-              {placements.length === 1 ? "" : "s"} you placed — no dragging on
-              their end.
-            </DialogDescription>
+              {"Отправьте безопасную ссылку для подписи на любой адрес электронной почты. Кандидат заполняет только "}{placements.length} {"полей "}{placements.length === 1 ? "" : "s"} {"вы разместили — не перетаскивая их конец. "}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium">Signing order</p>
-                <p className="text-xs text-muted-foreground">Each person receives the link only after the previous signer finishes.</p>
+                <p className="text-sm font-medium">{"Подписание приказа"}</p>
+                <p className="text-xs text-muted-foreground">{"Каждый человек получает ссылку только после того, как предыдущий подписавшийся завершит работу."}</p>
               </div>
               <Button type="button" variant="outline" size="sm" onClick={() => setRecipients((prev) => [...prev, { email: "", name: "" }])} disabled={recipients.length >= 10}>
-                <Plus className="size-4" /> Add signer
-              </Button>
+                <Plus className="size-4" /> {"Добавить подписывающую сторону "}</Button>
             </div>
             {recipients.map((recipient, index) => (
               <div key={index} className="grid gap-3 rounded-xl border border-border/70 p-3 sm:grid-cols-[32px_1fr_1fr_auto] sm:items-end">
                 <span className="pb-2 text-sm font-semibold text-muted-foreground">{index + 1}</span>
-                <div className="space-y-2"><Label htmlFor={`native-recipient-name-${index}`}>Name</Label><Input id={`native-recipient-name-${index}`} value={recipient.name} onChange={(event) => setRecipients((prev) => prev.map((item, itemIndex) => itemIndex === index ? { ...item, name: event.target.value } : item))} /></div>
-                <div className="space-y-2"><Label htmlFor={`native-recipient-email-${index}`}>Email</Label><Input id={`native-recipient-email-${index}`} type="email" value={recipient.email} onChange={(event) => setRecipients((prev) => prev.map((item, itemIndex) => itemIndex === index ? { ...item, email: event.target.value } : item))} /></div>
-                <Button type="button" variant="ghost" size="icon" aria-label={`Remove signer ${index + 1}`} onClick={() => setRecipients((prev) => prev.filter((_, itemIndex) => itemIndex !== index))} disabled={recipients.length === 1}><Trash2 className="size-4" /></Button>
+                <div className="space-y-2"><Label htmlFor={`native-recipient-name-${index}`}>{"Имя"}</Label><Input id={`native-recipient-name-${index}`} value={recipient.name} onChange={(event) => setRecipients((prev) => prev.map((item, itemIndex) => itemIndex === index ? { ...item, name: event.target.value } : item))} /></div>
+                <div className="space-y-2"><Label htmlFor={`native-recipient-email-${index}`}>{"Электронная почта"}</Label><Input id={`native-recipient-email-${index}`} type="email" value={recipient.email} onChange={(event) => setRecipients((prev) => prev.map((item, itemIndex) => itemIndex === index ? { ...item, email: event.target.value } : item))} /></div>
+                <Button type="button" variant="ghost" size="icon" aria-label={`Удалить подписывающего ${index + 1}`} onClick={() => setRecipients((prev) => prev.filter((_, itemIndex) => itemIndex !== index))} disabled={recipients.length === 1}><Trash2 className="size-4" /></Button>
               </div>
             ))}
             <div className="space-y-2">
-              <Label>Field ownership</Label>
+              <Label>{"Владение полем"}</Label>
               {placements.map((placement, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
-                  <span className="min-w-0 flex-1 truncate">{placement.type === "text" ? placement.label || `Text field ${index + 1}` : `Signature field ${index + 1}`}</span>
-                  <select aria-label={`Signer for field ${index + 1}`} value={placement.recipientIndex ?? 0} onChange={(event) => setPlacements((prev) => prev.map((item, itemIndex) => itemIndex === index ? { ...item, recipientIndex: Number(event.target.value) } : item))} className="h-9 rounded-md border border-input bg-background px-2 text-sm">
-                    {recipients.map((_, recipientIndex) => <option key={recipientIndex} value={recipientIndex}>Signer {recipientIndex + 1}</option>)}
+                  <span className="min-w-0 flex-1 truncate">{placement.type === "text" ? placement.label || `Текстовое поле ${index + 1}` : `Поле подписи ${index + 1}`}</span>
+                  <select aria-label={`Подписант для поля ${index + 1}`} value={placement.recipientIndex ?? 0} onChange={(event) => setPlacements((prev) => prev.map((item, itemIndex) => itemIndex === index ? { ...item, recipientIndex: Number(event.target.value) } : item))} className="h-9 rounded-md border border-input bg-background px-2 text-sm">
+                    {recipients.map((_, recipientIndex) => <option key={recipientIndex} value={recipientIndex}>{"подписывающая сторона "}{recipientIndex + 1}</option>)}
                   </select>
                 </div>
               ))}
             </div>
-            {!allRecipientsHaveSignature ? <p className="text-xs text-destructive">Every signer needs at least one signature field.</p> : null}
+            {!allRecipientsHaveSignature ? <p className="text-xs text-destructive">{"Каждому подписывающему лицу необходимо хотя бы одно поле для подписи."}</p> : null}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setStep("fields")}>
               <ArrowLeft className="size-4" />
-              Back
-            </Button>
+              {"Назад "}</Button>
             <Button
               onClick={submit}
               disabled={isPending || !allRecipientsComplete || !allRecipientsHaveSignature}
             >
-              {isPending ? "Sending…" : "Send signing link"}
+              {isPending ? "Отправка…" : "Отправить ссылку для подписи"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -196,11 +190,9 @@ export function DocumentFieldPlacementDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex h-[90vh] max-h-[90vh] w-[min(1440px,calc(100%-2rem))] max-w-[min(1440px,calc(100%-2rem))] sm:max-w-[min(1440px,calc(100%-2rem))] flex-col overflow-hidden p-0">
         <DialogHeader className="border-b border-border px-6 py-4 text-left">
-          <DialogTitle>Place signature fields</DialogTitle>
+          <DialogTitle>{"Разместите поля для подписи"}</DialogTitle>
           <DialogDescription>
-            Mark where <strong>{document.name}</strong> needs a signature — or
-            a date, name, or other text — before sending it.
-          </DialogDescription>
+            {"Отметьте, где "}<strong>{document.name}</strong> {"перед отправкой требуется подпись (или дата, имя или другой текст). "}</DialogDescription>
         </DialogHeader>
         <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div
@@ -224,38 +216,33 @@ export function DocumentFieldPlacementDialog({
           </div>
           <aside className="flex min-h-0 flex-col gap-4 overflow-y-auto p-6">
             <div>
-              <p className="text-sm font-semibold text-foreground">Fields</p>
+              <p className="text-sm font-semibold text-foreground">{"Поля"}</p>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                The recipient only fills these in — no dragging on their end.
-              </p>
+                {"Получатель только заполняет их — без перетаскивания. "}</p>
             </div>
             <div className="flex flex-col gap-2">
               <Button variant="outline" onClick={() => addField("signature")}>
                 <PenLine className="size-4" />
-                Add signature field
-              </Button>
+                {"Добавить поле для подписи "}</Button>
               <Button variant="outline" onClick={() => addField("text")}>
                 <TypeIcon className="size-4" />
-                Add text field
-              </Button>
+                {"Добавить текстовое поле "}</Button>
             </div>
             <p className="text-xs text-muted-foreground">
               {placements.length === 0
-                ? "Loading the document…"
-                : `${placements.length} field${placements.length === 1 ? "" : "s"} placed.`}
+                ? "Загрузка документа…"
+                : `Поле ${placements.length}${placements.length === 1 ? "" : "s"} размещено.`}
             </p>
             <div className="mt-auto">
               {rotated ? (
                 <p className="mb-2 text-xs text-destructive" role="alert">
-                  This PDF has rotated pages. Re-export it without rotation before sending.
-                </p>
+                  {"В этом PDF-файле страницы повернуты. Реэкспортируйте его без вращения перед отправкой. "}</p>
               ) : null}
               <Button
                 onClick={() => setStep("recipient")}
                 disabled={placements.length === 0 || rotated}
               >
-                Continue
-              </Button>
+                {"Продолжить "}</Button>
             </div>
           </aside>
         </div>

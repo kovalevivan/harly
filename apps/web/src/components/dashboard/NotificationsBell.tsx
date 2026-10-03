@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useCallback, useState, useTransition } from "react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
@@ -71,9 +72,9 @@ export function NotificationsBell({
           const result = await markNotificationRead({
             notificationId: item.id,
           });
-          if (!result.success) setError("Could not mark notification as read.");
+          if (!result.success) setError("Не удалось пометить уведомление как прочитанное.");
         } catch {
-          setError("Could not mark notification as read.");
+          setError("Не удалось пометить уведомление как прочитанное.");
         }
       }
       if (item.href) {
@@ -92,11 +93,11 @@ export function NotificationsBell({
           ? await markNotificationUnread({ notificationId: item.id })
           : await markNotificationRead({ notificationId: item.id });
         if (!result.success) {
-          setError("Could not update notification.");
+          setError("Не удалось обновить уведомление.");
           return;
         }
       } catch {
-        setError("Could not update notification.");
+        setError("Не удалось обновить уведомление.");
         return;
       }
       await reloadNotifications();
@@ -110,11 +111,11 @@ export function NotificationsBell({
       try {
         const result = await deleteNotification({ notificationId: item.id });
         if (!result.success) {
-          setError("Could not delete notification.");
+          setError("Не удалось удалить уведомление.");
           return;
         }
       } catch {
-        setError("Could not delete notification.");
+        setError("Не удалось удалить уведомление.");
         return;
       }
       await reloadNotifications();
@@ -127,11 +128,11 @@ export function NotificationsBell({
       try {
         const result = await markAllNotificationsRead();
         if (!result.success) {
-          setError("Could not mark notifications as read.");
+          setError("Не удалось пометить уведомления как прочитанные.");
           return;
         }
       } catch {
-        setError("Could not mark notifications as read.");
+        setError("Не удалось пометить уведомления как прочитанные.");
         return;
       }
       await reloadNotifications();
@@ -139,18 +140,18 @@ export function NotificationsBell({
   }
 
   function removeAll() {
-    if (!window.confirm("Delete all notifications? This cannot be undone."))
+    if (!window.confirm("Удалить все уведомления? Это невозможно отменить."))
       return;
     setError(null);
     startTransition(async () => {
       try {
         const result = await deleteAllNotifications();
         if (!result.success) {
-          setError("Could not delete all notifications.");
+          setError("Не удалось удалить все уведомления.");
           return;
         }
       } catch {
-        setError("Could not delete all notifications.");
+        setError("Не удалось удалить все уведомления.");
         return;
       }
       setOpen(false);
@@ -166,7 +167,7 @@ export function NotificationsBell({
           size="icon"
           className="relative text-muted-foreground"
           aria-label={
-            unread > 0 ? `Notifications (${unread} unread)` : "Notifications"
+            unread > 0 ? `Уведомления (${unread} непрочитанные)` : "Уведомления"
           }
         >
           <svg
@@ -190,7 +191,7 @@ export function NotificationsBell({
       </PopoverTrigger>
       <PopoverContent align="end" className="w-96 p-0">
         <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
-          <p className="text-sm font-semibold">Notifications</p>
+          <p className="text-sm font-semibold">{"Уведомления"}</p>
           <div className="flex items-center gap-1">
             {unread > 0 ? (
               <Button
@@ -201,8 +202,7 @@ export function NotificationsBell({
                 disabled={isPending}
               >
                 <CheckCheck className="size-3.5" />
-                Mark all read
-              </Button>
+                {"Отметить все прочитанными "}</Button>
             ) : null}
             <Button
               size="sm"
@@ -212,8 +212,7 @@ export function NotificationsBell({
               disabled={isPending}
             >
               <Trash2 className="size-3.5" />
-              Clear all
-            </Button>
+              {"Очистить все "}</Button>
           </div>
         </div>
         {error ? (
@@ -221,14 +220,13 @@ export function NotificationsBell({
             role="alert"
             className="border-b px-4 py-2 text-xs text-destructive"
           >
-            {error}
+            {localizeSystemText(error)}
           </p>
         ) : null}
 
         {items.length === 0 ? (
           <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-            You&apos;re all caught up. No notifications yet.
-          </p>
+            {"Вы все в плену. Уведомлений пока нет. "}</p>
         ) : (
           <div className="max-h-96 overflow-y-auto">
             {items.map((item, index) => (
@@ -310,13 +308,11 @@ export function NotificationsBell({
                         {item.read ? (
                           <>
                             <EyeOff className="size-4" />
-                            Mark as unread
-                          </>
+                            {"Отметить как непрочитанное "}</>
                         ) : (
                           <>
                             <Eye className="size-4" />
-                            Mark as read
-                          </>
+                            {"Отметить как прочитанное "}</>
                         )}
                       </DropdownMenuItem>
                       <DropdownMenuItem
@@ -325,8 +321,7 @@ export function NotificationsBell({
                         className="text-destructive focus:text-destructive"
                       >
                         <Trash2 className="size-4" />
-                        Delete
-                      </DropdownMenuItem>
+                        {"Удалить "}</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </span>

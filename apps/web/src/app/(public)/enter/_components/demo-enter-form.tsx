@@ -26,8 +26,7 @@ export function DemoEnterForm({ siteKey }: { siteKey: string }) {
         </div>
       ) : (
         <p className="text-center text-sm text-danger-rust">
-          Turnstile is not configured (missing site key).
-        </p>
+          {"Турникет не настроен (отсутствует ключ объекта). "}</p>
       )}
 
       <button
@@ -41,12 +40,11 @@ export function DemoEnterForm({ siteKey }: { siteKey: string }) {
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-pine-strong disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
       >
         {verified ? (
-          "Enter the demo"
+          "Войти в демо"
         ) : (
           <>
             <Spinner />
-            Verifying…
-          </>
+            {"Проверка… "}</>
         )}
       </button>
     </form>

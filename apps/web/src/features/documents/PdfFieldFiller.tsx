@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 /* eslint-disable @next/next/no-img-element */
 
 import { useRef } from "react";
@@ -51,7 +52,7 @@ export function PdfFieldFiller({
   if (error)
     return (
       <p className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-        {error}
+        {localizeSystemText(error)}
       </p>
     );
 
@@ -81,7 +82,7 @@ export function PdfFieldFiller({
                     type="text"
                     value={textValues[field.id] ?? ""}
                     onChange={(event) => onTextValueChange(field.id, event.target.value)}
-                    placeholder={field.label?.trim() || "Type here"}
+                    placeholder={field.label?.trim() || "Введите здесь"}
                     required={field.required}
                     tabIndex={field.order + 1}
                     maxLength={200}
@@ -99,14 +100,13 @@ export function PdfFieldFiller({
                   {hasSignature ? (
                     <img
                       src={signatureDataUrl}
-                      alt="Your signature"
+                      alt={"Ваша подпись"}
                       className="h-full w-full object-contain"
                       draggable={false}
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-center text-[11px] text-muted-foreground">
-                      Signature required
-                    </div>
+                      {"Требуется подпись "}</div>
                   )}
                 </div>
               );
@@ -120,8 +120,7 @@ export function PdfFieldFiller({
             style={{ maxWidth: maxPageWidth }}
           />
           <p className="text-center text-sm text-muted-foreground">
-            Loading PDF…
-          </p>
+            {"Загрузка PDF… "}</p>
         </div>
       ) : null}
     </div>

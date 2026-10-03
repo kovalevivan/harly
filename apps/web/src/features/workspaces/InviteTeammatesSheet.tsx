@@ -112,13 +112,13 @@ export function InviteTeammatesSheet({
     lastState.current = state;
     if (state.success) {
       const parts: string[] = [];
-      if (state.sent) parts.push(`${state.sent} invited`);
-      if (state.added) parts.push(`${state.added} added`);
+      if (state.sent) parts.push(`${state.sent} приглашен`);
+      if (state.added) parts.push(`${state.added} добавлено`);
       const skipped = state.skipped?.length ?? 0;
       toast.success(
-        parts.length ? parts.join(", ") : "Done",
+        parts.length ? parts.join(", ") : "Готово",
         skipped
-          ? { description: `${skipped} skipped (${state.skipped?.[0]?.reason ?? ""})` }
+          ? { description: `${skipped} пропущено (${state.skipped?.[0]?.reason ?? ""})` }
           : undefined,
       );
       queueMicrotask(() => {
@@ -167,18 +167,18 @@ export function InviteTeammatesSheet({
   function handlePaste(text: string) {
     const emails = text.split(/[\s,;]+/).filter((t) => EMAIL_RE.test(t));
     if (!emails.length) {
-      toast.error("No valid emails found in pasted text.");
+      toast.error("Во вставленном тексте не найдено действительных адресов электронной почты.");
       return;
     }
     addEmails(emails, pasteRole);
-    toast.success(`Added ${emails.length} email${emails.length === 1 ? "" : "s"}`);
+    toast.success(`Добавлен ${emails.length} адрес электронной почты${emails.length === 1 ? "" : "s"}`);
   }
 
   async function handleCsv(file: File) {
     const text = await file.text();
     const grid = parseCsv(text);
     if (!grid.length) {
-      toast.error("CSV is empty.");
+      toast.error("CSV пуст.");
       return;
     }
     // Detect header: find email + optional role columns.
@@ -203,7 +203,7 @@ export function InviteTeammatesSheet({
       fresh.push({ email, role });
     }
     if (!fresh.length) {
-      toast.error("No valid emails found in CSV.");
+      toast.error("Действительные адреса электронной почты в формате CSV не найдены.");
       return;
     }
     const existing = new Set(
@@ -214,7 +214,7 @@ export function InviteTeammatesSheet({
       const base = prev.length === 1 && !prev[0].email.trim() ? [] : prev;
       return [...base, ...toAdd.map((f) => ({ id: crypto.randomUUID(), ...f }))];
     });
-    toast.success(`Imported ${toAdd.length} from CSV`);
+    toast.success(`Импортировано ${toAdd.length} из CSV.`);
   }
 
   // Only submit rows with a valid email.
@@ -223,7 +223,7 @@ export function InviteTeammatesSheet({
 
   function submit() {
     if (!validRows.length) {
-      toast.error("Add at least one valid email.");
+      toast.error("Добавьте хотя бы один действительный адрес электронной почты.");
       return;
     }
     const fd = new FormData();
@@ -244,11 +244,9 @@ export function InviteTeammatesSheet({
       <SheetContent className="flex w-full flex-col gap-0 p-0 sm:max-w-lg">
         <SheetHeader className="border-b px-5 py-4 text-left">
           <SheetTitle className="font-display text-lg font-semibold tracking-tight">
-            Invite teammates
-          </SheetTitle>
+            {"Пригласить товарищей по команде "}</SheetTitle>
           <SheetDescription className="text-sm text-muted-foreground">
-            Add people by email with a role each, or share a link.
-          </SheetDescription>
+            {"Добавляйте людей по электронной почте, назначая каждому роль, или поделитесь ссылкой. "}</SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5">
@@ -295,7 +293,7 @@ export function InviteTeammatesSheet({
                     size="icon"
                     className="shrink-0 text-muted-foreground hover:text-destructive"
                     onClick={() => removeRow(row.id)}
-                    aria-label="Remove row"
+                    aria-label={"Удалить строку"}
                   >
                     <TrashIcon className="size-4" />
                   </Button>
@@ -311,8 +309,7 @@ export function InviteTeammatesSheet({
                 className="text-muted-foreground"
               >
                 <PlusIcon className="size-4" />
-                Add another
-              </Button>
+                {"Добавить еще "}</Button>
               <input
                 ref={fileRef}
                 type="file"
@@ -332,8 +329,7 @@ export function InviteTeammatesSheet({
                 className="text-muted-foreground"
               >
                 <Upload className="size-4" />
-                Import CSV
-              </Button>
+                {"Импортировать CSV-файл "}</Button>
             </div>
           </div>
 
@@ -341,8 +337,7 @@ export function InviteTeammatesSheet({
           <div className="space-y-2 rounded-lg border bg-muted/20 p-3">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Paste a list
-              </Label>
+                {"Вставить список "}</Label>
               <Select value={pasteRole} onValueChange={setPasteRole}>
                 <SelectTrigger className="h-8 w-36">
                   <SelectValue />
@@ -375,16 +370,14 @@ export function InviteTeammatesSheet({
               }}
             />
             <p className="text-[11px] text-muted-foreground">
-              Paste emails separated by commas, spaces, or new lines. They join
-              with the role above (editable per row after).
-            </p>
+              {"Вставьте электронные письма, разделенные запятыми, пробелами или новыми строками. Они присоединяются к роли, указанной выше (можно редактировать в каждой строке после). "}</p>
           </div>
 
           {/* Pending invitations */}
           {pending.length > 0 ? (
             <div className="space-y-2">
               <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Pending ({pending.length})
+                {"В ожидании ("}{pending.length})
               </Label>
               <ul className="divide-y rounded-lg border">
                 {pending.map((inv) => (
@@ -415,8 +408,8 @@ export function InviteTeammatesSheet({
           >
             <UserPlusIcon className="size-4" />
             {isPending
-              ? "Sending…"
-              : `Send ${validRows.length || ""} invite${validRows.length === 1 ? "" : "s"}`}
+              ? "Отправка…"
+              : `Отправить ${validRows.length || ""} приглашение${validRows.length === 1 ? "" : "s"}`}
           </Button>
         </div>
       </SheetContent>
@@ -438,15 +431,15 @@ function CancelInvite({ invitationId }: { invitationId: string }) {
         startTransition(async () => {
           const result = await cancelWorkspaceInvitationAction(invitationId);
           if (result.success) {
-            toast.success("Invitation canceled.");
+            toast.success("Приглашение отменено.");
             router.refresh();
           } else {
-            toast.error(result.error ?? "Unable to cancel.");
+            toast.error(result.error ?? "Невозможно отменить.");
           }
         });
       }}
     >
-      {isPending ? "Canceling…" : "Cancel"}
+      {isPending ? "Отмена…" : "Отмена"}
     </Button>
   );
 }

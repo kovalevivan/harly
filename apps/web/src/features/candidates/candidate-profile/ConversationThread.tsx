@@ -54,7 +54,7 @@ export function ConversationThread({
                 : "secondary"
           }
         >
-          {last.status === "failed" ? "Failed" : last.read ? "Read" : "Unread"}
+          {last.status === "failed" ? "Не удалось" : last.read ? "Читать" : "Непрочитано"}
         </Badge>
       </div>
 
@@ -79,7 +79,7 @@ export function ConversationThread({
                   )}
                 >
                   <span className="font-medium text-foreground/80">
-                    {inbound ? message.fromEmail ?? "Candidate" : "You"}
+                    {inbound ? message.fromEmail ?? "Кандидат" : "ты"}
                   </span>
                   <RelativeTime value={message.createdAt} />
                 </div>
@@ -119,8 +119,7 @@ export function ConversationThread({
             href={`/dashboard/inbox?thread=${encodeURIComponent(threadId)}`}
             className="text-xs font-semibold text-foreground underline underline-offset-4"
           >
-            Open in Inbox
-          </Link>
+            {"Открыть во входящих "}</Link>
         ) : (
           <span />
         )}
@@ -135,8 +134,7 @@ export function ConversationThread({
             trigger={
               <Button size="sm" variant="outline">
                 <Mail className="size-4" />
-                Reply
-              </Button>
+                {"Ответить "}</Button>
             }
           />
         ) : null}

@@ -62,8 +62,7 @@ export function PersonProfile({
         className="inline-flex w-fit items-center gap-1.5 rounded-sm text-sm text-muted-foreground outline-offset-4 transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
       >
         <ArrowLeft className="size-3.5" />
-        Back to People
-      </Link>
+        {"Вернуться к людям "}</Link>
 
       <PersonHeader profile={profile} />
 
@@ -79,8 +78,7 @@ export function PersonProfile({
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  About
-                </CardTitle>
+                  {"О "}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed whitespace-pre-line">
@@ -98,19 +96,15 @@ export function PersonProfile({
                 <UserRoundX className="size-5" />
               </div>
               <h2 className="text-sm font-semibold text-foreground">
-                Nothing here yet
-              </h2>
+                {"Здесь пока ничего "}</h2>
               <p className="mt-1.5 max-w-sm text-sm leading-6 text-muted-foreground">
-                {profile.name} hasn&apos;t added a bio and isn&apos;t on any
-                jobs or hiring teams yet.
-              </p>
+                {profile.name} {"еще не добавил биографию и пока не занят ни на каких вакансиях и не нанимает команды. "}</p>
             </div>
           ) : (
             // Bio present but no jobs: keep the column from collapsing into a
             // lonely card by showing a quiet "on no jobs yet" note.
             <div className="rounded-3xl border border-dashed bg-card px-5 py-6 text-center text-sm text-muted-foreground">
-              Not on any jobs or hiring teams yet.
-            </div>
+              {"Пока нет ни вакансий, ни команд по найму. "}</div>
           )}
         </div>
 
@@ -138,8 +132,7 @@ function NothingElseFooter() {
     <div className="flex flex-col items-center gap-1.5 pt-2 pb-6 text-center">
       <div className="h-px w-10 bg-border" />
       <p className="text-xs text-muted-foreground/70">
-        Nothing else to see here.
-      </p>
+        {"Больше здесь смотреть не на что. "}</p>
     </div>
   );
 }
@@ -197,7 +190,7 @@ function ContactCard({ profile }: { profile: PersonProfileData }) {
     },
     profile.websiteUrl && {
       icon: Globe,
-      label: "Website",
+      label: "Веб-сайт",
       href: profile.websiteUrl,
     },
   ].filter(Boolean) as { icon: typeof Mail; label: string; href: string }[];
@@ -208,8 +201,7 @@ function ContactCard({ profile }: { profile: PersonProfileData }) {
     <Card>
       <CardHeader>
         <CardTitle className="text-sm font-medium text-muted-foreground">
-          Contact
-        </CardTitle>
+          {"Контакт "}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2.5">
         {links.map((link) => (
@@ -234,8 +226,7 @@ function SpecialtiesCard({ profile }: { profile: PersonProfileData }) {
     <Card>
       <CardHeader>
         <CardTitle className="text-sm font-medium text-muted-foreground">
-          Specialties & languages
-        </CardTitle>
+          {"Специальности и языки "}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {profile.specialties && profile.specialties.length > 0 && (

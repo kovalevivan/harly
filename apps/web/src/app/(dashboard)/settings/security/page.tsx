@@ -40,8 +40,7 @@ export default async function SecuritySettingsPage() {
     <div className="space-y-6">
       {demoLocked ? (
         <DemoLockedNotice>
-          Security and identity settings are locked in the demo.
-        </DemoLockedNotice>
+          {"Настройки безопасности и идентификации заблокированы в демо-версии. "}</DemoLockedNotice>
       ) : null}
       <Force2FACard enabled={securitySettings.require2fa} isOwner={canMutate} />
       <AdvancedSecurityCard settings={securitySettings} isOwner={canMutate} />

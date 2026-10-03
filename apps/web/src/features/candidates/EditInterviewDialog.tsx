@@ -30,17 +30,17 @@ import {
 } from "@/features/interviews/shared";
 
 const TYPES = [
-  { key: "screening", label: "Screening" },
-  { key: "technical", label: "Technical" },
-  { key: "culture_fit", label: "Culture fit" },
-  { key: "onsite", label: "Onsite" },
-  { key: "final", label: "Final round" },
+  { key: "screening", label: "Первичный отбор" },
+  { key: "technical", label: "Технический" },
+  { key: "culture_fit", label: "Культура соответствует" },
+  { key: "onsite", label: "На месте" },
+  { key: "final", label: "Финальный раунд" },
 ] as const;
 
 const MODES = [
-  { key: "video", label: "Video", icon: () => <span className="inline-block size-4 rounded bg-current/20" /> },
-  { key: "phone", label: "Phone", icon: () => <span className="inline-block size-4 rounded bg-current/20" /> },
-  { key: "onsite", label: "Onsite", icon: () => <span className="inline-block size-4 rounded bg-current/20" /> },
+  { key: "video", label: "Видео", icon: () => <span className="inline-block size-4 rounded bg-current/20" /> },
+  { key: "phone", label: "Телефон", icon: () => <span className="inline-block size-4 rounded bg-current/20" /> },
+  { key: "onsite", label: "На месте", icon: () => <span className="inline-block size-4 rounded bg-current/20" /> },
 ] as const;
 
 type TypeKey = (typeof TYPES)[number]["key"];
@@ -78,7 +78,7 @@ export function EditInterviewDialog({
   const [availabilityWarning, setAvailabilityWarning] = useState<string | null>(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
 
-  const locationLabel = mode === "onsite" ? "Address" : "Meeting link";
+  const locationLabel = mode === "onsite" ? "Адрес" : "Ссылка на встречу";
 
   async function checkTimeAvailability(
     newDate: string,
@@ -104,17 +104,17 @@ export function EditInterviewDialog({
       const warnings: string[] = [];
       if (result.gcalBusy.length > 0) {
         warnings.push(
-          `${result.gcalBusy.length} existing calendar event${result.gcalBusy.length > 1 ? "s" : ""}`,
+          `${result.gcalBusy.length} существующее событие календаря${result.gcalBusy.length > 1 ? "s" : ""}`,
         );
       }
       if (result.internalConflicts.length > 0) {
         warnings.push(
-          `${result.internalConflicts.length} overlapping interview${result.internalConflicts.length > 1 ? "s" : ""} in this workspace`,
+          `${result.internalConflicts.length} перекрывающееся интервью${result.internalConflicts.length > 1 ? "s" : ""} в этом рабочем пространстве`,
         );
       }
       setAvailabilityWarning(
         warnings.length > 0
-          ? `This time conflicts with ${warnings.join(" and ")}.`
+          ? `На этот раз конфликтует с ${warnings.join(" and ")}.`
           : null,
       );
     } catch {
@@ -126,7 +126,7 @@ export function EditInterviewDialog({
 
   function submit() {
     if (!date || !time) {
-      toast.error("Pick a date and time.");
+      toast.error("Выберите дату и время.");
       return;
     }
     startTransition(async () => {
@@ -144,11 +144,11 @@ export function EditInterviewDialog({
         title: title.trim() || null,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
       if (result.warning) toast.warning(result.warning);
-      toast.success("Interview updated");
+      toast.success("Интервью обновлено");
       setOpen(false);
       router.refresh();
     });
@@ -159,26 +159,25 @@ export function EditInterviewDialog({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Edit interview</DialogTitle>
+          <DialogTitle>{"Редактировать интервью"}</DialogTitle>
           <DialogDescription>
-            Update details, change the interviewer, or reschedule.
-          </DialogDescription>
+            {"Обновите детали, смените интервьюера или перенесите встречу. "}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5">
-          <Field label="Title (optional)" htmlFor="edit-title">
+          <Field label={"Название (необязательно)"} htmlFor="edit-title">
             <Input
               id="edit-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Panel with engineering team"
+              placeholder={"например Панель с командой инженеров"}
             />
           </Field>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {/* Left column */}
             <div className="space-y-5">
-              <Field label="Type">
+              <Field label={"Тип"}>
                 <div className="grid grid-cols-3 gap-2">
                   {TYPES.map((t) => (
                     <SegButton
@@ -192,7 +191,7 @@ export function EditInterviewDialog({
                 </div>
               </Field>
 
-              <Field label="Mode">
+              <Field label={"Режим"}>
                 <div className="grid grid-cols-3 gap-2">
                   {MODES.map((m) => (
                     <SegButton
@@ -207,7 +206,7 @@ export function EditInterviewDialog({
               </Field>
 
               <div className="grid grid-cols-2 gap-3">
-                <Field label="Date" htmlFor="edit-date">
+                <Field label={"Дата"} htmlFor="edit-date">
                   <Input
                     id="edit-date"
                     type="date"
@@ -218,7 +217,7 @@ export function EditInterviewDialog({
                     }}
                   />
                 </Field>
-                <Field label="Time" htmlFor="edit-time">
+                <Field label={"Время"} htmlFor="edit-time">
                   <Input
                     id="edit-time"
                     type="time"
@@ -261,18 +260,18 @@ export function EditInterviewDialog({
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder={
                     mode === "onsite"
-                      ? "Office address…"
+                      ? "Адрес офиса…"
                       : "https://meet.google.com/…"
                   }
                 />
               </Field>
 
-              <Field label="Notes" htmlFor="edit-notes">
+              <Field label={"Примечания"} htmlFor="edit-notes">
                 <Textarea
                   id="edit-notes"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Focus areas, panel, prep…"
+                  placeholder={"Области фокуса, панельная дискуссия, подготовка…"}
                   className="min-h-20"
                 />
               </Field>
@@ -286,18 +285,17 @@ export function EditInterviewDialog({
             </div>
           ) : null}
           {checkingAvailability ? (
-            <p className="text-xs text-muted-foreground">Checking availability…</p>
+            <p className="text-xs text-muted-foreground">{"Проверка доступности…"}</p>
           ) : null}
         </div>
 
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" disabled={isPending}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
           </DialogClose>
           <Button onClick={submit} disabled={isPending}>
-            {isPending ? "Saving…" : "Save changes"}
+            {isPending ? "Сохранение…" : "Сохранить изменения"}
           </Button>
         </DialogFooter>
       </DialogContent>

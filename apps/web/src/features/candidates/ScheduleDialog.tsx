@@ -49,17 +49,17 @@ export type ScheduleMemberOption = {
 };
 
 const TYPES = [
-  { key: "screening", label: "Screening" },
-  { key: "technical", label: "Technical" },
-  { key: "culture_fit", label: "Culture fit" },
-  { key: "onsite", label: "Onsite" },
-  { key: "final", label: "Final round" },
+  { key: "screening", label: "Первичный отбор" },
+  { key: "technical", label: "Технический" },
+  { key: "culture_fit", label: "Культура соответствует" },
+  { key: "onsite", label: "На месте" },
+  { key: "final", label: "Финальный раунд" },
 ] as const;
 
 const MODES = [
-  { key: "video", label: "Video", icon: Video },
-  { key: "phone", label: "Phone", icon: Phone },
-  { key: "onsite", label: "Onsite", icon: MapPin },
+  { key: "video", label: "Видео", icon: Video },
+  { key: "phone", label: "Телефон", icon: Phone },
+  { key: "onsite", label: "На месте", icon: MapPin },
 ] as const;
 
 type TypeKey = (typeof TYPES)[number]["key"];
@@ -111,7 +111,7 @@ export function ScheduleDialog({
 
   const hasApplication = applications.length > 0;
   const hasCandidateEmail = candidateEmail.trim().length > 0;
-  const locationLabel = mode === "onsite" ? "Address" : "Meeting link";
+  const locationLabel = mode === "onsite" ? "Адрес" : "Ссылка на встречу";
 
   const calLinkAvailable = cal.enabled && Boolean(cal.bookingUrl);
 
@@ -138,17 +138,17 @@ export function ScheduleDialog({
       const warnings: string[] = [];
       if (result.gcalBusy.length > 0) {
         warnings.push(
-          `${result.gcalBusy.length} existing calendar event${result.gcalBusy.length > 1 ? "s" : ""}`,
+          `${result.gcalBusy.length} существующее событие календаря${result.gcalBusy.length > 1 ? "s" : ""}`,
         );
       }
       if (result.internalConflicts.length > 0) {
         warnings.push(
-          `${result.internalConflicts.length} overlapping interview${result.internalConflicts.length > 1 ? "s" : ""} in this workspace`,
+          `${result.internalConflicts.length} перекрывающееся интервью${result.internalConflicts.length > 1 ? "s" : ""} в этом рабочем пространстве`,
         );
       }
       setAvailabilityWarning(
         warnings.length > 0
-          ? `This time conflicts with ${warnings.join(" and ")}.`
+          ? `На этот раз конфликтует с ${warnings.join(" and ")}.`
           : null,
       );
     } catch {
@@ -161,7 +161,7 @@ export function ScheduleDialog({
   function copyBookingLink() {
     if (!cal.bookingUrl) return;
     if (!applicationId) {
-      toast.error("Pick which role this interview is for.");
+      toast.error("Выберите, для какой роли предназначено это интервью.");
       return;
     }
     const link = buildCalBookingLink({
@@ -171,7 +171,7 @@ export function ScheduleDialog({
       metadata: { applicationId, candidateId, workspaceId },
     });
     void navigator.clipboard.writeText(link);
-    toast.success("Booking link copied. Send it to the candidate");
+    toast.success("Ссылка на бронирование скопирована. Отправьте это кандидату");
   }
 
   function reset() {
@@ -189,15 +189,15 @@ export function ScheduleDialog({
 
   function submit() {
     if (!hasApplication) {
-      toast.error("This candidate has no application to attach the interview to.");
+      toast.error("У этого кандидата нет заявки, к которой можно прикрепить собеседование.");
       return;
     }
     if (!applicationId) {
-      toast.error("Pick which role this interview is for.");
+      toast.error("Выберите, для какой роли предназначено это интервью.");
       return;
     }
     if (!date || !time) {
-      toast.error("Pick a date and time.");
+      toast.error("Выберите дату и время.");
       return;
     }
     startTransition(async () => {
@@ -217,23 +217,23 @@ export function ScheduleDialog({
         sendEmail: sendEmail && hasCandidateEmail,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not schedule.");
+        toast.error(result.error ?? "Не удалось запланировать.");
         return;
       }
       if (result.warning && result.emailStatus !== "failed") {
         toast.warning(result.warning);
       }
       if (result.emailStatus === "sent") {
-        toast.success("Interview scheduled and invitation sent");
+        toast.success("Собеседование назначено, приглашение отправлено.");
       } else if (result.emailStatus === "skipped") {
-        toast.success("Interview scheduled without sending an invitation");
+        toast.success("Собеседование назначено без отправки приглашения");
       } else if (result.emailStatus === "failed") {
         toast.warning(
           result.warning ??
-            "Interview scheduled, but the invitation email could not be sent.",
+            "Собеседование запланировано, но письмо с приглашением не удалось отправить.",
         );
       } else {
-        toast.success("Interview scheduled");
+        toast.success("Интервью запланировано");
       }
       setOpen(false);
       reset();
@@ -246,17 +246,14 @@ export function ScheduleDialog({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Schedule interview</DialogTitle>
+          <DialogTitle>{"Назначить собеседование"}</DialogTitle>
           <DialogDescription>
-            Added to the candidate timeline and the team agenda.
-          </DialogDescription>
+            {"Добавлено в график кандидатов и в повестку дня команды. "}</DialogDescription>
         </DialogHeader>
 
         {!hasApplication ? (
           <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            This candidate hasn&apos;t applied to any role yet. Interviews attach
-            to an application.
-          </p>
+            {"Этот кандидат еще не подавал заявки ни на одну должность. Собеседование прилагается к заявке. "}</p>
         ) : (
           <div className="space-y-5">
             {calLinkAvailable ? (
@@ -264,13 +261,10 @@ export function ScheduleDialog({
                 <div className="flex items-center gap-2">
                   <Link2 className="size-4 text-primary" strokeWidth={1.8} />
                   <p className="text-[13px] font-medium tracking-tight">
-                    Let the candidate self-schedule
-                  </p>
+                    {"Позвольте кандидату самостоятельно составить график "}</p>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Send a Cal.com link. When they book, the interview syncs here
-                  automatically.
-                </p>
+                  {"Отправьте ссылку Cal.com. Когда они записываются, интервью автоматически синхронизируется здесь. "}</p>
                 <Button
                   type="button"
                   variant="outline"
@@ -279,11 +273,9 @@ export function ScheduleDialog({
                   onClick={copyBookingLink}
                 >
                   <Link2 className="size-4" />
-                  Copy booking link
-                </Button>
+                  {"Скопировать ссылку на бронирование "}</Button>
                 <p className="text-center text-[11px] uppercase tracking-wide text-muted-foreground">
-                  or log it manually
-                </p>
+                  {"или войдите вручную "}</p>
               </div>
             ) : null}
 
@@ -291,7 +283,7 @@ export function ScheduleDialog({
               {/* Left column */}
               <div className="space-y-5">
                 {applications.length > 1 ? (
-                  <Field label="Role">
+                  <Field label={"Роль"}>
                     <Select value={applicationId} onValueChange={setApplicationId}>
                       <SelectTrigger className="w-full">
                         <SelectValue />
@@ -313,14 +305,14 @@ export function ScheduleDialog({
                   </Field>
                 ) : (
                   <p className="text-[13px] text-muted-foreground">
-                    For{" "}
+                    {"Для"}{" "}
                     <span className="font-medium text-foreground">
                       {applications[0]?.jobTitle}
                     </span>
                   </p>
                 )}
 
-                <Field label="Type">
+                <Field label={"Тип"}>
                   <div className="grid grid-cols-3 gap-2">
                     {TYPES.map((t) => (
                       <SegButton
@@ -334,7 +326,7 @@ export function ScheduleDialog({
                   </div>
                 </Field>
 
-                <Field label="Mode">
+                <Field label={"Режим"}>
                   <div className="grid grid-cols-3 gap-2">
                     {MODES.map((m) => (
                       <SegButton
@@ -350,7 +342,7 @@ export function ScheduleDialog({
                 </Field>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <Field label="Date" htmlFor="schedule-date">
+                  <Field label={"Дата"} htmlFor="schedule-date">
                     <Input
                       id="schedule-date"
                       type="date"
@@ -361,7 +353,7 @@ export function ScheduleDialog({
                       }}
                     />
                   </Field>
-                  <Field label="Time" htmlFor="schedule-time">
+                  <Field label={"Время"} htmlFor="schedule-time">
                     <Input
                       id="schedule-time"
                       type="time"
@@ -404,18 +396,18 @@ export function ScheduleDialog({
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder={
                       mode === "onsite"
-                        ? "Office address…"
+                        ? "Адрес офиса…"
                         : "https://meet.google.com/…"
                     }
                   />
                 </Field>
 
-                <Field label="Notes" htmlFor="schedule-notes">
+                <Field label={"Примечания"} htmlFor="schedule-notes">
                   <Textarea
                     id="schedule-notes"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Focus areas, panel, prep…"
+                    placeholder={"Области фокуса, панельная дискуссия, подготовка…"}
                     className="min-h-20"
                   />
                 </Field>
@@ -429,7 +421,7 @@ export function ScheduleDialog({
               </div>
             ) : null}
             {checkingAvailability ? (
-              <p className="text-xs text-muted-foreground">Checking availability…</p>
+              <p className="text-xs text-muted-foreground">{"Проверка доступности…"}</p>
             ) : null}
 
             <label className="flex items-start gap-3 rounded-lg border bg-muted/20 px-3.5 py-3">
@@ -442,12 +434,11 @@ export function ScheduleDialog({
               />
               <span className="space-y-0.5">
                 <span className="block text-sm font-medium">
-                  Send invitation email
-                </span>
+                  {"Отправить приглашение по электронной почте "}</span>
                 <span className="block text-xs text-muted-foreground">
                   {hasCandidateEmail
-                    ? "The candidate will receive the interview details after scheduling."
-                    : "Add an email address to this candidate before sending an invitation."}
+                    ? "Подробности собеседования кандидат получит после записи."
+                    : "Прежде чем отправлять приглашение, добавьте адрес электронной почты этому кандидату."}
                 </span>
               </span>
             </label>
@@ -457,17 +448,16 @@ export function ScheduleDialog({
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" disabled={isPending}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
           </DialogClose>
           <Button onClick={submit} disabled={isPending || !hasApplication}>
             {isPending
               ? sendEmail && hasCandidateEmail
-                ? "Scheduling & sending…"
-                : "Scheduling…"
+                ? "Планирование и отправка…"
+                : "Планирование…"
               : sendEmail && hasCandidateEmail
-                ? "Schedule & send invite"
-                : "Schedule without email"}
+                ? "Запланировать и отправить приглашение"
+                : "Расписание без электронной почты"}
           </Button>
         </DialogFooter>
       </DialogContent>

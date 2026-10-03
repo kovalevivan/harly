@@ -142,13 +142,11 @@ const initialImportSource: ImportSource | undefined =
     <div className="space-y-5">
       <div className="flex w-fit items-center gap-1 rounded-lg border bg-card p-1 text-sm">
         <Tab href="/dashboard/candidates" active={!isTrash}>
-          All
-          <span className="ml-1.5 tabular-nums text-muted-foreground">{rows.length}</span>
+          {"Все "}<span className="ml-1.5 tabular-nums text-muted-foreground">{rows.length}</span>
         </Tab>
         <Tab href="/dashboard/candidates?view=trash" active={isTrash}>
           <Trash2 className="size-3.5" />
-          Trash
-          <span className="ml-1.5 tabular-nums text-muted-foreground">{trashed.length}</span>
+          {"Корзина "}<span className="ml-1.5 tabular-nums text-muted-foreground">{trashed.length}</span>
         </Tab>
       </div>
 
@@ -172,7 +170,7 @@ const initialImportSource: ImportSource | undefined =
                       {candidate.fullName}
                     </span>
                     <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                      Deleted {formatRelative(candidate.deletedAt)}
+                      {"Удалено "}{formatRelative(candidate.deletedAt)}
                     </span>
                   </span>
                 </span>
@@ -186,16 +184,16 @@ const initialImportSource: ImportSource | undefined =
         ) : (
           <EmptyState
             icon={Trash2}
-            title="Trash is empty"
-            description="Candidates you delete show up here and can be restored."
+            title={"Корзина пуста"}
+            description={"Кандидаты, которых вы удалили, появятся здесь и могут быть восстановлены."}
           />
         )
       ) : rows.length === 0 ? (
         <div className="space-y-4">
           <EmptyState
             icon={Users}
-            title="No candidates yet"
-            description="Share your public job board or import candidates from another ATS."
+            title={"Кандидатов пока нет"}
+            description={"Поделитесь своей публичной доской вакансий или импортируйте кандидатов из другой ATS."}
           />
           <div className="flex justify-center gap-2">
             {canCreateCandidates ? (

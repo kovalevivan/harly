@@ -19,8 +19,7 @@ export default async function ConfigureEmailSettingsPage() {
       <Button asChild variant="ghost" size="sm" className="-ml-3 w-fit">
         <Link href="/settings/email">
           <CaretLeftIcon className="size-4" />
-          Email settings
-        </Link>
+          {"Настройки электронной почты "}</Link>
       </Button>
       <EmailSettingsForm status={status} />
     </div>

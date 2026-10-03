@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 /* eslint-disable @next/next/no-img-element */
 
 import { useState, useTransition } from "react";
@@ -97,8 +98,7 @@ function DocumentPreview({ document }: { document: DocumentListItem }) {
     );
   return (
     <div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
-      Preview is not available for this file type.
-    </div>
+      {"Предварительный просмотр недоступен для этого типа файла. "}</div>
   );
 }
 
@@ -116,7 +116,7 @@ function SendForSignatureDialog({
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [recipientName, setRecipientName] = useState("");
-  const [subject, setSubject] = useState(`Please sign: ${document.name}`);
+  const [subject, setSubject] = useState(`Пожалуйста, подпишите: ${document.name}`);
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -124,7 +124,7 @@ function SendForSignatureDialog({
   function reset() {
     setEmail("");
     setRecipientName("");
-    setSubject(`Please sign: ${document.name}`);
+    setSubject(`Пожалуйста, подпишите: ${document.name}`);
     setMessage("");
     setError(null);
   }
@@ -140,10 +140,10 @@ function SendForSignatureDialog({
         message: message.trim() || null,
       });
       if (!result.ok) {
-        setError(result.error ?? "Could not send for signature.");
+        setError(result.error ?? "Не удалось отправить на подпись.");
         return;
       }
-      toast.success("Sent for signature");
+      toast.success("Отправлено на подпись");
       reset();
       onOpenChange(false);
       router.refresh();
@@ -162,20 +162,17 @@ function SendForSignatureDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Send for signature</DialogTitle>
+          <DialogTitle>{"Отправить на подпись"}</DialogTitle>
           <DialogDescription>
-            DocuSeal emails the recipient — any email address, whether or not
-            they&apos;re a candidate on file. The signed PDF and audit log
-            return to this workspace automatically.
-          </DialogDescription>
+            {"DocuSeal отправляет электронное письмо получателю — на любой адрес электронной почты, независимо от того, является ли он кандидатом или нет. Подписанный PDF-файл и журнал аудита автоматически возвращаются в это рабочее пространство. "}</DialogDescription>
         </DialogHeader>
         {!connected ? (
           <div className="space-y-3 py-2">
             <p className="rounded-md border border-warning/30 bg-warning/[0.06] px-3 py-3 text-sm text-warning">
-              DocuSeal is{" "}
+              {"DocuSeal — это"}{" "}
               {data.esign.connected
-                ? "connected but missing its webhook secret"
-                : "not connected"}
+                ? "подключено, но отсутствует секрет веб-перехватчика"
+                : "не подключен"}
               . Finish setup in Settings → Integrations before sending for
               signature.
             </p>
@@ -184,7 +181,7 @@ function SendForSignatureDialog({
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="signer-email">Recipient email</Label>
+                <Label htmlFor="signer-email">{"Адрес электронной почты получателя"}</Label>
                 <Input
                   id="signer-email"
                   type="email"
@@ -194,17 +191,17 @@ function SendForSignatureDialog({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="signer-name">Recipient name</Label>
+                <Label htmlFor="signer-name">{"Имя получателя"}</Label>
                 <Input
                   id="signer-name"
                   value={recipientName}
                   onChange={(event) => setRecipientName(event.target.value)}
-                  placeholder="Taylor Okafor"
+                  placeholder={"Тейлор Окафор"}
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="signer-subject">Email subject</Label>
+              <Label htmlFor="signer-subject">{"Тема письма"}</Label>
               <Input
                 id="signer-subject"
                 value={subject}
@@ -212,14 +209,14 @@ function SendForSignatureDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="signer-message">Message (optional)</Label>
+              <Label htmlFor="signer-message">{"Сообщение (необязательно)"}</Label>
               <textarea
                 id="signer-message"
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 rows={3}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                placeholder="Add a short note for the signer…"
+                placeholder={"Добавьте короткую заметку для подписывающего лица…"}
               />
             </div>
             {error ? (
@@ -227,7 +224,7 @@ function SendForSignatureDialog({
                 className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
                 role="alert"
               >
-                {error}
+                {localizeSystemText(error)}
               </p>
             ) : null}
           </div>
@@ -238,8 +235,7 @@ function SendForSignatureDialog({
             onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button
             onClick={submit}
             disabled={
@@ -251,7 +247,7 @@ function SendForSignatureDialog({
             }
           >
             <Send className="size-4" />
-            {isPending ? "Sending…" : "Send for signature"}
+            {isPending ? "Отправка…" : "Отправить на подпись"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -280,10 +276,10 @@ function VoidSignatureDialog({
         reason,
       });
       if (!result.ok) {
-        setError(result.error ?? "Could not void the request.");
+        setError(result.error ?? "Не удалось аннулировать запрос.");
         return;
       }
-      toast.success("Signature request voided");
+      toast.success("Запрос на подпись аннулирован");
       setReason("");
       onOpenChange(false);
       router.refresh();
@@ -293,22 +289,20 @@ function VoidSignatureDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Void signature request</DialogTitle>
+          <DialogTitle>{"Аннулировать запрос на подпись"}</DialogTitle>
           <DialogDescription>
-            This cancels the signing request. Recipients can no longer sign it,
-            and the original document is left unsigned.
-          </DialogDescription>
+            {"Это отменяет запрос на подпись. Получатели больше не смогут его подписать, и исходный документ останется неподписанным. "}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="void-reason">Reason</Label>
+            <Label htmlFor="void-reason">{"Причина"}</Label>
             <textarea
               id="void-reason"
               value={reason}
               onChange={(event) => setReason(event.target.value)}
               rows={3}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              placeholder="Recipient email was wrong…"
+              placeholder={"Адрес электронной почты получателя указан неверно…"}
             />
           </div>
           {error ? (
@@ -316,7 +310,7 @@ function VoidSignatureDialog({
               className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
               role="alert"
             >
-              {error}
+              {localizeSystemText(error)}
             </p>
           ) : null}
         </div>
@@ -326,14 +320,13 @@ function VoidSignatureDialog({
             onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button
             variant="destructive"
             onClick={submit}
             disabled={isPending || reason.trim().length < 3}
           >
-            {isPending ? "Voiding…" : "Void request"}
+            {isPending ? "Мочеиспускание…" : "Аннулировать запрос"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -371,10 +364,10 @@ function LegalHoldDialog({
             reference: reference || null,
           });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update legal hold.");
+        toast.error(result.error ?? "Не удалось обновить юридическое удержание.");
         return;
       }
-      toast.success(releasing ? "Legal hold released" : "Legal hold placed");
+      toast.success(releasing ? "Юридическое удержание снято" : "Установлено юридическое приостановление");
       setReason("");
       setReference("");
       onOpenChange(false);
@@ -387,18 +380,18 @@ function LegalHoldDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {releasing ? "Release legal hold" : "Place legal hold"}
+            {releasing ? "Освободите юридическую блокировку" : "Наложить юридическое удержание"}
           </DialogTitle>
           <DialogDescription>
             {releasing
-              ? "Record why this hold is being released. Other active holds, if any, remain in force."
-              : "This protects the document from archival until every active hold is released."}
+              ? "Запишите, почему это удержание снимается. Другие активные запреты, если таковые имеются, остаются в силе."
+              : "Это защищает документ от архивирования до тех пор, пока не будут сняты все активные удержания."}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <Label htmlFor="legal-hold-reason">
-              {releasing ? "Release reason" : "Reason"}
+              {releasing ? "Причина выпуска" : "Причина"}
             </Label>
             <textarea
               id="legal-hold-reason"
@@ -408,32 +401,31 @@ function LegalHoldDialog({
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               placeholder={
                 releasing
-                  ? "Investigation closed…"
-                  : "Active litigation, audit, or preservation notice…"
+                  ? "Расследование закрыто…"
+                  : "Активное судебное разбирательство, аудит или уведомление о сохранении…"
               }
             />
           </div>
           {!releasing ? (
             <div className="space-y-2">
-              <Label htmlFor="legal-hold-reference">Reference (optional)</Label>
+              <Label htmlFor="legal-hold-reference">{"Ссылка (необязательно)"}</Label>
               <Input
                 id="legal-hold-reference"
                 value={reference}
                 onChange={(event) => setReference(event.target.value)}
-                placeholder="Matter, ticket, or case reference"
+                placeholder={"Дело, билет или ссылка на дело"}
               />
             </div>
           ) : null}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button
             onClick={submit}
             disabled={isPending || reason.trim().length < 3}
           >
-            {isPending ? "Saving…" : releasing ? "Release hold" : "Place hold"}
+            {isPending ? "Сохранение…" : releasing ? "Отпустите удержание" : "Удержание места"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -461,10 +453,10 @@ function ExpiresAtField({
         expiresAt: value || null,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save the date.");
+        toast.error(result.error ?? "Не удалось сохранить дату.");
         return;
       }
-      toast.success(value ? "Date saved" : "Date cleared");
+      toast.success(value ? "Дата сохранения" : "Дата очищена");
       router.refresh();
     });
   }
@@ -479,7 +471,7 @@ function ExpiresAtField({
       />
       {dirty ? (
         <Button size="sm" variant="outline" onClick={save} disabled={isPending}>
-          {isPending ? "Saving…" : "Save"}
+          {isPending ? "Сохранение…" : "Сохранить"}
         </Button>
       ) : null}
     </div>
@@ -540,7 +532,7 @@ export function DocumentDetailView({
     startTransition(async () => {
       const result = await action();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update document.");
+        toast.error(result.error ?? "Не удалось обновить документ.");
         return;
       }
       toast.success(success);
@@ -550,7 +542,7 @@ export function DocumentDetailView({
   function rename() {
     run(
       () => renameDocument({ documentId: document.id, name: nextName }),
-      "Name updated",
+      "Имя обновлено",
     );
     setRenameOpen(false);
   }
@@ -573,7 +565,7 @@ export function DocumentDetailView({
           expiresAt: document.expiresAt,
           attestationNote,
         }),
-      "Signature status updated",
+      "Статус подписи обновлен.",
     );
   const saveSignatureStatus = (
     nextStatus: keyof typeof SIGNATURE_STATUS_META,
@@ -593,17 +585,17 @@ export function DocumentDetailView({
     if (
       !data.canDelete ||
       !window.confirm(
-        `Permanently delete “${document.name}”? This cannot be undone.`,
+        `Удалить «${document.name}» навсегда? Это невозможно отменить.`,
       )
     )
       return;
     startTransition(async () => {
       const result = await deleteDocument({ documentId: document.id });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not delete document.");
+        toast.error(result.error ?? "Не удалось удалить документ.");
         return;
       }
-      toast.success("Document deleted");
+      toast.success("Документ удален.");
       router.push("/dashboard/documents");
     });
   }
@@ -643,27 +635,24 @@ export function DocumentDetailView({
             <div className="mt-4 flex items-start gap-2 rounded-xl border border-warning/30 bg-warning/[0.06] px-3 py-2.5 text-sm text-warning">
               <ShieldAlert className="mt-0.5 size-4 shrink-0" />
               <p>
-                An access rule restricts this document to specific people —
-                you have read-only access here, so management actions are
-                unavailable even though you can manage documents generally.
-              </p>
+                {"Правило доступа ограничивает доступ к этому документу определенным людям — здесь у вас есть доступ только для чтения, поэтому действия по управлению недоступны, даже если вы можете управлять документами в целом. "}</p>
             </div>
           ) : null}
 
           <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-border/70 pt-4 text-sm sm:grid-cols-3">
             <div>
-              <p className="text-xs text-muted-foreground">Association</p>
+              <p className="text-xs text-muted-foreground">{"Ассоциация"}</p>
               <p className="mt-1 font-medium">
-                {document.associationLabels.join(" · ") || "Workspace"}
+                {document.associationLabels.join(" · ") || "Рабочая область"}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Owner</p>
+              <p className="text-xs text-muted-foreground">{"Владелец"}</p>
               <div className="mt-1 flex items-center gap-2">
                 {document.ownerId ? (
                   <>
                     <UserAvatar
-                      name={document.ownerName ?? "Workspace"}
+                      name={document.ownerName ?? "Рабочая область"}
                       src={document.ownerImage}
                       size="sm"
                     />
@@ -672,20 +661,20 @@ export function DocumentDetailView({
                     </span>
                   </>
                 ) : (
-                  <span className="font-medium">Workspace</span>
+                  <span className="font-medium">{"Рабочая область"}</span>
                 )}
               </div>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Updated</p>
+              <p className="text-xs text-muted-foreground">{"Обновлено"}</p>
               <p className="mt-1 font-medium">{formatDate(document.updatedAt)}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Versions</p>
+              <p className="text-xs text-muted-foreground">{"Версии"}</p>
               <p className="mt-1 font-medium">{document.versionCount}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Checksum</p>
+              <p className="text-xs text-muted-foreground">{"Контрольная сумма"}</p>
               <p
                 className="mt-1 truncate font-mono text-[11px]"
                 title={document.checksum}
@@ -696,8 +685,7 @@ export function DocumentDetailView({
             <div>
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <CalendarClock className="size-3.5" />
-                Effective / expiration date
-              </p>
+                {"Дата вступления в силу/истечения срока действия "}</p>
               <div className="mt-1">
                 <ExpiresAtField
                   document={document}
@@ -710,7 +698,7 @@ export function DocumentDetailView({
 
         <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm font-semibold">Preview</p>
+            <p className="text-sm font-semibold">{"Предварительный просмотр"}</p>
             <Button
               size="sm"
               variant="outline"
@@ -718,7 +706,7 @@ export function DocumentDetailView({
               onClick={() => setPreviewOpen((current) => !current)}
             >
               <FileText className="size-4" />
-              {previewOpen ? "Hide preview" : "Show preview"}
+              {previewOpen ? "Скрыть предварительный просмотр" : "Показать предварительный просмотр"}
             </Button>
           </div>
           {previewOpen ? (
@@ -726,21 +714,21 @@ export function DocumentDetailView({
           ) : (
             <div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
               {isPreviewable(document.mimeType)
-                ? "Preview hidden — click Show preview to load it."
-                : "Preview is not available for this file type."}
+                ? "Предварительный просмотр скрыт — нажмите «Показать предварительный просмотр», чтобы загрузить его."
+                : "Предварительный просмотр недоступен для этого типа файла."}
             </div>
           )}
         </div>
 
         {document.activity.length > 0 ? (
           <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
-            <p className="mb-3 text-sm font-semibold">Recent activity</p>
+            <p className="mb-3 text-sm font-semibold">{"Недавняя активность"}</p>
             <div className="divide-y divide-border/70">
               {document.activity.map((event) => (
                 <div key={event.id} className="py-2.5 text-sm first:pt-0 last:pb-0">
                   <p className="capitalize">{formatActivityType(event.type)}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    {event.actorName ?? "System"} ·{" "}
+                    {event.actorName ?? "Система"} ·{" "}
                     {formatDate(event.createdAt)}
                   </p>
                 </div>
@@ -753,14 +741,12 @@ export function DocumentDetailView({
       <div className="space-y-5">
         <div className="space-y-2 rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Actions
-          </p>
+            {"Действия "}</p>
           <div className="grid grid-cols-2 gap-2">
             <Button size="sm" variant="outline" asChild>
               <a href={`/api/documents/${document.id}?download=1`}>
                 <Download className="size-4" />
-                Download
-              </a>
+                {"Скачать "}</a>
             </Button>
             {canManageThis ? (
               <Button
@@ -769,8 +755,7 @@ export function DocumentDetailView({
                 disabled={isArchived}
                 onClick={() => setRenameOpen(true)}
               >
-                Rename
-              </Button>
+                {"Переименовать "}</Button>
             ) : null}
             {canManageThis ? (
               <Button
@@ -788,8 +773,8 @@ export function DocumentDetailView({
                             : "archived",
                       }),
                     document.status === "archived"
-                      ? "Document restored"
-                      : "Document archived",
+                      ? "Документ восстановлен"
+                      : "Документ в архиве",
                   )
                 }
               >
@@ -798,7 +783,7 @@ export function DocumentDetailView({
                 ) : (
                   <Archive className="size-4" />
                 )}
-                {document.status === "archived" ? "Restore" : "Archive"}
+                {document.status === "archived" ? "Восстановить" : "Архив"}
               </Button>
             ) : null}
             {canManageThis ? (
@@ -813,8 +798,7 @@ export function DocumentDetailView({
                 }
                 onClick={() => setVersionOpen(true)}
               >
-                New version
-              </Button>
+                {"Новая версия "}</Button>
             ) : null}
             {data.canDelete ? (
               <Button
@@ -824,8 +808,7 @@ export function DocumentDetailView({
                 onClick={deleteCurrentDocument}
               >
                 <Trash2 className="size-4" />
-                Delete
-              </Button>
+                {"Удалить "}</Button>
             ) : null}
           </div>
         </div>
@@ -833,8 +816,7 @@ export function DocumentDetailView({
         <div className="space-y-2 rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Category
-            </p>
+              {"Категория "}</p>
             <FolderCog className="size-4 text-muted-foreground" />
           </div>
           <select
@@ -847,12 +829,12 @@ export function DocumentDetailView({
                     documentId: document.id,
                     categoryId: event.target.value || null,
                   }),
-                "Category updated",
+                "Категория обновлена",
               )
             }
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="">No category</option>
+            <option value="">{"Нет категории"}</option>
             {data.categories
               .filter((category) => category.active)
               .map((category) => (
@@ -865,12 +847,11 @@ export function DocumentDetailView({
 
         <div className="space-y-3 rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Assignments
-          </p>
+            {"Задания "}</p>
           {(["owner", "reviewer"] as const).map((assignmentType) => (
             <label key={assignmentType} className="block space-y-1.5">
               <span className="text-sm font-medium">
-                {assignmentType === "owner" ? "Responsible" : "Reviewer"}
+                {assignmentType === "owner" ? "Ответственный" : "Рецензент"}
               </span>
               <select
                 value={assignmentFor(assignmentType)}
@@ -883,12 +864,12 @@ export function DocumentDetailView({
                         userId: event.target.value || null,
                         assignmentType,
                       }),
-                    `${assignmentType === "owner" ? "Responsible" : "Reviewer"} updated`,
+                    `${assignmentType === "owner" ? "Ответственный" : "Рецензент"} обновлено`,
                   )
                 }
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
-                <option value="">Not assigned</option>
+                <option value="">{"Не назначено"}</option>
                 {data.members.map((member) => (
                   <option key={member.id} value={member.id}>
                     {member.name}
@@ -901,19 +882,16 @@ export function DocumentDetailView({
 
         <div className="space-y-2 rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Access & ownership
-          </p>
+            {"Доступ и владение "}</p>
           <div className="rounded-xl border border-border/70 bg-muted/20 p-3 text-sm">
             <p className="flex items-center gap-2">
               <ShieldCheck className="size-4 text-primary" />
               {document.accessRoles.length + document.accessMembers.length === 0
-                ? "Workspace permission"
-                : `${document.accessRoles.length + document.accessMembers.length} explicit rule${document.accessRoles.length + document.accessMembers.length === 1 ? "" : "s"}`}
+                ? "Разрешение рабочей области"
+                : `${document.accessRoles.length + document.accessMembers.length} явное правило${document.accessRoles.length + document.accessMembers.length === 1 ? "" : "s"}`}
             </p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              Owner and workspace admins retain access. ACL rules can narrow
-              access for everyone else.
-            </p>
+              {"Владелец и администраторы рабочей области сохраняют доступ. Правила ACL могут ограничить доступ для всех остальных. "}</p>
           </div>
           {data.canShare ? (
             <Button
@@ -924,16 +902,14 @@ export function DocumentDetailView({
               onClick={() => setAccessOpen(true)}
             >
               <Users className="size-4" />
-              Manage access
-            </Button>
+              {"Управление доступом "}</Button>
           ) : null}
         </div>
 
         <div className="space-y-3 rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Signature
-            </p>
+              {"Подпись "}</p>
             <LockKeyhole className="size-4 text-muted-foreground" />
           </div>
           <select
@@ -969,17 +945,16 @@ export function DocumentDetailView({
                 rel="noreferrer"
                 className="mt-2 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
               >
-                Open DocuSeal submission
-              </a>
+                {"Открыть подачу DocuSeal "}</a>
             ) : null}
             {document.manualSignatureNote ? (
               <div className="mt-2 rounded-md bg-warning/10 p-2 text-xs text-warning">
-                <p className="font-medium">Manual attestation</p>
+                <p className="font-medium">{"Ручная аттестация"}</p>
                 <p className="mt-0.5 leading-5">
                   {document.manualSignatureNote}
                 </p>
                 <p className="mt-1 text-[11px] text-muted-foreground">
-                  {document.manualSignedByName ?? "A manager"} ·{" "}
+                  {document.manualSignedByName ?? "Менеджер"} ·{" "}
                   {document.manualSignedAt
                     ? formatDate(document.manualSignedAt)
                     : ""}
@@ -1001,8 +976,7 @@ export function DocumentDetailView({
                 }
               >
                 <LockKeyhole className="size-4" />
-                Sign now
-              </Button>
+                {"Подпишите сейчас "}</Button>
               {document.signatureStatus === "pending" &&
               (document.signatureProvider === "docuseal" || document.signatureProvider === "native") ? (
                 <Button
@@ -1012,10 +986,9 @@ export function DocumentDetailView({
                   onClick={() => setVoidOpen(true)}
                 >
                   <LockKeyhole className="size-4" />
-                  Void request
-                </Button>
+                  {"Аннулировать запрос "}</Button>
               ) : canSendForSignature ? (
-                <div className={data.esign.connected && data.remoteSignEnabled ? "grid grid-cols-2 gap-2" : "grid gap-2"}>
+                <div className={data.esign.connected && data.remoteSignEnabled ? "сетка Grid-cols-2 разрыв-2" : "разрыв сетки-2"}>
                   {data.remoteSignEnabled ? (
                     <Button
                       size="sm"
@@ -1024,11 +997,10 @@ export function DocumentDetailView({
                       onClick={() => setNativeSendOpen(true)}
                     >
                       <LockKeyhole className="size-4" />
-                      Native link
-                    </Button>
+                      {"Родная ссылка "}</Button>
                   ) : (
                     <p className="rounded-lg border border-border/70 bg-muted/30 p-3 text-xs leading-5 text-muted-foreground">
-                      Remote signing links are disabled. <Link href="/settings/signature" className="font-medium text-foreground underline underline-offset-2">Enable them in Signature settings</Link>.
+                      {"Ссылки для удаленной подписи отключены. "}<Link href="/settings/signature" className="font-medium text-foreground underline underline-offset-2">{"Включите их в настройках подписи."}</Link>.
                     </p>
                   )}
                   {data.esign.connected ? (
@@ -1052,25 +1024,20 @@ export function DocumentDetailView({
           <div className="flex items-center justify-between gap-3">
             <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <Gavel className="size-4" />
-              Governance
-            </p>
+              {"Управление "}</p>
             {activeHolds.length > 0 ? (
               <StatusPill className="bg-warning/10 text-warning">
-                {activeHolds.length} active hold
-                {activeHolds.length === 1 ? "" : "s"}
+                {activeHolds.length} {"активное удержание "}{activeHolds.length === 1 ? "" : "s"}
               </StatusPill>
             ) : null}
           </div>
           <p className="text-xs leading-5 text-muted-foreground">
-            Preservation notices and signed evidence remain workspace-scoped
-            and ACL-protected.
-          </p>
+            {"Уведомления о сохранении и подписанные доказательства остаются в пределах рабочего пространства и защищены ACL. "}</p>
           <div className="grid gap-2 sm:grid-cols-2">
             <Button size="sm" variant="outline" asChild>
               <a href={`/api/documents/${document.id}/evidence`}>
                 <Download className="size-4" />
-                Export evidence
-              </a>
+                {"Экспортировать доказательства "}</a>
             </Button>
             {canManageThis ? (
               <Button
@@ -1080,15 +1047,14 @@ export function DocumentDetailView({
                 onClick={() => setHoldOpen(true)}
               >
                 <Gavel className="size-4" />
-                {activeHold ? "Release legal hold" : "Place legal hold"}
+                {activeHold ? "Освободите юридическую блокировку" : "Наложить юридическое удержание"}
               </Button>
             ) : null}
           </div>
           {activeHolds.length > 0 ? (
             <div className="space-y-2 rounded-xl border border-warning/30 bg-warning/[0.04] p-3 text-sm">
               <p className="font-medium text-warning">
-                This document is preserved.
-              </p>
+                {"Этот документ сохранился. "}</p>
               {activeHolds.map((hold) => (
                 <div
                   key={hold.id}
@@ -1096,7 +1062,7 @@ export function DocumentDetailView({
                 >
                   <p>{hold.reason}</p>
                   {hold.reference ? (
-                    <p className="mt-0.5">Reference: {hold.reference}</p>
+                    <p className="mt-0.5">{"Основание: "}{hold.reference}</p>
                   ) : null}
                 </div>
               ))}
@@ -1108,8 +1074,8 @@ export function DocumentDetailView({
       <Dialog open={renameOpen} onOpenChange={setRenameOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rename document</DialogTitle>
-            <DialogDescription>This changes metadata only.</DialogDescription>
+            <DialogTitle>{"Переименовать документ"}</DialogTitle>
+            <DialogDescription>{"Это изменяет только метаданные."}</DialogDescription>
           </DialogHeader>
           <Input
             value={nextName}
@@ -1117,11 +1083,9 @@ export function DocumentDetailView({
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setRenameOpen(false)}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button onClick={rename} disabled={!nextName.trim() || isPending}>
-              Save name
-            </Button>
+              {"Сохранить имя "}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1162,10 +1126,9 @@ export function DocumentDetailView({
       <Dialog open={attestOpen} onOpenChange={setAttestOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Record manual signature</DialogTitle>
+            <DialogTitle>{"Запись ручной подписи"}</DialogTitle>
             <DialogDescription>
-              Describe how and when it was signed.
-            </DialogDescription>
+              {"Опишите, как и когда он был подписан. "}</DialogDescription>
           </DialogHeader>
           <Textarea
             value={attestNote}
@@ -1174,14 +1137,12 @@ export function DocumentDetailView({
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setAttestOpen(false)}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button
               onClick={confirmAttestation}
               disabled={attestNote.trim().length < 3 || isPending}
             >
-              Confirm signed
-            </Button>
+              {"Подтвердить подписание "}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

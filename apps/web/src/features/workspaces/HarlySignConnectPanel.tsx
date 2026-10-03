@@ -37,15 +37,15 @@ export function HarlySignConnectPanel({
     startSaveChannel(async () => {
       const result = await saveOfferSignatureChannelAction(channel);
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update offer signature settings.");
+        toast.error(result.error ?? "Не удалось обновить настройки подписи предложения.");
         return;
       }
       toast.success(
         channel === "esign"
-          ? "DocuSeal enabled for offers"
+          ? "DocuSeal включен для предложений"
           : channel === "native"
-            ? "Native signing enabled for offers"
-            : "Email enabled for offers",
+            ? "Встроенная подпись включена для предложений"
+            : "Электронная почта включена для предложений",
       );
       router.refresh();
     });
@@ -64,8 +64,7 @@ export function HarlySignConnectPanel({
           <Button variant="outline" asChild>
             <Link href="/settings/signature">
               <GearSixIcon className="size-4" />
-              Signature settings
-            </Link>
+              {"Настройки подписи "}</Link>
           </Button>
         }
       />
@@ -73,19 +72,19 @@ export function HarlySignConnectPanel({
       {canEdit ? (
         <Card className="space-y-4 p-5">
           <div>
-            <h2 className="font-display text-base font-semibold tracking-tight">Offer signature delivery</h2>
-            <p className="text-sm text-muted-foreground">Choose how candidates receive offers by default.</p>
+            <h2 className="font-display text-base font-semibold tracking-tight">{"Предложить доставку подписи"}</h2>
+            <p className="text-sm text-muted-foreground">{"Выберите, как кандидаты будут получать предложения по умолчанию."}</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant={status.offerSignatureChannel === "email" ? "default" : "outline"} disabled={savingChannel} onClick={() => setChannel("email")}>Email</Button>
-            <Button variant={status.offerSignatureChannel === "native" ? "default" : "outline"} disabled={savingChannel} onClick={() => setChannel("native")}>Native (built-in)</Button>
+            <Button variant={status.offerSignatureChannel === "email" ? "default" : "outline"} disabled={savingChannel} onClick={() => setChannel("email")}>{"Электронная почта"}</Button>
+            <Button variant={status.offerSignatureChannel === "native" ? "default" : "outline"} disabled={savingChannel} onClick={() => setChannel("native")}>{"Родной (встроенный)"}</Button>
             <Button
               variant={status.offerSignatureChannel === "esign" ? "default" : "outline"}
               disabled={savingChannel || !docusealConnected}
-              title={docusealConnected ? undefined : "Connect DocuSeal first"}
+              title={docusealConnected ? undefined : "Сначала подключите DocuSeal"}
               onClick={() => setChannel("esign")}
             >
-              DocuSeal{docusealConnected ? "" : " (not connected)"}
+              DocuSeal{docusealConnected ? "" : " (не подключен)"}
             </Button>
           </div>
         </Card>

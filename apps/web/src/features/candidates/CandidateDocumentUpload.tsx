@@ -51,11 +51,11 @@ export function useCandidateDocumentUpload(candidateId: string) {
   function onFile(file: File | null) {
     if (!file) return;
     if (!ALLOWED_TYPES.has(file.type)) {
-      toast.error("Upload a PDF, Word doc, or image.");
+      toast.error("Загрузите PDF, документ Word или изображение.");
       return;
     }
     if (file.size <= 0 || file.size > MAX_BYTES) {
-      toast.error("File must be between 1 byte and 25 MB.");
+      toast.error("Размер файла должен быть от 1 байта до 25 МБ.");
       return;
     }
     start(async () => {
@@ -92,13 +92,13 @@ export function useCandidateDocumentUpload(candidateId: string) {
           association: { targetType: "candidate", targetId: candidateId },
         });
         if (!result.ok) {
-          toast.error(result.error ?? "Could not upload the document.");
+          toast.error(result.error ?? "Не удалось загрузить документ.");
           return;
         }
-        toast.success("Document uploaded");
+        toast.success("Документ загружен");
         router.refresh();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Could not upload the document.");
+        toast.error(error instanceof Error ? error.message : "Не удалось загрузить документ.");
       } finally {
         if (inputRef.current) inputRef.current.value = "";
       }

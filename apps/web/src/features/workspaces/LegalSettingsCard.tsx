@@ -40,11 +40,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 const JURISDICTION_LABELS: Record<string, string> = {
-  eu: "European Union (GDPR)",
-  us: "United States",
-  cl: "Chile (Ley 21.719)",
-  br: "Brazil (LGPD)",
-  other: "Other",
+  eu: "Европейский Союз (ВВП)",
+  us: "Соединенные Штаты",
+  cl: "Чили (21,719 Лей)",
+  br: "Бразилия (LGPD)",
+  other: "Другое",
 };
 
 const PAGE_KEYS: LegalPageKey[] = [
@@ -153,14 +153,14 @@ export function LegalSettings({
 
   function applyTemplate() {
     if (!jurisdiction) {
-      toast.error("Select a jurisdiction first.");
+      toast.error("Сначала выберите юрисдикцию.");
       return;
     }
     const template = getTemplate(jurisdiction as Jurisdiction);
     const filled: Record<string, string> = {};
     for (const [key, raw] of Object.entries(template)) {
       let text = raw
-        .replaceAll("{{DATE}}", new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }))
+        .replaceAll("{{DATE}}", new Date().toLocaleDateString("ru-RU", { year: "numeric", month: "long", day: "numeric" }))
         .replaceAll("{{ENTITY_NAME}}", entityName || "[Company Name]")
         .replaceAll("{{ENTITY_ADDRESS}}", entityAddress || "[Company Address]")
         .replaceAll("{{ENTITY_EMAIL}}", entityEmail || "[privacy@company.com]")
@@ -175,7 +175,7 @@ export function LegalSettings({
     setHasDraft(true);
     setPagesVersion((v) => v + 1);
     saveDraft(filled);
-    toast.success(`${JURISDICTION_LABELS[jurisdiction]} template applied. Review and customize.`);
+    toast.success(`Шаблон ${JURISDICTION_LABELS[jurisdiction]} применен. Просмотрите и настройте.`);
   }
 
   function save() {
@@ -195,12 +195,12 @@ export function LegalSettings({
         legalPages: pages as LegalPages,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
       clearDraft();
       setHasDraft(false);
-      toast.success("Legal settings saved");
+      toast.success("Юридические настройки сохранены.");
       router.refresh();
     });
   }
@@ -210,7 +210,7 @@ export function LegalSettings({
     setPagesVersion((v) => v + 1);
     clearDraft();
     setHasDraft(false);
-    toast.success("Draft discarded");
+    toast.success("Черновик отклонен");
   }
 
   const pageCount = Object.keys(pages).filter((k) => pages[k]?.trim()).length;
@@ -226,75 +226,66 @@ export function LegalSettings({
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="font-display text-lg font-semibold tracking-tight">
-                Legal & Compliance
-              </h1>
+                {"Юридические вопросы и соблюдение требований "}</h1>
               {settings.legalConfigured ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-sage px-2.5 py-0.5 text-xs font-medium text-sage-ink">
                   <span className="size-1.5 rounded-full bg-pine" />
-                  Configured
-                </span>
+                  {"Настроен "}</span>
               ) : pageCount > 0 ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-clay/10 px-2.5 py-0.5 text-xs font-medium text-clay">
                   <span className="size-1.5 rounded-full bg-clay" />
-                  Incomplete
-                </span>
+                  {"Неполный "}</span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                   <span className="size-1.5 rounded-full bg-muted-foreground/50" />
-                  Not configured
-                </span>
+                  {"Не настроено "}</span>
               )}
             </div>
             <p className="max-w-prose text-sm text-muted-foreground">
-              Legal entity information, data retention policies, and customizable legal pages
-              for your careers page and application forms.
-            </p>
+              {"Информация о юридических лицах, политика хранения данных и настраиваемые юридические страницы для вашей страницы вакансий и форм заявок. "}</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {hasDraft ? (
             <Button variant="ghost" size="sm" onClick={discardDraft}>
-              Discard draft
-            </Button>
+              {"Отменить черновик "}</Button>
           ) : null}
           <Button onClick={save} disabled={saving}>
             {saving ? <SpinnerIcon className="size-4" /> : null}
-            Save changes
-          </Button>
+            {"Сохранить изменения "}</Button>
         </div>
       </div>
 
       {/* Entity Information */}
       <Card className="gap-3 p-5">
-        <h2 className="m-0 text-sm font-semibold text-foreground">Legal Entity</h2>
+        <h2 className="m-0 text-sm font-semibold text-foreground">{"Юридическое лицо"}</h2>
         <p className="-mt-2 text-xs text-muted-foreground">
-          Basic information about the organization responsible for candidate data.
-        </p>
+          {"Основная информация об организации, ответственной за данные о кандидатах. "}</p>
 
         <div className="space-y-3">
           <Field>
-            <Label htmlFor="legal-entity-name">Entity name</Label>
+            <Label htmlFor="legal-entity-name">{"Имя объекта"}</Label>
             <Input
               id="legal-entity-name"
               value={entityName}
               onChange={(e) => setEntityName(e.target.value)}
-              placeholder="Acme Corp S.A."
+              placeholder={"Акме Корп С.А."}
             />
           </Field>
 
           <Field>
-            <Label htmlFor="legal-entity-address">Address</Label>
+            <Label htmlFor="legal-entity-address">{"Адрес"}</Label>
             <Input
               id="legal-entity-address"
               value={entityAddress}
               onChange={(e) => setEntityAddress(e.target.value)}
-              placeholder="Calle Mayor 123, Madrid, Spain"
+              placeholder={"Калле Майор 123, Мадрид, Испания"}
             />
           </Field>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
-              <Label htmlFor="legal-entity-email">Contact email</Label>
+              <Label htmlFor="legal-entity-email">{"Контактный адрес электронной почты"}</Label>
               <Input
                 id="legal-entity-email"
                 type="email"
@@ -304,7 +295,7 @@ export function LegalSettings({
               />
             </Field>
             <Field>
-              <Label htmlFor="legal-entity-website">Website</Label>
+              <Label htmlFor="legal-entity-website">{"Веб-сайт"}</Label>
               <Input
                 id="legal-entity-website"
                 type="url"
@@ -317,22 +308,22 @@ export function LegalSettings({
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
-              <Label htmlFor="legal-jurisdiction">Jurisdiction</Label>
+              <Label htmlFor="legal-jurisdiction">{"Юрисдикция"}</Label>
               <Select value={jurisdiction} onValueChange={setJurisdiction}>
                 <SelectTrigger id="legal-jurisdiction">
-                  <SelectValue placeholder="Select jurisdiction" />
+                  <SelectValue placeholder={"Выберите юрисдикцию"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="eu">European Union (GDPR)</SelectItem>
-                  <SelectItem value="us">United States</SelectItem>
-                  <SelectItem value="cl">Chile (Ley 21.719)</SelectItem>
-                  <SelectItem value="br">Brazil (LGPD)</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="eu">{"Европейский Союз (ВВП)"}</SelectItem>
+                  <SelectItem value="us">{"Соединенные Штаты"}</SelectItem>
+                  <SelectItem value="cl">{"Чили (21,719 Лей)"}</SelectItem>
+                  <SelectItem value="br">{"Бразилия (LGPD)"}</SelectItem>
+                  <SelectItem value="other">{"Другое"}</SelectItem>
                 </SelectContent>
               </Select>
             </Field>
             <Field>
-              <Label htmlFor="legal-dpo-email">DPO email (optional)</Label>
+              <Label htmlFor="legal-dpo-email">{"Электронная почта DPO (необязательно)"}</Label>
               <Input
                 id="legal-dpo-email"
                 type="email"
@@ -347,31 +338,26 @@ export function LegalSettings({
 
       {/* Data Retention */}
       <Card className="gap-3 p-5">
-        <h2 className="m-0 text-sm font-semibold text-foreground">Data Retention</h2>
+        <h2 className="m-0 text-sm font-semibold text-foreground">{"Хранение данных"}</h2>
         <p className="-mt-2 text-xs text-muted-foreground">
-          How long candidate data is kept after the hiring process concludes.
-        </p>
+          {"Как долго данные о кандидатах хранятся после завершения процесса найма. "}</p>
 
         <div className="flex items-start justify-between gap-4 rounded-xl border border-border/70 bg-muted/20 p-4">
           <div>
-            <p className="text-sm font-medium text-foreground">Enforce automatically</p>
+            <p className="text-sm font-medium text-foreground">{"Применять автоматически"}</p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              When on, a nightly job anonymizes candidates past their retention window (name,
-              contact info, and résumé data redacted; documents deleted). Hired candidates and
-              anything under legal hold are always skipped. Pipeline history is kept for metrics.
-              Off by default — the months below are advisory until you turn this on.
-            </p>
+              {"Когда эта функция включена, ночная работа анонимизирует кандидатов после окончания периода хранения (имя, контактная информация и данные резюме редактируются, документы удаляются). Нанятые кандидаты и все, что находится под законным контролем, всегда игнорируется. История конвейера сохраняется для метрик. По умолчанию отключено. Указанные ниже месяцы являются рекомендательными, пока вы не включите эту функцию. "}</p>
           </div>
           <Switch
             checked={retentionEnabled}
             onCheckedChange={setRetentionEnabled}
-            aria-label="Enforce data retention automatically"
+            aria-label={"Обеспечьте автоматическое сохранение данных"}
           />
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field>
-            <Label htmlFor="retention-applicants">Applicants (months)</Label>
+            <Label htmlFor="retention-applicants">{"Кандидаты (месяцы)"}</Label>
             <Input
               id="retention-applicants"
               type="number"
@@ -381,11 +367,11 @@ export function LegalSettings({
               onChange={(e) => setRetentionApplicants(Number(e.target.value) || 6)}
             />
             <p className="text-xs text-muted-foreground">
-              Unsuccessful candidates are anonymized after this period{retentionEnabled ? "" : " once enforcement is on"}.
+              {"По истечении этого периода неуспешные кандидаты анонимизируются."}{retentionEnabled ? "" : " как только вступит в силу правоприменение"}.
             </p>
           </Field>
           <Field>
-            <Label htmlFor="retention-talent-pool">Talent pool (months)</Label>
+            <Label htmlFor="retention-talent-pool">{"Кадровый резерв (месяцев)"}</Label>
             <Input
               id="retention-talent-pool"
               type="number"
@@ -395,13 +381,12 @@ export function LegalSettings({
               onChange={(e) => setRetentionTalentPool(Number(e.target.value) || 24)}
             />
             <p className="text-xs text-muted-foreground">
-              Candidates who opt-in to your talent pool. Requires re-consent.
-            </p>
+              {"Кандидаты, которые присоединятся к вашему кадровому резерву. Требуется повторное согласие. "}</p>
           </Field>
         </div>
         <div className="max-w-sm">
           <Field>
-            <Label htmlFor="retention-audit">Audit log retention (months)</Label>
+            <Label htmlFor="retention-audit">{"Хранение журнала аудита (месяцы)"}</Label>
             <Input
               id="retention-audit"
               type="number"
@@ -411,31 +396,28 @@ export function LegalSettings({
               onChange={(e) => setAuditRetentionMonths(Number(e.target.value) || 24)}
             />
             <p className="text-xs text-muted-foreground">
-              Audit evidence is pruned by the protected nightly retention job. Minimum 12 months.
-            </p>
+              {"Аудиторские доказательства сокращаются с помощью защищенного ночного хранения. Минимум 12 месяцев. "}</p>
           </Field>
         </div>
       </Card>
 
       {/* Consent */}
       <Card className="gap-3 p-5">
-        <h2 className="m-0 text-sm font-semibold text-foreground">Consent</h2>
+        <h2 className="m-0 text-sm font-semibold text-foreground">{"Согласие"}</h2>
         <p className="-mt-2 text-xs text-muted-foreground">
-          Text shown next to the consent checkbox on the application form.
-        </p>
+          {"Текст, отображаемый рядом с флажком согласия в форме заявки. "}</p>
 
         <div>
-          <Label htmlFor="consent-text">Consent checkbox text</Label>
+          <Label htmlFor="consent-text">{"Текст флажка согласия"}</Label>
           <Textarea
             id="consent-text"
             value={consentText}
             onChange={(e) => setConsentText(e.target.value)}
-            placeholder="I agree to the processing of my personal data for recruitment purposes. I have read and accept the Privacy Policy."
+            placeholder={"Я согласен на обработку моих персональных данных в целях трудоустройства. Я прочитал и принимаю Политику конфиденциальности."}
             rows={3}
           />
           <p className="text-xs text-muted-foreground">
-            The link to your Privacy Policy will be appended automatically if provided below.
-          </p>
+            {"Ссылка на вашу Политику конфиденциальности будет добавлена автоматически, если она указана ниже. "}</p>
         </div>
       </Card>
 
@@ -443,29 +425,27 @@ export function LegalSettings({
       <Card className="p-0 overflow-hidden">
         <div className="flex flex-col gap-3 border-b p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-foreground">Legal Pages</h2>
+            <h2 className="text-sm font-semibold text-foreground">{"Юридические страницы"}</h2>
             <p className="text-xs text-muted-foreground">
-              Write your legal content. Pages are published at{" "}
+              {"Напишите свой юридический контент. Страницы опубликованы на"}{" "}
               <code className="text-xs">/legal/privacy-policy</code>,{" "}
-              <code className="text-xs">/legal/terms-of-service</code>, etc.
-            </p>
+              <code className="text-xs">/legal/terms-of-service</code>{"и т. д. "}</p>
           </div>
           <div className="flex items-center gap-2">
             <Select value={jurisdiction} onValueChange={setJurisdiction}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Template..." />
+                <SelectValue placeholder={"Шаблон..."} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="eu">EU Template (GDPR)</SelectItem>
-                <SelectItem value="us">US Template</SelectItem>
-                <SelectItem value="cl">Chile Template (Ley 21.719)</SelectItem>
-                <SelectItem value="br">Brazil Template (LGPD)</SelectItem>
-                <SelectItem value="other">Generic Template</SelectItem>
+                <SelectItem value="eu">{"Шаблон ЕС (GDPR)"}</SelectItem>
+                <SelectItem value="us">{"Шаблон США"}</SelectItem>
+                <SelectItem value="cl">{"Шаблон Чили (Ley 21.719)"}</SelectItem>
+                <SelectItem value="br">{"Шаблон Бразилии (LGPD)"}</SelectItem>
+                <SelectItem value="other">{"Общий шаблон"}</SelectItem>
               </SelectContent>
             </Select>
             <Button variant="outline" size="sm" onClick={applyTemplate} disabled={!jurisdiction}>
-              Apply template
-            </Button>
+              {"Применить шаблон "}</Button>
           </div>
         </div>
 
@@ -502,7 +482,7 @@ export function LegalSettings({
                 <RichTextEditor
                   key={pagesVersion}
                   defaultValue={pages[key] ?? ""}
-                  placeholder={`Write your ${LEGAL_PAGE_LABELS[key].toLowerCase()} here...`}
+                  placeholder={`Напишите здесь свой ${LEGAL_PAGE_LABELS[key].toLowerCase()}...`}
                   minHeight="24rem"
                   onChange={(html) => updatePage(key, html)}
                 />

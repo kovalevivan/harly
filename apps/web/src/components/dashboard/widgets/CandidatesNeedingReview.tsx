@@ -10,8 +10,8 @@ import type { ReviewCandidate } from "@/features/dashboard/widgets";
 import { Tile, TileHeader, TileLink, EmptyHint } from "./primitives";
 
 function agingLabel(days: number) {
-  if (days <= 0) return "Requested today";
-  return `Requested ${days} day${days === 1 ? "" : "s"} ago`;
+  if (days <= 0) return "Запрошено сегодня";
+  return `Запрошено ${days} дня${days === 1 ? "" : "s"} назад`;
 }
 
 export function CandidatesNeedingReview({
@@ -25,8 +25,8 @@ export function CandidatesNeedingReview({
     <Tile className={className}>
       <TileHeader
         icon={ClipboardCheck}
-        title="Candidates needing your review"
-        action={<TileLink href="/dashboard/candidates">View all</TileLink>}
+        title={"Кандидаты для рассмотрения"}
+        action={<TileLink href="/dashboard/candidates">{"Посмотреть все"}</TileLink>}
       />
       <div className="flex flex-1 flex-col px-2 pb-2 pt-1">
         {candidates.length > 0 ? (
@@ -70,8 +70,7 @@ export function CandidatesNeedingReview({
                     asChild
                   >
                     <span>
-                      Review
-                      <ArrowRight className="size-3.5" strokeWidth={1.8} />
+                      {"Обзор "}<ArrowRight className="size-3.5" strokeWidth={1.8} />
                     </span>
                   </Button>
                 </Link>
@@ -81,7 +80,7 @@ export function CandidatesNeedingReview({
         ) : (
           <EmptyHint
             icon={ClipboardCheck}
-            text="No reviews pending. Your team is on top of feedback."
+            text={"Нет ожидающих отзывов. Ваша команда следит за обратной связью."}
           />
         )}
       </div>

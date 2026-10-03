@@ -93,17 +93,17 @@ function uniqueSorted(values: (string | null)[]) {
 }
 
 const CSV_HEADERS = [
-  "Full name",
-  "Email",
-  "Phone",
-  "Location",
-  "Role",
-  "Department",
-  "Stage",
-  "Status",
-  "Source",
-  "Tags",
-  "Applied at",
+  "Полное имя",
+  "Электронная почта",
+  "Телефон",
+  "Расположение",
+  "Роль",
+  "Отдел",
+  "Этап",
+  "Статус",
+  "Источник",
+  "Теги",
+  "Применяется в",
 ];
 
 function candidateToCsvRow(row: CandidateRow): string[] {
@@ -289,7 +289,7 @@ export function CandidatesTable({
       .map((r) => r.applicationId as string);
 
     if (applicationIds.length === 0) {
-      toast.error("Selected candidates have no application to update.");
+      toast.error("У выбранных кандидатов нет отклика для обновления.");
       return;
     }
     if (
@@ -306,12 +306,12 @@ export function CandidatesTable({
       });
       if (result.success) {
         toast.success(
-          `Updated ${applicationIds.length} candidate${applicationIds.length === 1 ? "" : "s"}.`,
+          `Обновлен кандидат ${applicationIds.length}${applicationIds.length === 1 ? "" : "s"}.`,
         );
         setSelected(new Set());
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not update candidates.");
+        toast.error(result.error ?? "Не удалось обновить кандидатов.");
       }
     });
   }
@@ -321,7 +321,7 @@ export function CandidatesTable({
     next: "hired" | "rejected" | "active",
   ) {
     if (!row.applicationId) {
-      toast.error("This candidate has no application to update.");
+      toast.error("У этого кандидата нет отклика для обновления.");
       return;
     }
     startTransition(async () => {
@@ -330,10 +330,10 @@ export function CandidatesTable({
         status: next,
       });
       if (result.success) {
-        toast.success(`${row.fullName} updated.`);
+        toast.success(`${row.fullName} обновлено.`);
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not update candidate.");
+        toast.error(result.error ?? "Не удалось обновить кандидата.");
       }
     });
   }
@@ -341,7 +341,7 @@ export function CandidatesTable({
   function runDelete(row: CandidateRow) {
     if (
       !window.confirm(
-        `Move ${row.fullName} to trash? You can restore them later from the Trash tab.`,
+        `Переместить ${row.fullName} в корзину? Вы можете восстановить их позже на вкладке «Корзина».`,
       )
     ) {
       return;
@@ -349,7 +349,7 @@ export function CandidatesTable({
     startTransition(async () => {
       const result = await trashCandidateAction(row.id);
       if (result.success) {
-        toast.success(`${row.fullName} moved to trash.`);
+        toast.success(`${row.fullName} перемещено в корзину.`);
         setSelected((prev) => {
           const next = new Set(prev);
           next.delete(row.id);
@@ -357,7 +357,7 @@ export function CandidatesTable({
         });
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not delete candidate.");
+        toast.error(result.error ?? "Не удалось удалить кандидата.");
       }
     });
   }
@@ -370,16 +370,16 @@ export function CandidatesTable({
       if (result.success) {
         toast.success(
           row.inPool
-            ? `${row.fullName} removed from pool.`
-            : `${row.fullName} added to pool.`,
+            ? `${row.fullName} удалено из пула.`
+            : `${row.fullName} добавлено в пул.`,
         );
         router.refresh();
       } else {
         toast.error(
           result.error ??
             (row.inPool
-              ? "Could not remove from pool."
-              : "Could not add to pool."),
+              ? "Не удалось удалить из пула."
+              : "Не удалось добавить в пул."),
         );
         router.refresh();
       }
@@ -391,7 +391,7 @@ export function CandidatesTable({
     if (ids.length === 0) return;
     if (
       !window.confirm(
-        `Move ${ids.length} candidate${ids.length === 1 ? "" : "s"} to trash? You can restore them later.`,
+        `Переместить кандидата ${ids.length}${ids.length === 1 ? "" : "s"} в корзину? Вы сможете восстановить их позже.`,
       )
     ) {
       return;
@@ -401,12 +401,12 @@ export function CandidatesTable({
       if (result.success) {
         const count = result.count ?? ids.length;
         toast.success(
-          `Moved ${count} candidate${count === 1 ? "" : "s"} to trash.`,
+          `Кандидат ${count}${count === 1 ? "" : "s"} перемещён в корзину.`,
         );
         setSelected(new Set());
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not delete candidates.");
+        toast.error(result.error ?? "Не удалось удалить кандидатов.");
       }
     });
   }
@@ -416,11 +416,11 @@ export function CandidatesTable({
   function exportCsv() {
     const exportRows = filtered.filter((r) => selected.has(r.id));
     if (selectedCount > 0 && exportRows.length === 0) {
-      toast.error("No candidates to export.");
+      toast.error("Нет кандидатов на экспорт.");
       return;
     }
     if (selectedCount > 0) {
-      downloadCsv(`candidates-${new Date().toISOString().slice(0, 10)}.csv`, [
+      downloadCsv(`кандидаты-${new Date().toISOString().slice(0, 10)}.csv`, [
         CSV_HEADERS,
         ...exportRows.map(candidateToCsvRow),
       ]);
@@ -446,7 +446,7 @@ export function CandidatesTable({
         sort: sortKey,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not export candidates.");
+        toast.error(result.error ?? "Не удалось экспортировать кандидатов.");
         return;
       }
       const blob = new Blob([UTF8_BOM + result.csv], { type: "text/csv;charset=utf-8;" });
@@ -456,7 +456,7 @@ export function CandidatesTable({
       link.download = `candidates-${new Date().toISOString().slice(0, 10)}.csv`;
       link.click();
       URL.revokeObjectURL(url);
-      toast.success(`Exported ${result.count.toLocaleString()} candidates.`);
+      toast.success(`Экспортировано ${result.count.toLocaleString("ru-RU")} кандидатов.`);
     });
   }
 
@@ -472,7 +472,7 @@ export function CandidatesTable({
             onKeyDown={(e) => {
               if (e.key === "Enter") navigateWithFilter("q", query.trim());
             }}
-            placeholder="Search candidates by name, email, role or location…"
+            placeholder={"Ищите кандидатов по имени, электронной почте, должности или местоположению…"}
             className="h-11 rounded-full pl-11"
           />
         </div>
@@ -484,8 +484,8 @@ export function CandidatesTable({
           <Download className="size-4" />
           <span className="hidden sm:inline">
             {selectedCount > 0
-              ? `Export selected (${selectedCount})`
-              : "Export CSV"}
+              ? `Экспортировать выбрано (${selectedCount})`
+              : "Экспортировать CSV"}
           </span>
           <span className="sm:hidden">
             {selectedCount > 0 ? `(${selectedCount})` : "CSV"}
@@ -508,38 +508,38 @@ export function CandidatesTable({
       {/* Filter pills */}
       <div className="flex flex-wrap items-center gap-2">
         <FilterPill
-          label="Department"
+          label={"Отдел"}
           value={dept}
           onChange={(value) => { setDept(value); navigateWithFilter("dept", value); }}
           options={departments}
         />
         <FilterPill
-          label="Job"
+          label={"Вакансия"}
           value={role}
           onChange={(value) => { setRole(value); navigateWithFilter("role", value); }}
           options={roles}
         />
         <FilterPill
-          label="Stage"
+          label={"Этап"}
           value={stage}
           onChange={(value) => { setStage(value); navigateWithFilter("stage", value); }}
           options={stages}
         />
         <FilterPill
-          label="Status"
+          label={"Статус"}
           value={status}
           onChange={(value) => { setStatus(value); navigateWithFilter("status", value); }}
           options={["active", "hired", "rejected", "withdrawn"]}
           labelMap={{
-            active: "Active",
-            hired: "Hired",
-            rejected: "Rejected",
-            withdrawn: "Withdrawn",
+            active: "Активные",
+            hired: "Нанят",
+            rejected: "Отказ",
+            withdrawn: "снято",
           }}
         />
         {sources.length > 0 ? (
           <FilterPill
-            label="Source"
+            label={"Источник"}
             value={source}
             onChange={(value) => { setSource(value); navigateWithFilter("source", value); }}
             options={sources}
@@ -547,21 +547,21 @@ export function CandidatesTable({
         ) : null}
         {tagOptions.length > 0 ? (
           <FilterPill
-            label="Tag"
+            label={"Тег"}
             value={tag}
             onChange={(value) => { setTag(value); navigateWithFilter("tag", value); }}
             options={tagOptions}
           />
         ) : null}
         <FilterPill
-          label="Sort"
+          label={"Сортировать"}
           value={sortKey}
           onChange={(v) => { setSortKey(v as SortKey); navigateWithFilter("sort", v); }}
           options={["recent", "oldest", "modified", "name"]}
           labelMap={{
-            recent: "Most recent",
-            oldest: "Oldest",
-            modified: "Last modified",
+            recent: "Сначала новые",
+            oldest: "Самый старый",
+            modified: "Последнее изменение",
             name: "Name A–Z",
           }}
           allValue="recent"
@@ -573,8 +573,7 @@ export function CandidatesTable({
             onClick={clearFilters}
             className="rounded-full text-muted-foreground"
           >
-            Clear
-          </Button>
+            {"Очистить "}</Button>
         ) : null}
         <p className="ml-auto text-sm text-muted-foreground">
           <span className="font-semibold tabular-nums text-foreground">
@@ -586,20 +585,20 @@ export function CandidatesTable({
 
       {pageInfo && (pageInfo.page > 1 || pageInfo.hasNextPage) ? (
         <div className="flex items-center justify-between border-t pt-3 text-sm text-muted-foreground">
-          <span>Page {pageInfo.page} · {pageInfo.total.toLocaleString()} candidates</span>
+          <span>{"Страница "}{pageInfo.page} · {pageInfo.total.toLocaleString("ru-RU")} {"кандидатов"}</span>
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               disabled={pageInfo.page <= 1 || isPending}
               onClick={() => navigateWithFilter("page", String(pageInfo.page - 1))}
-            >Previous</Button>
+            >{"Предыдущий"}</Button>
             <Button
               variant="outline"
               size="sm"
               disabled={!pageInfo.hasNextPage || isPending}
               onClick={() => navigateWithFilter("page", String(pageInfo.page + 1))}
-            >Next</Button>
+            >{"Далее"}</Button>
           </div>
         </div>
       ) : null}
@@ -607,7 +606,7 @@ export function CandidatesTable({
       {/* Bulk bar */}
       {selectedCount > 0 ? (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/25 bg-accent/40 px-3 py-2 duration-200 animate-in fade-in slide-in-from-top-1">
-          <span className="text-sm font-medium">{selectedCount} selected</span>
+          <span className="text-sm font-medium">{selectedCount} {"выбрано"}</span>
           <div className="ml-auto flex flex-wrap gap-2">
             <Button
               size="sm"
@@ -616,8 +615,7 @@ export function CandidatesTable({
               onClick={() => setBulkEmailOpen(true)}
             >
               <Mail className="size-4" />
-              Email
-            </Button>
+              {"Электронная почта "}</Button>
             <Button
               size="sm"
               variant="outline"
@@ -625,8 +623,7 @@ export function CandidatesTable({
               onClick={() => runBulk("hired")}
             >
               <CheckCircle2 className="size-4 text-primary" />
-              Mark hired
-            </Button>
+              {"Отметить как нанятого "}</Button>
             <Button
               size="sm"
               variant="outline"
@@ -634,8 +631,7 @@ export function CandidatesTable({
               onClick={() => runBulk("rejected")}
             >
               <XCircle className="size-4 text-destructive" />
-              Reject
-            </Button>
+              {"Отклонить "}</Button>
             <Button
               size="sm"
               variant="outline"
@@ -643,8 +639,7 @@ export function CandidatesTable({
               onClick={() => runBulk("active")}
             >
               <RotateCcw className="size-4" />
-              Reactivate
-            </Button>
+              {"Повторно активировать "}</Button>
             <Button
               size="sm"
               variant="outline"
@@ -653,15 +648,13 @@ export function CandidatesTable({
               onClick={runBulkDelete}
             >
               <Trash2 className="size-4" />
-              Delete
-            </Button>
+              {"Удалить "}</Button>
             <Button
               size="sm"
               variant="ghost"
               onClick={() => setSelected(new Set())}
             >
-              Clear
-            </Button>
+              {"Очистить "}</Button>
           </div>
         </div>
       ) : null}
@@ -674,17 +667,14 @@ export function CandidatesTable({
             <Checkbox
               checked={allVisibleSelected}
               onCheckedChange={toggleAll}
-              aria-label="Select all"
+              aria-label={"Выбрать все"}
             />
             <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              Candidate
-            </span>
+              {"Кандидат "}</span>
             <span className="hidden text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:block">
-              Pipeline
-            </span>
+              {"Воронка найма "}</span>
             <span className="hidden text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:block">
-              Status
-            </span>
+              {"Статус "}</span>
             <span aria-hidden className="hidden sm:block" />
           </div>
 
@@ -713,7 +703,7 @@ export function CandidatesTable({
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => toggleOne(row.id)}
-                      aria-label={`Select ${row.fullName}`}
+                      aria-label={`Выберите ${row.fullName}`}
                     />
                   </div>
 
@@ -747,20 +737,18 @@ export function CandidatesTable({
                         {row.inPool ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700">
                             <BookmarkSimpleIcon className="size-3 fill-current" />
-                            In Pool
-                          </span>
+                            {"В кадровом резерве "}</span>
                         ) : null}
                         {row.isReferred ? (
                           <ReferralBadge featured={row.isFeaturedReferral} />
                         ) : null}
                         {row.hasOpenPrivacyRequest ? (
                           <span
-                            title="Has a pending privacy request awaiting review"
+                            title={"Имеет ожидающий рассмотрения запрос на конфиденциальность"}
                             className="inline-flex items-center gap-1 rounded-full bg-clay/10 px-1.5 py-0.5 text-[11px] font-semibold text-clay"
                           >
                             <ShieldAlert className="size-3" />
-                            Privacy request
-                          </span>
+                            {"Запрос конфиденциальности "}</span>
                         ) : null}
                       </div>
                       <p className="truncate text-sm text-muted-foreground">
@@ -806,8 +794,7 @@ export function CandidatesTable({
                       </>
                     ) : (
                       <p className="text-xs text-muted-foreground">
-                        No application
-                      </p>
+                        {"Нет отклика "}</p>
                     )}
                   </div>
 
@@ -848,19 +835,18 @@ export function CandidatesTable({
                 <EmptyState
                   variant="filtered"
                   icon={Search}
-                  title="Nobody matches these filters"
-                  hint="Widen the search, or clear the filters to see everyone again."
+                  title={"Никто не соответствует этим фильтрам"}
+                  hint={"Расширьте поиск или очистите фильтры, чтобы снова видеть всех."}
                   action={
                     <Button variant="outline" size="sm" onClick={clearFilters}>
-                      Clear filters
-                    </Button>
+                      {"Очистить фильтры "}</Button>
                   }
                 />
               ) : (
                 <EmptyState
                   icon={Users}
-                  title="No candidates yet"
-                  hint="They arrive when someone applies through your career page, or you add one by hand."
+                  title={"Кандидатов пока нет"}
+                  hint={"Они приходят, когда кто-то подает заявку через вашу страницу карьеры или вы добавляете ее вручную."}
                 />
               )
             ) : null}
@@ -921,7 +907,7 @@ function RowActions({
           variant="ghost"
           size="icon"
           className="size-8 text-muted-foreground"
-          aria-label={`Actions for ${row.fullName}`}
+          aria-label={`Действия для ${row.fullName}`}
           disabled={disabled}
         >
           <MoreHorizontal className="size-4" />
@@ -930,36 +916,31 @@ function RowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onSelect={onView}>
           <User className="size-4" />
-          View profile
-        </DropdownMenuItem>
+          {"Посмотреть профиль "}</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => onStatus("hired")}>
           <CheckCircle2 className="size-4 text-primary" />
-          Mark hired
-        </DropdownMenuItem>
+          {"Отметить как нанятого "}</DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"
           onSelect={() => onStatus("rejected")}
         >
           <XCircle className="size-4" />
-          Reject
-        </DropdownMenuItem>
+          {"Отклонить "}</DropdownMenuItem>
         <DropdownMenuItem onSelect={() => onStatus("active")}>
           <RotateCcw className="size-4" />
-          Reactivate
-        </DropdownMenuItem>
+          {"Повторно активировать "}</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={onTogglePool}>
           <BookmarkSimpleIcon
             className={cn("size-4", row.inPool && "fill-current")}
           />
-          {row.inPool ? "Remove from Pool" : "Add to Pool"}
+          {row.inPool ? "Удалить из пула" : "Добавить в пул"}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onSelect={onDelete}>
           <Trash2 className="size-4" />
-          Delete
-        </DropdownMenuItem>
+          {"Удалить "}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

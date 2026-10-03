@@ -33,29 +33,29 @@ const PROVIDERS: ProviderInfo[] = [
   {
     id: "google",
     name: "Google Workspace",
-    description: "Allow team members to sign in with their Google account.",
+    description: "Разрешить членам команды входить в свою учетную запись Google.",
     docsUrl: "https://console.cloud.google.com/apis/credentials",
-    docsLabel: "Google Cloud Console",
+    docsLabel: "Облачная консоль Google",
     clientIdPlaceholder: "123456789.apps.googleusercontent.com",
     environmentVariables: "GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET",
   },
   {
     id: "microsoft",
     name: "Microsoft / Entra ID",
-    description: "Allow team members to sign in with their Microsoft account.",
+    description: "Разрешите членам команды входить в систему, используя свою учетную запись Microsoft.",
     docsUrl:
       "https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps",
-    docsLabel: "Azure Portal",
-    clientIdPlaceholder: "Application (client) ID, e.g. a UUID",
+    docsLabel: "Лазурный портал",
+    clientIdPlaceholder: "Идентификатор приложения (клиента), например. UUID",
     environmentVariables: "MICROSOFT_CLIENT_ID / MICROSOFT_CLIENT_SECRET",
   },
   {
     id: "github",
     name: "GitHub",
-    description: "Allow team members to sign in with their GitHub account.",
+    description: "Разрешите членам команды входить в систему, используя свою учетную запись GitHub.",
     docsUrl: "https://github.com/settings/developers",
-    docsLabel: "GitHub Developer Settings",
-    clientIdPlaceholder: "OAuth App Client ID, e.g. Ov23li...",
+    docsLabel: "Настройки разработчика GitHub",
+    clientIdPlaceholder: "Идентификатор клиента приложения OAuth, например. Ов23ли...",
     environmentVariables: "GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET",
   },
 ];
@@ -96,11 +96,11 @@ export function SsoConfigDrawer({
     startSave(async () => {
       // For new configs, require both fields. For editing, allow secret to be empty (keep existing).
       if (!clientId.trim()) {
-        toast.error("Client ID is required.");
+        toast.error("Требуется идентификатор клиента.");
         return;
       }
       if (!isEditing && !clientSecret.trim()) {
-        toast.error("Client Secret is required for new configurations.");
+        toast.error("Секрет клиента необходим для новых конфигураций.");
         return;
       }
       if (isEditing && !clientSecret.trim()) {
@@ -116,11 +116,11 @@ export function SsoConfigDrawer({
       });
 
       if (!result.ok) {
-        toast.error(result.error ?? "Failed to save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
 
-      toast.success(`${info.name} configured successfully.`);
+      toast.success(`${info.name} настроен успешно.`);
       handleOpenChange(false);
       router.refresh();
     });
@@ -131,10 +131,10 @@ export function SsoConfigDrawer({
     startDelete(async () => {
       const result = await deleteOAuthProviderAction(existingConfig.id);
       if (!result.ok) {
-        toast.error(result.error ?? "Failed to delete.");
+        toast.error(result.error ?? "Не удалось удалить.");
         return;
       }
-      toast.success(`${info.name} configuration removed.`);
+      toast.success(`Конфигурация ${info.name} удалена.`);
       handleOpenChange(false);
       router.refresh();
     });
@@ -148,7 +148,7 @@ export function SsoConfigDrawer({
     >
       <SheetTrigger asChild>
         <Button variant="outline" size="sm">
-          {isEditing ? "Configure" : "Set up"}
+          {isEditing ? "Настроить" : "Настройка"}
         </Button>
       </SheetTrigger>
       <DrawerLayout
@@ -168,19 +168,16 @@ export function SsoConfigDrawer({
                 ) : (
                   <Trash2 className="size-4" />
                 )}
-                Remove
-              </Button>
+                {"Удалить "}</Button>
               <Button
                 variant="outline"
                 disabled={saving}
                 onClick={() => handleOpenChange(false)}
               >
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
               <Button onClick={save} disabled={saving || !clientId.trim()}>
                 {saving ? <SpinnerIcon className="size-4" /> : null}
-                Save
-              </Button>
+                {"Сохранить "}</Button>
             </>
           ) : (
             <>
@@ -189,15 +186,13 @@ export function SsoConfigDrawer({
                 disabled={saving}
                 onClick={() => handleOpenChange(false)}
               >
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
               <Button
                 onClick={save}
                 disabled={saving || !clientId.trim() || !clientSecret.trim()}
               >
                 {saving ? <SpinnerIcon className="size-4" /> : null}
-                Save
-              </Button>
+                {"Сохранить "}</Button>
             </>
           )
         }
@@ -211,12 +206,11 @@ export function SsoConfigDrawer({
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <ExternalLink className="size-3" />
-            Open {info.docsLabel} to create OAuth credentials
-          </a>
+            {"Открыта "}{info.docsLabel} {"для создания учетных данных OAuth "}</a>
 
           {/* Client ID */}
           <div className="space-y-2">
-            <Label htmlFor={`client-id-${provider}`}>Client ID</Label>
+            <Label htmlFor={`client-id-${provider}`}>{"Идентификатор клиента"}</Label>
             <Input
               id={`client-id-${provider}`}
               value={clientId}
@@ -225,18 +219,16 @@ export function SsoConfigDrawer({
               autoComplete="off"
             />
             <p className="text-xs text-muted-foreground">
-              Server fallback: <code>{info.environmentVariables}</code>
+              {"Резервный сервер: "}<code>{info.environmentVariables}</code>
             </p>
           </div>
 
           {/* Client Secret */}
           <div className="space-y-2">
             <Label htmlFor={`client-secret-${provider}`}>
-              Client Secret
-              {isEditing && !clientSecret && (
+              {"Секрет клиента "}{isEditing && !clientSecret && (
                 <span className="ml-2 text-xs text-muted-foreground">
-                  (leave empty to keep current)
-                </span>
+                  {"(оставьте пустым, чтобы быть в курсе) "}</span>
               )}
             </Label>
             <div className="relative">
@@ -245,7 +237,7 @@ export function SsoConfigDrawer({
                 type={showSecret ? "text" : "password"}
                 value={clientSecret}
                 onChange={(e) => setClientSecret(e.target.value)}
-                placeholder={isEditing ? "••••••••" : "Enter client secret"}
+                placeholder={isEditing ? "••••••••" : "Введите секрет клиента"}
                 autoComplete="off"
               />
               <button
@@ -270,10 +262,9 @@ export function SsoConfigDrawer({
                 onCheckedChange={(v) => setEnabled(v === true)}
               />
               <span className="min-w-0">
-                <span className="block text-sm font-medium">Enabled</span>
+                <span className="block text-sm font-medium">{"Включено"}</span>
                 <span className="mt-0.5 block text-xs text-muted-foreground">
-                  Allow users to sign in with this provider
-                </span>
+                  {"Разрешить пользователям входить в систему с помощью этого провайдера "}</span>
               </span>
             </label>
           )}
@@ -281,7 +272,7 @@ export function SsoConfigDrawer({
           {/* Callback URL hint */}
           <div className="rounded-lg bg-muted/50 px-3 py-2.5">
             <p className="text-xs font-medium text-muted-foreground">
-              Callback URL (set this in {info.docsLabel}):
+              {"URL обратного вызова (установите это в "}{info.docsLabel}):
             </p>
             <code className="mt-1 block break-all text-xs font-mono text-foreground">
               {typeof window !== "undefined" ? window.location.origin : ""}

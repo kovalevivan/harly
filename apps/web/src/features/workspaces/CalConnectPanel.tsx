@@ -62,13 +62,13 @@ export function CalConnectPanel({
     : "neutral";
   const statusLabel = status.hasApiKey
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   function toggleEnabled(next: boolean) {
     if (!status.hasApiKey && next) {
-      toast.error("Add a Cal.com API key first.");
+      toast.error("Сначала добавьте ключ API Cal.com.");
       return;
     }
     startToggle(async () => {
@@ -76,10 +76,10 @@ export function CalConnectPanel({
         ? await saveCalSettingsAction({ enabled: true })
         : await disableCalAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
-      toast.success(next ? "Cal.com enabled" : "Cal.com disabled");
+      toast.success(next ? "Cal.com включен" : "Cal.com отключен");
       router.refresh();
     });
   }
@@ -109,9 +109,9 @@ export function CalConnectPanel({
                 )}
                 {status.hasApiKey
                   ? open
-                    ? "Hide settings"
-                    : "Manage"
-                  : "Connect"}
+                    ? "Скрыть настройки"
+                    : "Управление"
+                  : "Подключиться"}
               </Button>
               {status.hasApiKey ? (
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -119,10 +119,10 @@ export function CalConnectPanel({
                     checked={status.enabled}
                     disabled={togglePending}
                     onCheckedChange={toggleEnabled}
-                    aria-label="Enable Cal.com"
+                    aria-label={"Включить Cal.com"}
                   />
                   <span className="text-muted-foreground">
-                    {status.enabled ? "On" : "Off"}
+                    {status.enabled ? "On" : "Выкл."}
                   </span>
                 </label>
               ) : null}
@@ -135,28 +135,26 @@ export function CalConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on
-            the server to store the Cal.com key.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере для хранения ключа Cal.com. "}</p>
         </div>
       ) : null}
 
       {status.hasApiKey ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <StatCell label="Booking page">
+            <StatCell label={"Страница бронирования"}>
               <span className="truncate text-muted-foreground">
-                {status.bookingUrl ?? "Not set"}
+                {status.bookingUrl ?? "Не установлено"}
               </span>
             </StatCell>
-            <StatCell label="Event type">
+            <StatCell label={"Тип события"}>
               <span className="font-mono text-[13px]">
                 {status.defaultEventTypeId
                   ? `#${status.defaultEventTypeId}`
-                  : "Not configured"}
+                  : "Не настроено"}
               </span>
             </StatCell>
-            <StatCell label="Webhook">
+            <StatCell label={"Вебхук"}>
               <WebhookCell canEdit={canEdit} status={status} />
             </StatCell>
           </div>
@@ -193,16 +191,16 @@ function WebhookCell({
     startRegister(async () => {
       const result = await registerCalWebhookAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not register webhook.");
+        toast.error(result.error ?? "Не удалось зарегистрировать вебхук.");
         return;
       }
-      toast.success("Webhook registered with Cal.com");
+      toast.success("Вебхук зарегистрирован на Cal.com");
       router.refresh();
     });
   }
 
   if (!canEdit) {
-    return <span>{status.hasWebhookSecret ? "Active" : "Not set"}</span>;
+    return <span>{status.hasWebhookSecret ? "Активные" : "Не установлено"}</span>;
   }
 
   return (
@@ -217,7 +215,7 @@ function WebhookCell({
       ) : (
         <WebhooksDuotoneIcon className="size-3.5" />
       )}
-      {status.hasWebhookSecret ? "Re-register" : "Register"}
+      {status.hasWebhookSecret ? "Re-register" : "Зарегистрироваться"}
     </button>
   );
 }
@@ -248,11 +246,11 @@ function CalConnectForm({
       const result = await testCalConnectionAction({ apiKey, baseUrl });
       if (result.ok) {
         setTest({ kind: "ok" });
-        toast.success("Cal.com reachable with that key");
+        toast.success("Cal.com доступен с помощью этого ключа");
       } else {
         setTest({
           kind: "error",
-          message: result.error ?? "Could not reach Cal.com.",
+          message: result.error ?? "Не удалось связаться с Cal.com.",
         });
       }
     });
@@ -268,10 +266,10 @@ function CalConnectForm({
         defaultEventTypeId: eventTypeId || undefined,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Cal.com settings saved");
+      toast.success("Настройки Cal.com сохранены.");
       onSaved();
     });
   }
@@ -279,7 +277,7 @@ function CalConnectForm({
   function copyWebhook() {
     if (!webhookUrl) return;
     void navigator.clipboard.writeText(webhookUrl);
-    toast.success("Webhook URL copied");
+    toast.success("URL-адрес вебхука скопирован.");
   }
 
   const canTest = Boolean(apiKey.trim()) || status.hasApiKey;
@@ -289,11 +287,10 @@ function CalConnectForm({
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            {status.hasApiKey ? "Manage connection" : "Connect Cal.com"}
+            {status.hasApiKey ? "Управление подключением" : "Подключите Cal.com"}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Your API key is encrypted at rest and never shown again.
-          </p>
+            {"Ваш ключ API зашифрован и никогда больше не отображается. "}</p>
         </div>
         <a
           href="https://cal.com/docs/api-reference/v2/introduction"
@@ -301,14 +298,13 @@ function CalConnectForm({
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pine transition-colors hover:text-pine-strong"
         >
-          API docs
-          <ArrowUpRightIcon className="size-3.5" />
+          {"Документация по API "}<ArrowUpRightIcon className="size-3.5" />
         </a>
       </div>
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="cal-key">API key</Label>
+          <Label htmlFor="cal-key">{"API-ключ"}</Label>
           <Input
             id="cal-key"
             type="password"
@@ -319,27 +315,26 @@ function CalConnectForm({
             }}
             placeholder={
               status.hasApiKey
-                ? "•••••••• (stored, leave blank to keep)"
-                : "cal_live_…"
+                ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
+                : "кал_лайв_…"
             }
             autoComplete="off"
           />
           <p className="text-xs text-muted-foreground">
-            Cal.com → Settings → Developer →{" "}
+            {"Cal.com → Настройки → Разработчик →"}{" "}
             <a
               href="https://app.cal.com/settings/developer/api-keys"
               target="_blank"
               rel="noopener noreferrer"
               className="underline underline-offset-2 hover:text-foreground"
             >
-              API keys
-            </a>
+              {"Ключи API "}</a>
             . Needs booking + webhook scopes.
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="cal-booking-url">Booking page URL</Label>
+          <Label htmlFor="cal-booking-url">{"URL страницы бронирования"}</Label>
           <Input
             id="cal-booking-url"
             value={bookingUrl}
@@ -347,13 +342,12 @@ function CalConnectForm({
             placeholder="https://cal.com/your-team/interview"
           />
           <p className="text-xs text-muted-foreground">
-            Public link candidates use to pick a slot. Prefilled per candidate.
-          </p>
+            {"Кандидаты используют публичную ссылку для выбора места. Заполняется заранее для каждого кандидата. "}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="cal-event">Default event type ID</Label>
+            <Label htmlFor="cal-event">{"Идентификатор типа события по умолчанию"}</Label>
             <Input
               id="cal-event"
               inputMode="numeric"
@@ -363,7 +357,7 @@ function CalConnectForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cal-base">API base URL</Label>
+            <Label htmlFor="cal-base">{"Базовый URL API"}</Label>
             <Input
               id="cal-base"
               value={baseUrl}
@@ -376,7 +370,7 @@ function CalConnectForm({
 
         {webhookUrl ? (
           <div className="space-y-2 rounded-xl border bg-muted/30 p-3">
-            <Label>Webhook URL</Label>
+            <Label>{"URL вебхука"}</Label>
             <div className="flex gap-2">
               <Input readOnly value={webhookUrl} className="font-mono text-xs" />
               <Button
@@ -389,18 +383,15 @@ function CalConnectForm({
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Save first, then “Register webhook” auto-creates it in Cal.com. Or
-              add this URL manually under Cal.com webhooks.
-            </p>
+              {"Сначала сохраните, затем «Зарегистрировать веб-перехватчик» автоматически создаст его на Cal.com. Или добавьте этот URL-адрес вручную в разделе веб-перехватчиков Cal.com. "}</p>
           </div>
         ) : null}
 
         <div className="flex items-center justify-between rounded-xl border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable Cal.com</p>
+            <p className="text-sm font-medium">{"Включить Cal.com"}</p>
             <p className="text-xs text-muted-foreground">
-              When off, scheduling stays manual.
-            </p>
+              {"Если параметр выключен, планирование остается ручным. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -425,12 +416,11 @@ function CalConnectForm({
           ) : test.kind === "ok" ? (
             <CheckCircleIcon className="size-4 text-pine" />
           ) : null}
-          {test.kind === "ok" ? "Connection OK" : "Test connection"}
+          {test.kind === "ok" ? "Соединение в порядке" : "Тестовое соединение"}
         </Button>
         <Button onClick={save} disabled={saving || !status.encryptionReady}>
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save
-        </Button>
+          {"Сохранить "}</Button>
       </div>
     </Card>
   );

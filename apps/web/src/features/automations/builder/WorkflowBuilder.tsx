@@ -284,7 +284,7 @@ export function WorkflowBuilder({
       const result = await getWorkflowAction(workflowId);
       if (!result.ok || !result.workflow?.graph || !result.workflow.layout) {
         toast.error(
-          result.error ?? "The automation was applied, but the updated draft could not be loaded.",
+          result.error ?? "Автоматизация была применена, но обновленный проект загрузить не удалось.",
         );
         return;
       }
@@ -303,7 +303,7 @@ export function WorkflowBuilder({
       setHasUnpublishedChanges(Boolean(result.workflow.hasUnpublishedChanges));
       setPublishIssues([]);
       commitSave(initialSaveState(navigator.onLine, false));
-      toast.success("Automation updated in the builder.");
+      toast.success("Обновлена автоматизация в конструкторе.");
     },
     [commitSave],
   );
@@ -377,21 +377,21 @@ export function WorkflowBuilder({
           saveConflict(
             saveRef.current,
             generation,
-            result.error ?? "This draft was saved elsewhere.",
+            result.error ?? "Этот черновик был сохранен в другом месте.",
             result.workflow?.draftRevision ?? null,
           ),
         );
-        toast.error(result.error ?? "This draft was saved elsewhere.");
+        toast.error(result.error ?? "Этот черновик был сохранен в другом месте.");
         return false;
       }
       commitSave(
         saveFailed(
           saveRef.current,
           generation,
-          result.error ?? "Could not save.",
+          result.error ?? "Не удалось сохранить.",
         ),
       );
-      toast.error(result.error ?? "Could not save.");
+      toast.error(result.error ?? "Не удалось сохранить.");
       return false;
     } catch (error) {
       const aborted =
@@ -400,7 +400,7 @@ export function WorkflowBuilder({
         saveFailed(
           saveRef.current,
           generation,
-          error instanceof Error ? error.message : "Could not save.",
+          error instanceof Error ? error.message : "Не удалось сохранить.",
           aborted,
         ),
       );
@@ -414,7 +414,7 @@ export function WorkflowBuilder({
               saveConflict(
                 saveRef.current,
                 generation,
-                "The server may already have a newer revision. Compare before retrying.",
+                "Возможно, на сервере уже установлена ​​более новая версия. Сравните, прежде чем повторять попытку.",
                 latest.workflow.draftRevision,
               ),
             );
@@ -428,7 +428,7 @@ export function WorkflowBuilder({
           }
         }
       }
-      toast.error("Could not save.");
+      toast.error("Не удалось сохранить.");
       return false;
     }
   }
@@ -532,14 +532,14 @@ export function WorkflowBuilder({
     startSave(async () => {
       if (!(await flushPendingSave())) {
         toast.error(
-          "Save the latest draft before changing its approval or publish status.",
+          "Сохраните последний черновик, прежде чем менять его статус утверждения или публикации.",
         );
         return;
       }
       const currentDraft = draftRef.current;
       if (!currentDraft.id || currentDraft.draftRevision === undefined) {
         toast.error(
-          "Save the recipe before changing its approval or publish status.",
+          "Сохраните рецепт, прежде чем менять его статус одобрения или публикации.",
         );
         return;
       }
@@ -564,14 +564,14 @@ export function WorkflowBuilder({
               saveConflict(
                 saveRef.current,
                 saveRef.current.dirtyGeneration,
-                result.error ?? "This draft changed elsewhere.",
+                result.error ?? "Этот проект изменился в другом месте.",
                 latest.workflow.draftRevision,
               ),
             );
             setConflictOpen(true);
           }
         }
-        toast.error(result.error ?? "Could not update workflow state.");
+        toast.error(result.error ?? "Не удалось обновить состояние рабочего процесса.");
         return;
       }
       setPublishIssues([]);
@@ -598,7 +598,7 @@ export function WorkflowBuilder({
                 className="group inline-flex items-center gap-2 rounded-full border border-border bg-pure-snow/80 py-1.5 pl-2.5 pr-3.5 text-xs font-medium text-foreground shadow-xs transition-all duration-150 hover:bg-soft-kraft active:scale-[0.98]"
               >
                 <ArrowLeft className="size-4 transition-transform duration-150 group-hover:-translate-x-0.5" />
-                <span className="hidden sm:inline">Back to automations</span>
+                <span className="hidden sm:inline">{"Вернемся к автоматизации"}</span>
               </button>
             }
             center={
@@ -610,8 +610,7 @@ export function WorkflowBuilder({
                   </span>
                 ) : (
                   <span className="font-display inline-flex items-center rounded-full border border-dashed border-border px-3 py-1 text-xs font-medium text-soft-ink">
-                    New automation
-                  </span>
+                    {"Новая автоматизация "}</span>
                 )}
                 <input
                   value={draft.name}
@@ -620,9 +619,9 @@ export function WorkflowBuilder({
                       d.name = e.target.value;
                     })
                   }
-                  placeholder="Untitled automation"
+                  placeholder={"Без названия автоматизация"}
                   className="font-display w-[min(34vw,280px)] truncate rounded-full border border-transparent bg-transparent px-3 py-1 text-sm font-semibold text-foreground outline-none transition-colors duration-150 ease-out placeholder:font-medium placeholder:text-quiet-mist hover:border-border focus:border-foreground/30 focus:bg-soft-kraft/40"
-                  aria-label="Automation name"
+                  aria-label={"Имя автоматизации"}
                 />
               </div>
             }
@@ -639,7 +638,7 @@ export function WorkflowBuilder({
                   )}
                 >
                   {hasUnpublishedChanges && status !== "draft"
-                    ? `${status} · edits`
+                    ? `${status} · правки`
                     : status}
                 </span>
                 {draft.id &&
@@ -652,7 +651,7 @@ export function WorkflowBuilder({
                         runGovernanceAction(
                           (id, revision) =>
                             requestWorkflowApprovalAction(id, revision),
-                          "Approval requested.",
+                          "Запрошено одобрение.",
                           status,
                           false,
                           true,
@@ -661,8 +660,7 @@ export function WorkflowBuilder({
                       disabled={saving}
                       className="hidden text-xs font-medium text-soft-ink hover:text-foreground lg:inline"
                     >
-                      Request approval
-                    </button>
+                      {"Запросить одобрение "}</button>
                   )}
                 {draft.id &&
                   (status === "draft" || hasUnpublishedChanges) &&
@@ -673,7 +671,7 @@ export function WorkflowBuilder({
                       onClick={() =>
                         runGovernanceAction(
                           (id, revision) => approveWorkflowAction(id, revision),
-                          "Workflow approved.",
+                          "Рабочий процесс одобрен.",
                           status,
                           true,
                           true,
@@ -682,8 +680,7 @@ export function WorkflowBuilder({
                       disabled={saving}
                       className="hidden rounded-lg border border-border bg-soft-kraft px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-soft-kraft/70 active:scale-[0.98] lg:inline"
                     >
-                      Approve workflow
-                    </button>
+                      {"Утвердить рабочий процесс "}</button>
                   )}
                 {draft.id &&
                   (status === "draft" || hasUnpublishedChanges) &&
@@ -693,7 +690,7 @@ export function WorkflowBuilder({
                       onClick={() =>
                         runGovernanceAction(
                           (id, revision) => publishWorkflowAction(id, revision),
-                          "Workflow published.",
+                          "Рабочий процесс опубликован.",
                           status === "paused" ? "paused" : "published",
                           true,
                           false,
@@ -702,8 +699,7 @@ export function WorkflowBuilder({
                       disabled={saving}
                       className="hidden rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background hover:bg-foreground/90 active:scale-[0.98] lg:inline"
                     >
-                      Publish
-                    </button>
+                      {"Опубликовать "}</button>
                   )}
                 {draft.id && status === "published" && (
                   <button
@@ -711,15 +707,14 @@ export function WorkflowBuilder({
                     onClick={() =>
                       runGovernanceAction(
                         (id) => pauseWorkflowAction(id),
-                        "Workflow paused.",
+                        "Рабочий процесс приостановлен.",
                         "paused",
                       )
                     }
                     disabled={saving}
                     className="hidden text-xs font-medium text-soft-ink hover:text-danger-rust lg:inline"
                   >
-                    Pause
-                  </button>
+                    {"Пауза "}</button>
                 )}
                 {draft.id && status === "paused" && (
                   <button
@@ -727,7 +722,7 @@ export function WorkflowBuilder({
                     onClick={() =>
                       runGovernanceAction(
                         (id) => resumeWorkflowAction(id),
-                        "Automation turned back on.",
+                        "Автоматика снова включилась.",
                         "published",
                         true,
                       )
@@ -735,18 +730,16 @@ export function WorkflowBuilder({
                     disabled={saving}
                     className="hidden text-xs font-medium text-soft-ink hover:text-foreground lg:inline"
                   >
-                    Turn back on
-                  </button>
+                    {"Включите снова "}</button>
                 )}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
                       className="inline-flex rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-soft-ink hover:bg-soft-kraft hover:text-foreground lg:hidden"
-                      aria-label="More workflow actions"
+                      aria-label={"Дополнительные действия рабочего процесса"}
                     >
-                      More
-                    </button>
+                      {"Подробнее "}</button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     {draft.id &&
@@ -758,15 +751,14 @@ export function WorkflowBuilder({
                           runGovernanceAction(
                             (id, revision) =>
                               requestWorkflowApprovalAction(id, revision),
-                            "Approval requested.",
+                            "Запрошено одобрение.",
                             status,
                             false,
                             true,
                           )
                         }
                       >
-                        Request approval
-                      </DropdownMenuItem>
+                        {"Запросить одобрение "}</DropdownMenuItem>
                     ) : null}
                     {draft.id &&
                     (status === "draft" || hasUnpublishedChanges) &&
@@ -777,15 +769,14 @@ export function WorkflowBuilder({
                           runGovernanceAction(
                             (id, revision) =>
                               approveWorkflowAction(id, revision),
-                            "Workflow approved.",
+                            "Рабочий процесс одобрен.",
                             status,
                             true,
                             true,
                           )
                         }
                       >
-                        Approve workflow
-                      </DropdownMenuItem>
+                        {"Утвердить рабочий процесс "}</DropdownMenuItem>
                     ) : null}
                     {draft.id &&
                     (status === "draft" || hasUnpublishedChanges) &&
@@ -795,47 +786,43 @@ export function WorkflowBuilder({
                           runGovernanceAction(
                             (id, revision) =>
                               publishWorkflowAction(id, revision),
-                            "Workflow published.",
+                            "Рабочий процесс опубликован.",
                             status === "paused" ? "paused" : "published",
                             true,
                             false,
                           )
                         }
                       >
-                        Publish
-                      </DropdownMenuItem>
+                        {"Опубликовать "}</DropdownMenuItem>
                     ) : null}
                     {draft.id && status === "published" ? (
                       <DropdownMenuItem
                         onClick={() =>
                           runGovernanceAction(
                             () => pauseWorkflowAction(draft.id!),
-                            "Workflow paused.",
+                            "Рабочий процесс приостановлен.",
                             "paused",
                           )
                         }
                       >
-                        Pause
-                      </DropdownMenuItem>
+                        {"Пауза "}</DropdownMenuItem>
                     ) : null}
                     {draft.id && status === "paused" ? (
                       <DropdownMenuItem
                         onClick={() =>
                           runGovernanceAction(
                             () => resumeWorkflowAction(draft.id!),
-                            "Automation turned back on.",
+                            "Автоматика снова включилась.",
                             "published",
                             true,
                           )
                         }
                       >
-                        Turn back on
-                      </DropdownMenuItem>
+                        {"Включите снова "}</DropdownMenuItem>
                     ) : null}
                     {!draft.id && !hasUnpublishedChanges ? (
                       <DropdownMenuItem disabled>
-                        Save the automation to publish it
-                      </DropdownMenuItem>
+                        {"Сохраните автоматизацию, чтобы опубликовать ее. "}</DropdownMenuItem>
                     ) : null}
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -844,21 +831,18 @@ export function WorkflowBuilder({
                     active={tab === "build"}
                     onClick={() => setTab("build")}
                   >
-                    <Zap className="size-3.5" /> Editor
-                  </TabButton>
+                    <Zap className="size-3.5" /> {"Редактор "}</TabButton>
                   <TabButton
                     active={tab === "test"}
                     onClick={() => setTab("test")}
                   >
-                    <FlaskConical className="size-3.5" /> Test
-                  </TabButton>
+                    <FlaskConical className="size-3.5" /> {"Тест "}</TabButton>
                   {draft.id ? (
                     <TabButton
                       active={tab === "runs"}
                       onClick={() => setTab("runs")}
                     >
-                      <Clock className="size-3.5" /> Runs
-                    </TabButton>
+                      <Clock className="size-3.5" /> {"Бежит "}</TabButton>
                   ) : null}
                 </div>
                 <Tooltip>
@@ -866,7 +850,7 @@ export function WorkflowBuilder({
                     <button
                       type="button"
                       onClick={() => setAiOpen((prev) => !prev)}
-                      aria-label={aiOpen ? "Close Harly AI" : "Ask Harly AI"}
+                      aria-label={aiOpen ? "Закрыть Харли AI" : "Спросите Харли AI"}
                       aria-pressed={aiOpen}
                       className={cn(
                         "flex size-9 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink",
@@ -880,7 +864,7 @@ export function WorkflowBuilder({
                       ) : (
                         <Image
                           src="/harly-ai-animado.svg"
-                          alt="Harly AI"
+                          alt={"Харли ИИ"}
                           width={22}
                           height={22}
                           className="size-[22px] shrink-0"
@@ -889,7 +873,7 @@ export function WorkflowBuilder({
                       )}
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent>{aiOpen ? "Close Harly AI" : "Ask Harly AI"}</TooltipContent>
+                  <TooltipContent>{aiOpen ? "Закрыть Харли AI" : "Спросите Харли AI"}</TooltipContent>
                 </Tooltip>
                 <SaveStatus state={save} onSave={() => void performSave()} isNew={!draft.id} />
               </>
@@ -901,8 +885,7 @@ export function WorkflowBuilder({
           {publishIssues.length > 0 ? (
             <div className="border-b border-danger-rust/25 bg-danger-rust/5 px-4 py-3">
               <p className="text-sm font-medium text-foreground">
-                Can’t publish yet
-              </p>
+                {"Пока не могу опубликовать "}</p>
               <ul className="mt-1 space-y-1">
                 {publishIssues.map((issue) => (
                   <li
@@ -956,7 +939,7 @@ export function WorkflowBuilder({
         open={conflictOpen}
         localGraph={canvas.graph}
         serverGraph={serverGraph}
-        message={save.conflictMessage ?? "This draft was saved elsewhere."}
+        message={save.conflictMessage ?? "Этот черновик был сохранен в другом месте."}
         comparing={comparing}
         lines={diffLines}
         onDismiss={() => setConflictOpen(false)}
@@ -979,7 +962,7 @@ export function WorkflowBuilder({
                 : [
                     {
                       id: "missing",
-                      message: "Could not load the server copy to compare.",
+                      message: "Не удалось загрузить копию сервера для сравнения.",
                     },
                   ],
             );
@@ -997,12 +980,12 @@ export function WorkflowBuilder({
               { graph: canvas.graph, layout: canvas.layout },
             );
             if (result.ok && result.workflow) {
-              toast.success("Copied your edits into a new recipe.");
+              toast.success("Скопировал ваши изменения в новый рецепт.");
               window.location.assign(
                 `/dashboard/automations/${result.workflow.id}`,
               );
             } else {
-              toast.error(result.error ?? "Could not copy this draft.");
+              toast.error(result.error ?? "Не удалось скопировать этот черновик.");
             }
           });
         }}
@@ -1032,7 +1015,7 @@ export function WorkflowBuilder({
           })}
           surfaceContext={{
             kind: "section",
-            label: draft.name || "Automation Builder",
+            label: draft.name || "Конструктор автоматизации",
             path: draft.id ? `/dashboard/automations/${draft.id}` : "/dashboard/automations/new",
           }}
           onAutomationApplied={handleAutomationApplied}
@@ -1148,17 +1131,16 @@ function WorkflowMetrics({ workflowId }: { workflowId: string }) {
   return (
     <section>
       <h2 className="font-display text-sm font-semibold text-foreground">
-        Recent activity
-      </h2>
+        {"Недавняя активность "}</h2>
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
-          ["Runs", metrics.total],
+          ["Бежит", metrics.total],
           [
-            "Succeeded",
+            "Удалось",
             metrics.total === 0 ? "—" : `${Math.round(metrics.successRate * 100)}%`,
           ],
-          ["Failed", metrics.failed],
-          ["In progress", metrics.running],
+          ["Не удалось", metrics.failed],
+          ["В процессе", metrics.running],
         ].map(([label, value]) => (
           <div
             key={String(label)}
@@ -1234,13 +1216,11 @@ function VersionHistory({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-sm font-semibold text-foreground">
-            Version history
-          </h2>
+            {"История версий "}</h2>
           <p className="mt-1 text-xs text-soft-ink">
-            Immutable definitions used for audit and rollback.
-          </p>
+            {"Неизменяемые определения, используемые для аудита и отката. "}</p>
         </div>
-        <span className="text-xs text-soft-ink">Current v{currentVersion}</span>
+        <span className="text-xs text-soft-ink">{"Текущий v"}{currentVersion}</span>
       </div>
       <div className="mt-4 space-y-2">
         {versions.map((version) => (
@@ -1258,22 +1238,22 @@ function VersionHistory({
               className="flex w-full items-center justify-between text-left"
             >
               <span className="text-sm font-medium text-foreground">
-                v{version.version} · {version.triggerEvent}
+                {"в"}{version.version} · {version.triggerEvent}
               </span>
               <span className="text-xs text-soft-ink">
-                {version.publishedAt ? "Published" : "Draft"}
+                {version.publishedAt ? "Опубликовано" : "Черновик"}
               </span>
             </button>
             {selected === version.version && (
               <div className="mt-3 border-t border-hairline-c pt-3 text-xs text-soft-ink">
                 <p>
                   {Array.isArray(version.actions) ? version.actions.length : 0}{" "}
-                  actions ·{" "}
+                  {"действия ·"}{" "}
                   {Array.isArray(version.conditions)
                     ? version.conditions.length
                     : 0}{" "}
-                  conditions · created{" "}
-                  {new Date(version.createdAt).toLocaleString()}
+                  {"условия · создано"}{" "}
+                  {new Date(version.createdAt).toLocaleString("ru-RU")}
                 </p>
                 <p
                   className={cn(
@@ -1282,8 +1262,8 @@ function VersionHistory({
                   )}
                 >
                   {differs
-                    ? "Differs from current draft"
-                    : "Matches current draft"}
+                    ? "Отличается от текущего проекта"
+                    : "Соответствует текущему проекту"}
                 </p>
                 {version.version !== currentVersion && (
                   <button
@@ -1296,17 +1276,17 @@ function VersionHistory({
                           version.version,
                         );
                         if (result.ok) {
-                          toast.success(`Restored version ${version.version}.`);
+                          toast.success(`Восстановленная версия ${version.version}.`);
                           window.location.assign(
                             `/dashboard/automations/${workflowId}`,
                           );
                         } else
-                          toast.error(result.error ?? "Could not roll back.");
+                          toast.error(result.error ?? "Не удалось откатиться назад.");
                       });
                     }}
                     className="mt-2 rounded-md border border-border px-2.5 py-1.5 font-medium text-foreground hover:bg-soft-kraft disabled:opacity-50"
                   >
-                    Roll back to v{version.version}
+                    {"Откатиться на v"}{version.version}
                   </button>
                 )}
               </div>
@@ -1365,12 +1345,9 @@ function RunsView({
       <WorkflowMetrics workflowId={workflowId} />
       <section>
         <h2 className="font-display text-sm font-semibold text-foreground">
-          Run history
-        </h2>
+          {"История запуска "}</h2>
         <p className="mt-1 text-xs text-soft-ink">
-          What fired, which action ran, and whether it succeeded. Retry or
-          cancel from a row.
-        </p>
+          {"Что сработало, какое действие было выполнено и удалось ли оно. Повторите попытку или отмените попытку из ряда. "}</p>
         <div className="mt-4">
           <RunsTimeline workflowId={workflowId} members={members} />
         </div>
@@ -1402,11 +1379,9 @@ function TestView({
     <div className="space-y-5">
       <div className="rounded-2xl border border-border bg-warm-paper p-4 shadow-xs">
         <h2 className="font-display text-sm font-semibold text-foreground">
-          Simulate workflow execution
-        </h2>
+          {"Имитировать выполнение рабочего процесса "}</h2>
         <p className="mt-1 text-xs text-soft-ink">
-          Test your workflow path with sample candidate data. No messages or emails will be sent, and no real candidate data is changed.
-        </p>
+          {"Проверьте свой рабочий процесс с помощью образцов данных кандидатов. Никакие сообщения или электронные письма не будут отправлены, и никакие реальные данные кандидата не будут изменены. "}</p>
       </div>
       <DryRunPanel
         trigger={trigger}

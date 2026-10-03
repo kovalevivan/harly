@@ -15,10 +15,10 @@ import { UserAvatar } from "@/components/ui/UserAvatar";
 import { cn } from "@/lib/utils";
 
 const RECOMMENDATION_META = {
-  strong_yes: { label: "Strong yes", className: "bg-primary/10 text-primary" },
-  yes: { label: "Yes", className: "bg-primary/10 text-primary" },
-  maybe: { label: "Maybe", className: "bg-clay/15 text-clay" },
-  no: { label: "No", className: "bg-destructive/10 text-destructive" },
+  strong_yes: { label: "Сильный да", className: "bg-primary/10 text-primary" },
+  yes: { label: "Да", className: "bg-primary/10 text-primary" },
+  maybe: { label: "Может быть", className: "bg-clay/15 text-clay" },
+  no: { label: "Нет", className: "bg-destructive/10 text-destructive" },
 } as const;
 
 const CURRENT_RULES_VERSION = "rules-v3";
@@ -95,8 +95,8 @@ export function JobCandidateRanking({
         if (!result.success) {
           toast.error(
             result.reason === "not_configured"
-              ? "Automatic evaluation is unavailable right now."
-              : result.error ?? "Could not rank applicants.",
+              ? "Автоматическая оценка сейчас недоступна."
+              : result.error ?? "Не удалось ранжировать кандидатов.",
           );
           return;
         }
@@ -108,15 +108,15 @@ export function JobCandidateRanking({
 
       if (totalSucceeded > 0 || totalFailed > 0) {
         toast.success(
-          `Scored ${totalSucceeded} candidate${totalSucceeded === 1 ? "" : "s"}` +
-            (totalFailed > 0 ? ` · ${totalFailed} failed` : ""),
+          `Набрал ${totalSucceeded} кандидат${totalSucceeded === 1 ? "" : "s"}` +
+            (totalFailed > 0 ? ` · ${totalFailed} не удалось` : ""),
         );
       } else {
-        toast.info("Everyone is already scored.");
+        toast.info("Все уже забиты.");
       }
       router.refresh();
     } catch {
-      toast.error("Could not rank applicants. Try again shortly.");
+      toast.error("Не удалось ранжировать кандидатов. Повторите попытку через некоторое время.");
     } finally {
       setRanking(false);
     }
@@ -137,12 +137,11 @@ export function JobCandidateRanking({
           <div className="min-w-0">
             {/* Framed as a suggestion from a colleague, not a verdict. */}
             <p className="text-[14px] font-medium text-near-ink">
-              Harly can suggest an order
-            </p>
+              {"Харли может предложить заказ "}</p>
             <p className="truncate text-[12px] text-soft-ink">
               {unscored === 0
-                ? `All ${scored} active applicant${scored === 1 ? "" : "s"} rated. Yours to overrule.`
-                : `${unscored} of ${activeApplications.length} not rated yet for ${jobTitle}.`}
+                ? `Все активные кандидаты ${scored}${scored === 1 ? "" : "s"} имеют рейтинг. Ваше решение отменить.`
+                : `${unscored} из ${activeApplications.length} еще не оценено для ${jobTitle}.`}
             </p>
           </div>
           {unscored === 0 ? null : (
@@ -158,7 +157,7 @@ export function JobCandidateRanking({
                     ranking && "animate-pulse motion-reduce:animate-none",
                   )}
                 />
-                {ranking ? "Evaluating…" : aiConfigured ? "Rate the rest" : "Evaluate the rest"}
+                {ranking ? "Оценка…" : aiConfigured ? "Оцените остальное" : "Оцените остальное"}
               </Button>
             )}
         </div>
@@ -181,7 +180,7 @@ export function JobCandidateRanking({
               !showOrder && "-rotate-90",
             )}
           />
-          {showOrder ? "Hide suggested order" : "Show suggested order"}
+          {showOrder ? "Скрыть предложенный заказ" : "Показать предлагаемый заказ"}
         </button>
 
         {showOrder ? (
@@ -242,15 +241,14 @@ export function JobCandidateRanking({
                             "text-base font-semibold tabular-nums",
                             scoreTone(application.aiScore),
                           )}
-                          title={`${application.evaluationSource === "rules" ? `Harly Algorithm ${application.evaluationEngineVersion ?? "rules"}` : "Automatic evaluation"}. ${application.aiUsedResume ? "Based on resume + profile" : "Profile only. No readable resume"}`}
+                          title={`${application.evaluationSource === "rules" ? `Алгоритм Харли ${application.evaluationEngineVersion ?? "rules"}` : "Автоматическая оценка"}. ${application.aiUsedResume ? "На основании резюме + профиля" : "Только профиль. Нет читабельного резюме"}`}
                         >
                           {application.aiScore}
                         </span>
                       </>
                     ) : (
                       <Badge variant="outline" className="font-normal text-muted-foreground">
-                        Not evaluated
-                      </Badge>
+                        {"Не оценено "}</Badge>
                     )}
                   </div>
                 </div>
@@ -262,9 +260,7 @@ export function JobCandidateRanking({
         {showOrder && scored > 0 ? (
           <p className="flex items-center gap-1.5 text-[12px] text-soft-ink">
             <FileText className="size-3.5 shrink-0" />
-            Based on each candidate&apos;s resume and answers against this job.
-            Harly can be wrong , you decide.
-          </p>
+            {"На основе резюме каждого кандидата и ответов на данную вакансию. Харли может ошибаться, решать вам. "}</p>
         ) : null}
       </CardContent>
     </Card>
