@@ -27,9 +27,13 @@ function translated(value: string): string {
     const careers = clean.match(/^Careers at (.+)$/);
     const greeting = clean.match(/^Good (morning|afternoon|evening), (.+)!$/);
     const candidates = clean.match(/^(\d+) candidates? in play\.$/);
+    const nextStep = clean.match(/^(\d+) of (\d+) done · Next: (.+)$/);
+    const unread = clean.match(/^Notifications \((\d+) unread\)$/);
     if (careers) replacement = `Вакансии в ${careers[1]}`;
     else if (greeting) replacement = `Здравствуйте, ${greeting[2]}!`;
     else if (candidates) replacement = `Кандидатов в работе: ${candidates[1]}.`;
+    else if (nextStep) replacement = `Выполнено ${nextStep[1]} из ${nextStep[2]} · Далее: ${catalogue.get(nextStep[3]) ?? nextStep[3]}`;
+    else if (unread) replacement = `Уведомления: ${unread[1]} непрочитанных`;
   }
   if (!replacement) return value;
   const leading = value.match(/^\s*/)?.[0] ?? "";
@@ -105,7 +109,7 @@ export function LanguageController() {
         timer = null;
         for (const node of changed) translateTree(node, language);
         changed.clear();
-      }, 250);
+      }, 1500);
     });
     const start = () => {
       const apply = () => {
@@ -115,7 +119,7 @@ export function LanguageController() {
         observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: [...attributes] });
       };
       if (initialPassComplete.current) apply();
-      else timer = setTimeout(apply, 1500);
+      else timer = setTimeout(apply, 3000);
     };
     if (document.readyState === "complete") start();
     else window.addEventListener("load", start, { once: true });
