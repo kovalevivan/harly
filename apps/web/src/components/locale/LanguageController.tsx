@@ -83,7 +83,9 @@ export function LanguageController() {
   const initialPassComplete = useRef(false);
   useEffect(() => {
     const saved = document.cookie.match(/(?:^|; )harly_lang=(ru|en)(?:;|$)/)?.[1];
-    if (saved === "en") setLanguage("en");
+    if (saved !== "en") return;
+    const frame = requestAnimationFrame(() => setLanguage("en"));
+    return () => cancelAnimationFrame(frame);
   }, []);
   useEffect(() => {
     document.documentElement.lang = language;
