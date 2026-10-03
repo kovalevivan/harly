@@ -35,9 +35,9 @@ export default async function PipelinePage({ searchParams }: PipelinePageProps) 
     return (
       <div className="space-y-4">
         <EmptyState
-          title="No jobs yet"
-          description="Create a job to start building your pipeline."
-          action={{ href: "/dashboard/jobs/new", label: "Create job" }}
+          title={"Пока нет вакансий"}
+          description={"Создайте задание, чтобы начать строить свой конвейер."}
+          action={{ href: "/dashboard/jobs/new", label: "Создать вакансию" }}
         />
       </div>
     );
@@ -59,8 +59,8 @@ export default async function PipelinePage({ searchParams }: PipelinePageProps) 
       <div className="space-y-4">
         {toolbar}
         <EmptyState
-          title="No stages configured"
-          description="Add pipeline stages to this job to start tracking candidates."
+          title={"Этапы не настроены"}
+          description={"Добавьте этапы конвейера в эту вакансию, чтобы начать отслеживать кандидатов."}
         />
       </div>
     );
@@ -71,8 +71,8 @@ export default async function PipelinePage({ searchParams }: PipelinePageProps) 
       <div className="space-y-4">
         {toolbar}
         <EmptyState
-          title="No candidates yet"
-          description="Candidates will appear here once they apply."
+          title={"Кандидатов пока нет"}
+          description={"Кандидаты появятся здесь после подачи заявки."}
         />
       </div>
     );

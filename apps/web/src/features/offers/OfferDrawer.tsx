@@ -87,12 +87,12 @@ export function OfferDrawer({
 
   function submit() {
     if (!title.trim()) {
-      toast.error("Give the offer a role title.");
+      toast.error("Дайте предложению название роли.");
       return;
     }
     const salaryAmount = salary.trim() ? Number(salary) : null;
     if (salaryAmount !== null && (!Number.isInteger(salaryAmount) || salaryAmount <= 0)) {
-      toast.error("Salary must be a positive whole number.");
+      toast.error("Заработная плата должна быть положительным целым числом.");
       return;
     }
 
@@ -113,10 +113,10 @@ export function OfferDrawer({
         : await createOffer({ applicationId, ...fields, documentIds });
 
       if (!result.success) {
-        toast.error(result.error ?? "Could not save the offer.");
+        toast.error(result.error ?? "Не удалось сохранить предложение.");
         return;
       }
-      toast.success(offer ? "Offer updated" : "Offer drafted");
+      toast.success(offer ? "Предложение обновлено" : "Предложение составлено");
       onOpenChange(false);
       router.refresh();
     });
@@ -129,21 +129,20 @@ export function OfferDrawer({
   return (
     <Sheet open={open} onOpenChange={onOpenChange} mobilePresentation="bottom-on-mobile">
       <DrawerLayout
-        title={offer ? "Edit offer" : "New offer"}
+        title={offer ? "Изменить предложение" : "Новое предложение"}
         description={
           offer
-            ? "Update the terms of this draft offer."
-            : "Draft the offer terms. You can review before sending."
+            ? "Обновите условия этого проекта предложения."
+            : "Составьте условия предложения. Вы можете просмотреть перед отправкой."
         }
         footer={
           <>
             <SheetClose asChild>
               <Button variant="outline" disabled={isPending}>
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
             </SheetClose>
             <Button onClick={submit} disabled={isPending}>
-              {isPending ? "Saving…" : offer ? "Save changes" : "Create draft"}
+              {isPending ? "Сохранение…" : offer ? "Сохранить изменения" : "Создать черновик"}
             </Button>
           </>
         }
@@ -151,7 +150,7 @@ export function OfferDrawer({
         <div className="space-y-5">
           {!offer && applications.length > 1 ? (
             <div className="space-y-2">
-              <Label>Application</Label>
+              <Label>{"Отклик"}</Label>
               <Select value={applicationId} onValueChange={setApplicationId}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -168,38 +167,38 @@ export function OfferDrawer({
           ) : null}
 
           <div className="space-y-2">
-            <Label htmlFor="offer-title">Role title</Label>
+            <Label htmlFor="offer-title">{"Название роли"}</Label>
             <Input
               id="offer-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Senior Frontend Engineer"
+              placeholder={"Старший фронтенд-инженер"}
             />
           </div>
 
           {!offer && documents.length > 0 ? (
             <div className="space-y-2">
-              <Label>Attach documents</Label>
-              <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={documentQuery} onChange={(event) => setDocumentQuery(event.target.value)} placeholder="Search documents…" className="pl-9" aria-label="Search documents to attach" /></div>
+              <Label>{"Прикрепить документы"}</Label>
+              <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={documentQuery} onChange={(event) => setDocumentQuery(event.target.value)} placeholder={"Поиск документов…"} className="pl-9" aria-label={"Поиск документов для прикрепления"} /></div>
               <div className="max-h-48 divide-y overflow-y-auto rounded-lg border">
-                {matchingDocuments.length === 0 ? <p className="px-3 py-4 text-xs text-muted-foreground">No documents match that search.</p> : matchingDocuments.map((document) => {
+                {matchingDocuments.length === 0 ? <p className="px-3 py-4 text-xs text-muted-foreground">{"Никакие документы не соответствуют этому запросу."}</p> : matchingDocuments.map((document) => {
                   const checked = documentIds.includes(document.id);
                   return (
                     <label key={document.id} className="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm hover:bg-muted/30">
                       <input type="checkbox" checked={checked} onChange={() => setDocumentIds((current) => checked ? current.filter((id) => id !== document.id) : [...current, document.id])} />
                       <span className="min-w-0 flex-1 truncate">{document.name}</span>
-                      <span className="text-xs text-muted-foreground">{document.mimeType === "application/pdf" ? "PDF" : "File"}</span>
+                      <span className="text-xs text-muted-foreground">{document.mimeType === "application/pdf" ? "PDF" : "Файл"}</span>
                     </label>
                   );
                 })}
               </div>
-              <p className="text-xs text-muted-foreground">Selected files will be associated with this offer and available when the offer is sent.</p>
+              <p className="text-xs text-muted-foreground">{"Выбранные файлы будут связаны с этим предложением и доступны после отправки предложения."}</p>
             </div>
           ) : null}
 
           <div className="grid grid-cols-[1fr_6rem_7.5rem] gap-2">
             <div className="space-y-2">
-              <Label htmlFor="offer-salary">Salary</Label>
+              <Label htmlFor="offer-salary">{"Зарплата"}</Label>
               <Input
                 id="offer-salary"
                 inputMode="numeric"
@@ -209,7 +208,7 @@ export function OfferDrawer({
               />
             </div>
             <div className="space-y-2">
-              <Label>Currency</Label>
+              <Label>{"Валюта"}</Label>
               <Select value={currency} onValueChange={setCurrency}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -224,7 +223,7 @@ export function OfferDrawer({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Period</Label>
+              <Label>{"Период"}</Label>
               <Select
                 value={period}
                 onValueChange={(v) => setPeriod(v as "annual" | "monthly")}
@@ -233,26 +232,26 @@ export function OfferDrawer({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="annual">Annual</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="annual">{"Ежегодный"}</SelectItem>
+                  <SelectItem value="monthly">{"Ежемесячно"}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="offer-equity">Equity (optional)</Label>
+            <Label htmlFor="offer-equity">{"Акционерный капитал (необязательно)"}</Label>
             <Input
               id="offer-equity"
               value={equity}
               onChange={(e) => setEquity(e.target.value)}
-              placeholder="0.1% over 4 years"
+              placeholder={"0,1% за 4 года"}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-2">
-              <Label htmlFor="offer-start">Start date</Label>
+              <Label htmlFor="offer-start">{"Дата начала"}</Label>
               <Input
                 id="offer-start"
                 type="date"
@@ -261,7 +260,7 @@ export function OfferDrawer({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="offer-expires">Offer expires</Label>
+              <Label htmlFor="offer-expires">{"Срок действия предложения истекает"}</Label>
               <Input
                 id="offer-expires"
                 type="date"
@@ -272,12 +271,12 @@ export function OfferDrawer({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="offer-notes">Notes (optional)</Label>
+            <Label htmlFor="offer-notes">{"Примечания (необязательно)"}</Label>
             <Textarea
               id="offer-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Benefits, signing bonus, conditions…"
+              placeholder={"Преимущества, подписной бонус, условия…"}
               className="min-h-24"
             />
           </div>

@@ -73,11 +73,9 @@ export function ToolLibrary({
     <aside className="flex h-full min-h-0 w-full flex-col bg-warm-paper">
       <div className="border-b border-hairline-c px-3 py-3">
         <p className="font-display text-sm font-semibold text-foreground">
-          Step library
-        </p>
+          {"Библиотека шагов "}</p>
         <p className="mt-1 text-xs leading-relaxed text-soft-ink">
-          Drag onto the canvas, or click to add. Connect steps to define your flow.
-        </p>
+          {"Перетащите на холст или щелкните, чтобы добавить. Соедините шаги, чтобы определить свой поток. "}</p>
         <div className="relative mt-3">
           <label className="flex items-center gap-2 rounded-lg border border-border bg-pure-snow px-3 py-2 focus-within:ring-1 focus-within:ring-foreground/30">
             <Search className="size-3.5 text-soft-ink shrink-0" />
@@ -86,16 +84,16 @@ export function ToolLibrary({
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search steps…"
+              placeholder={"Шаги поиска…"}
               className="w-full bg-transparent text-xs text-foreground outline-none placeholder:text-soft-ink"
-              aria-label="Search steps"
+              aria-label={"Шаги поиска"}
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 className="text-soft-ink hover:text-foreground"
-                aria-label="Clear search"
+                aria-label={"Очистить поиск"}
               >
                 <X className="size-3" />
               </button>
@@ -107,8 +105,7 @@ export function ToolLibrary({
         {!query && frequentlyUsed.length > 0 && (
           <div>
             <p className="font-chrome px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-soft-ink">
-              Frequently used
-            </p>
+              {"Часто используемый "}</p>
             <div className="space-y-1">
               {frequentlyUsed.map((item) => {
                 const Icon = getLibraryItemIcon(item);
@@ -153,14 +150,13 @@ export function ToolLibrary({
 
         {filtered.length === 0 ? (
           <div className="py-8 text-center">
-            <p className="text-xs text-soft-ink">No steps match “{query}”.</p>
+            <p className="text-xs text-soft-ink">{"Нет совпадений шагов »"}{query}”.</p>
             <button
               type="button"
               onClick={() => setQuery("")}
               className="mt-2 text-xs font-medium text-foreground underline underline-offset-2"
             >
-              Clear search
-            </button>
+              {"Очистить поиск "}</button>
           </div>
         ) : (
           groups.map((group) => (
@@ -212,7 +208,7 @@ export function ToolLibrary({
                             <Plus className="size-3 shrink-0 text-soft-ink group-hover:text-foreground transition-colors" />
                           </div>
                           <p className="mt-0.5 text-[11px] leading-tight text-soft-ink line-clamp-1">
-                            {disabled ? "One trigger per automation" : item.blurb}
+                            {disabled ? "Один триггер на автоматизацию" : item.blurb}
                           </p>
                         </div>
                       </button>

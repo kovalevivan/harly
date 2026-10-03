@@ -50,7 +50,7 @@ function Column({
         <button
           type="button"
           onClick={() => handlers.add(status)}
-          aria-label={`Add task to ${TASK_STATUS_LABELS[status]}`}
+          aria-label={`Добавить задачу в ${TASK_STATUS_LABELS[status]}`}
           className="ml-auto rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
           <Plus className="size-4" />
@@ -68,7 +68,7 @@ function Column({
           <div className="flex flex-1 flex-col items-center justify-center gap-1.5 py-12 text-center">
             <Icon className="size-5 text-muted-foreground/40" strokeWidth={1.5} />
             <p className="text-xs text-muted-foreground">
-              {isOver ? "Drop here" : "Drag a card here"}
+              {isOver ? "Перетащите сюда" : "Перетащите карту сюда"}
             </p>
           </div>
         ) : (

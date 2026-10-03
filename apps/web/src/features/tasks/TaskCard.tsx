@@ -44,7 +44,7 @@ export function TaskMenu({ task, handlers }: { task: TaskItem; handlers: TaskHan
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          aria-label="Task actions"
+          aria-label={"Действия задачи"}
           onPointerDown={(e) => e.stopPropagation()}
           className="rounded-md p-1 text-muted-foreground opacity-0 transition hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
         >
@@ -53,22 +53,17 @@ export function TaskMenu({ task, handlers }: { task: TaskItem; handlers: TaskHan
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem onClick={() => handlers.edit(task)}>
-          <Pencil className="mr-2 size-4" /> Edit
-        </DropdownMenuItem>
+          <Pencil className="mr-2 size-4" /> {"Редактировать "}</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => handlers.setStatus(task.id, "pending")}>
-          <Circle className="mr-2 size-4 text-muted-foreground" /> To do
-        </DropdownMenuItem>
+          <Circle className="mr-2 size-4 text-muted-foreground" /> {"Делать "}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => handlers.setStatus(task.id, "in_progress")}>
-          <Clock className="mr-2 size-4 text-clay" /> In progress
-        </DropdownMenuItem>
+          <Clock className="mr-2 size-4 text-clay" /> {"В процессе "}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => handlers.setStatus(task.id, "completed")}>
-          <CheckCircle2 className="mr-2 size-4 text-primary" /> Done
-        </DropdownMenuItem>
+          <CheckCircle2 className="mr-2 size-4 text-primary" /> {"Готово "}</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => handlers.remove(task.id)} className="text-destructive">
-          <Trash2 className="mr-2 size-4" /> Delete
-        </DropdownMenuItem>
+          <Trash2 className="mr-2 size-4" /> {"Удалить "}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -107,10 +102,9 @@ function Meta({ task }: { task: TaskItem }) {
           <FileText className="size-3" />
           {task.candidateId ? (
             <Link href={`/dashboard/candidates/${task.candidateId}`} className="hover:underline">
-              Application
-            </Link>
+              {"Отклик "}</Link>
           ) : (
-            "Application"
+            "Отклик"
           )}
         </span>
       )}
@@ -119,10 +113,9 @@ function Meta({ task }: { task: TaskItem }) {
           <CalendarClock className="size-3" />
           {task.candidateId ? (
             <Link href={`/dashboard/candidates/${task.candidateId}`} className="hover:underline">
-              Interview
-            </Link>
+              {"Собеседование "}</Link>
           ) : (
-            "Interview"
+            "Собеседование"
           )}
         </span>
       )}

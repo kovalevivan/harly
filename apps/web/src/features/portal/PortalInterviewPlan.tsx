@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
 import { cn } from "@/lib/utils";
 import {
   CheckCircleIcon,
@@ -39,8 +40,7 @@ export function PortalInterviewPlan({
   return (
     <div>
       <h2 className="mb-4 text-lg font-semibold text-foreground">
-        Application progress
-      </h2>
+        {"Ход выполнения заявки "}</h2>
       <div className="space-y-2">
         {visibleStages.map((stage, idx) => {
           // In a terminal state every visible stage is a completed step.
@@ -76,7 +76,7 @@ export function PortalInterviewPlan({
                   isFuture && "font-medium text-muted-foreground"
                 )}
               >
-                {stage.name}
+                {localizeStageName(stage.name)}
               </span>
             </div>
           );
@@ -87,16 +87,14 @@ export function PortalInterviewPlan({
           <div className="flex items-center gap-3 rounded-xl border border-emerald-300 bg-emerald-100 px-4 py-3 dark:border-emerald-800 dark:bg-emerald-950/30">
             <CheckCircleIcon className="size-5 shrink-0 text-emerald-600" />
             <span className="text-sm font-bold text-emerald-800 dark:text-emerald-300">
-              Hired
-            </span>
+              {"Нанят "}</span>
           </div>
         )}
         {isRejected && (
           <div className="flex items-center gap-3 rounded-xl border border-red-300 bg-red-100 px-4 py-3 dark:border-red-900 dark:bg-red-950/30">
             <XCircleIcon className="size-5 shrink-0 text-rust" />
             <span className="text-sm font-bold text-rust">
-              Not selected
-            </span>
+              {"Не выбрано "}</span>
           </div>
         )}
       </div>

@@ -46,14 +46,14 @@ export function WebhookSchemaEditor({
     try {
       const value: unknown = JSON.parse(text);
       if (!value || typeof value !== "object" || Array.isArray(value)) {
-        return { error: "Schema must be a JSON object." };
+        return { error: "Схема должна быть объектом JSON." };
       }
       if (new TextEncoder().encode(text).byteLength > 32 * 1024) {
-        return { error: "Schema must be 32 KB or smaller." };
+        return { error: "Схема должна иметь размер 32 КБ или меньше." };
       }
       return { value: value as Record<string, unknown> };
     } catch {
-      return { error: "Enter valid JSON before saving." };
+      return { error: "Введите действительный JSON перед сохранением." };
     }
   }, [text]);
   const saved = "value" in parsed && stableJson(parsed.value) === stableJson(schema);
@@ -61,9 +61,9 @@ export function WebhookSchemaEditor({
   return (
     <div className="space-y-2">
       <label className="block">
-        <span className="mb-1 block text-[11px] font-medium text-foreground">Payload schema (JSON Schema Draft 7)</span>
+        <span className="mb-1 block text-[11px] font-medium text-foreground">{"Схема полезных данных (проект схемы JSON 7)"}</span>
         <textarea
-          aria-describedby={`${id}-help ${id}-error`}
+          aria-describedby={`${id}-справка ${id}-ошибка`}
           aria-invalid={"error" in parsed}
           autoCapitalize="off"
           autoCorrect="off"
@@ -75,14 +75,13 @@ export function WebhookSchemaEditor({
         />
       </label>
       <p id={`${id}-help`} className="text-[10px] leading-4 text-soft-ink">
-        {"{}"} accepts any JSON object. Rules are enforced before an event is recorded; validation does not rewrite the payload.
-      </p>
+        {"{}"} {"принимает любой объект JSON. Правила применяются до того, как событие будет записано; проверка не перезаписывает полезную нагрузку. "}</p>
       <p id={`${id}-error`} aria-live="polite" className="min-h-4 text-[10px] text-danger-rust">
         {"error" in parsed ? parsed.error : ""}
       </p>
       {showSavedStatus ? (
-        <p role="status" aria-label="Webhook schema save status" className="text-[10px] text-soft-ink">
-          {saved ? "Saved" : "Unsaved changes"}
+        <p role="status" aria-label={"Статус сохранения схемы вебхука"} className="text-[10px] text-soft-ink">
+          {saved ? "Сохранено" : "Несохраненные изменения"}
         </p>
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
@@ -102,16 +101,14 @@ export function WebhookSchemaEditor({
           disabled={disabled}
           onClick={() => setText(JSON.stringify(sampleSchema, null, 2))}
         >
-          Use sample
-        </button>
+          {"Использовать образец "}</button>
         <button
           type="button"
           className="px-1 py-2 text-[10px] font-medium text-soft-ink underline underline-offset-2 disabled:opacity-50"
           disabled={disabled}
           onClick={() => setText("{}")}
         >
-          Accept any object
-        </button>
+          {"Принять любой объект "}</button>
       </div>
     </div>
   );

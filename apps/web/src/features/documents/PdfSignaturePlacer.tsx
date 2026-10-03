@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 /* eslint-disable @next/next/no-img-element */
 
 import { useRef } from "react";
@@ -211,7 +212,7 @@ export function PdfSignaturePlacer({
   if (error)
     return (
       <p className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-        {error}
+        {localizeSystemText(error)}
       </p>
     );
   return (
@@ -262,19 +263,18 @@ export function PdfSignaturePlacer({
               >
                 {isText ? (
                   <div className="flex h-full w-full items-center justify-center px-1 text-center text-[11px] text-info">
-                    {placement.label?.trim() || "Text field"}
+                    {placement.label?.trim() || "Текстовое поле"}
                   </div>
                 ) : hasSignature ? (
                   <img
                     src={signatureDataUrl}
-                    alt={`Signature placement ${index + 1}`}
+                    alt={`Размещение подписи ${index + 1}`}
                     className="h-full w-full object-contain"
                     draggable={false}
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-[11px] text-muted-foreground">
-                    Signature
-                  </div>
+                    {"Подпись "}</div>
                 )}
                 <div
                   className="absolute inset-0 cursor-move touch-none"
@@ -300,7 +300,7 @@ export function PdfSignaturePlacer({
                   onPointerCancel={() => {
                     resizeRef.current = null;
                   }}
-                  aria-label={`Resize field ${index + 1}`}
+                  aria-label={`Изменить размер поля ${index + 1}`}
                 >
                   <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden className={isText ? "text-info" : "text-primary"}>
                     <path d="M7 1 1 7M7 4 4 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
@@ -310,7 +310,7 @@ export function PdfSignaturePlacer({
                   <span
                     className={`pointer-events-none absolute left-1 top-1 rounded px-1 py-px text-[9px] font-medium ${isText ? "text-info" : "text-primary"}`}
                   >
-                    {isText ? `Text ${index + 1}` : `Sign ${index + 1}`}
+                    {isText ? `Текст ${index + 1}` : `Знак ${index + 1}`}
                   </span>
                 ) : null}
 
@@ -331,11 +331,11 @@ export function PdfSignaturePlacer({
                             onPageChange(index, Number(event.target.value))
                           }
                           className="h-6 rounded-md border border-input bg-background px-1.5 text-[11px] font-medium outline-none focus:border-ring"
-                          aria-label={`Page for field ${index + 1}`}
+                          aria-label={`Страница для поля ${index + 1}`}
                         >
                           {Array.from({ length: pageCount }, (_, p) => (
                             <option key={p + 1} value={p + 1}>
-                              Page {p + 1}
+                              {"Страница "}{p + 1}
                             </option>
                           ))}
                         </select>
@@ -345,8 +345,8 @@ export function PdfSignaturePlacer({
                     {onDuplicate ? (
                       <button
                         type="button"
-                        aria-label={`Duplicate field ${index + 1}`}
-                        title="Duplicate"
+                        aria-label={`Дублирующееся поле ${index + 1}`}
+                        title={"Дублировать"}
                         onClick={() => onDuplicate(index)}
                         className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                       >
@@ -356,8 +356,8 @@ export function PdfSignaturePlacer({
                     {onRemoveField ? (
                       <button
                         type="button"
-                        aria-label={`Remove field ${index + 1}`}
-                        title="Delete"
+                        aria-label={`Удалить поле ${index + 1}`}
+                        title={"Удалить"}
                         onClick={() => onRemoveField(index)}
                         className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                       >
@@ -373,7 +373,7 @@ export function PdfSignaturePlacer({
                     value={placement.label ?? ""}
                     onChange={(event) => onLabelChange(index, event.target.value)}
                     onClick={(event) => event.stopPropagation()}
-                    placeholder="Label (e.g. Date)"
+                    placeholder={"Метка (например, дата)"}
                     maxLength={60}
                     className="absolute -bottom-8 left-0 w-40 rounded-md border border-input bg-background px-2 py-1 text-xs shadow-xs"
                   />
@@ -390,14 +390,11 @@ export function PdfSignaturePlacer({
             style={{ maxWidth: maxPageWidth }}
           />
           <p className="text-center text-sm text-muted-foreground">
-            Loading PDF…
-          </p>
+            {"Загрузка PDF… "}</p>
         </div>
       ) : null}
       <p className="text-center text-xs text-muted-foreground">
-        Drag a field across pages. Hold it near the top or bottom edge to
-        scroll.
-      </p>
+        {"Перетащите поле по страницам. Удерживайте его возле верхнего или нижнего края для прокрутки. "}</p>
     </div>
   );
 }

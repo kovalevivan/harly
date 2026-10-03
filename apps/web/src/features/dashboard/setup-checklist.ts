@@ -21,7 +21,7 @@ export type SetupChecklistItem = {
   value: string;
   href: string;
   done: boolean;
-  /** CTA label: "Start" when pending, "Edit" once done (we keep it visible). */
+  /** CTA label: "Начало" when pending, "Редактировать" once done (we keep it visible). */
   ctaLabel: string;
   /** Optional steps can be dismissed by the user instead of completed , not
    *  every workspace needs them (e.g. a solo recruiter working alone). */
@@ -156,7 +156,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   ) =>
     items.push({
       ...item,
-      ctaLabel: item.ctaLabel ?? (item.done ? "Edit" : "Start"),
+      ctaLabel: item.ctaLabel ?? (item.done ? "Редактировать" : "Начало"),
     });
 
   // Priority order: get a working, safe hiring pipeline live first (job,
@@ -168,16 +168,16 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   if (hasJob && hasApplicants) {
     push({
       key: "applicants",
-      title: "Review your first applicants",
+      title: "Проверьте своих первых кандидатов",
       value: "Candidates are waiting. Move them through your pipeline.",
       href: "/dashboard/candidates",
       done: true,
-      ctaLabel: "Review",
+      ctaLabel: "Обзор",
     });
   } else {
     push({
       key: "job",
-      title: "Publish your first job",
+      title: "Опубликуйте свою первую работу",
       value: "Start receiving applications today.",
       href: "/dashboard/jobs",
       done: hasJob,
@@ -187,7 +187,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // 2. Email , recruiters can't run a pipeline without candidate email.
   push({
     key: "email",
-    title: "Connect your email",
+    title: "Подключите электронную почту",
     value: "Send and track candidate emails from one inbox.",
     href: "/settings/integrations",
     done: Boolean(settings?.emailEnabled),
@@ -196,7 +196,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // 3. Captcha , protects the public application form from abuse/spam.
   push({
     key: "captcha",
-    title: "Turn on captcha protection",
+    title: "Включите защиту капчей",
     value: "Stop bots and spam from flooding your application form.",
     href: "/settings/integrations",
     done: Boolean(settings?.captchaEnabled),
@@ -205,7 +205,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // 4. Careers page.
   push({
     key: "careers",
-    title: "Customize your careers page",
+    title: "Настройте свою страницу вакансий",
     value: "Make your brand shine where candidates land.",
     href: "/dashboard/career-page",
     done: careersDone,
@@ -214,7 +214,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // 5. Legal , compliance is essential, not an afterthought.
   push({
     key: "legal",
-    title: "Set up legal info",
+    title: "Настройка юридической информации",
     value: "Stay compliant. GDPR-ready in a few clicks.",
     href: "/settings/legal",
     done: Boolean(settings?.legalConfigured),
@@ -223,7 +223,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // 6. Logo , branding polish.
   push({
     key: "logo",
-    title: "Add your logo",
+    title: "Добавьте свой логотип",
     value: "Build trust with candidates from the first click.",
     href: "/settings",
     done: Boolean(context.organization.logo),
@@ -232,7 +232,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // 7. Company profile.
   push({
     key: "profile",
-    title: "Complete your company profile",
+    title: "Заполните профиль вашей компании",
     value: "Show candidates who you are and why to join.",
     href: "/settings",
     done: profileDone,
@@ -243,7 +243,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   if (!hasCalendar) {
     push({
       key: "scheduling",
-      title: "Set up interview scheduling",
+      title: "Настроить расписание собеседований",
       value: "Let candidates book time without the back-and-forth.",
       href: "/settings/integrations",
       done: false,
@@ -254,7 +254,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   if (!hasIntegration) {
     push({
       key: "integrations",
-      title: "Connect your tools",
+      title: "Подключите свои инструменты",
       value: "Sync calendars and scheduling into your workflow.",
       href: "/settings/integrations",
       done: false,
@@ -265,7 +265,7 @@ export async function getSetupChecklist(): Promise<SetupChecklist> {
   // single recruiter working alone or still evaluating Harly solo.
   push({
     key: "team",
-    title: "Invite your team",
+    title: "Пригласите свою команду",
     value: "Hire together for faster, shared decisions.",
     href: "/settings/members",
     done: memberCount > 1 || inviteCount > 0,

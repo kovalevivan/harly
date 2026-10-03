@@ -6,9 +6,9 @@ type InterviewDateBadgeProps = {
 };
 
 export function InterviewDateBadge({ date, variant = "default" }: InterviewDateBadgeProps) {
-  const dayOfWeek = new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date).toUpperCase();
-  const dayNum = new Intl.DateTimeFormat("en-US", { day: "numeric" }).format(date);
-  const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(date).toUpperCase();
+  const dayOfWeek = new Intl.DateTimeFormat("ru-RU", { weekday: "short" }).format(date).toUpperCase();
+  const dayNum = new Intl.DateTimeFormat("ru-RU", { day: "numeric" }).format(date);
+  const month = new Intl.DateTimeFormat("ru-RU", { month: "short" }).format(date).toUpperCase();
 
   if (variant === "compact") {
     return (

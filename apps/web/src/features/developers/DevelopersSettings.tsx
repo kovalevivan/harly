@@ -1,8 +1,9 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import { useMemo, useState, useTransition, type ComponentType, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { formatDistanceToNow, format } from "date-fns";
+import { formatDistanceToNow, format } from "@/lib/date-format";
 import { toast } from "@/lib/notification-island/toast";
 
 import {
@@ -50,13 +51,13 @@ import { cn } from "@/lib/utils";
 
 /** Human-readable labels for API scopes , raw scope strings surface in a tooltip. */
 const SCOPE_LABELS: Record<string, string> = {
-  "jobs:read": "Read jobs",
-  "jobs:write": "Manage jobs",
-  "candidates:read": "Read candidates",
-  "candidates:write": "Manage candidates",
-  "applications:read": "Read applications",
-  "applications:write": "Manage applications",
-  "webhooks:manage": "Manage webhooks",
+  "jobs:read": "Читать вакансии",
+  "jobs:write": "Управление заданиями",
+  "candidates:read": "Читать кандидатов",
+  "candidates:write": "Управление кандидатами",
+  "applications:read": "Чтение заявок",
+  "applications:write": "Управление приложениями",
+  "webhooks:manage": "Управление веб-перехватчиками",
 };
 
 function scopeLabel(scope: string): string {
@@ -78,14 +79,14 @@ type WebhookDeliverySummary = {
 } | null;
 
 function deliveryLabel(delivery: WebhookDeliverySummary): string {
-  if (!delivery) return "No deliveries yet";
+  if (!delivery) return "Поставок пока нет";
   const when = formatDistanceToNow(new Date(delivery.deliveredAt ?? delivery.createdAt), {
     addSuffix: true,
   });
-  if (delivery.status === "success") return `Delivered ${when}`;
-  if (delivery.status === "pending") return "Delivery pending";
+  if (delivery.status === "success") return `Доставлено ${when}`;
+  if (delivery.status === "pending") return "Ожидается доставка";
   const statusSuffix = delivery.responseStatus ? ` (${delivery.responseStatus})` : "";
-  return `Delivery failed ${when}${statusSuffix}`;
+  return `Доставка не удалась ${when}${statusSuffix}`;
 }
 
 type ApiKeyView = {
@@ -147,8 +148,8 @@ export function DevelopersSettings(props: {
 
 function copy(value: string) {
   navigator.clipboard.writeText(value).then(
-    () => toast.success("Copied"),
-    () => toast.error("Could not copy"),
+    () => toast.success("Скопировано"),
+    () => toast.error("Не удалось скопировать"),
   );
 }
 
@@ -211,8 +212,7 @@ function SecretBanner({
     <div className="animate-in fade-in zoom-in-95 duration-200 rounded-2xl border border-pine/30 bg-sage/40 p-3 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
       <p className="font-medium text-sage-ink">{label}</p>
       <p className="mt-1 text-xs text-muted-foreground">
-        Copy it now. You won&apos;t be able to see it again.
-      </p>
+        {"Скопируйте его сейчас. Вы больше не сможете его увидеть. "}</p>
       <div className="mt-2 flex items-center gap-2">
         <code className="flex-1 overflow-x-auto rounded-lg bg-background px-2 py-1.5 font-mono text-xs">
           {value}
@@ -223,16 +223,14 @@ function SecretBanner({
           className="shrink-0 transition-transform active:scale-[0.97]"
           onClick={() => copy(value)}
         >
-          <CopyIcon className="size-3.5" /> Copy
-        </Button>
+          <CopyIcon className="size-3.5" /> {"Копировать "}</Button>
         <Button
           size="sm"
           variant="ghost"
           className="shrink-0 transition-transform active:scale-[0.97]"
           onClick={onDismiss}
         >
-          Done
-        </Button>
+          {"Готово "}</Button>
       </div>
     </div>
   );
@@ -271,14 +269,14 @@ function ApiKeysSection({
 
   function submit() {
     if (!name.trim()) {
-      toast.error("Name the key.");
+      toast.error("Назовите ключ.");
       return;
     }
     const scopesForType = selectedScopes.filter((s) =>
       availableScopes.includes(s),
     );
     if (scopesForType.length === 0) {
-      toast.error("Pick at least one scope.");
+      toast.error("Выберите хотя бы одну область применения.");
       return;
     }
     startTransition(async () => {
@@ -288,7 +286,7 @@ function ApiKeysSection({
         scopes: scopesForType,
       });
       if (!result.ok || !result.raw) {
-        toast.error(result.error ?? "Could not create key.");
+        toast.error(result.error ?? "Не удалось создать ключ.");
         return;
       }
       setCreated(result.raw);
@@ -304,11 +302,11 @@ function ApiKeysSection({
     startTransition(async () => {
       const result = await revokeApiKeyAction(id);
       if (!result.ok) {
-        toast.error(result.error ?? "Could not revoke.");
+        toast.error(result.error ?? "Не удалось отозвать.");
         setRevokingId(null);
         return;
       }
-      toast.success("Key revoked");
+      toast.success("Ключ отозван");
       router.refresh();
     });
   }
@@ -317,23 +315,22 @@ function ApiKeysSection({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={KeyDuotoneIcon}
-        title="API keys"
-        description="Secret keys for server integrations, publishable keys for the embed widget."
+        title={"Ключи API"}
+        description={"Секретные ключи для интеграции с сервером, публикуемые ключи для виджета встраивания."}
         action={
           canManage ? (
             <Button
               onClick={() => setShowForm((v) => !v)}
               className="transition-transform active:scale-[0.97]"
             >
-              <PlusIcon className="size-4" /> New key
-            </Button>
+              <PlusIcon className="size-4" /> {"Новый ключ "}</Button>
           ) : null
         }
       />
 
       {created && (
         <SecretBanner
-          label="Your new API key"
+          label={"Ваш новый ключ API"}
           value={created}
           onDismiss={() => setCreated(null)}
         />
@@ -343,15 +340,15 @@ function ApiKeysSection({
         <div className="animate-in fade-in slide-in-from-top-1 space-y-4 rounded-2xl border bg-muted/20 p-4 duration-200">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label>Name</Label>
+              <Label>{"Имя"}</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Production server"
+                placeholder={"Производственный сервер"}
               />
             </div>
              <div className="space-y-1.5">
-              <Label>Type</Label>
+              <Label>{"Тип"}</Label>
               <div className="flex gap-2">
                 {(["secret", "publishable"] as const).map((t) => (
                   <button
@@ -368,14 +365,14 @@ function ApiKeysSection({
                         : "text-muted-foreground hover:border-foreground/15",
                     )}
                   >
-                    {t === "secret" ? "Secret (sk)" : "Publishable (pk)"}
+                    {t === "secret" ? "Секрет (ск)" : "Публикуемый (упак.)"}
                   </button>
                 ))}
               </div>
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label>Scopes</Label>
+            <Label>{"Области применения"}</Label>
             <div className="flex flex-wrap gap-1.5">
               {availableScopes.map((scope) => (
                 <Chip
@@ -394,16 +391,15 @@ function ApiKeysSection({
             disabled={pending}
             className="transition-transform active:scale-[0.97]"
           >
-            {pending && <SpinnerIcon className="size-4 animate-spin" />} Create key
-          </Button>
+            {pending && <SpinnerIcon className="size-4 animate-spin" />} {"Создать ключ "}</Button>
         </div>
       )}
 
       {apiKeys.length === 0 ? (
         <EmptyRow
           icon={KeyDuotoneIcon}
-          title="No API keys yet"
-          description="Create one to authenticate server-to-server requests or power the embed widget."
+          title={"Ключей API пока нет"}
+          description={"Создайте его для аутентификации межсерверных запросов или включения встроенного виджета."}
         />
       ) : (
         <div className="space-y-2">
@@ -418,16 +414,16 @@ function ApiKeysSection({
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="truncate font-medium">{key.name}</span>
                     {key.revokedAt ? (
-                      <Badge variant="danger">Revoked</Badge>
+                      <Badge variant="danger">{"Отозван"}</Badge>
                     ) : (
                       <StatusPill tone={key.environment === "live" ? "on" : "warn"} dot={false}>
-                        {key.environment === "live" ? "Live" : "Test"}
+                        {key.environment === "live" ? "Живи" : "Тест"}
                       </StatusPill>
                     )}
                   </div>
 
                   <p className="mt-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {key.type === "secret" ? "Secret key" : "Publishable key"}
+                    {key.type === "secret" ? "Секретный ключ" : "Публикуемый ключ"}
                   </p>
                   <div className="mt-1 flex items-center gap-2">
                     <code className="min-w-0 flex-1 truncate rounded-lg bg-muted/50 px-2.5 py-1.5 font-mono text-xs">
@@ -438,15 +434,13 @@ function ApiKeysSection({
                       onClick={() => copy(maskKey(key.prefix, key.last4))}
                       className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:scale-95"
                     >
-                      <CopyIcon className="size-3.5" /> Copy
-                    </button>
+                      <CopyIcon className="size-3.5" /> {"Копировать "}</button>
                   </div>
 
                   {key.scopes.length > 0 && (
                     <div className="mt-2.5">
                       <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                        Permissions
-                      </p>
+                        {"Разрешения "}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {key.scopes.map((scope, si) => (
                           <span key={scope} title={scope}>
@@ -459,7 +453,7 @@ function ApiKeysSection({
                   )}
 
                   <p className="mt-2.5 text-xs text-muted-foreground">
-                    Created {format(new Date(key.createdAt), "PP")}
+                    {"Создано "}{format(new Date(key.createdAt), "PP")}
                   </p>
                 </div>
 
@@ -470,7 +464,7 @@ function ApiKeysSection({
                         size="icon"
                         variant="ghost"
                         className="shrink-0 text-muted-foreground"
-                        aria-label="Key actions"
+                        aria-label={"Ключевые действия"}
                       >
                         <DotsThreeVerticalIcon className="size-4" />
                       </Button>
@@ -484,8 +478,7 @@ function ApiKeysSection({
                         {pending && revokingId === key.id && (
                           <SpinnerIcon className="size-3.5 animate-spin" />
                         )}
-                        Revoke key
-                      </DropdownMenuItem>
+                        {"Отозвать ключ "}</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
@@ -541,10 +534,10 @@ function WebhooksSection({
     startTransition(async () => {
       const result = await rotateWebhookSecretAction(id);
       if (!result.ok || !result.secret) {
-        toast.error(result.error ?? "Could not rotate secret.");
+        toast.error(result.error ?? "Не удалось повернуть секрет.");
       } else {
         setSecret(result.secret);
-        toast.success("Signing secret rotated");
+        toast.success("Секрет подписи поменян");
       }
       setRotatingId(null);
       router.refresh();
@@ -557,7 +550,7 @@ function WebhooksSection({
     startTransition(async () => {
       const result = await listWebhookDeliveriesAction(hook.id);
       if (!result.ok || !result.deliveries) {
-        toast.error(result.error ?? "Could not load deliveries.");
+        toast.error(result.error ?? "Не удалось загрузить поставки.");
         setDeliveries([]);
       } else {
         setDeliveries(result.deliveries);
@@ -574,9 +567,9 @@ function WebhooksSection({
         endpointId: deliveriesFor.id,
         deliveryId,
       });
-      if (!result.ok) toast.error(result.error ?? "Could not replay delivery.");
+      if (!result.ok) toast.error(result.error ?? "Не удалось воспроизвести доставку.");
       else {
-        toast.success("Replay queued");
+        toast.success("Повтор в очереди");
         openDeliveries(deliveriesFor);
       }
       setReplayingId(null);
@@ -600,11 +593,11 @@ function WebhooksSection({
   function saveEdit() {
     if (!editing) return;
     if (!/^https?:\/\//.test(editUrl)) {
-      toast.error("Enter a valid http(s) URL.");
+      toast.error("Введите действительный URL-адрес http(s).");
       return;
     }
     if (editEvents.length === 0) {
-      toast.error("Subscribe to at least one event.");
+      toast.error("Подпишитесь хотя бы на одно событие.");
       return;
     }
     startTransition(async () => {
@@ -615,10 +608,10 @@ function WebhooksSection({
         description: editDescription || null,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update webhook.");
+        toast.error(result.error ?? "Не удалось обновить вебхук.");
         return;
       }
-      toast.success("Webhook updated");
+      toast.success("Вебхук обновлен");
       setEditing(null);
       router.refresh();
     });
@@ -632,11 +625,11 @@ function WebhooksSection({
 
   function submit() {
     if (!/^https?:\/\//.test(url)) {
-      toast.error("Enter a valid http(s) URL.");
+      toast.error("Введите действительный URL-адрес http(s).");
       return;
     }
     if (selectedEvents.length === 0) {
-      toast.error("Subscribe to at least one event.");
+      toast.error("Подпишитесь хотя бы на одно событие.");
       return;
     }
     startTransition(async () => {
@@ -646,7 +639,7 @@ function WebhooksSection({
         description: description || undefined,
       });
       if (!result.ok || !result.secret) {
-        toast.error(result.error ?? "Could not create webhook.");
+        toast.error(result.error ?? "Не удалось создать вебхук.");
         return;
       }
       setSecret(result.secret);
@@ -661,7 +654,7 @@ function WebhooksSection({
   function toggleEnabled(id: string, enabled: boolean) {
     startTransition(async () => {
       const result = await updateWebhookAction({ id, enabled });
-      if (!result.ok) toast.error(result.error ?? "Could not update.");
+      if (!result.ok) toast.error(result.error ?? "Не удалось обновить.");
       else router.refresh();
     });
   }
@@ -669,9 +662,9 @@ function WebhooksSection({
   function remove(id: string) {
     startTransition(async () => {
       const result = await deleteWebhookAction(id);
-      if (!result.ok) toast.error(result.error ?? "Could not delete.");
+      if (!result.ok) toast.error(result.error ?? "Не удалось удалить.");
       else {
-        toast.success("Webhook deleted");
+        toast.success("Вебхук удален.");
         router.refresh();
       }
     });
@@ -681,8 +674,8 @@ function WebhooksSection({
     setTestingId(id);
     startTransition(async () => {
       const result = await testWebhookAction(id);
-      if (result.ok) toast.success("Test delivered");
-      else toast.error(result.error ?? `Test failed (${result.status ?? "?"})`);
+      if (result.ok) toast.success("Тест пройден");
+      else toast.error(result.error ?? `Тест не пройден (${result.status ?? "?"})`);
       setTestingId(null);
       router.refresh();
     });
@@ -692,23 +685,22 @@ function WebhooksSection({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={WebhooksDuotoneIcon}
-        title="Webhooks"
-        description="Receive signed events when applications and jobs change."
+        title={"Вебхуки"}
+        description={"Получайте подписанные события при изменении приложений и заданий."}
         action={
           canManage ? (
             <Button
               onClick={() => setShowForm((v) => !v)}
               className="transition-transform active:scale-[0.97]"
             >
-              <PlusIcon className="size-4" /> Add endpoint
-            </Button>
+              <PlusIcon className="size-4" /> {"Добавить конечную точку "}</Button>
           ) : null
         }
       />
 
       {secret && (
         <SecretBanner
-          label="Signing secret"
+          label={"Секрет подписания"}
           value={secret}
           onDismiss={() => setSecret(null)}
         />
@@ -717,7 +709,7 @@ function WebhooksSection({
       {showForm && canManage && (
         <div className="animate-in fade-in slide-in-from-top-1 space-y-4 rounded-2xl border bg-muted/20 p-4 duration-200">
           <div className="space-y-1.5">
-            <Label>Endpoint URL</Label>
+            <Label>{"URL-адрес конечной точки"}</Label>
             <Input
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -726,15 +718,15 @@ function WebhooksSection({
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Description (optional)</Label>
+            <Label>{"Описание (необязательно)"}</Label>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Slack notifier"
+              placeholder={"например Slack-уведомитель"}
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Events</Label>
+            <Label>{"События"}</Label>
             <div className="flex flex-wrap gap-1.5">
               {events.map((event) => (
                 <Chip
@@ -753,17 +745,15 @@ function WebhooksSection({
             disabled={pending}
             className="transition-transform active:scale-[0.97]"
           >
-            {pending && <SpinnerIcon className="size-4 animate-spin" />} Create
-            endpoint
-          </Button>
+            {pending && <SpinnerIcon className="size-4 animate-spin" />} {"Создать конечную точку "}</Button>
         </div>
       )}
 
       {webhooks.length === 0 ? (
         <EmptyRow
           icon={WebhooksDuotoneIcon}
-          title="No webhook endpoints yet"
-          description="Add one to get signed events when applications and jobs change."
+          title={"Конечных точек вебхука пока нет."}
+          description={"Добавьте его, чтобы получать подписанные события при изменении приложений и заданий."}
         />
       ) : (
         <div className="space-y-2">
@@ -784,7 +774,7 @@ function WebhooksSection({
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="truncate font-mono text-sm font-medium">{hook.url}</p>
                       <StatusPill tone={hook.enabled ? "on" : "off"}>
-                        {hook.enabled ? "Active" : "Inactive"}
+                        {hook.enabled ? "Активные" : "Неактивный"}
                       </StatusPill>
                     </div>
                     {hook.description && (
@@ -794,8 +784,7 @@ function WebhooksSection({
                     )}
 
                     <p className="mt-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Subscribed events
-                    </p>
+                      {"Подписанные события "}</p>
                     <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted-foreground">
                       {visibleEvents.map((event, ei) => (
                         <span key={event} title={event}>
@@ -810,13 +799,11 @@ function WebhooksSection({
                               type="button"
                               className="rounded-md px-1.5 py-0.5 font-medium text-pine transition-colors hover:bg-sage/40"
                             >
-                              +{overflowCount} more
-                            </button>
+                              +{overflowCount} {"ещё "}</button>
                           </PopoverTrigger>
                           <PopoverContent align="start" className="w-64 p-3">
                             <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                              All subscribed events
-                            </p>
+                              {"Все подписанные события "}</p>
                             <div className="mt-2 space-y-1">
                               {hook.events.map((event) => (
                                 <p key={event} title={event} className="text-sm">
@@ -845,42 +832,37 @@ function WebhooksSection({
                         {pending && testingId === hook.id && (
                           <SpinnerIcon className="size-3.5 animate-spin" />
                         )}
-                        Send test
-                      </Button>
+                        {"Отправить тест "}</Button>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => openDeliveries(hook)}
                       >
-                        Deliveries
-                      </Button>
+                        {"Поставки "}</Button>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
                             size="icon"
                             variant="ghost"
                             className="text-muted-foreground"
-                            aria-label="Webhook actions"
+                            aria-label={"Действия вебхука"}
                           >
                             <DotsThreeVerticalIcon className="size-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => openEdit(hook)}>
-                            Edit endpoint
-                          </DropdownMenuItem>
+                            {"Изменить конечную точку "}</DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => rotateSecret(hook.id)}
                             disabled={pending && rotatingId === hook.id}
                           >
-                            Rotate signing secret
-                          </DropdownMenuItem>
+                            {"Ротация секрета подписи "}</DropdownMenuItem>
                           <DropdownMenuItem onClick={() => toggleEnabled(hook.id, !hook.enabled)}>
-                            {hook.enabled ? "Disable endpoint" : "Enable endpoint"}
+                            {hook.enabled ? "Отключить конечную точку" : "Включить конечную точку"}
                           </DropdownMenuItem>
                           <DropdownMenuItem variant="destructive" onClick={() => remove(hook.id)}>
-                            Delete endpoint
-                          </DropdownMenuItem>
+                            {"Удалить конечную точку "}</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -895,11 +877,11 @@ function WebhooksSection({
       <Dialog open={editing !== null} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit endpoint</DialogTitle>
+            <DialogTitle>{"Изменить конечную точку"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label>Endpoint URL</Label>
+              <Label>{"URL-адрес конечной точки"}</Label>
               <Input
                 value={editUrl}
                 onChange={(e) => setEditUrl(e.target.value)}
@@ -908,15 +890,15 @@ function WebhooksSection({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Description (optional)</Label>
+              <Label>{"Описание (необязательно)"}</Label>
               <Input
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
-                placeholder="e.g. Slack notifier"
+                placeholder={"например Slack-уведомитель"}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Events</Label>
+              <Label>{"События"}</Label>
               <div className="flex flex-wrap gap-1.5">
                 {events.map((event) => (
                   <Chip
@@ -932,11 +914,9 @@ function WebhooksSection({
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)} disabled={pending}>
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button onClick={saveEdit} disabled={pending}>
-              {pending && <SpinnerIcon className="size-4 animate-spin" />} Save changes
-            </Button>
+              {pending && <SpinnerIcon className="size-4 animate-spin" />} {"Сохранить изменения "}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -947,17 +927,15 @@ function WebhooksSection({
       >
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Delivery history</DialogTitle>
+            <DialogTitle>{"История доставки"}</DialogTitle>
           </DialogHeader>
           <div className="max-h-96 space-y-2 overflow-y-auto">
             {loadingDeliveries ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Loading…
-              </p>
+                {"Загрузка… "}</p>
             ) : deliveries.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No deliveries yet
-              </p>
+                {"Поставок пока нет "}</p>
             ) : (
               deliveries.map((delivery) => (
                 <div
@@ -968,7 +946,7 @@ function WebhooksSection({
                     <div className="flex items-center gap-2">
                       <span className="truncate font-mono text-xs">{delivery.event}</span>
                       <StatusPill tone={delivery.status === "success" ? "on" : "off"}>
-                        {delivery.status}
+                        {formatEnumLabel(delivery.status)}
                       </StatusPill>
                       {delivery.responseStatus !== null && (
                         <span className="text-xs text-muted-foreground">
@@ -980,7 +958,7 @@ function WebhooksSection({
                       {formatDistanceToNow(new Date(delivery.deliveredAt ?? delivery.createdAt), {
                         addSuffix: true,
                       })}
-                      {delivery.attempts > 1 ? ` · ${delivery.attempts} attempts` : ""}
+                      {delivery.attempts > 1 ? ` · ${delivery.attempts} попыток` : ""}
                     </p>
                   </div>
                   <Button
@@ -992,16 +970,14 @@ function WebhooksSection({
                     {pending && replayingId === delivery.id && (
                       <SpinnerIcon className="size-3.5 animate-spin" />
                     )}
-                    Replay
-                  </Button>
+                    {"Повтор "}</Button>
                 </div>
               ))
             )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeliveriesFor(null)}>
-              Close
-            </Button>
+              {"Закрыть "}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1030,9 +1006,9 @@ function EmbedSection({
     { label: string; lang: string; code: string; note: string }
   > = {
     board: {
-      label: "Job board",
+      label: "Доска объявлений",
       lang: "HTML",
-      note: "Renders your open roles with inline apply. Drop it anywhere.",
+      note: "Отображает открытые роли с помощью встроенного применения. Бросай куда угодно.",
       code: `<div id="harly-jobs-container"></div>
 <script
   src="${appUrl}/embed/widget.js"
@@ -1042,9 +1018,9 @@ function EmbedSection({
 ></script>`,
     },
     job: {
-      label: "Single job",
+      label: "Одиночная работа",
       lang: "HTML",
-      note: "Embed only one role's apply form on its own page. Set data-job to the job slug.",
+      note: "Встраивайте форму заявки только для одной роли на отдельную страницу. Установите data-job в пул задания.",
       code: `<div id="harly-jobs-container"></div>
 <script
   src="${appUrl}/embed/widget.js"
@@ -1055,9 +1031,9 @@ function EmbedSection({
 ></script>`,
     },
     html: {
-      label: "Custom form",
+      label: "Пользовательская форма",
       lang: "HTML",
-      note: "Loads this job's questions, renders them, and submits a complete application.",
+      note: "Загружает вопросы по этому заданию, визуализирует их и отправляет полную заявку.",
       code: `<form id="harly-apply">
   <label>First name <input name="firstName" required /></label>
   <label>Last name <input name="lastName" required /></label>
@@ -1104,14 +1080,14 @@ function EmbedSection({
       body: JSON.stringify(body),
     });
     if (!response.ok) throw new Error("Application failed");
-    form.innerHTML = "<p>Application received. Thank you!</p>";
+    form.innerHTML = "<p>Отклик получен. Спасибо!</p>";
   });
 </script>`,
     },
     react: {
-      label: "React",
+      label: "Реагировать",
       lang: "TSX",
-      note: "A typed handler you can wire into your own component.",
+      note: "Типизированный обработчик, который можно подключить к своему компоненту.",
       code: `async function submitApplication(values: {
   firstName: string;
   lastName: string;
@@ -1143,8 +1119,8 @@ function EmbedSection({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={CodeDuotoneIcon}
-        title="Embed widget"
-        description="Drop your open roles into any careers page. The widget inherits your site's fonts and colors, and you can theme it further with CSS variables."
+        title={"Встроить виджет"}
+        description={"Добавьте свои открытые вакансии на любую страницу вакансий. Виджет наследует шрифты и цвета вашего сайта, и вы можете дополнительно оформить его с помощью переменных CSS."}
       />
 
       <div className="flex flex-wrap gap-1.5">
@@ -1184,12 +1160,10 @@ function EmbedSection({
           >
             {copied ? (
               <>
-                <CheckIcon className="size-3.5 text-pine" /> Copied
-              </>
+                <CheckIcon className="size-3.5 text-pine" /> {"Скопировано "}</>
             ) : (
               <>
-                <CopyIcon className="size-3.5" /> Copy
-              </>
+                <CopyIcon className="size-3.5" /> {"Копировать "}</>
             )}
           </button>
         </div>
@@ -1199,11 +1173,9 @@ function EmbedSection({
       </div>
 
       <div className="rounded-xl border bg-muted/20 p-4 text-xs text-muted-foreground">
-        <p className="mb-1.5 font-medium text-foreground">Theming</p>
+        <p className="mb-1.5 font-medium text-foreground">{"Тематика"}</p>
         <p>
-          The widget seeds its accent from your board brand color, then defers to
-          the host page. Override any token from your own stylesheet:
-        </p>
+          {"Виджет выделяет акцент на фирменном цвете вашей доски, а затем переходит на главную страницу. Переопределите любой токен из вашей собственной таблицы стилей: "}</p>
         <pre className="mt-2 overflow-x-auto rounded-lg bg-background p-3 font-mono">
           <code>{`.oh-root {
   --oh-accent: #5b5bd6;
@@ -1212,21 +1184,17 @@ function EmbedSection({
 }`}</code>
         </pre>
         <p className="mt-2">
-          Or pin a scheme with{" "}
+          {"Или прикрепите схему с"}{" "}
           <code className="font-mono">data-theme=&quot;light|dark&quot;</code>.
         </p>
       </div>
 
       {publishableKey ? (
         <p className="text-xs text-muted-foreground">
-          Replace the masked <code className="font-mono">data-pk</code> with your
-          full publishable key.
-        </p>
+          {"Заменить маскируемый "}<code className="font-mono">data-pk</code> {"с вашим полным публикуемым ключом. "}</p>
       ) : (
         <p className="text-xs text-muted-foreground">
-          Create a publishable key above for per-embed analytics and revocation
-          (optional. The widget also works with just the workspace slug).
-        </p>
+          {"Создайте опубликованный ключ выше для встроенной аналитики и отзыва (необязательно. Виджет также работает только с фрагментом рабочей области). "}</p>
       )}
     </Card>
   );

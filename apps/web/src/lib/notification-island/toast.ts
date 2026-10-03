@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import { toast as sonnerToast } from "sonner";
+import { toast as sonnerToast } from "@/lib/toast";
+
+import { localizeSystemText } from "@/lib/localize-system-text";
 
 import { dismissIsland, pushIsland, settleIsland } from "./store";
 
@@ -29,14 +31,17 @@ export const toast = Object.assign(
   (message: ToastMessage, opts?: ToastOpts) => sonnerToast(message, opts),
   {
     success(message: ToastMessage, opts?: ToastOpts) {
+      message = localizeSystemText(message);
       if (!fitsIsland(message, opts)) return sonnerToast.success(message, opts);
       return pushIsland("success", message, AUTO_HIDE_MS.success);
     },
     error(message: ToastMessage, opts?: ToastOpts) {
+      message = localizeSystemText(message);
       if (!fitsIsland(message, opts)) return sonnerToast.error(message, opts);
       return pushIsland("error", message, AUTO_HIDE_MS.error);
     },
     loading(message: ToastMessage, opts?: ToastOpts) {
+      message = localizeSystemText(message);
       if (!fitsIsland(message, opts)) return sonnerToast.loading(message, opts);
       return pushIsland("loading", message);
     },
@@ -50,10 +55,10 @@ export const toast = Object.assign(
     ) {
       if (!fitsIsland(msgs.loading)) return sonnerToast.promise(promise, msgs);
 
-      const id = pushIsland("loading", msgs.loading);
+      const id = pushIsland("loading", localizeSystemText(msgs.loading));
       void promise.then(
         (value) => {
-          const text = typeof msgs.success === "function" ? msgs.success(value) : msgs.success;
+          const text = localizeSystemText(typeof msgs.success === "function" ? msgs.success(value) : msgs.success);
           if (fitsIsland(text)) settleIsland(id, "success", text, AUTO_HIDE_MS.success);
           else {
             dismissIsland(id);
@@ -61,7 +66,7 @@ export const toast = Object.assign(
           }
         },
         (error: unknown) => {
-          const text = typeof msgs.error === "function" ? msgs.error(error) : msgs.error;
+          const text = localizeSystemText(typeof msgs.error === "function" ? msgs.error(error) : msgs.error);
           if (fitsIsland(text)) settleIsland(id, "error", text, AUTO_HIDE_MS.error);
           else {
             dismissIsland(id);

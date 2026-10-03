@@ -29,12 +29,12 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "template", label: "Template", icon: TemplateIcon },
-  { id: "content", label: "Content", icon: ContentIcon },
-  { id: "jobs", label: "Jobs", icon: JobsIcon },
-  { id: "design", label: "Design", icon: DesignIcon },
-  { id: "footer", label: "Footer", icon: FooterIcon },
-  { id: "discovery", label: "Discover", icon: EyeIcon },
+  { id: "template", label: "Шаблон", icon: TemplateIcon },
+  { id: "content", label: "Содержание", icon: ContentIcon },
+  { id: "jobs", label: "Вакансии", icon: JobsIcon },
+  { id: "design", label: "Дизайн", icon: DesignIcon },
+  { id: "footer", label: "Нижний колонтитул", icon: FooterIcon },
+  { id: "discovery", label: "Откройте для себя", icon: EyeIcon },
 ];
 
 export function BuilderSidebar({
@@ -46,7 +46,7 @@ export function BuilderSidebar({
 }) {
   return (
     <nav
-      aria-label="Builder sections"
+      aria-label={"Разделы строителя"}
       className="flex w-[76px] shrink-0 flex-col items-center gap-1.5 border-r border-border bg-paper py-4"
     >
       {NAV_ITEMS.map((item) => {

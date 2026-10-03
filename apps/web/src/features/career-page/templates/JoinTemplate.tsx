@@ -19,7 +19,7 @@ import { SocialIcon, socialLabel } from "@/features/career-page/social-icons";
 import { accentPalette } from "@/features/career-page/color";
 
 const reveal =
-  "duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-backwards motion-reduce:animate-none";
+  "длительность-500 анимация постепенное появление слайд-вниз-снизу-3 режим заливки назад движение-уменьшение: анимация-нет";
 
 const ALL = "__all__";
 
@@ -111,11 +111,11 @@ export function JoinTemplate({
   }, [jobs]);
 
   const tabs = [
-    { id: "positions", label: config.positions.title || "Open positions", show: true },
-    { id: "about", label: "About us", show: Boolean(config.intro.body) },
-    { id: "values", label: config.values.title || "Values", show: showValues },
-    { id: "images", label: "Images", show: photos.length > 0 },
-    { id: "locations", label: "Locations", show: officeLocations.length > 0 },
+    { id: "positions", label: config.positions.title || "Открытые позиции", show: true },
+    { id: "about", label: "О нас", show: Boolean(config.intro.body) },
+    { id: "values", label: config.values.title || "Ценности", show: showValues },
+    { id: "images", label: "Изображения", show: photos.length > 0 },
+    { id: "locations", label: "Локации", show: officeLocations.length > 0 },
   ].filter((t) => t.show);
 
   return (
@@ -186,8 +186,7 @@ export function JoinTemplate({
               className="mt-1 text-sm font-medium underline-offset-2 hover:underline"
               style={{ color: pal.ink }}
             >
-              Read more
-            </button>
+              {"Подробнее "}</button>
           )}
 
           {socials.length > 0 && (
@@ -241,7 +240,7 @@ export function JoinTemplate({
                   onChange={(e) => setDepartment(e.target.value)}
                   className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 outline-none transition-colors focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
                 >
-                  <option value={ALL}>All categories</option>
+                  <option value={ALL}>{"Все категории"}</option>
                   {departments.map((d) => (
                     <option key={d} value={d}>
                       {d}
@@ -255,7 +254,7 @@ export function JoinTemplate({
                   onChange={(e) => setLocation(e.target.value)}
                   className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 outline-none transition-colors focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
                 >
-                  <option value={ALL}>All locations</option>
+                  <option value={ALL}>{"Все локации"}</option>
                   {locations.map((l) => (
                     <option key={l} value={l}>
                       {l}
@@ -268,8 +267,7 @@ export function JoinTemplate({
 
           {shown.length === 0 ? (
             <p className="mt-8 rounded-xl border border-dashed border-zinc-200 py-16 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-              No open positions right now.
-            </p>
+              {"На данный момент открытых позиций нет. "}</p>
           ) : (
             <>
               <div className="mt-5 divide-y divide-zinc-100 overflow-hidden rounded-xl border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
@@ -304,8 +302,7 @@ export function JoinTemplate({
                 ))}
               </div>
               <p className="mt-3 text-right text-xs text-zinc-400 dark:text-zinc-500">
-                {shown.length} of {jobs.length} results
-              </p>
+                {shown.length} {"из "}{jobs.length} {"результатов "}</p>
             </>
           )}
         </section>
@@ -313,7 +310,7 @@ export function JoinTemplate({
         {/* About us */}
         {config.intro.body && (
           <section id="about" className={`${reveal} scroll-mt-8 border-t border-zinc-100 pt-10 mt-10 dark:border-zinc-800`}>
-            <h2 className="text-xl font-semibold tracking-tight">About us</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{"О нас"}</h2>
             <div className="mt-4 max-w-2xl text-zinc-600 dark:text-zinc-400">
               <RichBody html={config.intro.body} />
             </div>
@@ -351,7 +348,7 @@ export function JoinTemplate({
         {/* Images */}
         {photos.length > 0 && (
           <section id="images" className={`${reveal} scroll-mt-8 border-t border-zinc-100 pt-10 mt-10 dark:border-zinc-800`}>
-            <h2 className="text-xl font-semibold tracking-tight">Images</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{"Изображения"}</h2>
             <div className="mt-5">
               <CareerGallery
                 gallery={{ ...config.gallery, enabled: true, autoplay: true }}
@@ -365,7 +362,7 @@ export function JoinTemplate({
         {/* Locations */}
         {officeLocations.length > 0 && (
           <section id="locations" className={`${reveal} scroll-mt-8 border-t border-zinc-100 pt-10 mt-10 dark:border-zinc-800`}>
-            <h2 className="text-xl font-semibold tracking-tight">Locations</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{"Локации"}</h2>
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {officeLocations.map(([loc, count]) => (
                 <div
@@ -377,7 +374,7 @@ export function JoinTemplate({
                     {loc}
                   </span>
                   <span className="shrink-0 text-sm text-zinc-500 dark:text-zinc-400">
-                    {count} open {count === 1 ? "role" : "roles"}
+                    {"Открытых вакансий: "}{count}
                   </span>
                 </div>
               ))}
@@ -404,7 +401,7 @@ export function JoinTemplate({
                 className="mt-6 inline-flex h-11 items-center gap-2 rounded-full px-6 text-sm font-semibold text-white transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: config.cta.color ?? pal.ink }}
               >
-                {config.cta.buttonText || "Get in touch"}
+                {config.cta.buttonText || "Свяжитесь с нами"}
                 <ArrowUpRight className="size-4" strokeWidth={2} />
               </a>
             )}

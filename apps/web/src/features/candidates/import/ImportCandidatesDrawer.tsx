@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import type { ComponentType } from "react";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -76,39 +77,39 @@ type SourceOption = {
 const IMPORT_SOURCE_OPTIONS: SourceOption[] = [
   {
     value: "csv",
-    label: "CSV file",
+    label: "CSV-файл",
     logo: FileSpreadsheet,
-    hint: "Upload a spreadsheet",
+    hint: "Загрузить таблицу",
   },
   {
     value: "greenhouse",
-    label: "Greenhouse",
+    label: "Теплица",
     logo: GreenhouseLogo,
-    hint: "Harvest API key",
+    hint: "Сбор API-ключа",
   },
   {
     value: "workable",
-    label: "Workable",
+    label: "Работоспособный",
     logo: WorkableLogo,
-    hint: "Subdomain + token",
+    hint: "Субдомен + токен",
   },
   {
     value: "ashby",
-    label: "Ashby",
+    label: "Эшби",
     logo: AshbyLogo,
-    hint: "Read-only API key",
+    hint: "Ключ API только для чтения",
   },
   {
     value: "lever",
-    label: "Lever",
+    label: "Рычаг",
     logo: LeverLogo,
-    hint: "Opportunities key",
+    hint: "Ключ к возможностям",
   },
   {
     value: "join",
     label: "JOIN.com",
     logo: JoinLogo,
-    hint: "API token",
+    hint: "API-токен",
   },
 ];
 
@@ -166,7 +167,7 @@ export function ImportCandidatesDrawer({
   async function handleFile(selected: File) {
     if (selected.size > MAX_IMPORT_FILE_BYTES) {
       toast.error(
-        "This file is larger than 5 MB. Split it into smaller files and try again.",
+        "Этот файл больше 5 МБ. Разделите его на файлы меньшего размера и повторите попытку.",
       );
       return;
     }
@@ -238,11 +239,11 @@ export function ImportCandidatesDrawer({
       setSummary(result);
       if (result.imported > 0) {
         toast.success(
-          `Imported ${result.imported} candidate${result.imported === 1 ? "" : "s"}.`,
+          `Импортирован ${result.imported} кандидат.`,
         );
         router.refresh();
       } else {
-        toast.error("No candidates were imported.");
+        toast.error("Ни один кандидат не был импортирован.");
       }
     });
   }
@@ -260,7 +261,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Imported ${result.imported} Greenhouse candidate${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} Кандидат в теплицу.`,
       );
       router.refresh();
     });
@@ -280,7 +281,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Imported ${result.imported} Workable candidate${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} Работоспособный кандидат.`,
       );
       router.refresh();
     });
@@ -299,7 +300,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Imported ${result.imported} Ashby candidate${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} кандидат Эшби.`,
       );
       router.refresh();
     });
@@ -318,7 +319,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Imported ${result.imported} Lever candidate${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} Кандидат на рычаг .`,
       );
       router.refresh();
     });
@@ -337,7 +338,7 @@ export function ImportCandidatesDrawer({
       }
       setSummary(result);
       toast.success(
-        `Imported ${result.imported} JOIN candidate${result.imported === 1 ? "" : "s"}.`,
+        `Импортирован ${result.imported} кандидат ПРИСОЕДИНЯЙТЕСЬ.`,
       );
       router.refresh();
     });
@@ -345,7 +346,7 @@ export function ImportCandidatesDrawer({
 
   function downloadTemplate() {
     const csv =
-      "First name,Last name,Email,Phone,Location,LinkedIn URL,GitHub URL,Website URL,Headline\r\nAda,Lovelace,ada@example.com,+56 9 1234 5678,Santiago,https://linkedin.com/in/ada,,,Mathematician";
+      "Имя, Фамилия, адрес электронной почты, Телефон, Местоположение, URL-адрес LinkedIn, URL-адрес GitHub, URL-адрес веб-сайта, Заголовок Ada, Lovelace, ada@example.com, +56 9 1234 5678, Сантьяго, https://linkedin.com/in/ada,,,Математик";
     const url = URL.createObjectURL(
       new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" }),
     );
@@ -368,8 +369,7 @@ export function ImportCandidatesDrawer({
       <SheetTrigger asChild>
         <Button variant="outline" size="sm" className="h-11 rounded-lg">
           <Upload className="size-4" />
-          Import candidates
-        </Button>
+          {"Импортировать кандидатов "}</Button>
       </SheetTrigger>
       <DrawerLayout
         title={
@@ -377,16 +377,15 @@ export function ImportCandidatesDrawer({
             {ActiveSourceLogo ? (
               <ActiveSourceLogo className="size-5 shrink-0" />
             ) : null}
-            Import candidates
-          </span>
+            {"Импортировать кандидатов "}</span>
         }
-        description="Bring candidates into a job from a CSV file or another ATS."
+        description={"Привлекайте кандидатов на работу из файла CSV или другого ATS."}
         className="sm:max-w-2xl"
         footer={
           <>
             <SheetClose asChild>
               <Button variant="outline" disabled={isPending}>
-                {summary ? "Close" : "Cancel"}
+                {summary ? "Закрыть" : "Отмена"}
               </Button>
             </SheetClose>
             {!summary && source === "csv" ? (
@@ -401,8 +400,8 @@ export function ImportCandidatesDrawer({
                 }
               >
                 {isPending
-                  ? "Importing…"
-                  : `Import ${validRowCount} candidate${validRowCount === 1 ? "" : "s"}`}
+                  ? "Импорт…"
+                  : `Импортировать ${validRowCount} кандидата`}
               </Button>
             ) : null}
           </>
@@ -410,16 +409,14 @@ export function ImportCandidatesDrawer({
       >
         {jobs.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Create a job before importing candidates. Every imported row is
-            added to a job&apos;s pipeline.
-          </p>
+            {"Создайте вакансию перед импортом кандидатов. Каждая импортированная строка добавляется в конвейер задания. "}</p>
         ) : (
           <div className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="import-job">Job</Label>
+              <Label htmlFor="import-job">{"Вакансия"}</Label>
               <Select value={jobId} onValueChange={setJobId}>
                 <SelectTrigger id="import-job" className="w-full">
-                  <SelectValue placeholder="Select a job" />
+                  <SelectValue placeholder={"Выберите работу"} />
                 </SelectTrigger>
                 <SelectContent>
                   {jobs.map((job) => (
@@ -432,10 +429,10 @@ export function ImportCandidatesDrawer({
             </div>
 
             <div className="space-y-2">
-              <Label>Source</Label>
+              <Label>{"Источник"}</Label>
               <div
                 role="radiogroup"
-                aria-label="Import source"
+                aria-label={"Источник импорта"}
                 className="grid grid-cols-2 gap-2 sm:grid-cols-3"
               >
                 {IMPORT_SOURCE_OPTIONS.map((option) => {
@@ -478,7 +475,7 @@ export function ImportCandidatesDrawer({
 
             {source === "csv" ? (
               <div className="space-y-2">
-                <Label htmlFor="import-file">CSV file</Label>
+                <Label htmlFor="import-file">{"CSV-файл"}</Label>
                 <Input
                   id="import-file"
                   type="file"
@@ -490,10 +487,7 @@ export function ImportCandidatesDrawer({
                   }}
                 />
                 <p className="text-xs text-muted-foreground">
-                  The first row should contain column headers. Use Full name or
-                  First name + Last name, plus Email. CSV, semicolon-separated
-                  CSV and TSV are supported.
-                </p>
+                  {"Первая строка должна содержать заголовки столбцов. Используйте полное имя или имя + фамилию плюс адрес электронной почты. Поддерживаются форматы CSV, CSV, разделенные точкой с запятой, и TSV. "}</p>
                 <Button
                   type="button"
                   variant="link"
@@ -502,12 +496,10 @@ export function ImportCandidatesDrawer({
                   onClick={downloadTemplate}
                 >
                   <Download className="size-3.5" />
-                  Download template
-                </Button>
+                  {"Скачать шаблон "}</Button>
                 {file?.truncated ? (
                   <p className="text-xs text-amber-600 dark:text-amber-400">
-                    Only the first 500 rows of {file.fileName} will be imported.
-                  </p>
+                    {"Только первые 500 строк "}{file.fileName} {"будет импортирован. "}</p>
                 ) : null}
               </div>
             ) : null}
@@ -520,8 +512,7 @@ export function ImportCandidatesDrawer({
                     htmlFor="greenhouse-api-key"
                     className="text-sm font-medium"
                   >
-                    Greenhouse API key
-                  </Label>
+                    {"API-ключ для теплицы "}</Label>
                 </div>
                 <Input
                   id="greenhouse-api-key"
@@ -529,20 +520,17 @@ export function ImportCandidatesDrawer({
                   autoComplete="off"
                   value={greenhouseApiKey}
                   onChange={(event) => setGreenhouseApiKey(event.target.value)}
-                  placeholder="Harvest API key"
+                  placeholder={"Сбор API-ключа"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Imports eligible candidates into the selected job. The key is
-                  used once, never saved, and needs the Harvest Candidates
-                  permission.
-                </p>
+                  {"Импортирует подходящих кандидатов на выбранную вакансию. Ключ используется один раз, никогда не сохраняется и требует разрешения Harvest Candidates. "}</p>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={importGreenhouse}
                   disabled={!jobId || !greenhouseApiKey.trim() || isPending}
                 >
-                  {isPending ? "Importing…" : "Import Greenhouse candidates"}
+                  {isPending ? "Импорт…" : "Импортировать кандидатов в теплицы"}
                 </Button>
               </div>
             ) : null}
@@ -552,16 +540,14 @@ export function ImportCandidatesDrawer({
                 <div className="flex items-center gap-2">
                   <WorkableLogo className="size-5" />
                   <span className="text-sm font-medium">
-                    Workable credentials
-                  </span>
+                    {"Работоспособные учетные данные "}</span>
                 </div>
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="workable-subdomain"
                     className="text-xs text-muted-foreground"
                   >
-                    Subdomain
-                  </Label>
+                    {"Субдомен "}</Label>
                   <Input
                     id="workable-subdomain"
                     autoComplete="off"
@@ -569,7 +555,7 @@ export function ImportCandidatesDrawer({
                     onChange={(event) =>
                       setWorkableSubdomain(event.target.value)
                     }
-                    placeholder="e.g. acme"
+                    placeholder={"например кульминация"}
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -577,8 +563,7 @@ export function ImportCandidatesDrawer({
                     htmlFor="workable-api-token"
                     className="text-xs text-muted-foreground"
                   >
-                    API access token
-                  </Label>
+                    {"Токен доступа к API "}</Label>
                   <Input
                     id="workable-api-token"
                     type="password"
@@ -587,14 +572,12 @@ export function ImportCandidatesDrawer({
                     onChange={(event) =>
                       setWorkableApiToken(event.target.value)
                     }
-                    placeholder="Admin-generated token"
+                    placeholder={"Токен, созданный администратором"}
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Use an Admin-generated token with only the{" "}
-                  <code>r_candidates</code> scope. Harly reads complete profiles
-                  and never saves the token.
-                </p>
+                  {"Используйте токен, созданный администратором, только с"}{" "}
+                  <code>r_candidates</code> {"сфера применения. Харли читает полные профили и никогда не сохраняет токен. "}</p>
                 <Button
                   type="button"
                   variant="outline"
@@ -606,7 +589,7 @@ export function ImportCandidatesDrawer({
                     isPending
                   }
                 >
-                  {isPending ? "Importing…" : "Import Workable candidates"}
+                  {isPending ? "Импорт…" : "Импортировать работоспособных кандидатов"}
                 </Button>
               </div>
             ) : null}
@@ -619,8 +602,7 @@ export function ImportCandidatesDrawer({
                     htmlFor="ashby-api-key"
                     className="text-sm font-medium"
                   >
-                    Ashby API key
-                  </Label>
+                    {"API-ключ Эшби "}</Label>
                 </div>
                 <Input
                   id="ashby-api-key"
@@ -628,20 +610,18 @@ export function ImportCandidatesDrawer({
                   autoComplete="off"
                   value={ashbyApiKey}
                   onChange={(event) => setAshbyApiKey(event.target.value)}
-                  placeholder="Ashby API key"
+                  placeholder={"API-ключ Эшби"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Use an Admin-generated key with the{" "}
-                  <code>candidatesRead</code> scope. Harly reads complete
-                  profiles and never saves the key.
-                </p>
+                  {"Используйте ключ, сгенерированный администратором, с"}{" "}
+                  <code>{"кандидатыЧитать"}</code> {"сфера применения. Харли читает полные профили и никогда не сохраняет ключ. "}</p>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={importAshby}
                   disabled={!jobId || !ashbyApiKey.trim() || isPending}
                 >
-                  {isPending ? "Importing…" : "Import Ashby candidates"}
+                  {isPending ? "Импорт…" : "Импортировать кандидатов Эшби"}
                 </Button>
               </div>
             ) : null}
@@ -654,8 +634,7 @@ export function ImportCandidatesDrawer({
                     htmlFor="lever-api-key"
                     className="text-sm font-medium"
                   >
-                    Lever API key
-                  </Label>
+                    {"Ключ API рычага "}</Label>
                 </div>
                 <Input
                   id="lever-api-key"
@@ -663,19 +642,17 @@ export function ImportCandidatesDrawer({
                   autoComplete="off"
                   value={leverApiKey}
                   onChange={(event) => setLeverApiKey(event.target.value)}
-                  placeholder="Lever API key"
+                  placeholder={"Ключ API рычага"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Use a read-only key with access to Opportunities. Harly
-                  imports candidate details and never saves the key.
-                </p>
+                  {"Используйте ключ только для чтения для доступа к возможностям. Харли импортирует данные кандидата и никогда не сохраняет ключ. "}</p>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={importLever}
                   disabled={!jobId || !leverApiKey.trim() || isPending}
                 >
-                  {isPending ? "Importing…" : "Import Lever candidates"}
+                  {isPending ? "Импорт…" : "Импортировать кандидатов на рычаг"}
                 </Button>
               </div>
             ) : null}
@@ -688,8 +665,7 @@ export function ImportCandidatesDrawer({
                     htmlFor="join-api-token"
                     className="text-sm font-medium"
                   >
-                    JOIN API token
-                  </Label>
+                    {"ПРИСОЕДИНЯЙТЕСЬ API-токен "}</Label>
                 </div>
                 <Input
                   id="join-api-token"
@@ -697,21 +673,17 @@ export function ImportCandidatesDrawer({
                   autoComplete="off"
                   value={joinApiToken}
                   onChange={(event) => setJoinApiToken(event.target.value)}
-                  placeholder="API token from JOIN"
+                  placeholder={"Токен API от JOIN"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Create it in JOIN under User Settings → API Credentials. Use
-                  a dedicated token with application access; Harly uses it
-                  once and never saves it. Candidate profiles are imported,
-                  but CV attachments are not downloaded.
-                </p>
+                  {"Создайте его в JOIN в разделе «Настройки пользователя» → «Учетные данные API». Используйте выделенный токен для доступа к отклику; Харли использует его один раз и никогда не сохраняет. Профили кандидатов импортируются, но вложения с резюме не загружаются. "}</p>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={importJoin}
                   disabled={!jobId || !joinApiToken.trim() || isPending}
                 >
-                  {isPending ? "Importing…" : "Import JOIN candidates"}
+                  {isPending ? "Импорт…" : "Импортировать кандидатов JOIN"}
                 </Button>
               </div>
             ) : null}
@@ -719,7 +691,7 @@ export function ImportCandidatesDrawer({
             {file && !summary ? (
               <>
                 <div className="space-y-2">
-                  <Label>Map columns</Label>
+                  <Label>{"Столбцы карты"}</Label>
                   <div className="grid grid-cols-2 gap-3">
                     {IMPORT_FIELDS.map((field) => (
                       <div key={field.key} className="space-y-1.5">
@@ -742,13 +714,13 @@ export function ImportCandidatesDrawer({
                             id={`map-${field.key}`}
                             className="w-full"
                           >
-                            <SelectValue placeholder="Not mapped" />
+                            <SelectValue placeholder={"Не сопоставлено"} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value={UNMAPPED}>Not mapped</SelectItem>
+                            <SelectItem value={UNMAPPED}>{"Не сопоставлено"}</SelectItem>
                             {file.headers.map((header, index) => (
                               <SelectItem key={index} value={index.toString()}>
-                                {header || `Column ${index + 1}`}
+                                {header || `Столбец ${index + 1}`}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -758,11 +730,11 @@ export function ImportCandidatesDrawer({
                   </div>
                 </div>
                 {mappingError ? (
-                  <p className="text-sm text-destructive">{mappingError}</p>
+                  <p className="text-sm text-destructive">{localizeSystemText(mappingError)}</p>
                 ) : null}
 
                 <div className="space-y-2">
-                  <Label>Preview</Label>
+                  <Label>{"Предварительный просмотр"}</Label>
                   <div className="max-h-64 overflow-auto rounded-lg border">
                     <Table>
                       <TableHeader>
@@ -791,7 +763,7 @@ export function ImportCandidatesDrawer({
                                       ImportFieldKey,
                                       "fullName"
                                     >
-                                  ] || "Not provided"}
+                                  ] || "Не предусмотрено"}
                                 </TableCell>
                               ))}
                             </TableRow>
@@ -800,11 +772,9 @@ export function ImportCandidatesDrawer({
                     </Table>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {rowsToImport.length} row
-                    {rowsToImport.length === 1 ? "" : "s"} found,{" "}
-                    {validRowCount} ready to import
-                    {rowsToImport.length > PREVIEW_ROWS
-                      ? `, showing the first ${PREVIEW_ROWS}`
+                    {rowsToImport.length} {"строк "} {"нашел,"}{" "}
+                    {validRowCount} {"готов к импорту "}{rowsToImport.length > PREVIEW_ROWS
+                      ? `, показывая первый ${PREVIEW_ROWS}`
                       : ""}
                     .
                   </p>
@@ -818,24 +788,21 @@ export function ImportCandidatesDrawer({
                   <span className="font-semibold text-foreground">
                     {summary.imported}
                   </span>{" "}
-                  candidate{summary.imported === 1 ? "" : "s"} imported.
-                  {summary.alreadyInPipeline > 0
-                    ? ` ${summary.alreadyInPipeline} already in this job's pipeline.`
+                  {"кандидат"} {"импортировано. "}{summary.alreadyInPipeline > 0
+                    ? ` ${summary.alreadyInPipeline} уже в стадии разработки.`
                     : ""}
                   {summary.skipped
-                    ? ` ${summary.skipped} incomplete ${skippedSourceLabel} profile${summary.skipped === 1 ? " was" : "s were"} skipped.`
+                    ? ` ${summary.skipped} неполный ${skippedSourceLabel} профиль${summary.skipped === 1 ? " was" : "были"} пропущен.`
                     : ""}
                 </p>
                 {summary.errors.length > 0 ? (
                   <div className="space-y-1.5">
                     <p className="font-medium text-foreground">
-                      {summary.errors.length} row
-                      {summary.errors.length === 1 ? "" : "s"} skipped:
-                    </p>
+                      {summary.errors.length} {"строк "} {"пропущено: "}</p>
                     <ul className="max-h-40 space-y-1 overflow-auto text-xs text-muted-foreground">
                       {summary.errors.map((error) => (
                         <li key={error.row}>
-                          Row {error.row}
+                          {"Строка "}{error.row}
                           {error.email ? ` (${error.email})` : ""}:{" "}
                           {error.reason}
                         </li>

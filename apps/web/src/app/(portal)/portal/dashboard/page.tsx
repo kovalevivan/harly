@@ -73,7 +73,7 @@ export default async function PortalDashboardPage() {
   ]);
 
   const showPipeline = settings?.showStatus !== false;
-  const orgName = org?.name ?? "this company";
+  const orgName = org?.name ?? "эта компания";
 
   const appRows = await db
     .select({
@@ -116,9 +116,9 @@ export default async function PortalDashboardPage() {
           )}
           <PortalEmptyState
             icon={BriefcaseIcon}
-            title="No applications yet"
-            description="Browse open positions and apply to get started."
-            cta={{ label: "Browse positions", href: "/portal/jobs" as Route }}
+            title={"Пока нет заявок"}
+            description={"Просмотрите открытые вакансии и подайте заявку, чтобы начать работу."}
+            cta={{ label: "Просмотр позиций", href: "/portal/jobs" as Route }}
           />
         </div>
       </PortalShell>
@@ -179,13 +179,11 @@ export default async function PortalDashboardPage() {
             {session.firstName} {session.lastName}
           </h1>
           <p className="mt-1 text-base text-muted-foreground">
-            For <span className="font-medium text-foreground">{primaryApp.jobTitle}</span> at{" "}
+            {"Для "}<span className="font-medium text-foreground">{primaryApp.jobTitle}</span> {"в"}{" "}
             <span className="font-medium text-foreground">{orgName}</span>
           </p>
           <p className="mt-3 text-base text-muted-foreground">
-            Hello 👋 from {orgName}! We&apos;ll use this guide to share information
-            about our company, the job, and track your interview process.
-          </p>
+            {"Привет 👋 из "}{orgName}{"! Мы будем использовать это руководство, чтобы делиться информацией о нашей компании, вакансии и отслеживать процесс вашего собеседования. "}</p>
         </div>
 
         {/* Two-column: Interview plan | Interviews */}
@@ -207,7 +205,7 @@ export default async function PortalDashboardPage() {
         {(settings?.description || settings?.websiteUrl) && (
           <section className="rounded-2xl border border-border bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
             <h2 className="mb-3 text-xl font-bold text-foreground">
-              Welcome to {orgName}!
+              {"Добро пожаловать в "}{orgName}!
             </h2>
             {settings.description && (
               <p className="text-base leading-relaxed text-muted-foreground">
@@ -222,8 +220,7 @@ export default async function PortalDashboardPage() {
                 className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
               >
                 <GlobeIcon className="size-4" />
-                Visit website
-                <ArrowUpRightIcon className="size-3" />
+                {"Посетите веб-сайт "}<ArrowUpRightIcon className="size-3" />
               </a>
             )}
           </section>
@@ -233,8 +230,7 @@ export default async function PortalDashboardPage() {
         {hiringTeam.length > 0 && (
           <section>
             <h2 className="mb-4 text-lg font-semibold text-foreground">
-              Meet your hiring team
-            </h2>
+              {"Познакомьтесь со своей командой по найму "}</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {hiringTeam.map((member) => (
                 <div
@@ -257,7 +253,7 @@ export default async function PortalDashboardPage() {
                     <p className="truncate font-medium text-foreground">
                       {member.name}
                     </p>
-                    <p className="text-sm text-muted-foreground">Interviewer</p>
+                    <p className="text-sm text-muted-foreground">{"Интервьюер"}</p>
                   </div>
                 </div>
               ))}

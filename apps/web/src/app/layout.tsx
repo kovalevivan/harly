@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(getHarlyPublicOrigin()),
     title: "Harly",
-    description: "Open-source applicant tracking system for modern teams.",
+    description: "Система отслеживания кандидатов с открытым исходным кодом для современных команд.",
     icons: {
       icon: "/favicon.svg",
     },
@@ -55,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ru"
       suppressHydrationWarning
       className={`${onest.variable} ${onestVariable.variable} ${GeistMono.variable} h-full antialiased`}
       data-scroll-behavior="smooth"

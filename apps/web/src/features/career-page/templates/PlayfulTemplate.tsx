@@ -22,7 +22,7 @@ const VALUE_ART = [
 ];
 
 const reveal =
-  "duration-700 animate-in fade-in slide-in-from-bottom-3 fill-mode-backwards motion-reduce:animate-none";
+  "продолжительность-700 анимация постепенное появление слайд-вниз-снизу-3 режим заливки назад движение-уменьшение: анимация-нет";
 
 export function PlayfulTemplate({
   workspace,
@@ -41,7 +41,7 @@ export function PlayfulTemplate({
   const ctaColor = config.cta.color ?? accent;
   const overlayFrom = config.hero.overlayFrom ?? `${accent}E6`;
   const overlayTo = config.hero.overlayTo ?? `${accent}00`;
-  const headline = config.hero.headline || "Join us";
+  const headline = config.hero.headline || "Присоединяйтесь к нам";
   const heroImage = config.hero.imageUrl ?? workspace.heroImageUrl;
   const logo = workspace.logoUrl;
 
@@ -100,10 +100,8 @@ export function PlayfulTemplate({
         <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
           <div className={reveal}>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-              Careers
-              <span className="rounded-full bg-white px-2 py-0.5 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100">
-                Join us
-              </span>
+              {"Карьера "}<span className="rounded-full bg-white px-2 py-0.5 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100">
+                {"Присоединяйтесь к нам "}</span>
             </span>
             <h1 className="mt-5 text-5xl font-semibold tracking-tight sm:text-6xl">
               {headline}
@@ -181,8 +179,7 @@ export function PlayfulTemplate({
                 href="#positions"
                 className="mt-6 block rounded-xl bg-zinc-900 px-4 py-2.5 text-center text-sm font-medium text-white transition-transform duration-150 active:scale-[0.98] dark:bg-zinc-100 dark:text-zinc-900"
               >
-                See open positions
-              </a>
+                {"Посмотреть открытые позиции "}</a>
             </aside>
           )}
         </div>
@@ -320,8 +317,7 @@ export function PlayfulTemplate({
                   className="rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-transform duration-150 active:scale-[0.98]"
                   style={{ backgroundColor: ctaColor }}
                 >
-                  Get in touch
-                </a>
+                  {"Свяжитесь с нами "}</a>
               )}
             </div>
           </div>

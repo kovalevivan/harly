@@ -4,13 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { WeeklyAvailability } from "@harly/db";
 
 const DAY_LABELS: Record<keyof WeeklyAvailability, string> = {
-  monday: "Mon",
-  tuesday: "Tue",
-  wednesday: "Wed",
-  thursday: "Thu",
-  friday: "Fri",
-  saturday: "Sat",
-  sunday: "Sun",
+  monday: "Пн.",
+  tuesday: "Вт",
+  wednesday: "ср.",
+  thursday: "Чт",
+  friday: "Пт",
+  saturday: "Суббота",
+  sunday: "Солнце",
 };
 
 export function PersonAvailabilityCard({
@@ -35,19 +35,18 @@ export function PersonAvailabilityCard({
       <CardHeader>
         <CardTitle className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
           <Clock className="size-3.5" />
-          Availability
-        </CardTitle>
+          {"Доступность "}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         {timezone && (
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Timezone</span>
+            <span className="text-muted-foreground">{"Часовой пояс"}</span>
             <span className="font-medium">{timezone}</span>
           </div>
         )}
         {capacityHoursPerWeek != null && (
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Capacity</span>
+            <span className="text-muted-foreground">{"Емкость"}</span>
             <span className="font-medium">{capacityHoursPerWeek} hrs/week</span>
           </div>
         )}

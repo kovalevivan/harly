@@ -19,8 +19,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <AuthShell branding={branding}>
       <AuthCard
-        title="Sign in"
-        subtitle="Welcome back. Enter your credentials to continue."
+        title={"Войти"}
+        subtitle={"С возвращением! Введите данные для входа."}
       >
         <LoginForm redirect={redirect} methods={methods} />
       </AuthCard>

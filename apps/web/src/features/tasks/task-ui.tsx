@@ -100,11 +100,11 @@ export function urgencyOf(iso: string | null, todayStart: string): UrgencyKey {
 export const URGENCY_ORDER: UrgencyKey[] = ["overdue", "today", "week", "later", "none"];
 
 export const URGENCY_LABEL: Record<UrgencyKey, string> = {
-  overdue: "Overdue",
-  today: "Due today",
-  week: "This week",
-  later: "Later",
-  none: "No due date",
+  overdue: "Просрочено",
+  today: "Срок сегодня",
+  week: "На этой неделе",
+  later: "Позже",
+  none: "Нет срока сдачи",
 };
 
 export const URGENCY_DOT: Record<UrgencyKey, string> = {
@@ -120,11 +120,11 @@ export const URGENCY_DOT: Record<UrgencyKey, string> = {
 export function RelativeDate({ iso }: { iso: string | null }) {
   // Reading the clock is impure, so it lives in useMemo (not the render body).
   const view = useMemo(() => {
-    if (!iso) return { label: "No date", cls: "text-muted-foreground" };
+    if (!iso) return { label: "Без даты", cls: "text-muted-foreground" };
     const dateKey = taskDateKey(iso);
-    if (!dateKey) return { label: "No date", cls: "text-muted-foreground" };
+    if (!dateKey) return { label: "Без даты", cls: "text-muted-foreground" };
     const d = new Date(`${dateKey}T12:00:00`);
-    const label = new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(d);
+    const label = new Intl.DateTimeFormat("ru-RU", { month: "short", day: "numeric" }).format(d);
     const today = currentTaskDateKey();
     if (dateKey < today) return { label, cls: "font-medium text-rust" };
     if (dateKey === today) return { label, cls: "font-medium text-clay" };

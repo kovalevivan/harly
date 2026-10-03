@@ -10,13 +10,15 @@ import {
 import { useTheme } from "@/components/ThemeProvider"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 
-const Toaster = ({ ...props }: ToasterProps) => {
+const Toaster = ({ toastOptions, ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
 
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
+      containerAriaLabel="Уведомления"
+      toastOptions={{ closeButtonAriaLabel: "Закрыть уведомление", ...toastOptions }}
       icons={{
         success: <CircleCheckIcon className="size-4" />,
         info: <InfoIcon className="size-4" />,

@@ -103,31 +103,25 @@ export function CandidateProfileTabs({
         variant="line"
         className="w-full justify-start gap-5 overflow-x-auto border-b border-hairline text-sm [&>button]:flex-none [&>button]:px-0.5"
       >
-        <TabsTrigger value="profile">Profile</TabsTrigger>
+        <TabsTrigger value="profile">{"Профиль"}</TabsTrigger>
         <TabsTrigger value="interviews">
-          Interviews
-          <TabCount value={interviews.length} />
+          {"Собеседования "}<TabCount value={interviews.length} />
         </TabsTrigger>
         <TabsTrigger value="communication">
-          Communication
-          <TabCount value={messages.length} />
+          {"Общение "}<TabCount value={messages.length} />
         </TabsTrigger>
         <TabsTrigger value="evaluation">
-          Evaluation
-          <TabCount value={scorecards.length} />
+          {"Оценка "}<TabCount value={scorecards.length} />
         </TabsTrigger>
         <TabsTrigger value="offers">
-          Offers
-          <TabCount value={offers.length} />
+          {"Предложения "}<TabCount value={offers.length} />
         </TabsTrigger>
         <TabsTrigger value="activity">
-          Activity
-          <TabCount value={activity.length + notes.length} />
+          {"Деятельность "}<TabCount value={activity.length + notes.length} />
         </TabsTrigger>
         {privacyRequests.length > 0 ? (
           <TabsTrigger value="privacy">
-            Privacy
-            <TabCount value={privacyRequests.length} />
+            {"Конфиденциальность "}<TabCount value={privacyRequests.length} />
           </TabsTrigger>
         ) : null}
       </TabsList>
@@ -173,16 +167,15 @@ export function CandidateProfileTabs({
             trigger={
               <Button size="sm">
                 <Plus className="size-4" />
-                Schedule interview
-              </Button>
+                {"Назначить собеседование "}</Button>
             }
           />
         </div>
         {interviews.length === 0 ? (
           <EmptySection
             icon={CalendarClock}
-            title="No interviews yet"
-            hint="Schedule one with the button above. The join link, the interviewer and the notes all stay on the card."
+            title={"Пока нет интервью"}
+            hint={"Запланируйте его с помощью кнопки выше. Ссылка для присоединения, интервьюер и заметки остаются на карте."}
           />
         ) : (
           <div className="space-y-3 duration-300 animate-in fade-in slide-in-from-bottom-1">
@@ -215,16 +208,15 @@ export function CandidateProfileTabs({
             trigger={
               <Button size="sm">
                 <Mail className="size-4" />
-                New message
-              </Button>
+                {"Новое сообщение "}</Button>
             }
           />
         </div>
         {messages.length === 0 ? (
           <EmptySection
             icon={Mail}
-            title={`You haven't emailed ${candidateName.split(" ")[0]} yet`}
-            hint="Write the first message above. Their replies arrive in the Inbox and thread back here automatically."
+            title={`Вы еще не отправили электронное письмо ${candidateName.split(" ")[0]}`}
+            hint={"Напишите первое сообщение выше. Их ответы поступают в папку «Входящие» и автоматически возвращаются сюда."}
           />
         ) : (
           <div className="space-y-4 duration-300 animate-in fade-in slide-in-from-bottom-1">
@@ -253,8 +245,8 @@ export function CandidateProfileTabs({
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
             {scorecards.length === 0
-              ? "Nobody on the team has scored this candidate yet."
-              : `${scorecards.length} evaluation${scorecards.length === 1 ? "" : "s"} from the team.`}
+              ? "Никто в команде еще не забил этого кандидата."
+              : `${scorecards.length} оценка от команды.`}
           </p>
           {applications[0] ? (
             <EvaluationDrawer
@@ -265,15 +257,13 @@ export function CandidateProfileTabs({
               trigger={
                 <Button size="sm">
                   <ClipboardCheck className="size-4" />
-                  Add evaluation
-                </Button>
+                  {"Добавить оценку "}</Button>
               }
             />
           ) : (
-            <Button size="sm" disabled title="This candidate has no application to score">
+            <Button size="sm" disabled title={"У этого кандидата нет заявки на получение баллов"}>
               <ClipboardCheck className="size-4" />
-              Add evaluation
-            </Button>
+              {"Добавить оценку "}</Button>
           )}
         </div>
         <ScorecardList scorecards={scorecards} />
@@ -294,8 +284,7 @@ export function CandidateProfileTabs({
         {/* Notes always on top so the form is reachable without scrolling */}
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Notes &amp; comments
-          </p>
+            {"Примечания и комментарии "}</p>
           <NoteForm
             candidateId={candidateId}
             workspaceId={workspaceId}
@@ -307,8 +296,7 @@ export function CandidateProfileTabs({
         {activity.length > 0 ? (
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Timeline
-            </p>
+              {"Хронология "}</p>
             <ActivityTimeline activity={activity} />
           </div>
         ) : null}
@@ -316,8 +304,8 @@ export function CandidateProfileTabs({
         {activity.length === 0 && notes.length === 0 ? (
           <EmptySection
             icon={MessageSquare}
-            title="Nothing has happened yet"
-            hint="Stage moves, notes, emails and interviews all land here in order, so you can see how this candidate got to where they are."
+            title={"Еще ничего не произошло"}
+            hint={"Сценические ходы, заметки, электронные письма и интервью — все это размещается здесь по порядку, чтобы вы могли увидеть, как этот кандидат добился того, чего он достиг."}
           />
         ) : null}
       </TabsContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import {
   AnimatePresence,
   motion,
@@ -163,7 +164,7 @@ export function OnboardingShell({
 
             {error && (
               <p className="mt-5 rounded-lg border border-destructive/25 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-                {error}
+                {localizeSystemText(error)}
               </p>
             )}
           </div>
@@ -176,8 +177,7 @@ export function OnboardingShell({
               <>
                 {current > 0 && (
                   <Button variant="ghost" size="sm" disabled={pending} onClick={onBack}>
-                    Back
-                  </Button>
+                    {"Назад "}</Button>
                 )}
                 {onSkip && (
                   <Button
@@ -187,8 +187,7 @@ export function OnboardingShell({
                     disabled={pending}
                     onClick={onSkip}
                   >
-                    Skip
-                  </Button>
+                    {"Пропустить "}</Button>
                 )}
                 <Button
                   size="sm"

@@ -19,8 +19,7 @@ export default async function ConfigureAiSettingsPage() {
       <Button asChild variant="ghost" size="sm" className="-ml-3 w-fit">
         <Link href="/settings/ai">
           <CaretLeftIcon className="size-4" />
-          AI settings
-        </Link>
+          {"Настройки ИИ "}</Link>
       </Button>
       <AiSettingsForm status={status} />
     </div>

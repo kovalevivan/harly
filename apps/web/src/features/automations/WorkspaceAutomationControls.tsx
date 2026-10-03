@@ -26,13 +26,13 @@ export function WorkspaceAutomationControls({
         reason: trimmed,
       });
       if (!result.ok || !result.policy) {
-        toast.error(result.error ?? "Could not update workspace automations.");
+        toast.error(result.error ?? "Не удалось обновить средства автоматизации рабочей области.");
         return;
       }
       setPolicy(result.policy);
       setReason("");
       toast.success(
-        nextEnabled ? "Workspace automations resumed." : "Workspace automations paused.",
+        nextEnabled ? "Автоматизация рабочего пространства возобновилась." : "Автоматизация рабочего пространства приостановлена.",
       );
     });
   }
@@ -45,18 +45,15 @@ export function WorkspaceAutomationControls({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 id="workspace-automation-policy-title" className="text-base font-semibold text-near-ink">
-            Workspace automation controls
-          </h2>
+            {"Средства автоматизации рабочего пространства "}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Workspace limits: {policy.maxRunsPerMinute} new runs and {policy.maxExternalActionsPerMinute} external actions per minute, with up to {policy.maxConcurrentRuns} active runs.
-          </p>
+            {"Ограничения рабочего пространства: "}{policy.maxRunsPerMinute} {"новые пробеги и "}{policy.maxExternalActionsPerMinute} {"внешних действий в минуту, до "}{policy.maxConcurrentRuns} {"активные пробежки. "}</p>
           <p role="status" aria-live="polite" className="mt-2 text-sm font-medium">
-            Automations are {enabled ? "enabled" : "paused"} for this workspace.
-          </p>
+            {"Автоматизация "}{enabled ? "включена" : "приостановлена"} {"для этого рабочего пространства. "}</p>
           {!enabled && policy.pausedAt && (
             <p className="mt-1 text-sm text-muted-foreground">
-              Paused {new Date(policy.pausedAt).toLocaleString()}
-              {policy.pausedById ? ` by ${policy.pausedById}` : ""}.
+              {"Приостановлено "}{new Date(policy.pausedAt).toLocaleString("ru-RU")}
+              {policy.pausedById ? ` на ${policy.pausedById}` : ""}.
               {policy.pauseReason ? ` Reason: ${policy.pauseReason}` : ""}
             </p>
           )}
@@ -67,7 +64,7 @@ export function WorkspaceAutomationControls({
           disabled={pending || !reason.trim()}
           className="rounded-md border border-border px-4 py-2 text-sm font-semibold text-near-ink disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {pending ? "Saving…" : enabled ? "Pause workspace automations" : "Resume workspace automations"}
+          {pending ? "Сохранение…" : enabled ? "Приостановить автоматизацию рабочего пространства" : "Возобновить автоматизацию рабочего пространства"}
         </button>
       </div>
       <div className="mt-4 max-w-2xl">
@@ -75,8 +72,7 @@ export function WorkspaceAutomationControls({
           htmlFor="workspace-automation-reason"
           className="mb-1 block text-sm font-medium text-near-ink"
         >
-          Reason for this change
-        </label>
+          {"Причина этого изменения "}</label>
         <textarea
           id="workspace-automation-reason"
           value={reason}
@@ -88,8 +84,7 @@ export function WorkspaceAutomationControls({
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-near-ink"
         />
         <p id="workspace-automation-reason-help" className="mt-1 text-xs text-muted-foreground">
-          Required for pause and resume; up to 500 characters.
-        </p>
+          {"Требуется для паузы и возобновления; до 500 символов. "}</p>
       </div>
     </section>
   );

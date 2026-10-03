@@ -24,27 +24,27 @@ export const DSAR_STATUS_META: Record<
   { label: string; badgeVariant: BadgeVariant; accentClassName: string }
 > = {
   pending: {
-    label: "Pending",
+    label: "Ожидается",
     badgeVariant: "warning",
     accentClassName: "bg-clay",
   },
   processing: {
-    label: "In progress",
+    label: "В процессе",
     badgeVariant: "info",
     accentClassName: "bg-slate-info",
   },
   blocked: {
-    label: "Blocked by legal hold",
+    label: "Заблокировано юридическим удержанием",
     badgeVariant: "warning",
     accentClassName: "bg-clay",
   },
   completed: {
-    label: "Completed",
+    label: "Завершено",
     badgeVariant: "success",
     accentClassName: "bg-lime",
   },
   denied: {
-    label: "Denied",
+    label: "Отказано",
     badgeVariant: "danger",
     accentClassName: "bg-destructive",
   },
@@ -55,12 +55,12 @@ export const DSAR_TYPE_META: Record<
   { label: string; icon: typeof Download; className: string }
 > = {
   export: {
-    label: "Data export request",
+    label: "Запрос на экспорт данных",
     icon: Download,
     className: "bg-slate-info/10 text-slate-info",
   },
   erasure: {
-    label: "Erasure request",
+    label: "Запрос на удаление",
     icon: Trash2,
     className: "bg-destructive/10 text-destructive",
   },

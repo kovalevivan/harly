@@ -31,7 +31,7 @@ export function CandidateTags({
     startTransition(async () => {
       const result = await addCandidateTag({ candidateId, workspaceId, label });
       if (!result.success) {
-        toast.error(result.error ?? "Could not add tag.");
+        toast.error(result.error ?? "Не удалось добавить тег.");
         return;
       }
       setDraft("");
@@ -44,7 +44,7 @@ export function CandidateTags({
     startTransition(async () => {
       const result = await removeCandidateTag({ tagId, candidateId, workspaceId });
       if (!result.success) {
-        toast.error(result.error ?? "Could not remove tag.");
+        toast.error(result.error ?? "Не удалось удалить тег.");
         return;
       }
       router.refresh();
@@ -64,7 +64,7 @@ export function CandidateTags({
             onClick={() => remove(tag.id)}
             disabled={isPending}
             className="text-sage-ink/60 transition-colors hover:text-sage-ink"
-            aria-label={`Remove ${tag.label}`}
+            aria-label={`Удалить ${tag.label}`}
           >
             <X className="size-3" />
           </button>
@@ -85,7 +85,7 @@ export function CandidateTags({
             }
           }}
           onBlur={add}
-          placeholder="Tag name…"
+          placeholder={"Имя тега…"}
           className="h-7 w-32 rounded-full px-3 text-xs"
         />
       ) : (
@@ -95,8 +95,7 @@ export function CandidateTags({
           className="inline-flex items-center gap-1 rounded-full border border-dashed px-2.5 py-0.5 text-xs font-medium text-muted-foreground transition-colors hover:border-ring/40 hover:text-foreground"
         >
           <Plus className="size-3" />
-          Tag
-        </button>
+          {"Тег "}</button>
       )}
     </div>
   );

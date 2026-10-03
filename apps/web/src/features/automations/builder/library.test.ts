@@ -5,8 +5,8 @@ import { filterLibraryItems, libraryItems } from "./library";
 describe("T07 — library search and clickable blocks", () => {
   it("filters actions by label without requiring JSON", () => {
     const items = libraryItems();
-    const email = filterLibraryItems(items, "email");
-    expect(email.some((item) => item.label.toLowerCase().includes("email"))).toBe(true);
+    const email = filterLibraryItems(items, "письмо");
+    expect(email.some((item) => item.label.toLowerCase().includes("письмо"))).toBe(true);
     expect(email.every((item) => item.blurb.length > 0 || item.label.length > 0)).toBe(true);
   });
 

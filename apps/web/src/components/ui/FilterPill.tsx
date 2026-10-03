@@ -31,7 +31,7 @@ export function FilterPill({
 }) {
   const neutral = allValue ?? FILTER_ALL;
   const active = value !== neutral;
-  const display = value === FILTER_ALL ? "All" : (labelMap?.[value] ?? value);
+  const display = value === FILTER_ALL ? "Все" : (labelMap?.[value] ?? value);
 
   return (
     <Select value={value} onValueChange={onChange}>
@@ -51,7 +51,7 @@ export function FilterPill({
         </span>
       </SelectTrigger>
       <SelectContent position="popper" align="start" className="max-h-60">
-        {allValue === undefined ? <SelectItem value={FILTER_ALL}>All</SelectItem> : null}
+        {allValue === undefined ? <SelectItem value={FILTER_ALL}>{"Все"}</SelectItem> : null}
         {options.map((opt) => (
           <SelectItem key={opt} value={opt}>
             {labelMap?.[opt] ?? opt}

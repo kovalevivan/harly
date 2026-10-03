@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 import { JobStatusBadge } from "@/components/ui/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -59,13 +60,13 @@ export default async function DashboardJobPage({
     <JobForm
       action={updateJobAction}
       job={job}
-      submitLabel="Save changes"
+      submitLabel={"Сохранить изменения"}
       departments={departments}
       hiringTeam={hiringTeam}
       workspaceMembers={workspaceMembers}
       aiConfigured={aiStatus.enabled && aiStatus.hasApiKey}
       candidatePoolCount={candidatePoolCount}
-      eyebrow="Job detail"
+      eyebrow={"Детали работы"}
       statusBadge={<JobStatusBadge status={job.status} />}
       previewWorkspace={careerPageData?.workspace ?? null}
       previewConfig={careerPageData?.config ?? null}
@@ -75,10 +76,12 @@ export default async function DashboardJobPage({
       railActions={
         <>
           <Button asChild variant="outline" size="sm" className="w-full justify-start">
+            <Link href={`/dashboard/jobs/${job.id}/headhunter-demo`}>HeadHunter · демо</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm" className="w-full justify-start">
             <a href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
               <ExternalLink className="size-4" />
-              View job
-            </a>
+              {"Посмотреть вакансию "}</a>
           </Button>
           <JobShareButton
             url={publicUrl}

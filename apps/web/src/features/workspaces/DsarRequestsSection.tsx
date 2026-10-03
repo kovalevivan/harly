@@ -22,25 +22,21 @@ export function DsarRequestsSection({
             id="dsar-requests-heading"
             className="font-display text-lg font-semibold tracking-tight"
           >
-            Requests
-          </h2>
+            {"Запросы "}</h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Open a candidate to review their applications, activity, notes, and
-            request context before deciding.
-          </p>
+            {"Прежде чем принять решение, откройте кандидата, чтобы просмотреть его заявки, действия, заметки и контекст запроса. "}</p>
         </div>
         <span className="shrink-0 rounded-full border bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground">
           {requests.filter((request) => request.status === "pending").length}{" "}
-          awaiting review
-        </span>
+          {"ожидает рассмотрения "}</span>
       </div>
 
       {requests.length === 0 ? (
         <EmptyState
           className="mt-5"
           icon={ShieldCheck}
-          title="No privacy requests yet"
-          description="Candidate export and deletion requests will appear here for review."
+          title={"Запросов на конфиденциальность пока нет"}
+          description={"Запросы на экспорт и удаление кандидатов будут появляться здесь для рассмотрения."}
         />
       ) : (
         <div className="mt-5 overflow-hidden rounded-xl border bg-card">
@@ -51,7 +47,7 @@ export function DsarRequestsSection({
                 request.requestedBy ??
                 "Deleted candidate";
               const typeMeta = DSAR_TYPE_META[request.type];
-              const date = new Intl.DateTimeFormat(undefined, {
+              const date = new Intl.DateTimeFormat("ru-RU", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
@@ -84,18 +80,18 @@ export function DsarRequestsSection({
                     <p className="truncate text-sm text-muted-foreground">
                       {request.candidateEmail ??
                         request.requestedBy ??
-                        "Candidate details are no longer available"}{" "}
-                      · Requested {date}
+                        "Сведения о кандидате больше не доступны."}{" "}
+                      {"· Запрошено "}{date}
                     </p>
                     {request.notes ? (
                       <p className="line-clamp-1 text-xs text-muted-foreground">
-                        Review note: {request.notes}
+                        {"Примечание к обзору: "}{request.notes}
                       </p>
                     ) : null}
                     {request.status === "blocked" && request.reviewDueAt ? (
                       <p className="text-xs text-muted-foreground">
-                        Legal hold review due{" "}
-                        {new Date(request.reviewDueAt).toLocaleDateString()}.
+                        {"Ожидается юридическая приостановка проверки"}{" "}
+                        {new Date(request.reviewDueAt).toLocaleDateString("ru-RU")}.
                       </p>
                     ) : null}
                   </div>

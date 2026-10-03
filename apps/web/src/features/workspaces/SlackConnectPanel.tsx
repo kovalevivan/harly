@@ -1,5 +1,6 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/notification-island/toast";
@@ -62,16 +63,16 @@ export function SlackConnectPanel({
   const statusTone = isConnected ? (status.enabled ? "on" : "off") : "neutral";
   const statusLabel = isConnected
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   const installUrl = `/api/integrations/slack/install?ws=${workspaceId}`;
 
   function toggleEnabled(next: boolean) {
     if (!isConnected) return;
     if (next && !status.channelId) {
-      toast.error("Select a channel first.");
+      toast.error("Сначала выберите канал.");
       return;
     }
     startToggle(async () => {
@@ -82,10 +83,10 @@ export function SlackConnectPanel({
         events: status.events,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
-      toast.success(next ? "Slack notifications on" : "Slack notifications off");
+      toast.success(next ? "Slack-уведомления включены" : "Slack-уведомления отключены");
       router.refresh();
     });
   }
@@ -94,10 +95,10 @@ export function SlackConnectPanel({
     startDisconnect(async () => {
       const result = await disconnectSlackAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Slack disconnected");
+      toast.success("Slack отключен");
       router.refresh();
     });
   }
@@ -121,17 +122,17 @@ export function SlackConnectPanel({
                   aria-expanded={open}
                 >
                   <GearSixIcon className="size-4" />
-                  {open ? "Hide settings" : "Manage"}
+                  {open ? "Скрыть настройки" : "Управление"}
                 </Button>
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
                   <Switch
                     checked={status.enabled}
                     disabled={togglePending}
                     onCheckedChange={toggleEnabled}
-                    aria-label="Enable Slack notifications"
+                    aria-label={"Включить уведомления Slack"}
                   />
                   <span className="text-muted-foreground">
-                    {status.enabled ? "On" : "Off"}
+                    {status.enabled ? "On" : "Выкл."}
                   </span>
                 </label>
               </>
@@ -139,8 +140,7 @@ export function SlackConnectPanel({
               <Button asChild>
                 <a href={installUrl}>
                   <SlackLogo className="size-4" />
-                  Add to Slack
-                </a>
+                  {"Добавить в Slack "}</a>
               </Button>
             ) : (
               <Button
@@ -149,8 +149,7 @@ export function SlackConnectPanel({
                 aria-expanded={open}
               >
                 <SlackLogo className="size-4" />
-                Set up Slack
-              </Button>
+                {"Настройте Слак "}</Button>
             )
           ) : null
         }
@@ -160,27 +159,25 @@ export function SlackConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on
-            the server to enable encrypted credential storage.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере, чтобы включить зашифрованное хранилище учетных данных. "}</p>
         </div>
       ) : null}
 
       {isConnected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <StatCell label="Workspace">
+            <StatCell label={"Рабочая область"}>
               <SlackLogo className="size-4" />
-              {status.teamName ?? "Not connected"}
+              {status.teamName ?? "Не подключено"}
             </StatCell>
-            <StatCell label="Channel">
-              {status.channelName ? `#${status.channelName}` : "Not selected"}
+            <StatCell label={"Канал"}>
+              {status.channelName ? `#${status.channelName}` : "Не выбрано"}
             </StatCell>
-            <StatCell label="Events">
+            <StatCell label={"События"}>
               <span className="text-muted-foreground">
                 {status.events.length === 0
-                  ? "None selected"
-                  : `${status.events.length} subscribed`}
+                  ? "Ничего не выбрано"
+                  : `${status.events.length} подписался`}
               </span>
             </StatCell>
           </div>
@@ -190,19 +187,19 @@ export function SlackConnectPanel({
       {isConnected && status.lastDelivery ? (
         <Card className="p-4 text-sm">
           <div className="flex items-center justify-between gap-3">
-            <span className="font-medium">Delivery health</span>
+            <span className="font-medium">{"Здоровье доставки"}</span>
             <span className="text-muted-foreground">
               {status.lastDelivery.status === "success"
-                ? "Healthy"
+                ? "Здоровый"
                 : status.lastDelivery.status === "dead_letter"
-                  ? "Action required"
-                  : "Retrying"}
+                  ? "Требуется действие"
+                  : "Повторная попытка"}
             </span>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
             {status.pendingDeliveries > 0
-              ? `${status.pendingDeliveries} notification${status.pendingDeliveries === 1 ? "" : "s"} pending.`
-              : `Last delivery attempt: ${status.lastDelivery.attempts}.`}
+              ? `${status.pendingDeliveries} уведомление ожидается.`
+              : `Последняя попытка доставки: ${status.lastDelivery.attempts}.`}
             {status.lastDelivery.error ? ` ${status.lastDelivery.error}` : ""}
           </p>
         </Card>
@@ -236,10 +233,10 @@ function SlackCredentialsForm({ onSaved }: { onSaved: () => void }) {
     startSave(async () => {
       const result = await saveSlackCredentialsAction({ clientId, clientSecret });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Slack credentials saved. You can now connect.");
+      toast.success("Учетные данные Slack сохранены. Теперь вы можете подключиться.");
       onSaved();
     });
   }
@@ -254,12 +251,9 @@ function SlackCredentialsForm({ onSaved }: { onSaved: () => void }) {
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            Set up Slack integration
-          </h2>
+            {"Настройте интеграцию со Slack "}</h2>
           <p className="text-sm text-muted-foreground">
-            Create a Slack App, then paste the credentials. Your Client Secret is
-            encrypted at rest.
-          </p>
+            {"Создайте приложение Slack, затем вставьте учетные данные. Ваш клиентский секрет зашифрован. "}</p>
         </div>
         <a
           href="https://api.slack.com/apps"
@@ -267,17 +261,16 @@ function SlackCredentialsForm({ onSaved }: { onSaved: () => void }) {
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pine transition-colors hover:text-pine-strong"
         >
-          Slack apps
-          <ArrowUpRightIcon className="size-3.5" />
+          {"Слак-приложения "}<ArrowUpRightIcon className="size-3.5" />
         </a>
       </div>
 
       <div className="space-y-4">
         <div className="rounded-lg border bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground space-y-1.5">
-          <p className="font-medium text-foreground">How to get credentials:</p>
+          <p className="font-medium text-foreground">{"Как получить учетные данные:"}</p>
           <ol className="list-decimal space-y-1 pl-4">
             <li>
-              Go to{" "}
+              {"Перейти к"}{" "}
               <a
                 href="https://api.slack.com/apps"
                 target="_blank"
@@ -286,21 +279,20 @@ function SlackCredentialsForm({ onSaved }: { onSaved: () => void }) {
               >
                 api.slack.com/apps
               </a>{" "}
-              and create a new app
-            </li>
+              {"и создайте новое приложение "}</li>
             <li>
-              Under OAuth &amp; Permissions, add scopes: <code>chat:write</code>,{" "}
+              {"В разделе «OAuth и разрешения» добавьте области: "}<code>chat:write</code>,{" "}
               <code>channels:read</code>, <code>groups:read</code>
             </li>
             <li>
-              Set the Redirect URL to: <code>{redirectUrl}</code>
+              {"Установите URL-адрес перенаправления: "}<code>{redirectUrl}</code>
             </li>
-            <li>Copy Client ID and Client Secret from Basic Information</li>
+            <li>{"Скопируйте идентификатор клиента и секрет клиента из базовой информации."}</li>
           </ol>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="slack-client-id">Client ID</Label>
+          <Label htmlFor="slack-client-id">{"Идентификатор клиента"}</Label>
           <Input
             id="slack-client-id"
             value={clientId}
@@ -312,19 +304,18 @@ function SlackCredentialsForm({ onSaved }: { onSaved: () => void }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="slack-client-secret">Client Secret</Label>
+          <Label htmlFor="slack-client-secret">{"Секрет клиента"}</Label>
           <Input
             id="slack-client-secret"
             type="password"
             value={clientSecret}
             onChange={(e) => setClientSecret(e.target.value)}
-            placeholder="e.g. abcdef1234567890abcdef1234567890"
+            placeholder={"например abcdef1234567890abcdef1234567890"}
             autoComplete="off"
             className="font-mono text-xs"
           />
           <p className="text-xs text-muted-foreground">
-            Encrypted at rest. Never visible again after saving.
-          </p>
+            {"Зашифровано в состоянии покоя. Больше никогда не отображается после сохранения. "}</p>
         </div>
       </div>
 
@@ -334,8 +325,7 @@ function SlackCredentialsForm({ onSaved }: { onSaved: () => void }) {
           disabled={saving || !clientId.trim() || !clientSecret.trim()}
         >
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save credentials
-        </Button>
+          {"Сохранить учетные данные "}</Button>
       </div>
     </Card>
   );
@@ -397,10 +387,10 @@ function SlackConfigForm({
     startTest(async () => {
       const result = await testSlackAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Test failed.");
+        toast.error(result.error ?? "Тест не пройден.");
         return;
       }
-      toast.success("Test message sent to Slack!");
+      toast.success("Тестовое сообщение отправлено в Slack!");
     });
   }
 
@@ -415,9 +405,9 @@ function SlackConfigForm({
   function replay(id: string) {
     setReplaying(id);
     void replaySlackDeliveryAction(id).then((result) => {
-      if (!result.ok) toast.error(result.error ?? "Could not replay delivery.");
+      if (!result.ok) toast.error(result.error ?? "Не удалось воспроизвести доставку.");
       else {
-        toast.success("Slack delivery replay queued");
+        toast.success("Повтор Slack-доставки поставлен в очередь");
         loadDeliveries();
       }
       setReplaying(null);
@@ -426,7 +416,7 @@ function SlackConfigForm({
 
   function save() {
     if (!channelId) {
-      toast.error("Select a channel first.");
+      toast.error("Сначала выберите канал.");
       return;
     }
     startSave(async () => {
@@ -437,10 +427,10 @@ function SlackConfigForm({
         events: selected,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Slack settings saved");
+      toast.success("Настройки Slack сохранены.");
       onSaved();
     });
   }
@@ -449,16 +439,15 @@ function SlackConfigForm({
     <Card className="p-6">
       <div className="mb-5 space-y-0.5">
         <h2 className="font-display text-base font-semibold tracking-tight">
-          Configure Slack
-        </h2>
+          {"Настройка Slack "}</h2>
         <p className="text-sm text-muted-foreground">
-          Connected to {status.teamName ?? "Slack"}. Choose a channel and events.
+          {"Подключено к "}{status.teamName ?? "Slack"}. Выберите канал и события.
         </p>
       </div>
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label>Channel</Label>
+          <Label>{"Канал"}</Label>
           {!loaded ? (
             <Button
               variant="outline"
@@ -467,14 +456,12 @@ function SlackConfigForm({
               disabled={loadingChannels}
             >
               {loadingChannels ? <SpinnerIcon className="size-4" /> : null}
-              Load channels from Slack
-            </Button>
+              {"Загрузка каналов из Slack "}</Button>
           ) : (
             <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border p-2">
               {channels.length === 0 ? (
                 <p className="py-2 text-center text-sm text-muted-foreground">
-                  No channels found. Invite the Harly bot to a channel first.
-                </p>
+                  {"Каналы не найдены. Сначала пригласите бота Harly на канал. "}</p>
               ) : (
                 channels.map((ch) => (
                   <button
@@ -497,13 +484,13 @@ function SlackConfigForm({
           )}
           {channelName && (
             <p className="text-xs text-muted-foreground">
-              Selected: <span className="font-medium">#{channelName}</span>
+              {"Выбрано: "}<span className="font-medium">#{channelName}</span>
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label>Notify on</Label>
+          <Label>{"Уведомить о"}</Label>
           <div className="flex flex-wrap gap-1.5">
             {events.map((event) => (
               <button
@@ -525,10 +512,9 @@ function SlackConfigForm({
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable</p>
+            <p className="text-sm font-medium">{"Включить"}</p>
             <p className="text-xs text-muted-foreground">
-              When off, no messages are posted.
-            </p>
+              {"Если параметр выключен, сообщения не отправляются. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -544,8 +530,7 @@ function SlackConfigForm({
           disabled={disconnecting}
         >
           {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-          Disconnect
-        </Button>
+          {"Отключить "}</Button>
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -558,27 +543,23 @@ function SlackConfigForm({
             ) : (
               <PaperPlaneDuotoneIcon className="size-4" />
             )}
-            Send test
-          </Button>
+            {"Отправить тест "}</Button>
           <Button onClick={save} disabled={saving || !channelId}>
             {saving ? <SpinnerIcon className="size-4" /> : null}
-            Save
-          </Button>
+            {"Сохранить "}</Button>
         </div>
       </div>
 
       <div className="mt-5 border-t pt-5">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-medium">Recent deliveries</p>
+            <p className="text-sm font-medium">{"Недавние поставки"}</p>
             <p className="text-xs text-muted-foreground">
-              Inspect failures and replay safe summaries without exposing payloads.
-            </p>
+              {"Проверяйте сбои и воспроизводите безопасные сводки, не раскрывая полезные данные. "}</p>
           </div>
           <Button variant="outline" size="sm" onClick={loadDeliveries} disabled={loadingDeliveries}>
             {loadingDeliveries ? <SpinnerIcon className="size-3.5" /> : null}
-            Load history
-          </Button>
+            {"История загрузки "}</Button>
         </div>
         {deliveries.length > 0 ? (
           <div className="mt-3 space-y-1.5">
@@ -587,15 +568,14 @@ function SlackConfigForm({
                 <div className="min-w-0">
                   <p className="truncate font-medium">{delivery.event}</p>
                   <p className="text-muted-foreground">
-                    {delivery.status} · {delivery.attempts} attempt{delivery.attempts === 1 ? "" : "s"}
+                    {formatEnumLabel(delivery.status)} · {delivery.attempts} {"попыток"}
                     {delivery.lastError ? ` · ${delivery.lastError}` : ""}
                   </p>
                 </div>
                 {delivery.status === "dead_letter" || delivery.status === "failed" ? (
                   <Button size="sm" variant="outline" onClick={() => replay(delivery.id)} disabled={replaying === delivery.id}>
                     {replaying === delivery.id ? <SpinnerIcon className="size-3.5" /> : null}
-                    Replay
-                  </Button>
+                    {"Повтор "}</Button>
                 ) : null}
               </div>
             ))}

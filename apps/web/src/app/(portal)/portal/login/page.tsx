@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!workspace) return {};
   const org = await getOrgBranding(workspace.id);
   return {
-    title: `${org.name} Candidate Portal`,
+    title: `${org.name} Портал кандидатов`,
     icons: {
       icon: org.logo ?? "/favicon.svg",
     },
@@ -72,10 +72,9 @@ export default async function PortalLoginPage() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-6 text-center">
         <div className="max-w-sm space-y-2">
-          <h1 className="text-xl font-semibold">Candidate portal unavailable</h1>
+          <h1 className="text-xl font-semibold">{"Портал кандидата недоступен"}</h1>
           <p className="text-sm text-muted-foreground">
-            Use the careers page for the company you applied to, then open its candidate portal.
-          </p>
+            {"Используйте страницу вакансий компании, в которую вы подали заявку, затем откройте ее портал кандидатов. "}</p>
         </div>
       </main>
     );
@@ -96,7 +95,7 @@ export default async function PortalLoginPage() {
   const departments =
     org.departments.length > 0
       ? org.departments
-      : ["Engineering", "Design", "Product"];
+      : ["Инженерное дело", "Дизайн", "Продукт"];
 
   return (
     <div className="flex min-h-screen flex-col bg-background lg:flex-row">
@@ -154,7 +153,7 @@ export default async function PortalLoginPage() {
 
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/70">
             {org.tagline ??
-              "Sign in to track your applications and explore open opportunities."}
+              "Войдите в систему, чтобы отслеживать свои заявки и изучать открытые возможности."}
           </p>
 
           {/* Decorative role pills */}
@@ -176,11 +175,9 @@ export default async function PortalLoginPage() {
         <div className="w-full max-w-sm space-y-8">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Welcome back
-            </h2>
+              {"С возвращением "}</h2>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              Sign in to your candidate portal
-            </p>
+              {"Войдите на свой портал кандидатов "}</p>
           </div>
 
           <Suspense>
@@ -192,8 +189,8 @@ export default async function PortalLoginPage() {
           </Suspense>
 
           <p className="text-center text-xs text-muted-foreground">
-            Powered by{" "}
-            <span className="font-medium text-foreground">Harly</span>
+            {"При поддержке"}{" "}
+            <span className="font-medium text-foreground">{"Харли"}</span>
           </p>
         </div>
       </div>

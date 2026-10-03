@@ -14,7 +14,7 @@ import { CareerFooter } from "../CareerFooter";
 import { buildJobMeta, formatCompensation, type JobLike } from "./jobMeta";
 
 const reveal =
-  "duration-300 animate-in fade-in fill-mode-backwards motion-reduce:animate-none";
+  "длительность-300 анимация постепенного появления режим заливки назад движение-уменьшение: анимация-нет";
 
 export type JobShellVariant = "playful" | "structured" | "join";
 
@@ -134,8 +134,8 @@ export function JobShell({
   }, [activeTab, job.slug]);
 
   const tabs = [
-    { tab: "overview", label: "Overview", href: overviewHref },
-    { tab: "application", label: "Application", href: applyHref },
+    { tab: "overview", label: "Обзор", href: overviewHref },
+    { tab: "application", label: "Отклик", href: applyHref },
   ] as const;
 
   return (
@@ -268,8 +268,7 @@ export function JobShell({
                 <dl className="pt-1">
                   <div className="border-t border-zinc-200 py-3.5 dark:border-zinc-800">
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-                      Position
-                    </dt>
+                      {"Позиция "}</dt>
                     <dd className="mt-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100">
                       {job.title}
                     </dd>
@@ -285,8 +284,7 @@ export function JobShell({
                   )}
                   style={{ backgroundColor: accent, color: onAccent }}
                 >
-                  Apply for this role
-                </Link>
+                  {"Подать заявку на эту роль "}</Link>
               ) : null}
             </aside>
 
@@ -342,11 +340,10 @@ export function JobShell({
         {variant === "join" && (
           <div className="mx-auto max-w-5xl px-6 pt-6 text-xs text-zinc-400 dark:text-zinc-500">
             <Link href={(boardRoot || "/") as Route} className="hover:text-zinc-700 dark:hover:text-zinc-300">
-              Home
-            </Link>
+              {"Главная "}</Link>
             <span className="mx-1.5">/</span>
             <Link href={(boardRoot || "/") as Route} className="hover:text-zinc-700 dark:hover:text-zinc-300">
-              Jobs at {workspace.name}
+              {"Вакансии в "}{workspace.name}
             </Link>
             <span className="mx-1.5">/</span>
             <span>{job.title}</span>
@@ -450,15 +447,13 @@ function JoinJobContent({
           {activeTab === "overview" ? (
             <>
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-                Interested?
-              </p>
+                {"Заинтересованы? "}</p>
               <Link
                 href={applyHref}
                 className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-full px-5 text-sm font-semibold transition-transform duration-150 active:scale-[0.98]"
                 style={{ backgroundColor: accent, color: onAccent }}
               >
-                Apply now
-              </Link>
+                {"Подать заявку сейчас "}</Link>
             </>
           ) : (
             <Link
@@ -466,13 +461,11 @@ function JoinJobContent({
               className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
             >
               <ArrowLeft className="size-3.5" strokeWidth={1.8} />
-              Back to job
-            </Link>
+              {"Вернуться к работе "}</Link>
           )}
 
           <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-            Share this job
-          </p>
+            {"Поделиться этой вакансией "}</p>
           <button
             type="button"
             onClick={copyLink}
@@ -483,13 +476,11 @@ function JoinJobContent({
             {copied ? (
               <>
                 <Check className="size-3.5" strokeWidth={2} />
-                Copied
-              </>
+                {"Скопировано "}</>
             ) : (
               <>
                 <Link2 className="size-3.5" strokeWidth={1.8} />
-                Copy link
-              </>
+                {"Копировать ссылку "}</>
             )}
           </button>
         </aside>

@@ -168,8 +168,8 @@ export function NoteForm({
         id: optimisticId,
         body: submittedBody,
         createdAt: new Date().toISOString(),
-        authorName: "You",
-        authorEmail: "Saving…",
+        authorName: "ты",
+        authorEmail: "Сохранение…",
         mentions: usedMentions,
         pending: true,
       },
@@ -185,7 +185,7 @@ export function NoteForm({
       });
       if (!result.success) {
         setNotes((current) => current.filter((n) => n.id !== optimisticId));
-        toast.error(result.error ?? "Unable to save note.");
+        toast.error(result.error ?? "Не удалось сохранить заметку.");
         return;
       }
       if (result.note) {
@@ -213,7 +213,7 @@ export function NoteForm({
                 e.currentTarget.selectionStart ?? 0,
               )
             }
-            placeholder="Write a note about this candidate…"
+            placeholder={"Напишите заметку об этом кандидате…"}
             className="resize-none border-0 px-0 shadow-none focus-visible:ring-0"
           />
 
@@ -245,11 +245,11 @@ export function NoteForm({
         <div className="flex items-center justify-between border-t px-4 py-2">
           <div className="flex items-center gap-0.5">
             {[
-              { icon: Bold, label: "Bold", wrap: "**" },
-              { icon: Italic, label: "Italic", wrap: "_" },
-              { icon: Heading2, label: "Heading", wrap: "## " },
-              { icon: Link2, label: "Link", wrap: "[](url)" },
-              { icon: AtSign, label: "Mention", wrap: "@" },
+              { icon: Bold, label: "Жирный", wrap: "**" },
+              { icon: Italic, label: "Курсив", wrap: "_" },
+              { icon: Heading2, label: "Заголовок", wrap: "## " },
+              { icon: Link2, label: "Ссылка", wrap: "[](url)" },
+              { icon: AtSign, label: "Упоминание", wrap: "@" },
             ].map(({ icon: Icon, label, wrap }) => (
               <button
                 key={label}
@@ -285,14 +285,13 @@ export function NoteForm({
           </div>
           <div className="flex items-center gap-3">
             <p className="text-xs text-muted-foreground">
-              {remaining.toLocaleString()} characters remaining
-            </p>
+              {remaining.toLocaleString("ru-RU")} {"оставшиеся персонажи "}</p>
             <Button
               size="sm"
               disabled={isPending || body.trim().length === 0}
               onClick={submitNote}
             >
-              {isPending ? "Saving…" : "Add note"}
+              {isPending ? "Сохранение…" : "Добавить примечание"}
             </Button>
           </div>
         </div>
@@ -301,8 +300,8 @@ export function NoteForm({
       {notes.length === 0 ? (
         <EmptyState
           icon={MessageSquare}
-          title="No notes on this candidate"
-          hint="Write what you noticed above. Mention a teammate with @ and they get notified."
+          title={"Нет замечаний по этому кандидату"}
+          hint={"Напишите, что вы заметили выше. Упомяните товарища по команде с помощью @, и он получит уведомление."}
         />
       ) : (
         <div className="space-y-3">
@@ -313,7 +312,7 @@ export function NoteForm({
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold">{note.authorName}</p>
                   <p className="truncate text-xs text-muted-foreground">
-                    {note.pending ? "Saving…" : <RelativeTime value={note.createdAt} />}
+                    {note.pending ? "Сохранение…" : <RelativeTime value={note.createdAt} />}
                   </p>
                 </div>
               </div>

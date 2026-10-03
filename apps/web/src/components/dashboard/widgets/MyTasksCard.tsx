@@ -18,10 +18,10 @@ const priorityVariant: Record<
 };
 
 const priorityLabel: Record<MyDashboardTask["priority"], string> = {
-  urgent: "Urgent",
-  high: "High",
-  medium: "Medium",
-  low: "Low",
+  urgent: "Срочно",
+  high: "Высокий",
+  medium: "Средний",
+  low: "Низкий",
 };
 
 const dueStateClass: Record<string, string> = {
@@ -32,10 +32,10 @@ const dueStateClass: Record<string, string> = {
 
 function formatDue(task: MyDashboardTask): string | null {
   if (!task.dueDate) return null;
-  if (task.dueState === "overdue") return "Overdue";
-  if (task.dueState === "today") return "Due today";
+  if (task.dueState === "overdue") return "Просрочено";
+  if (task.dueState === "today") return "Срок сегодня";
   const d = new Date(task.dueDate);
-  return `Due ${d.toLocaleDateString("en", { month: "short", day: "numeric" })}`;
+  return `Срок погашения ${d.toLocaleDateString("ru-RU", { month: "short", day: "numeric" })}`;
 }
 
 export function MyTasksCard({
@@ -49,8 +49,8 @@ export function MyTasksCard({
     <Tile className={className}>
       <TileHeader
         icon={CheckSquare}
-        title="My tasks"
-        action={<TileLink href="/dashboard/tasks">View all</TileLink>}
+        title={"Мои задачи"}
+        action={<TileLink href="/dashboard/tasks">{"Посмотреть все"}</TileLink>}
       />
       <div className="flex flex-1 flex-col px-2 pb-2 pt-1">
         {tasks.length > 0 ? (
@@ -91,13 +91,12 @@ export function MyTasksCard({
             })}
           </ul>
         ) : (
-          <EmptyHint icon={CheckSquare} text="No pending tasks. You're all caught up." />
+          <EmptyHint icon={CheckSquare} text={"Невыполненных задач нет."} />
         )}
         <Button asChild variant="outline" size="sm" className="mt-2 w-full">
           <Link href="/dashboard/tasks">
             <CheckSquare className="size-4" strokeWidth={1.8} />
-            Go to tasks
-          </Link>
+            {"Перейти к задачам "}</Link>
         </Button>
       </div>
     </Tile>

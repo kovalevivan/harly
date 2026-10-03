@@ -48,8 +48,8 @@ export function IdentityShield({
           <span className="inline-flex items-center gap-2 text-xs font-medium text-pine">
             <EyeSlashDuotoneIcon className="size-4 shrink-0" />
             {revealed
-              ? "Identity revealed for this candidate"
-              : "Anonymized to reduce bias"}
+              ? "Личность этого кандидата раскрыта"
+              : "Анонимизировано, чтобы уменьшить предвзятость"}
           </span>
           <button
             type="button"
@@ -62,7 +62,7 @@ export function IdentityShield({
             )}
           >
             <EyeIcon className="size-3.5" />
-            {revealed ? "Hide identity" : "Reveal identity"}
+            {revealed ? "Скрыть личность" : "Раскрыть личность"}
           </button>
         </div>
         {children}

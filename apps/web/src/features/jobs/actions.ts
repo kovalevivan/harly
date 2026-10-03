@@ -2,9 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db, workspaceSettings } from "@harly/db";
+import { jobBriefs } from "@harly/db";
 
 import {
   createJob,
@@ -84,6 +85,11 @@ export async function createJobAction(formData: FormData) {
   const context = await requirePermission("jobs:create");
   const values = parseJobFormData(formData);
   const job = await createJob(values);
+  const briefId = String(formData.get("briefId") ?? "");
+  if (briefId) {
+    await db.update(jobBriefs).set({ jobId: job.id, updatedAt: new Date() })
+      .where(and(eq(jobBriefs.id, briefId), eq(jobBriefs.workspaceId, context.organization.id)));
+  }
 
   await logAuditEvent({
     workspaceId: context.organization.id,
@@ -254,6 +260,8 @@ export async function generateJobDraftAction(input: {
   department?: string;
   workplaceType?: string;
   keywords?: string[];
+  profile?: string;
+  language?: "ru" | "en";
 }): Promise<GenerateJobDraftResult> {
   const context = await requirePermission("jobs:create");
 
@@ -285,6 +293,8 @@ export async function generateJobDraftAction(input: {
       department: input.department?.trim() || undefined,
       workplaceType: input.workplaceType,
       keywords: input.keywords,
+      profile: input.profile?.slice(0, 12000),
+      language: input.language,
       brand: {
         name: context.organization.name,
         tagline: settings?.tagline,

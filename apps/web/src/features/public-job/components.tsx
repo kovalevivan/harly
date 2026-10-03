@@ -88,7 +88,7 @@ export function PublicJobPageHeader({
           {job.title}
         </h1>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
-          <MetaBadge>{job.location ?? "Remote"}</MetaBadge>
+          <MetaBadge>{job.location ?? "Удаленный"}</MetaBadge>
           {job.department ? <MetaBadge>{job.department}</MetaBadge> : null}
           <MetaBadge>{formatWorkplaceType(job.workplaceType)}</MetaBadge>
           <MetaBadge>{formatEmploymentType(job.employmentType)}</MetaBadge>
@@ -102,15 +102,13 @@ export function PublicJobPageHeader({
             className={`border-b-2 py-4 transition ${activeTab === "overview" ? "" : inactiveLinkClass}`}
             style={activeTab === "overview" ? activeLinkStyle : undefined}
           >
-            Overview
-          </Link>
+            {"Обзор "}</Link>
           <Link
             href={applyHref as Route}
             className={`border-b-2 py-4 transition ${activeTab === "application" ? "" : inactiveLinkClass}`}
             style={activeTab === "application" ? activeLinkStyle : undefined}
           >
-            Application
-          </Link>
+            {"Отклик "}</Link>
         </div>
       </nav>
     </header>
@@ -136,29 +134,25 @@ export function PublicJobFooter({ brand }: { brand: PublicJobBrand }) {
             rel="noreferrer"
             className="text-xs text-zinc-500 transition hover:text-zinc-900"
           >
-            View website
-          </a>
+            {"Посмотреть веб-сайт "}</a>
         ) : null}
         <Link
           href={brand.boardHref as Route}
           className="text-xs text-zinc-500 transition hover:text-zinc-900"
         >
-          View all jobs
-        </Link>
+          {"Посмотреть все вакансии "}</Link>
         <a
           href="mailto:help@harly.io"
           className="text-xs text-zinc-500 transition hover:text-zinc-900"
         >
-          Help
-        </a>
+          {"Помощь "}</a>
         <span className="text-xs text-zinc-400">
-          Powered by{" "}
+          {"При поддержке"}{" "}
           <Link
             href={"/" as Route}
             className="font-semibold text-zinc-600 transition hover:text-zinc-900"
           >
-            Harly
-          </Link>
+            {"Харли "}</Link>
         </span>
       </div>
     </footer>

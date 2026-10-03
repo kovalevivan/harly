@@ -46,11 +46,11 @@ export function AdvancedSecurityCard({
         requirePasskey,
         });
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Reauthentication failed.");
+        toast.error(error instanceof Error ? error.message : "Повторная аутентификация не удалась.");
         return;
       }
-      if (!result.ok) toast.error(result.error ?? "Could not update security policy.");
-      else toast.success("Enterprise security policy updated.");
+      if (!result.ok) toast.error(result.error ?? "Не удалось обновить политику безопасности.");
+      else toast.success("Обновлена политика безопасности предприятия.");
     });
   }
 
@@ -58,18 +58,18 @@ export function AdvancedSecurityCard({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={ShieldCheckDuotoneIcon}
-        title="Enterprise access controls"
-        description="Restrict workspace access, detect risky session changes, and require reauthentication for sensitive actions."
-        badge={<StatusPill tone={settings.ipAllowlist.length || settings.allowedDomains.length ? "on" : "neutral"}>{settings.ipAllowlist.length || settings.allowedDomains.length ? "Restricted" : "Open"}</StatusPill>}
+        title={"Корпоративный контроль доступа"}
+        description={"Ограничивайте доступ к рабочему пространству, обнаруживайте рискованные изменения сеанса и требуйте повторной аутентификации для конфиденциальных действий."}
+        badge={<StatusPill tone={settings.ipAllowlist.length || settings.allowedDomains.length ? "on" : "neutral"}>{settings.ipAllowlist.length || settings.allowedDomains.length ? "Ограниченный" : "Открыта"}</StatusPill>}
       />
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2"><Label htmlFor="security-ips">Allowed IPs / CIDRs</Label><Input id="security-ips" value={ips} onChange={(event) => setIps(event.target.value)} placeholder="203.0.113.10, 10.0.0.0/8" disabled={!isOwner} /><p className="text-xs text-muted-foreground">Comma-separated. Empty means any IP.</p></div>
-        <div className="space-y-2"><Label htmlFor="security-domains">Allowed email domains</Label><Input id="security-domains" value={domains} onChange={(event) => setDomains(event.target.value)} placeholder="acme.com, subsidiary.acme.com" disabled={!isOwner} /><p className="text-xs text-muted-foreground">Used for workspace identity and SSO policy.</p></div>
-        <div className="space-y-2"><Label htmlFor="security-reauth">Reauthentication window (minutes)</Label><Input id="security-reauth" type="number" min={5} max={60} value={reauthMinutes} onChange={(event) => setReauthMinutes(event.target.value)} disabled={!isOwner} /></div>
-        <div className="flex items-center justify-between rounded-xl border p-3"><div><p className="text-sm font-medium">Suspicious session detection</p><p className="text-xs text-muted-foreground">Flag simultaneous IP and browser-family changes.</p></div><Switch checked={risk} onCheckedChange={setRisk} disabled={!isOwner} /></div>
-        <div className="flex items-center justify-between rounded-xl border p-3 md:col-span-2"><div><p className="text-sm font-medium">Require passkey</p><p className="text-xs text-muted-foreground">Future-ready policy: members must register a passkey before access.</p></div><Switch checked={requirePasskey} onCheckedChange={setRequirePasskey} disabled={!isOwner} /></div>
+        <div className="space-y-2"><Label htmlFor="security-ips">{"Разрешенные IP-адреса/CIDR"}</Label><Input id="security-ips" value={ips} onChange={(event) => setIps(event.target.value)} placeholder="203.0.113.10, 10.0.0.0/8" disabled={!isOwner} /><p className="text-xs text-muted-foreground">{"Через запятую. Пусто означает любой IP."}</p></div>
+        <div className="space-y-2"><Label htmlFor="security-domains">{"Разрешенные домены электронной почты"}</Label><Input id="security-domains" value={domains} onChange={(event) => setDomains(event.target.value)} placeholder={"acme.com, дочерняя компания acme.com"} disabled={!isOwner} /><p className="text-xs text-muted-foreground">{"Используется для идентификации рабочей области и политики единого входа."}</p></div>
+        <div className="space-y-2"><Label htmlFor="security-reauth">{"Окно повторной аутентификации (минуты)"}</Label><Input id="security-reauth" type="number" min={5} max={60} value={reauthMinutes} onChange={(event) => setReauthMinutes(event.target.value)} disabled={!isOwner} /></div>
+        <div className="flex items-center justify-between rounded-xl border p-3"><div><p className="text-sm font-medium">{"Обнаружение подозрительного сеанса"}</p><p className="text-xs text-muted-foreground">{"Отмечайте одновременные изменения IP-адреса и семейства браузеров."}</p></div><Switch checked={risk} onCheckedChange={setRisk} disabled={!isOwner} /></div>
+        <div className="flex items-center justify-between rounded-xl border p-3 md:col-span-2"><div><p className="text-sm font-medium">{"Требовать ключ доступа"}</p><p className="text-xs text-muted-foreground">{"Политика готовности к будущему: перед доступом участники должны зарегистрировать ключ доступа."}</p></div><Switch checked={requirePasskey} onCheckedChange={setRequirePasskey} disabled={!isOwner} /></div>
       </div>
-      {isOwner ? <Button onClick={save} disabled={pending}>{pending ? "Saving…" : "Save security policy"}</Button> : <p className="text-xs text-muted-foreground">Only workspace owners can change these controls.</p>}
+      {isOwner ? <Button onClick={save} disabled={pending}>{pending ? "Сохранение…" : "Сохранить политику безопасности"}</Button> : <p className="text-xs text-muted-foreground">{"Изменять эти элементы управления могут только владельцы рабочей области."}</p>}
     </Card>
   );
 }

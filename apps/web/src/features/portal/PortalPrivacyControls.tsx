@@ -28,11 +28,11 @@ type ErasureRequest = {
 } | null;
 
 const STATUS_COPY: Record<DsarStatus, string> = {
-  pending: "Your deletion request is awaiting review.",
-  processing: "Your deletion request is being processed.",
-  blocked: "Your deletion request is temporarily blocked by a legal hold.",
-  completed: "Your deletion request has been completed.",
-  denied: "Your deletion request was not approved. Contact the hiring team if you have questions.",
+  pending: "Ваш запрос на удаление ожидает рассмотрения.",
+  processing: "Ваш запрос на удаление обрабатывается.",
+  blocked: "Ваш запрос на удаление временно заблокирован по закону.",
+  completed: "Ваш запрос на удаление выполнен.",
+  denied: "Ваш запрос на удаление не был одобрен. Если у вас есть вопросы, свяжитесь с командой по найму.",
 };
 
 export function PortalPrivacyControls({ erasureRequest }: { erasureRequest: ErasureRequest }) {
@@ -46,21 +46,20 @@ export function PortalPrivacyControls({ erasureRequest }: { erasureRequest: Eras
     startTransition(async () => {
       const result = await requestPortalErasureAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Unable to submit deletion request.");
+        toast.error(result.error ?? "Не удалось отправить запрос на удаление.");
         return;
       }
       setRequestStatus(result.status ?? "pending");
       setConfirmOpen(false);
-      toast.success("Your deletion request has been submitted for review.");
+      toast.success("Ваш запрос на удаление отправлен на рассмотрение.");
     });
   }
 
   return (
     <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:border-zinc-800 dark:bg-zinc-900">
-      <h2 className="text-sm font-semibold text-foreground">Your data</h2>
+      <h2 className="text-sm font-semibold text-foreground">{"Ваши данные"}</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Download a portable copy of your profile and applications, or request deletion.
-      </p>
+        {"Загрузите портативную копию своего профиля и откликов или запросите удаление. "}</p>
 
       {requestStatus ? (
         <div className="mt-4 flex items-start gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3.5 dark:border-zinc-800 dark:bg-zinc-800/60">
@@ -85,14 +84,12 @@ export function PortalPrivacyControls({ erasureRequest }: { erasureRequest: Eras
         <Button variant="outline" size="sm" asChild>
           <a href="/api/portal/privacy/export?format=json">
             <Download className="size-4" />
-            Download JSON
-          </a>
+            {"Скачать JSON "}</a>
         </Button>
         <Button variant="outline" size="sm" asChild>
           <a href="/api/portal/privacy/export?format=csv">
             <Download className="size-4" />
-            Download CSV
-          </a>
+            {"Скачать CSV-файл "}</a>
         </Button>
         <Button
           variant="ghost"
@@ -102,31 +99,29 @@ export function PortalPrivacyControls({ erasureRequest }: { erasureRequest: Eras
           className="ml-auto text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
           {isPending
-            ? "Submitting…"
+            ? "Отправка…"
             : hasOpenRequest
-              ? "Deletion requested"
+              ? "Запрошено удаление"
               : requestStatus === "completed"
-                ? "Deletion completed"
-                : "Request deletion"}
+                ? "Удаление завершено"
+                : "Запросить удаление"}
         </Button>
       </div>
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Request deletion of your data?</DialogTitle>
+            <DialogTitle>{"Запросить удаление ваших данных?"}</DialogTitle>
             <DialogDescription>
-              The hiring team will review your request. Once completed, your portal access and candidate data may no longer be available.
-            </DialogDescription>
+              {"Команда по найму рассмотрит ваш запрос. После завершения ваш доступ к порталу и данные кандидатов могут стать недоступными. "}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline" disabled={isPending}>
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
             </DialogClose>
             <Button variant="destructive" onClick={requestErasure} disabled={isPending}>
-              {isPending ? "Submitting…" : "Request deletion"}
+              {isPending ? "Отправка…" : "Запросить удаление"}
             </Button>
           </DialogFooter>
         </DialogContent>

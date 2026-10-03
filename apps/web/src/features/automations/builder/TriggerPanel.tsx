@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Trigger } from "../schema";
@@ -82,7 +83,7 @@ export function TriggerPanel({
             </span>
           </span>
           <span className="rounded-full bg-soft-kraft px-2.5 py-1 text-xs font-medium text-foreground">
-            {pickerOpen ? "Close" : "Change"}
+            {pickerOpen ? "Закрыть" : "Изменить"}
           </span>
         </button>
       )}
@@ -123,7 +124,7 @@ export function TriggerPanel({
           {showJob && (
             <div>
               <label className="mb-1 block text-xs font-medium text-foreground">
-                Only this job <span className="font-normal text-soft-ink">(optional)</span>
+                {"Только эта работа "}<span className="font-normal text-soft-ink">(optional)</span>
               </label>
               <BuilderSelect
                 value={selectedJobId}
@@ -137,10 +138,10 @@ export function TriggerPanel({
                     }),
                   });
                 }}
-                aria-label="Only this job"
+                aria-label={"Только эта работа"}
                 className={builderFieldClass()}
               >
-                <option value="">Any job</option>
+                <option value="">{"Любая работа"}</option>
                 {jobs.map((job) => (
                   <option key={job.id} value={job.id}>
                     {job.title}
@@ -153,8 +154,7 @@ export function TriggerPanel({
           {showStage && (
             <div>
               <label className="mb-1 block text-xs font-medium text-foreground">
-                When they reach
-              </label>
+                {"Когда они достигают "}</label>
               <BuilderSelect
                 value={selectedStageValue}
                 onChange={(e) => {
@@ -168,13 +168,13 @@ export function TriggerPanel({
                     }),
                   });
                 }}
-                aria-label="When they reach"
+                aria-label={"Когда они достигают"}
                 className={builderFieldClass()}
               >
-                <option value="">Any stage</option>
+                <option value="">{"Любой этап"}</option>
                 {stageOptions.map((stage) => (
                   <option key={stage.id} value={stage.id}>
-                    {stage.name}
+                    {localizeStageName(stage.name)}
                   </option>
                 ))}
               </BuilderSelect>

@@ -16,9 +16,9 @@ const severityVariant: Record<
 };
 
 const severityLabel: Record<RiskJob["severity"], string> = {
-  critical: "Critical",
-  danger: "At risk",
-  warning: "Needs attention",
+  critical: "Критический",
+  danger: "В зоне риска",
+  warning: "Требует внимания",
 };
 
 export function JobsAtRisk({
@@ -32,8 +32,8 @@ export function JobsAtRisk({
     <Tile className={className}>
       <TileHeader
         icon={TriangleAlert}
-        title="Jobs at risk"
-        action={<TileLink href="/dashboard/jobs">View all</TileLink>}
+        title={"Рабочие места под угрозой"}
+        action={<TileLink href="/dashboard/jobs">{"Посмотреть все"}</TileLink>}
       />
       <div className="flex flex-1 flex-col px-2 pb-2 pt-1">
         {jobs.length > 0 ? (
@@ -63,7 +63,7 @@ export function JobsAtRisk({
         ) : (
           <EmptyHint
             icon={TriangleAlert}
-            text="Every open role is on track. Nice work."
+            text={"Каждая открытая роль находится на правильном пути. Хорошая работа."}
           />
         )}
       </div>

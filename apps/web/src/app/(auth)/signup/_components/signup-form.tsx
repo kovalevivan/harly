@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState } from "react";
 
 import { authClient } from "@/lib/auth-client";
@@ -33,10 +34,10 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
 
-    if (!trimmedName) { setError("Full name is required."); return; }
-    if (!trimmedEmail) { setError("Email is required."); return; }
-    if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
-    if (password !== confirmPassword) { setError("Passwords do not match."); return; }
+    if (!trimmedName) { setError("Требуется полное имя."); return; }
+    if (!trimmedEmail) { setError("Требуется электронная почта."); return; }
+    if (password.length < 8) { setError("Пароль должен быть не менее 8 символов."); return; }
+    if (password !== confirmPassword) { setError("Пароли не совпадают."); return; }
 
     setPending("email");
     try {
@@ -46,7 +47,7 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
         password,
       });
       if (result.error) {
-        setError(result.error.message ?? "Unable to create account.");
+        setError(result.error.message ?? "Невозможно создать учетную запись.");
         return;
       }
       // Play a brief exit before the hard navigation to onboarding so the
@@ -67,11 +68,11 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
         callbackURL: "/onboarding",
       });
       if (result.error) {
-        setError("Unable to continue with Google.");
+        setError("Невозможно продолжить работу с Google.");
         setPending(null);
       }
     } catch {
-      setError("Unable to continue with Google.");
+      setError("Невозможно продолжить работу с Google.");
       setPending(null);
     }
   }
@@ -81,18 +82,18 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
       <form className="space-y-6" onSubmit={handleSubmit}>
         <Field
           id="name"
-          label="Full name"
+          label={"Полное имя"}
           type="text"
           autoComplete="name"
           autoFocus
           value={name}
-          placeholder="Ada Lovelace"
+          placeholder={"Ада Лавлейс"}
           onChange={(v) => { setName(v); setError(null); }}
         />
 
         <Field
           id="email"
-          label="Email address"
+          label={"Адрес электронной почты"}
           type="email"
           autoComplete="email"
           value={email}
@@ -105,8 +106,7 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
             htmlFor="password"
             className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
           >
-            Password
-          </label>
+            {"Пароль "}</label>
           <div className="relative mt-2">
             <input
               id="password"
@@ -115,14 +115,14 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
               autoComplete="new-password"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError(null); }}
-              placeholder="At least 8 characters"
+              placeholder={"Минимум 8 символов"}
               className="auth-field w-full border-0 border-b border-input bg-transparent pb-2.5 pr-10 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring"
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               className="absolute right-0 top-0 text-muted-foreground transition-colors hover:text-foreground"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
             </button>
@@ -134,8 +134,7 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
             htmlFor="confirm-password"
             className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
           >
-            Confirm password
-          </label>
+            {"Подтвердите пароль "}</label>
           <div className="relative mt-2">
             <input
               id="confirm-password"
@@ -144,21 +143,21 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
               autoComplete="new-password"
               value={confirmPassword}
               onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
-              placeholder="Repeat your password"
+              placeholder={"Повторите свой пароль"}
               className="auth-field w-full border-0 border-b border-input bg-transparent pb-2.5 pr-10 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring"
             />
             <button
               type="button"
               onClick={() => setShowConfirm((v) => !v)}
               className="absolute right-0 top-0 text-muted-foreground transition-colors hover:text-foreground"
-              aria-label={showConfirm ? "Hide password" : "Show password"}
+              aria-label={showConfirm ? "Скрыть пароль" : "Показать пароль"}
             >
               {showConfirm ? <EyeOffIcon /> : <EyeIcon />}
             </button>
           </div>
         </div>
 
-        {error ? <p className="text-center text-sm text-danger-rust">{error}</p> : null}
+        {error ? <p className="text-center text-sm text-danger-rust">{localizeSystemText(error)}</p> : null}
 
         <button
           type="submit"
@@ -169,10 +168,10 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
           {pending === "email" ? (
             <>
               <AuthSpinner />
-              <span>Creating account…</span>
+              <span>{"Создание аккаунта…"}</span>
             </>
           ) : (
-            <span>Continue</span>
+            <span>{"Продолжить"}</span>
           )}
         </button>
       </form>
@@ -181,15 +180,14 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
         <>
           <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
             <div className="h-px flex-1 bg-border" />
-            or
-            <div className="h-px flex-1 bg-border" />
+            {"или "}<div className="h-px flex-1 bg-border" />
           </div>
 
           <AuthMethodsRow
             methods={[
               {
                 id: "google",
-                label: "Google",
+                label: "Гугл",
                 icon: <GoogleIcon />,
                 onSelect: continueWithGoogle,
                 loading: pending === "google",

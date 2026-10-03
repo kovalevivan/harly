@@ -86,8 +86,7 @@ function PrefRow({
           {label}
           {locked && (
             <span className="rounded-full bg-zinc-100 px-1.5 py-[1px] text-[10px] font-medium tracking-wide text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
-              REQUIRED
-            </span>
+              {"ОБЯЗАТЕЛЬНО "}</span>
           )}
         </div>
         <p className="mt-0.5 text-[12.5px] leading-snug text-zinc-500 dark:text-zinc-400">
@@ -98,7 +97,7 @@ function PrefRow({
         checked={checked}
         locked={locked}
         onToggle={() => !locked && onToggle()}
-        label={`${label} cookies`}
+        label={`${label} печенье`}
       />
     </div>
   );
@@ -189,7 +188,7 @@ const CookiePanel = (props: CookiePanelProps) => {
     <div
       role="dialog"
       aria-live="polite"
-      aria-label="Cookie consent"
+      aria-label={"Согласие на использование файлов cookie"}
       className={cn(
         "fixed inset-x-4 bottom-4 sm:inset-x-auto sm:right-6 sm:bottom-6",
         "z-50 sm:w-[380px]",
@@ -212,7 +211,7 @@ const CookiePanel = (props: CookiePanelProps) => {
           type="button"
           onClick={hide}
           className="absolute right-4 top-4 inline-flex size-7 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
-          aria-label="Close"
+          aria-label={"Закрыть"}
         >
           <X className="size-4" strokeWidth={2} />
         </button>
@@ -233,15 +232,13 @@ const CookiePanel = (props: CookiePanelProps) => {
             href={cookieHref}
             className="font-medium text-zinc-700 underline decoration-zinc-300 underline-offset-2 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:decoration-zinc-600 dark:hover:text-zinc-100"
           >
-            Cookie Policy
-          </a>{" "}
-          and{" "}
+            {"Политика использования файлов cookie "}</a>{" "}
+          {"и"}{" "}
           <a
             href={privacyHref}
             className="font-medium text-zinc-700 underline decoration-zinc-300 underline-offset-2 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:decoration-zinc-600 dark:hover:text-zinc-100"
           >
-            Privacy Policy
-          </a>
+            {"Политика конфиденциальности "}</a>
           .
         </p>
 
@@ -255,14 +252,14 @@ const CookiePanel = (props: CookiePanelProps) => {
             className="mt-1 flex flex-col divide-y divide-zinc-100 border-t border-zinc-100 dark:divide-zinc-800 dark:border-zinc-800"
           >
             <PrefRow
-              label="Strictly necessary"
+              label={"Строго необходимо"}
               desc="Session when you sign in, and storing this choice. Always on."
               locked
               checked
               onToggle={() => {}}
             />
             <PrefRow
-              label="Embedded content"
+              label={"Встроенный контент"}
               desc="Videos, maps, and other third-party embeds this organization adds."
               checked={prefs.embeds}
               onToggle={() => setPrefs((current) => ({ ...current, embeds: !current.embeds }))}
@@ -312,8 +309,7 @@ const CookiePanel = (props: CookiePanelProps) => {
               "mt-2 w-full animate-in fade-in slide-in-from-top-1 duration-200",
             )}
           >
-            Save preferences
-          </button>
+            {"Сохранить настройки "}</button>
         )}
       </div>
     </div>

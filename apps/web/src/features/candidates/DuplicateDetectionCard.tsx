@@ -55,7 +55,7 @@ export function DuplicateDetectionCard({
         <CardContent className="space-y-3">
           <div className="flex items-center gap-2 text-clay">
             <Users className="size-4 shrink-0" />
-            <p className="text-sm font-medium">Possible duplicate candidates</p>
+            <p className="text-sm font-medium">{"Возможные дублирующиеся кандидаты"}</p>
           </div>
           <ul className="space-y-2">
             {matches.map((m) => (
@@ -76,7 +76,7 @@ export function DuplicateDetectionCard({
                       : "bg-clay/15 text-clay"
                   }`}
                 >
-                  {m.confidence === "high" ? "Likely duplicate" : "Possible match"}
+                  {m.confidence === "high" ? "Вероятный дубликат" : "Возможное совпадение"}
                 </span>
               </li>
             ))}
@@ -94,8 +94,8 @@ export function DuplicateDetectionCard({
           <AlertTriangle className="size-4 shrink-0" />
           <p className="text-sm">
             {suspects.length === 1
-              ? "1 candidate with a similar name exists in your workspace."
-              : `${suspects.length} candidates with similar names exist in your workspace.`}
+              ? "В вашем рабочем пространстве есть 1 кандидат с похожим именем."
+              : `В вашем рабочем пространстве есть ${suspects.length} кандидатов с похожими именами.`}
           </p>
         </div>
         {aiConfigured ? (
@@ -104,15 +104,14 @@ export function DuplicateDetectionCard({
             variant="outline"
             onClick={runAiCheck}
             loading={isPending}
-            loadingText="Checking"
+            loadingText={"Проверка"}
           >
-            Verify with AI
-          </AiButton>
+            {"Подтвердить с помощью ИИ "}</AiButton>
         ) : (
           <div className="flex flex-wrap gap-2">
             {suspects.map((s) => (
               <Button key={s.candidateId} asChild size="sm" variant="outline">
-                <Link href={`/dashboard/candidates/${s.candidateId}`}>View {s.fullName}</Link>
+                <Link href={`/dashboard/candidates/${s.candidateId}`}>{"Посмотреть "}{s.fullName}</Link>
               </Button>
             ))}
           </div>

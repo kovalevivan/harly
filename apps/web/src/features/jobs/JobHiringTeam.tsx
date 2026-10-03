@@ -34,9 +34,9 @@ import {
 } from "@/components/ui/select";
 
 const ROLES: { value: HiringTeamRole; label: string }[] = [
-  { value: "recruiter", label: "Recruiter" },
-  { value: "hiring_manager", label: "Hiring manager" },
-  { value: "interviewer", label: "Interviewer" },
+  { value: "recruiter", label: "Рекрутер" },
+  { value: "hiring_manager", label: "Менеджер по найму" },
+  { value: "interviewer", label: "Интервьюер" },
 ];
 
 export function JobHiringTeam({
@@ -57,15 +57,15 @@ export function JobHiringTeam({
   function run(promise: Promise<{ success: boolean; error?: string }>) {
     startTransition(async () => {
       const result = await promise;
-      if (!result.success) toast.error(result.error ?? "Something went wrong.");
+      if (!result.success) toast.error(result.error ?? "Что-то пошло не так.");
       else router.refresh();
     });
   }
 
   return (
     <FormSection
-      title="Hiring team"
-      description="Assigned teammates receive candidate updates for this role. Roles clarify who owns recruiting, the decision, and interviews."
+      title={"Команда найма"}
+      description={"Назначенные товарищи по команде получают обновления кандидатов на эту роль. Роли уточняют, кто отвечает за подбор персонала, принятие решений и собеседования."}
       contentClassName="divide-y divide-border/60"
       action={
         available.length > 0 ? (
@@ -73,8 +73,7 @@ export function JobHiringTeam({
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" disabled={isPending}>
                 <Plus className="size-4" />
-                Add member
-              </Button>
+                {"Добавить участника "}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-56">
               {available.map((m) => (
@@ -101,8 +100,7 @@ export function JobHiringTeam({
     >
       {team.length === 0 ? (
         <p className="rounded-lg border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
-          No one assigned yet. Add teammates to collaborate on this role.
-        </p>
+          {"Еще никто не назначил. Добавьте товарищей по команде для совместной работы над этой ролью. "}</p>
       ) : (
         team.map((member) => (
           <div
@@ -138,7 +136,7 @@ export function JobHiringTeam({
               size="icon-sm"
               className="text-muted-foreground hover:text-destructive"
               disabled={isPending}
-              aria-label={`Remove ${member.name}`}
+              aria-label={`Удалить ${member.name}`}
               onClick={() => run(removeHiringTeamMember({ id: member.id, jobId }))}
             >
               <X className="size-4" />

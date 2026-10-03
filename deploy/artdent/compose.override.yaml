@@ -1,0 +1,15 @@
+# Install beside the generated compose.yaml. Compose discovers this override
+# automatically; application updates then preserve the proxy configuration.
+# The AI transport supplies its own per-request dispatcher. Keep global proxy
+# routing disabled so OAuth, email, webhooks and other integrations stay direct.
+x-ai-proxy: &ai-proxy
+  HARLY_AI_PROXY_URL: ${HARLY_AI_PROXY_URL:?Set the trusted AI forward proxy URL}
+  NODE_USE_ENV_PROXY: "0"
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+
+services:
+  app:
+    environment: *ai-proxy
+  scheduler:
+    environment: *ai-proxy

@@ -28,17 +28,17 @@ export function Force2FACard({
         await ensureSensitiveActionReauth();
         result = await toggleForce2FAAction(value);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Reauthentication failed.");
+        toast.error(error instanceof Error ? error.message : "Повторная аутентификация не удалась.");
         return;
       }
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update setting.");
+        toast.error(result.error ?? "Не удалось обновить настройку.");
         return;
       }
       toast.success(
         value
-          ? "2FA is now required for all members."
-          : "2FA requirement removed.",
+          ? "2FA теперь требуется для всех участников."
+          : "Требование 2FA удалено.",
       );
       router.refresh();
     });
@@ -48,11 +48,11 @@ export function Force2FACard({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={UsersThreeDuotoneIcon}
-        title="Enforce 2FA for all members"
-        description="When enabled, all workspace members must set up two-factor authentication before accessing the dashboard."
+        title={"Принудительно использовать 2FA для всех участников"}
+        description={"Если этот параметр включен, все участники рабочей области должны настроить двухфакторную аутентификацию перед доступом к панели мониторинга."}
         badge={
           <StatusPill tone={enabled ? "on" : "off"}>
-            {enabled ? "Required" : "Optional"}
+            {enabled ? "Требуется" : "Необязательно"}
           </StatusPill>
         }
         action={
@@ -61,7 +61,7 @@ export function Force2FACard({
               checked={enabled}
               onCheckedChange={handleToggle}
               disabled={isPending}
-              aria-label="Require 2FA for all members"
+              aria-label={"Требовать 2FA для всех участников"}
             />
           ) : null
         }
@@ -69,14 +69,12 @@ export function Force2FACard({
 
       {!isOwner && (
         <p className="text-xs text-muted-foreground">
-          Only workspace owners can change this setting.
-        </p>
+          {"Изменить этот параметр могут только владельцы рабочей области. "}</p>
       )}
 
       {enabled && (
         <div className="rounded-xl border border-clay/20 bg-clay/5 px-4 py-3 text-sm text-clay">
-          Members without 2FA will be prompted to enable it on their next login.
-        </div>
+          {"Участникам без 2FA будет предложено включить его при следующем входе в систему. "}</div>
       )}
     </Card>
   );

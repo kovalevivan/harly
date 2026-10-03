@@ -58,6 +58,12 @@ type JobFormProps = {
   railActions?: ReactNode;
   previewWorkspace?: (WorkspaceBoardBranding & { id: string }) | null;
   previewConfig?: CareerPageConfig | null;
+  briefPrefill?: {
+    id: string;
+    title: string;
+    description: string;
+    sections: JobContentSection[];
+  };
 };
 
 function initialSectionsFor(job?: Job): JobContentSection[] {
@@ -68,13 +74,13 @@ function initialSectionsFor(job?: Job): JobContentSection[] {
     if (job.requirements)
       migrated.push({
         id: "migrated-req",
-        title: "Requirements",
+        title: "Требования",
         body: job.requirements,
       });
     if (job.benefits)
       migrated.push({
         id: "migrated-ben",
-        title: "Benefits",
+        title: "Преимущества",
         body: job.benefits,
       });
     return migrated;
@@ -89,36 +95,36 @@ function initialSectionsFor(job?: Job): JobContentSection[] {
 const SECTIONS = [
   {
     key: "essentials",
-    label: "Details",
-    blurb: "Use a common, searchable job title. One role per posting.",
+    label: "Подробности",
+    blurb: "Укажите понятное название позиции. Создавайте отдельную вакансию для каждой роли.",
   },
   {
     key: "description",
-    label: "Description",
-    blurb: "Lead with impact and team. Keep must-haves short and scannable.",
+    label: "Описание",
+    blurb: "Расскажите о команде, задачах и требованиях. Оставьте только то, что важно кандидату.",
   },
   {
     key: "compensation",
-    label: "Compensation",
-    blurb: "Listing a salary range measurably increases applications.",
+    label: "Компенсация",
+    blurb: "Укажите диапазон оплаты — это поможет привлечь подходящих кандидатов.",
   },
   {
     key: "application",
-    label: "Application form",
+    label: "Форма отклика",
     blurb:
-      "Ask only what you'll actually use to decide , fewer required fields, more completions.",
+      "Запрашивайте только информацию, которая поможет принять решение.",
   },
   {
     key: "advanced",
-    label: "Advanced",
+    label: "Расширенный",
     blurb:
-      "Keywords improve search on your careers page. A custom slug keeps URLs clean.",
+      "Ключевые слова помогают найти вакансию. Адрес можно настроить вручную.",
   },
   {
     key: "review",
-    label: "Team & publish",
+    label: "Команда и публикация",
     blurb:
-      "Assign a hiring team, then preview the listing exactly as candidates will see it.",
+      "Выберите участников команды найма и проверьте, как вакансия выглядит для кандидатов.",
   },
 ] as const satisfies readonly { key: string; label: string; blurb: string }[];
 
@@ -190,6 +196,7 @@ export function JobForm({
   railActions,
   previewWorkspace,
   previewConfig,
+  briefPrefill,
 }: JobFormProps) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -198,18 +205,18 @@ export function JobForm({
     job?.applicationConfig,
   );
 
-  const [title, setTitle] = useState(job?.title ?? "");
+  const [title, setTitle] = useState(job?.title ?? briefPrefill?.title ?? "");
   const [titleError, setTitleError] = useState(false);
   const [workplace, setWorkplace] = useState<string>(
     job?.workplaceType ?? "remote",
   );
 
   const [description, setDescription] = useState(
-    job?.description ??
-      "<p>Describe the role, the team, and the impact this person will have.</p>",
+    job?.description ?? briefPrefill?.description ??
+      "<p>Опишите задачи, команду и результаты, которых ждёте от нового сотрудника.</p>",
   );
   const [sections, setSections] = useState<JobContentSection[]>(() =>
-    initialSectionsFor(job),
+    job ? initialSectionsFor(job) : (briefPrefill?.sections ?? initialSectionsFor()),
   );
   const [keywords, setKeywords] = useState<string[]>(() =>
     parseKeywords(job?.keywords),
@@ -217,7 +224,7 @@ export function JobForm({
   const [photos, setPhotos] = useState<string[]>(() =>
     parseOfficePhotos(job?.officePhotos),
   );
-  const [descriptionVersion, setDescriptionVersion] = useState(0);
+  const [descriptionVersion, setDescriptionVersion] = useState(briefPrefill ? 1 : 0);
   const [aiPending, startAi] = useTransition();
 
   const [dirty, setDirty] = useState(false);
@@ -404,8 +411,7 @@ export function JobForm({
         size="sm"
         onClick={validateBeforeSubmit}
       >
-        Save as draft
-      </Button>
+        {"Сохранить как черновик "}</Button>
       <Button
         type="submit"
         name="intent"
@@ -421,6 +427,7 @@ export function JobForm({
   return (
     <form ref={formRef} action={action} className="contents">
       {job ? <input type="hidden" name="jobId" value={job.id} /> : null}
+      {briefPrefill ? <input type="hidden" name="briefId" value={briefPrefill.id} /> : null}
       <input
         type="hidden"
         name="contentSectionsJson"

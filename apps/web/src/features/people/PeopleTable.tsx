@@ -58,14 +58,14 @@ export function PeopleTable({ rows }: { rows: PersonListRow[] }) {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name, title, or username"
+            placeholder={"Поиск по имени, должности или имени пользователя"}
             className="pl-9"
-            aria-label="Search people"
+            aria-label={"Поиск людей"}
           />
         </div>
         {roleOptions.length > 1 && (
           <FilterPill
-            label="Role"
+            label={"Роль"}
             value={role}
             onChange={setRole}
             options={roleOptions}
@@ -73,7 +73,7 @@ export function PeopleTable({ rows }: { rows: PersonListRow[] }) {
         )}
         {specialtyOptions.length > 0 && (
           <FilterPill
-            label="Specialty"
+            label={"Специальность"}
             value={specialty}
             onChange={setSpecialty}
             options={specialtyOptions}
@@ -83,8 +83,7 @@ export function PeopleTable({ rows }: { rows: PersonListRow[] }) {
 
       {filtered.length === 0 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
-          No teammates match your search.
-        </p>
+          {"Ни один товарищ по команде не соответствует вашему запросу. "}</p>
       ) : (
         <Card className="gap-0 divide-y divide-border/60 overflow-hidden py-0">
           {filtered.map((person) => (

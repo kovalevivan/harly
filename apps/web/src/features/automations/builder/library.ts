@@ -26,8 +26,8 @@ export function libraryItems(
     id: "trigger",
     kind: "trigger",
     group: "Start",
-    label: "When",
-    blurb: "The event that starts this automation.",
+    label: "Когда",
+    blurb: "Событие, которое запускает эту автоматизацию.",
     keywords: TRIGGER_CATALOG.map((entry) => `${entry.label} ${entry.event}`).join(" "),
   };
   const control = CONTROL_BLOCKS.map((block) => ({

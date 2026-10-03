@@ -1,3 +1,4 @@
+import { localizeSystemText } from "@/lib/localize-system-text";
 import * as React from "react";
 
 import { Label } from "@/components/ui/label";
@@ -74,7 +75,7 @@ function FormField({
       ) : null}
       {children}
       {error ? (
-        <p className="text-xs text-destructive">{error}</p>
+        <p className="text-xs text-destructive">{localizeSystemText(error)}</p>
       ) : hint ? (
         <p className="text-xs text-muted-foreground">{hint}</p>
       ) : null}

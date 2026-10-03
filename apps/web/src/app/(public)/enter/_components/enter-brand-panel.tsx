@@ -13,18 +13,18 @@ const REPO_URL = "https://github.com/Vytral/harly";
 const POINTS = [
   {
     icon: LayoutGridIcon,
-    title: "There's plenty to play with",
-    body: "Candidates, jobs, interviews, offers, automations, forms, analytics and more are already set up.",
+    title: "Есть во что поиграть",
+    body: "Кандидаты, вакансии, собеседования, предложения, автоматизация, формы, аналитика и многое другое уже настроены.",
   },
   {
     icon: WorkflowIcon,
-    title: "Try the automations",
-    body: "Build one from scratch or edit an existing workflow to see what happens.",
+    title: "Попробуйте автоматизацию",
+    body: "Создайте его с нуля или отредактируйте существующий рабочий процесс, чтобы увидеть, что произойдет.",
   },
   {
     icon: BriefcaseIcon,
-    title: "Walk the careers page",
-    body: "Open the public job board as a candidate would, then apply to a role end to end.",
+    title: "Пройдите страницу вакансий",
+    body: "Откройте общественную доску вакансий, как это сделал бы кандидат, а затем подайте заявку на вакансию.",
   },
 ];
 
@@ -78,11 +78,11 @@ export function EnterBrandPanel() {
         <a
           href={LANDING_URL}
           className="inline-flex rounded-sm outline-none ring-lime/60 transition focus-visible:ring-2"
-          aria-label="Harly, visit harly.dev"
+          aria-label={"Харли, посетите harly.dev"}
         >
           <motion.img
             src="/harly-full-white.svg"
-            alt="Harly"
+            alt={"Харли"}
             className="h-10 w-auto"
             animate={reduce ? undefined : { y: [0, -5, 0] }}
             transition={
@@ -105,15 +105,13 @@ export function EnterBrandPanel() {
           variants={item}
           className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-lime ring-1 ring-inset ring-white/15"
         >
-          Live product demo
-        </motion.span>
+          {"Живая демонстрация продукта "}</motion.span>
 
         <motion.h2
           variants={item}
           className="mt-5 font-display text-3xl leading-tight tracking-tight lg:text-4xl"
         >
-          Take Harly for a spin.
-        </motion.h2>
+          {"Возьмите Харли на прогулку. "}</motion.h2>
 
         <ul className="mt-10 space-y-6">
           {POINTS.map(({ icon: Icon, title, body }) => (
@@ -140,14 +138,13 @@ export function EnterBrandPanel() {
         className="relative z-10 flex items-center justify-between gap-4"
       >
         <p className="text-xs text-white/45">
-          Open-source applicant tracking system
-        </p>
+          {"Система отслеживания кандидатов с открытым исходным кодом "}</p>
         <a
           href={REPO_URL}
           target="_blank"
           rel="noreferrer noopener"
           className="inline-flex size-9 items-center justify-center rounded-lg text-white/55 outline-none ring-inset ring-lime/60 transition hover:bg-white/10 hover:text-white focus-visible:ring-2"
-          aria-label="Harly on GitHub"
+          aria-label={"Харли на GitHub"}
         >
           <GithubIcon className="size-[1.125rem]" />
         </a>

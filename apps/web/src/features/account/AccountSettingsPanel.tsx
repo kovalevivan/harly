@@ -68,13 +68,13 @@ const WEEKDAYS: (keyof WeeklyAvailability)[] = [
   "sunday",
 ];
 const DAY_LABELS: Record<keyof WeeklyAvailability, string> = {
-  monday: "Mon",
-  tuesday: "Tue",
-  wednesday: "Wed",
-  thursday: "Thu",
-  friday: "Fri",
-  saturday: "Sat",
-  sunday: "Sun",
+  monday: "Пн.",
+  tuesday: "Вт",
+  wednesday: "ср.",
+  thursday: "Чт",
+  friday: "Пт",
+  saturday: "Суббота",
+  sunday: "Солнце",
 };
 
 function emptyWeek(): WeeklyAvailability {
@@ -134,8 +134,8 @@ type AccountUser = {
 };
 
 function formatDate(date: Date | undefined) {
-  if (!date) return "Not set";
-  return new Intl.DateTimeFormat("en-US", {
+  if (!date) return "Не установлено";
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "long",
     year: "numeric",
   }).format(new Date(date));
@@ -231,7 +231,7 @@ function PasswordField({
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          aria-label={visible ? "Hide password" : "Show password"}
+          aria-label={visible ? "Скрыть пароль" : "Показать пароль"}
           className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
         >
           {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -419,10 +419,10 @@ export function AccountSettingsPanel({
     startUsername(async () => {
       const result = await changeUsernameAction(username.trim());
       if (!result.success) {
-        toast.error(result.error ?? "Could not update username.");
+        toast.error(result.error ?? "Не удалось обновить имя пользователя.");
         return;
       }
-      toast.success("Username updated.");
+      toast.success("Имя пользователя обновлено.");
       setUsernameStatus("idle");
       router.refresh();
     });
@@ -436,7 +436,7 @@ export function AccountSettingsPanel({
       ) as WeeklyAvailability;
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Invalid availability.",
+        error instanceof Error ? error.message : "Неверное наличие.",
       );
       throw error;
     }
@@ -477,7 +477,7 @@ export function AccountSettingsPanel({
       const result = await updateOwnProfileAction(payload);
 
       if (!result.success) {
-        toast.error("Could not update profile.");
+        toast.error("Не удалось обновить профиль.");
         return;
       }
 
@@ -486,7 +486,7 @@ export function AccountSettingsPanel({
         image: image.trim() || undefined,
       });
 
-      toast.success("Profile updated.");
+      toast.success("Профиль обновлен.");
       setProfileDirty(false);
       router.refresh();
     });
@@ -519,7 +519,7 @@ export function AccountSettingsPanel({
         const result = await updateOwnProfileAction(payload);
 
         if (!result.success) {
-          toast.error("Could not update avatar.");
+          toast.error("Не удалось обновить аватар.");
           return;
         }
 
@@ -528,10 +528,10 @@ export function AccountSettingsPanel({
           image: url,
         });
 
-        toast.success("Avatar updated.");
+        toast.success("Аватар обновлен.");
         router.refresh();
       } catch {
-        toast.error("Upload failed.");
+        toast.error("Загрузка не удалась.");
       } finally {
         if (cropSrc) URL.revokeObjectURL(cropSrc);
         setCropSrc(null);
@@ -551,12 +551,12 @@ export function AccountSettingsPanel({
       const result = await updateOwnProfileAction(payload);
 
       if (!result.success) {
-        toast.error("Could not remove avatar.");
+        toast.error("Не удалось удалить аватар.");
         return;
       }
 
       await authClient.updateUser({ name: displayName, image: undefined });
-      toast.success("Avatar removed.");
+      toast.success("Аватар удален.");
       router.refresh();
     });
   }
@@ -567,9 +567,9 @@ export function AccountSettingsPanel({
     startEmail(async () => {
       const result = await authClient.changeEmail({ newEmail: email });
       if (result.error) {
-        toast.error(result.error.message ?? "Could not change email.");
+        toast.error(result.error.message ?? "Не удалось изменить адрес электронной почты.");
       } else {
-        toast.success("Email updated.");
+        toast.success("Электронная почта обновлена.");
         setNewEmail("");
         router.refresh();
       }
@@ -579,7 +579,7 @@ export function AccountSettingsPanel({
   function savePassword() {
     if (!canSavePassword) {
       toast.error(
-        "Enter your current password and a matching new one (8+ chars).",
+        "Введите свой текущий пароль и соответствующий новый (8+ символов).",
       );
       return;
     }
@@ -590,9 +590,9 @@ export function AccountSettingsPanel({
         revokeOtherSessions: true,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Could not change password.");
+        toast.error(result.error.message ?? "Не удалось изменить пароль.");
       } else {
-        toast.success("Password changed.");
+        toast.success("Пароль изменен.");
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
@@ -612,7 +612,7 @@ export function AccountSettingsPanel({
     startSignOut(async () => {
       const result = await revokeMySessionAction(sessionId);
       if (!result.ok) {
-        toast.error(result.error ?? "Could not revoke session.");
+        toast.error(result.error ?? "Не удалось отменить сеанс.");
         return;
       }
       if (result.current) {
@@ -620,7 +620,7 @@ export function AccountSettingsPanel({
         router.replace("/login");
         router.refresh();
       } else {
-        toast.success("Session revoked.");
+        toast.success("Сессия отменена.");
         router.refresh();
       }
     });
@@ -629,7 +629,7 @@ export function AccountSettingsPanel({
   async function copyUserId() {
     try {
       await navigator.clipboard.writeText(user.id);
-      toast.success("Account ID copied.");
+      toast.success("Идентификатор аккаунта скопирован.");
     } catch {
       // silent
     }
@@ -639,8 +639,7 @@ export function AccountSettingsPanel({
     <div className="mx-auto max-w-3xl space-y-8">
       {demoLocked ? (
         <DemoLockedNotice>
-          Account identity changes are locked in the demo so the shared login stays usable for everyone.
-        </DemoLockedNotice>
+          {"Изменения личности учетной записи заблокированы в демо-версии, поэтому общий логин остается доступным для всех. "}</DemoLockedNotice>
       ) : null}
       {/* ─── Profile header ─── */}
       <div className="flex flex-col items-center gap-4 pt-2 sm:flex-row sm:items-center sm:gap-6">
@@ -655,7 +654,7 @@ export function AccountSettingsPanel({
             type="button"
             onClick={() => avatarInputRef.current?.click()}
             disabled={demoLocked || savingProfile}
-            aria-label="Change avatar"
+            aria-label={"Сменить аватар"}
             className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 text-white/0 transition-all duration-150 ease-out hover:bg-black/40 hover:text-white/90 focus-visible:bg-black/40 focus-visible:text-white/90 focus-visible:outline-none active:scale-[0.97]"
           >
             <Camera className="size-5" strokeWidth={1.8} />
@@ -664,7 +663,7 @@ export function AccountSettingsPanel({
             <button
               type="button"
               onClick={removeAvatar}
-              aria-label="Remove avatar"
+              aria-label={"Удалить аватар"}
               className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-destructive/10 hover:text-destructive"
             >
               <span className="text-xs leading-none">×</span>
@@ -697,7 +696,7 @@ export function AccountSettingsPanel({
           <div className="mt-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground sm:justify-start">
             <span className="flex items-center gap-1.5">
               <CalendarDays className="size-3.5" />
-              Member since {formatDate(user.createdAt)}
+              {"Участник с "}{formatDate(user.createdAt)}
             </span>
             <button
               type="button"
@@ -714,21 +713,21 @@ export function AccountSettingsPanel({
 
       <Tabs defaultValue="profile">
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="session">Session</TabsTrigger>
+          <TabsTrigger value="profile">{"Профиль"}</TabsTrigger>
+          <TabsTrigger value="security">{"Безопасность"}</TabsTrigger>
+          <TabsTrigger value="session">{"Сессия"}</TabsTrigger>
         </TabsList>
 
         {/* ─── PROFILE TAB ─── */}
         <TabsContent value="profile" className="mt-6 space-y-6">
           <SectionCard
-            title="Personal info"
-            description="Your name and how others see you on the platform."
+            title={"Личная информация"}
+            description={"Ваше имя и то, как другие видят вас на платформе."}
           >
             <div className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="acc-first-name">First name</Label>
+                  <Label htmlFor="acc-first-name">{"Имя"}</Label>
                   <Input
                     id="acc-first-name"
                     value={firstName}
@@ -736,11 +735,11 @@ export function AccountSettingsPanel({
                       setFirstName(e.target.value);
                       markDirty();
                     }}
-                    placeholder="Ada"
+                    placeholder={"Ада"}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="acc-last-name">Last name</Label>
+                  <Label htmlFor="acc-last-name">{"Фамилия"}</Label>
                   <Input
                     id="acc-last-name"
                     value={lastName}
@@ -748,13 +747,13 @@ export function AccountSettingsPanel({
                       setLastName(e.target.value);
                       markDirty();
                     }}
-                    placeholder="Lovelace"
+                    placeholder={"ловелас"}
                   />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="acc-job-title">Job title</Label>
+                  <Label htmlFor="acc-job-title">{"Должность"}</Label>
                   <IconInput
                     icon={UserRound}
                     id="acc-job-title"
@@ -763,11 +762,11 @@ export function AccountSettingsPanel({
                       setJobTitle(e.target.value);
                       markDirty();
                     }}
-                    placeholder="e.g. Engineering Manager"
+                    placeholder={"например Инженерный менеджер"}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="acc-phone">Phone</Label>
+                  <Label htmlFor="acc-phone">{"Телефон"}</Label>
                   <IconInput
                     icon={Phone}
                     id="acc-phone"
@@ -783,7 +782,7 @@ export function AccountSettingsPanel({
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="acc-location">Location</Label>
+                  <Label htmlFor="acc-location">{"Расположение"}</Label>
                   <IconInput
                     icon={MapPin}
                     id="acc-location"
@@ -792,7 +791,7 @@ export function AccountSettingsPanel({
                       setLocation(e.target.value);
                       markDirty();
                     }}
-                    placeholder="San Francisco, CA"
+                    placeholder={"Сан-Франциско, Калифорния"}
                   />
                 </div>
               </div>
@@ -800,8 +799,8 @@ export function AccountSettingsPanel({
           </SectionCard>
 
           <SectionCard
-            title="Bio"
-            description="A short description shown on your profile and hiring team views."
+            title={"Био"}
+            description={"Краткое описание, отображаемое в вашем профиле и в представлениях команды по найму."}
           >
             <Textarea
               id="acc-bio"
@@ -810,14 +809,14 @@ export function AccountSettingsPanel({
                 setBio(e.target.value);
                 markDirty();
               }}
-              placeholder="Tell your team a bit about yourself…"
+              placeholder={"Расскажите своей команде немного о себе…"}
               className="min-h-[100px] resize-y"
             />
           </SectionCard>
 
           <SectionCard
-            title="Links"
-            description="Connected profiles and personal links."
+            title={"Ссылки"}
+            description={"Связанные профили и личные ссылки."}
           >
             <div className="space-y-4">
               <SocialLinkField
@@ -842,7 +841,7 @@ export function AccountSettingsPanel({
               />
               <SocialLinkField
                 icon={Globe}
-                label="Website"
+                label={"Веб-сайт"}
                 placeholder="https://yoursite.com"
                 value={websiteUrl}
                 onChange={(v) => {
@@ -854,8 +853,8 @@ export function AccountSettingsPanel({
           </SectionCard>
 
           <SectionCard
-            title="Username"
-            description="Your internal profile URL. Changing it keeps the old link working via a redirect."
+            title={"Имя пользователя"}
+            description={"URL вашего внутреннего профиля. При его изменении старая ссылка будет работать через перенаправление."}
             action={
               <Button
                 variant="outline"
@@ -866,7 +865,7 @@ export function AccountSettingsPanel({
                   username.trim() === (user.username ?? "")
                 }
               >
-                {savingUsername ? "Saving…" : "Save username"}
+                {savingUsername ? "Сохранение…" : "Сохранить имя пользователя"}
               </Button>
             }
           >
@@ -908,28 +907,27 @@ export function AccountSettingsPanel({
               >
                 {usernameError ??
                   (user.username
-                    ? `Your profile: /people/${user.username}`
-                    : "Pick a username to get a public internal profile.")}
+                    ? `Ваш профиль: /люди/${user.username}`
+                    : "Выберите имя пользователя, чтобы получить общедоступный внутренний профиль.")}
               </p>
               {user.username && (
                 <Link
                   href={`/people/${user.username}` as Route}
                   className="inline-block text-xs text-primary hover:underline"
                 >
-                  View public profile
-                </Link>
+                  {"Посмотреть общедоступный профиль "}</Link>
               )}
             </div>
           </SectionCard>
 
           <SectionCard
-            title="Operational details"
-            description="Specialties, languages, and timezone shown on your internal profile."
+            title={"Операционные детали"}
+            description={"Специальности, языки и часовой пояс указаны в вашем внутреннем профиле."}
           >
             <div className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="acc-timezone">Timezone</Label>
+                  <Label htmlFor="acc-timezone">{"Часовой пояс"}</Label>
                   <IconInput
                     icon={Globe}
                     id="acc-timezone"
@@ -942,7 +940,7 @@ export function AccountSettingsPanel({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="acc-capacity">Capacity (hrs/week)</Label>
+                  <Label htmlFor="acc-capacity">{"Производительность (часов/неделю)"}</Label>
                   <IconInput
                     icon={Clock}
                     id="acc-capacity"
@@ -959,7 +957,7 @@ export function AccountSettingsPanel({
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="acc-specialties">Specialties</Label>
+                <Label htmlFor="acc-specialties">{"Специальности"}</Label>
                 <IconInput
                   icon={Sparkles}
                   id="acc-specialties"
@@ -968,14 +966,13 @@ export function AccountSettingsPanel({
                     setSpecialtiesText(e.target.value);
                     markDirty();
                   }}
-                  placeholder="Technical sourcing, Executive search"
+                  placeholder={"Технический сорсинг, Поиск руководителей"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Comma-separated.
-                </p>
+                  {"Через запятую. "}</p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="acc-languages">Languages</Label>
+                <Label htmlFor="acc-languages">{"Языки"}</Label>
                 <IconInput
                   icon={Languages}
                   id="acc-languages"
@@ -984,18 +981,17 @@ export function AccountSettingsPanel({
                     setLanguagesText(e.target.value);
                     markDirty();
                   }}
-                  placeholder="English, Spanish"
+                  placeholder={"английский, испанский"}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Comma-separated.
-                </p>
+                  {"Через запятую. "}</p>
               </div>
             </div>
           </SectionCard>
 
           <SectionCard
-            title="Weekly availability"
-            description="Ranges in HH:mm-HH:mm, comma-separated for multiple ranges per day."
+            title={"Еженедельная доступность"}
+            description={"Диапазоны в формате ЧЧ:мм-ЧЧ:мм, разделенные запятыми, для нескольких диапазонов в день."}
           >
             <div className="space-y-3">
               {WEEKDAYS.map((day) => (
@@ -1030,8 +1026,7 @@ export function AccountSettingsPanel({
           {profileDirty ? (
             <div className="sticky bottom-4 z-10 flex items-center justify-between rounded-xl border border-pine/30 bg-card px-5 py-3.5 shadow-[0_8px_24px_-12px_rgba(31,41,38,0.25)]">
               <p className="text-sm text-muted-foreground">
-                You have unsaved changes.
-              </p>
+                {"У вас есть несохраненные изменения. "}</p>
               <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
@@ -1069,15 +1064,14 @@ export function AccountSettingsPanel({
                   }}
                   disabled={demoLocked || savingProfile}
                 >
-                  Discard
-                </Button>
+                  {"Отбросить "}</Button>
                 <Button
                   size="sm"
                   onClick={saveProfile}
                   disabled={demoLocked || savingProfile}
                 >
                   <PencilLine className="size-4" />
-                  {savingProfile ? "Saving…" : "Save profile"}
+                  {savingProfile ? "Сохранение…" : "Сохранить профиль"}
                 </Button>
               </div>
             </div>
@@ -1087,15 +1081,15 @@ export function AccountSettingsPanel({
         {/* ─── SECURITY TAB ─── */}
         <TabsContent value="security" className="mt-6 space-y-6">
           <SectionCard
-            title="Email address"
-            description="Your primary email used for sign-in and notifications."
+            title={"Адрес электронной почты"}
+            description={"Ваш основной адрес электронной почты, используемый для входа и уведомлений."}
             action={
               <Button
                 variant="outline"
                 onClick={saveEmail}
                 disabled={demoLocked || savingEmail || !newEmail.trim()}
               >
-                {savingEmail ? "Updating…" : "Update email"}
+                {savingEmail ? "Обновление…" : "Обновить адрес электронной почты"}
               </Button>
             }
           >
@@ -1104,11 +1098,10 @@ export function AccountSettingsPanel({
                 <AtSign className="size-4 shrink-0 text-muted-foreground" />
                 <span className="flex-1 text-sm font-medium">{user.email}</span>
                 <Badge variant="secondary" className="shrink-0">
-                  Current
-                </Badge>
+                  {"Текущий "}</Badge>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="acc-email">New email</Label>
+                <Label htmlFor="acc-email">{"Новое письмо"}</Label>
                 <IconInput
                   icon={Mail}
                   id="acc-email"
@@ -1122,22 +1115,22 @@ export function AccountSettingsPanel({
           </SectionCard>
 
           <SectionCard
-            title="Password"
-            description="Changing your password signs out every other session."
+            title={"Пароль"}
+            description={"Изменение пароля приводит к выходу из каждого второго сеанса."}
             action={
               <Button
                 variant="outline"
                 onClick={savePassword}
                 disabled={demoLocked || savingPassword || !canSavePassword}
               >
-                {savingPassword ? "Saving…" : "Change password"}
+                {savingPassword ? "Сохранение…" : "Изменить пароль"}
               </Button>
             }
           >
             <div className="space-y-4">
               <PasswordField
                 id="acc-current"
-                label="Current password"
+                label={"Текущий пароль"}
                 value={currentPassword}
                 onChange={setCurrentPassword}
                 autoComplete="current-password"
@@ -1146,7 +1139,7 @@ export function AccountSettingsPanel({
               <div className="grid gap-4 sm:grid-cols-2">
                 <PasswordField
                   id="acc-new"
-                  label="New password"
+                  label={"Новый пароль"}
                   value={newPassword}
                   onChange={setNewPassword}
                   autoComplete="new-password"
@@ -1154,7 +1147,7 @@ export function AccountSettingsPanel({
                 />
                 <PasswordField
                   id="acc-confirm"
-                  label="Confirm new password"
+                  label={"Подтвердите новый пароль"}
                   value={confirmPassword}
                   onChange={setConfirmPassword}
                   autoComplete="new-password"
@@ -1170,8 +1163,8 @@ export function AccountSettingsPanel({
                 )}
               >
                 {passwordsMismatch
-                  ? "New password and confirmation don't match."
-                  : "Use 8+ characters."}
+                  ? "Новый пароль и подтверждение не совпадают."
+                  : "Используйте 8+ символов."}
               </p>
             </div>
           </SectionCard>
@@ -1181,20 +1174,18 @@ export function AccountSettingsPanel({
 
         {/* ─── SESSION TAB ─── */}
         <TabsContent value="session" className="mt-6 space-y-6">
-          <SectionCard title="Active sessions">
+          <SectionCard title={"Активные сессии"}>
             <div className="space-y-3">
               {sessions.map((item) => (
                 <div key={item.id} className="flex items-center gap-3 rounded-lg border bg-muted/20 px-4 py-3">
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><Globe className="size-4" /></span>
-                  <div className="min-w-0 flex-1"><p className="text-sm font-medium">{item.current ? "Current browser" : "Other device"}</p><p className="truncate text-xs text-muted-foreground">{item.userAgent ?? "Unknown browser"}{item.ipAddress ? ` · ${item.ipAddress}` : ""}</p><p className="text-[11px] text-muted-foreground">Last active {item.updatedAt.toLocaleString()}</p></div>
-                  {item.current ? <Badge variant="secondary" className="shrink-0">This device</Badge> : <Button type="button" size="sm" variant="outline" onClick={() => revokeSession(item.id)}>Revoke</Button>}
+                  <div className="min-w-0 flex-1"><p className="text-sm font-medium">{item.current ? "Текущий браузер" : "Другое устройство"}</p><p className="truncate text-xs text-muted-foreground">{item.userAgent ?? "Неизвестный браузер"}{item.ipAddress ? ` · ${item.ipAddress}` : ""}</p><p className="text-[11px] text-muted-foreground">{"Последний активный "}{item.updatedAt.toLocaleString("ru-RU")}</p></div>
+                  {item.current ? <Badge variant="secondary" className="shrink-0">{"Это устройство"}</Badge> : <Button type="button" size="sm" variant="outline" onClick={() => revokeSession(item.id)}>{"Отозвать"}</Button>}
                 </div>
               ))}
               <p className="text-xs text-muted-foreground">
-                Signing out will end this session. Use &ldquo;Sign out
-                everywhere&rdquo; from settings to revoke all sessions.
-              </p>
-              {sessions.some((item) => !item.current) ? <Button type="button" variant="outline" onClick={() => startSignOut(async () => { const result = await revokeOtherMySessionsAction(); if (result.ok) { toast.success("Other sessions revoked."); router.refresh(); } })}>Sign out everywhere else</Button> : null}
+                {"Выход из системы завершит этот сеанс. Используйте «Выйти везде» в настройках, чтобы отменить все сеансы. "}</p>
+              {sessions.some((item) => !item.current) ? <Button type="button" variant="outline" onClick={() => startSignOut(async () => { const result = await revokeOtherMySessionsAction(); if (result.ok) { toast.success("Остальные заседания отменены."); router.refresh(); } })}>{"Выйти везде"}</Button> : null}
             </div>
           </SectionCard>
 
@@ -1202,17 +1193,14 @@ export function AccountSettingsPanel({
             <CardHeader className="border-b border-destructive/10 bg-destructive/[0.03] px-6 py-3">
               <CardTitle className="flex items-center gap-2 text-base text-destructive">
                 <LogOut className="size-4" />
-                Danger zone
-              </CardTitle>
+                {"Опасная зона "}</CardTitle>
               <CardDescription>
-                End your current session on this device.
-              </CardDescription>
+                {"Завершите текущий сеанс на этом устройстве. "}</CardDescription>
             </CardHeader>
             <CardContent className="px-6 py-3">
               <div className="flex items-center justify-between gap-4">
                 <p className="text-sm text-muted-foreground">
-                  You&apos;ll need to sign in again to access your account.
-                </p>
+                  {"Вам нужно будет снова войти в систему, чтобы получить доступ к своей учетной записи. "}</p>
                 <Button
                   variant="outline"
                   className="shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
@@ -1220,7 +1208,7 @@ export function AccountSettingsPanel({
                   disabled={signingOut}
                 >
                   <LogOut className="size-4" />
-                  {signingOut ? "Signing out…" : "Sign out"}
+                  {signingOut ? "Выход из системы…" : "Выйти"}
                 </Button>
               </div>
             </CardContent>

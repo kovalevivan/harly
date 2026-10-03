@@ -38,7 +38,7 @@ export function JobEditorTopBar({
           className="group inline-flex items-center gap-2 rounded-full border border-border bg-paper-raised/60 py-1.5 pl-2.5 pr-3.5 text-sm font-medium text-ink-soft shadow-sm transition-all duration-150 hover:border-pine/30 hover:bg-kraft hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pine/30 active:scale-[0.97]"
         >
           <ArrowLeft className="size-4 transition-transform duration-150 group-hover:-translate-x-0.5" />
-          <span className="hidden sm:inline">Jobs</span>
+          <span className="hidden sm:inline">{"Вакансии"}</span>
         </button>
       }
       center={
@@ -49,7 +49,7 @@ export function JobEditorTopBar({
             </span>
           ) : null}
           <span className="hidden truncate text-sm font-semibold text-foreground md:inline">
-            {title || "New job"}
+            {title || "Новая вакансия"}
           </span>
           {railActions ? (
             <Popover>
@@ -58,7 +58,7 @@ export function JobEditorTopBar({
                   type="button"
                   className="flex min-w-0 items-center gap-1 truncate text-sm font-semibold text-foreground md:hidden"
                 >
-                  <span className="truncate">{title || "New job"}</span>
+                  <span className="truncate">{title || "Новая вакансия"}</span>
                   <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
                 </button>
               </PopoverTrigger>
@@ -68,7 +68,7 @@ export function JobEditorTopBar({
             </Popover>
           ) : (
             <span className="truncate text-sm font-semibold text-foreground md:hidden">
-              {title || "New job"}
+              {title || "Новая вакансия"}
             </span>
           )}
           {statusBadge}

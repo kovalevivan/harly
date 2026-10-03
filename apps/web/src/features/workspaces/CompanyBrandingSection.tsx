@@ -98,8 +98,8 @@ export function CompanyBrandingSection({
     updateWorkspaceBoardBrandingAction,
     initialActionState,
   );
-  useActionToast(profileState, "Identity saved.");
-  useActionToast(brandingState, "Brand settings saved.");
+  useActionToast(profileState, "Личность сохранена.");
+  useActionToast(brandingState, "Настройки бренда сохранены.");
 
   const identityFormRef = useRef<HTMLFormElement>(null);
   const shouldAutoSaveLogo = useRef(false);
@@ -144,8 +144,8 @@ export function CompanyBrandingSection({
       <Card className="gap-6 p-6 sm:p-8">
         <SectionHeader
           icon={BuildingsIcon}
-          title="Identity"
-          description="Logo and name shown across Harly and your careers page."
+          title={"Название и логотип"}
+          description={"Название и логотип отображаются в Harly и на странице вакансий."}
         />
 
         <form
@@ -172,10 +172,10 @@ export function CompanyBrandingSection({
               }}
               variant="avatar"
               disabled={!canEdit || savingProfile}
-              hint="Square logo · PNG, JPG, SVG or WEBP"
+              hint={"Квадратный логотип · PNG, JPG, SVG или WEBP"}
             />
             <div className="flex-1 space-y-2">
-              <Label htmlFor="ws-name">Company name</Label>
+              <Label htmlFor="ws-name">{"Название компании"}</Label>
               <Input
                 id="ws-name"
                 name="name"
@@ -184,24 +184,21 @@ export function CompanyBrandingSection({
                 disabled={!canEdit || savingProfile}
               />
               <p className="text-xs text-muted-foreground">
-                Square logo, used as the app icon and avatar.
-              </p>
+                {"Квадратный логотип, используемый в качестве значка приложения и аватара. "}</p>
             </div>
           </div>
 
           {/* Sidebar logo */}
           <div className="space-y-3 border-t pt-6">
             <div className="space-y-1">
-              <Label>Sidebar logo</Label>
+              <Label>{"Логотип боковой панели"}</Label>
               <p className="text-xs text-muted-foreground">
-                Replace the workspace name with a wide wordmark logo in the
-                dashboard sidebar.
-              </p>
+                {"Замените имя рабочей области широким логотипом с надписью на боковой панели информационной панели. "}</p>
             </div>
             <Segmented
               options={[
-                { value: "bordered", label: "Icon + name" },
-                { value: "full", label: "Full logo" },
+                { value: "bordered", label: "Значок + имя" },
+                { value: "full", label: "Полный логотип" },
               ]}
               value={sidebarLogoStyle}
               onChange={setSidebarLogoStyle}
@@ -212,27 +209,25 @@ export function CompanyBrandingSection({
               <div className="grid gap-4 pt-1 lg:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-xs font-medium text-muted-foreground">
-                    Light mode
-                  </Label>
+                    {"Светлый режим "}</Label>
                   <FileDropzone
                     value={sidebarLogoUrl || null}
                     onChange={(url) => setSidebarLogoUrl(url ?? "")}
                     aspect="banner"
                     disabled={!canEdit}
-                    hint="Wide logo · transparent PNG/SVG"
+                    hint={"Широкий логотип · прозрачный PNG/SVG"}
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs font-medium text-muted-foreground">
-                    Dark mode
-                  </Label>
+                    {"Темный режим "}</Label>
                   <div className="rounded-2xl bg-zinc-950 p-2">
                     <FileDropzone
                       value={sidebarLogoDarkUrl || null}
                       onChange={(url) => setSidebarLogoDarkUrl(url ?? "")}
                       aspect="banner"
                       disabled={!canEdit}
-                      hint="Optional · falls back to light"
+                      hint={"Необязательно · возвращается к свету"}
                     />
                   </div>
                 </div>
@@ -242,7 +237,7 @@ export function CompanyBrandingSection({
 
           <div className="flex justify-end border-t pt-6">
             <Button type="submit" disabled={!canEdit || savingProfile}>
-              {savingProfile ? "Saving…" : "Save identity"}
+              {savingProfile ? "Сохранение…" : "Сохранить название и логотип"}
             </Button>
           </div>
         </form>
@@ -252,17 +247,15 @@ export function CompanyBrandingSection({
       <Card className="gap-6 p-6 sm:p-8">
         <SectionHeader
           icon={PaletteDuotoneIcon}
-          title="Brand & links"
+          title={"Бренд и ссылки"}
           description={
             <>
-              Color, website and fallback banner used across your careers pages,
-              application emails and job posts.{" "}
+              {"Цвет, сайт и баннер используются на странице вакансий и в письмах кандидатам."}{" "}
               <Link
                 href="/dashboard/career-page"
                 className="inline-flex items-center gap-0.5 font-medium text-pine underline-offset-2 hover:underline"
               >
-                Customize your careers page
-                <ArrowUpRightIcon className="size-3.5" />
+                {"Настройте свою страницу вакансий "}<ArrowUpRightIcon className="size-3.5" />
               </Link>
             </>
           }
@@ -285,7 +278,7 @@ export function CompanyBrandingSection({
 
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="ws-website">Website</Label>
+              <Label htmlFor="ws-website">{"Веб-сайт"}</Label>
               <Input
                 id="ws-website"
                 name="websiteUrl"
@@ -298,12 +291,12 @@ export function CompanyBrandingSection({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ws-color">Primary color</Label>
+              <Label htmlFor="ws-color">{"Основной цвет"}</Label>
               <div className="flex items-center gap-2 rounded-lg border bg-card p-1 pr-3">
                 <label
                   className="relative size-8 shrink-0 cursor-pointer overflow-hidden rounded-md ring-1 ring-border"
                   style={{ backgroundColor: previewColor }}
-                  aria-label="Pick primary color"
+                  aria-label={"Выберите основной цвет"}
                 >
                   <input
                     type="color"
@@ -326,53 +319,49 @@ export function CompanyBrandingSection({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="ws-tagline">Careers page tagline</Label>
+            <Label htmlFor="ws-tagline">{"Слоган страницы «Карьера»"}</Label>
             <Input
               id="ws-tagline"
               name="tagline"
               value={tagline}
               onChange={(event) => setTagline(event.target.value)}
-              placeholder="A short line about your company"
+              placeholder={"Короткая строка о вашей компании"}
               maxLength={120}
               disabled={!canEdit || savingBranding}
             />
             <p className="text-xs text-muted-foreground">
-              Optional. Shown on your public careers page.
-            </p>
+              {"Необязательно. Отображается на вашей общедоступной странице вакансий. "}</p>
           </div>
 
           <div className="space-y-2">
-            <Label>Default banner</Label>
+            <Label>{"Баннер по умолчанию"}</Label>
             <FileDropzone
               value={heroImageUrl || null}
               onChange={(url) => setHeroImageUrl(url ?? "")}
               aspect="banner"
               disabled={!canEdit}
-              hint="Fallback banner for your careers page · 1500×500"
+              hint={"Резервный баннер для страницы вашей карьеры · 1500×500"}
             />
           </div>
 
           <label className="flex items-start justify-between gap-4 rounded-xl border bg-card px-4 py-3.5">
             <span>
               <span className="block text-sm font-medium text-foreground">
-                Remove Harly branding from emails
-              </span>
+                {"Удалить брендинг Harly из электронных писем "}</span>
               <span className="mt-0.5 block text-xs text-muted-foreground">
-                Hides the &quot;Powered by Harly&quot; footer credit on invite,
-                notification and candidate emails.
-              </span>
+                {"Скрывает подпись «Powered by Harly» в приглашениях, уведомлениях и электронных письмах кандидатов. "}</span>
             </span>
             <Switch
               checked={hideHarlyBranding}
               onCheckedChange={setHideHarlyBranding}
               disabled={!canEdit || savingBranding}
-              aria-label="Remove Harly branding from emails"
+              aria-label={"Удалить брендинг Harly из электронных писем"}
             />
           </label>
 
           <div className="flex justify-end border-t pt-6">
             <Button type="submit" disabled={!canEdit || savingBranding}>
-              {savingBranding ? "Saving…" : "Save brand"}
+              {savingBranding ? "Сохранение…" : "Сохранить бренд"}
             </Button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -80,7 +81,7 @@ export function StageColumn({
               aria-hidden
             />
             <h2 className="truncate text-[13px] font-medium text-near-ink">
-              {stage.name}
+              {localizeStageName(stage.name)}
             </h2>
             <span className="font-chrome tabular text-[12px] text-quiet-mist">
               {applications.length}
@@ -94,7 +95,7 @@ export function StageColumn({
           */}
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label={`${stage.name} settings`}
+              aria-label={`Настройки этапа: ${localizeStageName(stage.name)}`}
               disabled={disabled}
               className="flex size-6 shrink-0 items-center justify-center rounded-md text-quiet-mist opacity-0 transition-opacity hover:text-near-ink focus-visible:opacity-100 focus-visible:outline-none group-hover/board:opacity-100 data-[state=open]:opacity-100"
             >
@@ -123,8 +124,8 @@ export function StageColumn({
                   <BellIcon className="size-4 text-soft-ink" />
                 )}
                 {emailOn
-                  ? "Stop emailing candidates here"
-                  : "Email candidates who reach here"}
+                  ? "Прекратите писать кандидатам сюда"
+                  : "Отправьте электронное письмо кандидатам, которые доберутся сюда"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -160,7 +161,7 @@ export function StageColumn({
               )}
             >
               <span className="font-chrome text-[11px]">
-                {isOver ? "Drop to move here" : "Empty"}
+                {isOver ? "Оставьте, чтобы переехать сюда" : "Пустой"}
               </span>
             </div>
           ) : null}

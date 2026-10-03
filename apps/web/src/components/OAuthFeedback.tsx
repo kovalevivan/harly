@@ -13,21 +13,21 @@ export function OAuthFeedback() {
 
   useEffect(() => {
     const feedbacks: Array<{ key: string; errorKey: string; label: string }> = [
-      { key: "gcal", errorKey: "gcal_error", label: "Google Calendar" },
-      { key: "slack", errorKey: "slack_error", label: "Slack" },
+      { key: "gcal", errorKey: "gcal_error", label: "Google Календарь" },
+      { key: "slack", errorKey: "slack_error", label: "Слабый" },
       { key: "outlook", errorKey: "outlook_error", label: "Microsoft Outlook" },
-      { key: "zoom", errorKey: "zoom_error", label: "Zoom" },
+      { key: "zoom", errorKey: "zoom_error", label: "Увеличить" },
     ];
 
     let dirty = false;
     for (const fb of feedbacks) {
       if (searchParams.get(fb.key) === "connected") {
-        toast.success(`${fb.label} connected successfully!`);
+        toast.success(`${fb.label} успешно подключено!`);
         dirty = true;
       }
       const err = searchParams.get(fb.errorKey);
       if (err) {
-        toast.error(`${fb.label} connection failed: ${err}`);
+        toast.error(`${fb.label} соединение не удалось: ${err}`);
         dirty = true;
       }
     }

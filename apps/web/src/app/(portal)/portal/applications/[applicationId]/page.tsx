@@ -41,7 +41,7 @@ function synthesizeActivities(
   items.push({
     id: `${app.id}-applied`,
     type: "applied",
-    label: "Application submitted",
+    label: "Заявка отправлена",
     timestamp: app.appliedAt,
   });
   for (const iv of interviews) {
@@ -49,14 +49,14 @@ function synthesizeActivities(
       items.push({
         id: `${iv.id}-done`,
         type: "interview_completed",
-        label: `${iv.title ?? formatEnumLabel(iv.type)} completed`,
+        label: `${iv.title ?? formatEnumLabel(iv.type)} завершено`,
         timestamp: new Date(iv.scheduledAt.getTime() + iv.durationMins * 60_000),
       });
     } else if (iv.status === "scheduled") {
       items.push({
         id: `${iv.id}-sched`,
         type: "interview_scheduled",
-        label: `${iv.title ?? formatEnumLabel(iv.type)} scheduled`,
+        label: `${iv.title ?? formatEnumLabel(iv.type)} запланировано`,
         timestamp: iv.scheduledAt,
       });
     }
@@ -65,7 +65,7 @@ function synthesizeActivities(
     items.push({
       id: `${app.id}-hired`,
       type: "offer",
-      label: "Offer received!",
+      label: "Предложение получено!",
       timestamp: app.updatedAt,
     });
   }
@@ -73,7 +73,7 @@ function synthesizeActivities(
     items.push({
       id: `${app.id}-rejected`,
       type: "rejected",
-      label: "Application not selected",
+      label: "Приложение не выбрано",
       timestamp: app.updatedAt,
     });
   }
@@ -81,16 +81,16 @@ function synthesizeActivities(
 }
 
 const WORKPLACE_LABELS: Record<string, string> = {
-  remote: "Remote",
-  hybrid: "Hybrid",
-  onsite: "On-site",
+  remote: "Удаленный",
+  hybrid: "Гибрид",
+  onsite: "В клинике",
 };
 
 const EMPLOYMENT_LABELS: Record<string, string> = {
-  full_time: "Full-time",
-  part_time: "Part-time",
-  contract: "Contract",
-  internship: "Internship",
+  full_time: "Полная занятость",
+  part_time: "Частичная занятость",
+  contract: "Договор",
+  internship: "Стажировка",
 };
 
 export default async function ApplicationDetailPage({
@@ -192,8 +192,7 @@ export default async function ApplicationDetailPage({
           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
           </svg>
-          Back to applications
-        </Link>
+          {"Вернуться к приложениям "}</Link>
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -212,7 +211,7 @@ export default async function ApplicationDetailPage({
               )}
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
-              Applied {formatShort(appRow.appliedAt)}
+              {"Отклик "}{formatShort(appRow.appliedAt)}
             </p>
           </div>
           <PortalStatusBadge status={appRow.status} />
@@ -244,7 +243,7 @@ export default async function ApplicationDetailPage({
         {/* Horizontal pipeline */}
         {showStatus && stages.length > 0 && (
           <section>
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Interview plan</h2>
+            <h2 className="mb-4 text-lg font-semibold text-foreground">{"План интервью"}</h2>
             <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <PortalHorizontalPipeline
                 stages={stages}
@@ -258,7 +257,7 @@ export default async function ApplicationDetailPage({
         {/* Upcoming interviews */}
         {upcomingInterviews.length > 0 && (
           <section>
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Upcoming Interviews</h2>
+            <h2 className="mb-4 text-lg font-semibold text-foreground">{"Предстоящие интервью"}</h2>
             <div className="space-y-3">
               {upcomingInterviews.map((iv) => (
                 <PortalInterviewCard
@@ -280,7 +279,7 @@ export default async function ApplicationDetailPage({
         {/* Past interviews */}
         {pastInterviews.length > 0 && (
           <section>
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Past Interviews</h2>
+            <h2 className="mb-4 text-lg font-semibold text-foreground">{"Прошлые интервью"}</h2>
             <div className="space-y-3">
               {pastInterviews.map((iv) => (
                 <PortalInterviewCard
@@ -304,15 +303,15 @@ export default async function ApplicationDetailPage({
         {interviewsList.length === 0 && (
           <PortalEmptyState
             icon={CalendarBlankIcon}
-            title="No interviews scheduled yet"
-            description="Your application is being reviewed. We'll notify you when an interview is booked."
+            title={"Собеседований пока не запланировано"}
+            description={"Ваша заявка находится на рассмотрении. Мы сообщим вам, когда будет назначено собеседование."}
           />
         )}
 
         {/* Activity timeline (full mode, all activities) */}
         {activities.length > 0 && (
           <section>
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Activity</h2>
+            <h2 className="mb-4 text-lg font-semibold text-foreground">{"Деятельность"}</h2>
             <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <PortalActivityTimeline activities={activities} />
             </div>

@@ -10,15 +10,15 @@ import { updateJobStatusAction } from "./actions";
 import { Button } from "@/components/ui/button";
 
 const actionMeta: Record<string, { label: string; icon: typeof Send }> = {
-  draft: { label: "Move to draft", icon: FileEdit },
-  open: { label: "Publish", icon: Send },
-  closed: { label: "Close", icon: Archive },
+  draft: { label: "Перейти в черновик", icon: FileEdit },
+  open: { label: "Опубликовать", icon: Send },
+  closed: { label: "Закрыть", icon: Archive },
 };
 
 const statusLabel: Record<string, string> = {
-  draft: "Draft",
-  open: "Open",
-  closed: "Closed",
+  draft: "Черновик",
+  open: "Открыта",
+  closed: "Закрыта",
 };
 
 export function JobStatusActions({ job }: { job: Job }) {
@@ -35,11 +35,11 @@ export function JobStatusActions({ job }: { job: Job }) {
       formData.set("status", status);
       try {
         await updateJobStatusAction(formData);
-        toast.success(`Job status updated to ${statusLabel[status] ?? status}.`);
+        toast.success(`Статус задания обновлен до ${statusLabel[status] ?? status}.`);
         router.refresh();
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Could not update job status.",
+          error instanceof Error ? error.message : "Не удалось обновить статус задания.",
         );
       }
     });

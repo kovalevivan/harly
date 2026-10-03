@@ -19,19 +19,19 @@ import {
 
 const SECTION_TEMPLATES: Record<string, { title: string; body: string }[]> = {
   Engineering: [
-    { title: "What you'll do", body: "<ul><li>Ship features end to end</li><li>Collaborate on architecture</li></ul>" },
-    { title: "Requirements", body: "<ul><li>3+ years building web apps</li><li>Strong in TypeScript</li></ul>" },
-    { title: "Benefits", body: "<ul><li>Remote-first</li><li>Equity</li></ul>" },
+    { title: "Что ты будешь делать", body: "<ul><li>Разрабатывать и выпускать новые функции</li><li>Участвовать в проектировании архитектуры</li></ul>" },
+    { title: "Требования", body: "<ul><li>Опыт разработки веб-приложений от 3 лет</li><li>Уверенное знание TypeScript</li></ul>" },
+    { title: "Преимущества", body: "<ul><li>Возможность удалённой работы</li><li>Участие в капитале компании</li></ul>" },
   ],
   Sales: [
-    { title: "About the role", body: "<p>Own a pipeline and close deals.</p>" },
-    { title: "Requirements", body: "<ul><li>2+ years in B2B sales</li><li>CRM fluency</li></ul>" },
-    { title: "Compensation", body: "<p>Base + uncapped commission.</p>" },
+    { title: "О роли", body: "<p>Вести клиентов по воронке продаж и заключать сделки.</p>" },
+    { title: "Требования", body: "<ul><li>Опыт продаж корпоративным клиентам от 2 лет</li><li>Уверенная работа в CRM</li></ul>" },
+    { title: "Компенсация", body: "<p>Оклад и процент от продаж без верхнего ограничения.</p>" },
   ],
   Generic: [
-    { title: "Responsibilities", body: "" },
-    { title: "Requirements", body: "" },
-    { title: "Benefits", body: "" },
+    { title: "Обязанности", body: "" },
+    { title: "Требования", body: "" },
+    { title: "Преимущества", body: "" },
   ],
 };
 
@@ -45,10 +45,10 @@ function escapeHtml(value: string) {
 function pickTemplateKey(title: string): keyof typeof SECTION_TEMPLATES {
   const t = title.toLowerCase();
   if (/(engineer|developer|programmer|software|backend|front[\s-]?end|full[\s-]?stack|data|devops|sre|qa)/.test(t))
-    return "Engineering";
+    return "Инженерное дело";
   if (/(sales|account executive|business development|bdr|sdr|revenue)/.test(t))
-    return "Sales";
-  return "Generic";
+    return "Продажи";
+  return "Общий";
 }
 
 let sectionSeq = 0;
@@ -106,22 +106,22 @@ export function DescriptionSection({
 
     if (keywords.length > 0) {
       const list = `<ul>${keywords.map((kw) => `<li>${escapeHtml(kw)}</li>`).join("")}</ul>`;
-      const ri = base.findIndex((s) => /require/i.test(s.title));
+      const ri = base.findIndex((s) => /требован/i.test(s.title));
       if (ri >= 0) base[ri] = { ...base[ri], body: list };
-      else base.push({ id: newSectionId(), title: "Requirements", body: list });
+      else base.push({ id: newSectionId(), title: "Требования", body: list });
     }
 
-    const roleName = title.trim() || "this role";
+    const roleName = title.trim() || "эта роль";
     setSections(base);
     setDescription(
-      `<p>We're hiring a <strong>${escapeHtml(roleName)}</strong> to join our team. Outline the mission, the team, and the impact of this role.</p>`,
+      `<p>Приглашаем в команду на позицию <strong>${escapeHtml(roleName)}</strong>. Расскажите о задачах, команде и ожидаемых результатах.</p>`,
     );
     setDescriptionVersion((v) => v + 1);
   }
 
   function generateWithAI() {
     if (title.trim().length < 3) {
-      toast.error("Add a job title first.");
+      toast.error("Сначала добавьте название должности.");
       return;
     }
 
@@ -147,7 +147,7 @@ export function DescriptionSection({
       );
       setDescription(`<p>${escapeHtml(draft.summary)}</p>`);
       setDescriptionVersion((v) => v + 1);
-      toast.success("Draft generated with AI");
+      toast.success("Черновик создан с помощью ИИ");
     });
   }
 
@@ -155,36 +155,33 @@ export function DescriptionSection({
     <section data-section="description">
       <div className="rounded-2xl border border-border/70 bg-card">
         <div className="flex items-center justify-between border-b px-5 py-3">
-          <p className="text-sm font-semibold">Description</p>
+          <p className="text-sm font-semibold">{"Описание"}</p>
           <div className="flex items-center gap-2">
             <AiButton
               type="button"
               size="sm"
               onClick={generateWithAI}
               loading={aiPending}
-              loadingText="Generating"
+              loadingText={"Создание"}
               logoClassName="size-4"
             >
-              Generate with AI
-            </AiButton>
+              {"Сгенерировать с помощью ИИ "}</AiButton>
             <Button type="button" variant="outline" size="sm" onClick={scaffoldDraft}>
               <FileText className="size-4" />
-              Draft for me
-            </Button>
+              {"Черновик для меня "}</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button type="button" variant="outline" size="sm">
-                  Templates
-                </Button>
+                  {"Шаблоны "}</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Replace with template</DropdownMenuLabel>
+                <DropdownMenuLabel>{"Заменить шаблоном"}</DropdownMenuLabel>
                 {Object.keys(SECTION_TEMPLATES).map((name) => (
                   <DropdownMenuItem
                     key={name}
                     onClick={() => applyTemplate(name as keyof typeof SECTION_TEMPLATES)}
                   >
-                    {name}
+                    {({ Engineering: "Разработка", Sales: "Продажи", Generic: "Общий" } as Record<string, string>)[name] ?? name}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -194,12 +191,12 @@ export function DescriptionSection({
 
         <div className="space-y-5 p-5">
           <div className="space-y-2">
-            <Label>About the role</Label>
+            <Label>{"О роли"}</Label>
             <input type="hidden" name="description" value={description} />
             <RichTextEditor
               key={`description-${descriptionVersion}`}
               defaultValue={descriptionVersion === 0 ? job?.description : description}
-              placeholder="Describe the role, team, and impact."
+              placeholder={"Опишите роль, команду и влияние."}
               minHeight="11rem"
               onChange={setDescription}
             />
@@ -211,7 +208,7 @@ export function DescriptionSection({
                 <Input
                   value={section.title}
                   onChange={(e) => updateSection(section.id, { title: e.target.value })}
-                  placeholder="Section title (e.g. Requirements)"
+                  placeholder={"Название раздела (например, Требования)"}
                   className="h-9 bg-card font-medium"
                 />
                 <Button
@@ -220,14 +217,14 @@ export function DescriptionSection({
                   size="icon"
                   className="size-8 shrink-0 text-muted-foreground hover:text-destructive"
                   onClick={() => removeSection(section.id)}
-                  aria-label="Remove section"
+                  aria-label={"Удалить раздел"}
                 >
                   <Trash2 className="size-4" />
                 </Button>
               </div>
               <RichTextEditor
                 defaultValue={section.body}
-                placeholder="Write this section..."
+                placeholder={"Напишите этот раздел..."}
                 minHeight="7rem"
                 onChange={(html) => updateSection(section.id, { body: html })}
               />
@@ -236,8 +233,7 @@ export function DescriptionSection({
 
           <Button type="button" variant="outline" onClick={addSection}>
             <Plus className="size-4" />
-            Add section
-          </Button>
+            {"Добавить раздел "}</Button>
         </div>
       </div>
     </section>

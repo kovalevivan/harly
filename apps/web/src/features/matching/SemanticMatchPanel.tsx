@@ -52,7 +52,7 @@ export function SemanticMatchPanel({
         const indexResult = await indexCandidatesForMatchingAction();
         if (!indexResult.success) {
           if (indexResult.reason === "not_configured") {
-            toast.error("Connect an AI provider in Settings → AI first.");
+            toast.error("Сначала подключите провайдера AI в «Настройки» → «AI».");
           } else if (indexResult.reason === "unsupported_provider") {
             toast.error(indexResult.error);
           } else {
@@ -70,7 +70,7 @@ export function SemanticMatchPanel({
       }
       setMatches(result.matches.slice(0, SEMANTIC_MATCH_LIMIT));
       if (result.matches.length === 0) {
-        toast.info("No candidates in your pool yet.");
+        toast.info("В вашем пуле пока нет кандидатов.");
       }
     } finally {
       setLoading(false);
@@ -82,10 +82,10 @@ export function SemanticMatchPanel({
     try {
       const result = await assignFromPoolToJobAction({ candidateId, jobId });
       if (!result.success) {
-        toast.error(result.error ?? "Could not assign candidate.");
+        toast.error(result.error ?? "Не удалось назначить кандидата.");
         return;
       }
-      toast.success("Candidate assigned to this job's pipeline.");
+      toast.success("Кандидат, назначенный на конвейер этой вакансии.");
     } finally {
       setAssigning(null);
     }
@@ -97,26 +97,24 @@ export function SemanticMatchPanel({
         <div>
           <h3 className="flex items-center gap-2 font-semibold tracking-tight">
             <TargetIcon className="size-4 text-pine" />
-            Semantic match
-          </h3>
+            {"Семантическое совпадение "}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            See the {SEMANTIC_MATCH_LIMIT} strongest matches from your candidate pool by embedding similarity.
-          </p>
+            {"См. "}{SEMANTIC_MATCH_LIMIT} {"самые сильные совпадения из вашего пула кандидатов путем внедрения сходства. "}</p>
         </div>
         {aiConfigured ? (
           <Button size="sm" onClick={findMatches} disabled={loading || candidatePoolCount === 0}>
             <TargetIcon className={cn("size-4", loading && "animate-pulse")} />
             {loading
-              ? "Matching…"
+              ? "Соответствие…"
               : candidatePoolCount === 0
-                ? "No candidates in pool"
+                ? "Нет кандидатов в пуле"
                 : matches
-                  ? "Refresh matches"
-                  : "Find matches"}
+                  ? "Обновить матчи"
+                  : "Найти совпадения"}
           </Button>
         ) : (
           <Button asChild size="sm" variant="outline">
-            <Link href="/settings/ai">Set up AI</Link>
+            <Link href="/settings/ai">{"Настроить ИИ"}</Link>
           </Button>
         )}
       </div>
@@ -124,10 +122,9 @@ export function SemanticMatchPanel({
       {candidatePoolCount === 0 ? (
         <CardContent className="mt-3 flex flex-col items-center gap-2 rounded-xl border border-dashed py-8 text-center">
           <TargetIcon className="size-6 text-muted-foreground" />
-          <p className="text-sm font-medium">Your candidate pool is empty</p>
+          <p className="text-sm font-medium">{"Ваш пул кандидатов пуст"}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Add candidates to the pool to generate a ranked shortlist for this role.
-          </p>
+            {"Добавьте кандидатов в пул, чтобы создать ранжированный список на эту должность. "}</p>
         </CardContent>
       ) : matches && matches.length > 0 ? (
         <ul className="mt-4 space-y-1.5">
@@ -150,13 +147,13 @@ export function SemanticMatchPanel({
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-medium">{m.fullName}</span>
                   <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                    {m.headline ?? (m.skills.length > 0 ? m.skills.slice(0, 4).join(", ") : "No headline")}
+                    {m.headline ?? (m.skills.length > 0 ? m.skills.slice(0, 4).join(", ") : "Нет заголовка")}
                   </span>
                 </span>
               </Link>
               <span
                 className={cn("flex items-center gap-1 text-sm font-semibold tabular-nums", matchTone(m.similarityPct))}
-                title="Embedding similarity to this job"
+                title={"Встраивание сходства с этой работой"}
               >
                 <TargetIcon className="size-3.5" />
                 {m.similarityPct}%
@@ -168,7 +165,7 @@ export function SemanticMatchPanel({
                 onClick={() => assign(m.candidateId)}
               >
                 <UserPlusIcon className="size-3.5" />
-                {assigning === m.candidateId ? "Assigning…" : "Assign"}
+                {assigning === m.candidateId ? "Назначение…" : "Назначить"}
               </Button>
             </motion.li>
           ))}
@@ -177,8 +174,8 @@ export function SemanticMatchPanel({
         <CardContent className="mt-3">
           <EmptyState
             icon={TargetIcon}
-            title="Nobody in the pool is indexed yet"
-            hint="Indexing runs after a candidate is saved to the pool. Add a few and check back."
+            title={"Никто в пуле еще не проиндексирован"}
+            hint={"Индексирование запускается после сохранения кандидата в пул. Добавьте несколько и проверьте снова."}
           />
         </CardContent>
       ) : null}

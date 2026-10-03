@@ -33,8 +33,7 @@ function RowIndicator({ integration }: { integration: MarketplaceIntegration }) 
   if (integration.status === "coming-soon") {
     return (
       <span className="shrink-0 rounded-md border border-dashed px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-        Coming soon
-      </span>
+        {"Скоро "}</span>
     );
   }
 
@@ -85,8 +84,7 @@ function IntegrationRow({
           </span>
           {connected ? (
             <span className="shrink-0 text-[11px] font-medium text-pine">
-              Connected
-            </span>
+              {"Подключено "}</span>
           ) : null}
         </span>
         <span className="mt-0.5 block truncate text-xs text-muted-foreground">
@@ -104,7 +102,7 @@ function IntegrationRow({
     return (
       <Link
         href={integration.href as Route}
-        aria-label={`Open ${integration.name}`}
+        aria-label={`Открыть ${integration.name}`}
         className={cn(
           base,
           "rounded-lg hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-none",

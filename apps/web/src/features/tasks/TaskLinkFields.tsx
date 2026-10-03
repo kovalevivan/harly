@@ -66,13 +66,11 @@ export function TaskLinkFields({
     <div className="space-y-3 rounded-lg border border-border/60 bg-muted/20 p-3">
       <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
         <Link2 className="size-3.5" />
-        Recruiting context
-      </div>
+        {"Контекст рекрутинга "}</div>
 
       <div>
         <FieldLabel icon={User} htmlFor="task-candidate">
-          Candidate
-        </FieldLabel>
+          {"Кандидат "}</FieldLabel>
         <select
           id="task-candidate"
           value={value.candidateId ?? ""}
@@ -86,7 +84,7 @@ export function TaskLinkFields({
           }
           className={selectClassName(false)}
         >
-          <option value="">No candidate linked</option>
+          <option value="">{"Ни один кандидат не связан"}</option>
           {options.candidates.map((candidate) => (
             <option key={candidate.id} value={candidate.id}>
               {candidate.firstName} {candidate.lastName}
@@ -97,8 +95,7 @@ export function TaskLinkFields({
 
       <div>
         <FieldLabel icon={Link2} htmlFor="task-application">
-          Application
-        </FieldLabel>
+          {"Отклик "}</FieldLabel>
         <select
           id="task-application"
           value={value.applicationId ?? ""}
@@ -115,7 +112,7 @@ export function TaskLinkFields({
           className={selectClassName(!value.candidateId)}
         >
           <option value="">
-            {value.candidateId ? "No application linked" : "Select a candidate first"}
+            {value.candidateId ? "Приложение не связано" : "Сначала выберите кандидата"}
           </option>
           {applications.map((application) => (
             <option key={application.id} value={application.id}>
@@ -127,8 +124,7 @@ export function TaskLinkFields({
 
       <div>
         <FieldLabel icon={Briefcase} htmlFor="task-job">
-          Job
-        </FieldLabel>
+          {"Вакансия "}</FieldLabel>
         <select
           id="task-job"
           value={value.jobId ?? ""}
@@ -136,7 +132,7 @@ export function TaskLinkFields({
           onChange={(event) => onChange({ ...value, jobId: event.target.value || null, interviewId: null })}
           className={selectClassName(Boolean(selectedApplication))}
         >
-          <option value="">No job linked</option>
+          <option value="">{"Нет связанных вакансий"}</option>
           {options.jobs.map((job) => (
             <option key={job.id} value={job.id}>
               {job.title}
@@ -145,15 +141,13 @@ export function TaskLinkFields({
         </select>
         {selectedApplication ? (
           <p className="mt-1 text-[11px] text-muted-foreground">
-            Derived from the selected application.
-          </p>
+            {"Получено из выбранного приложения. "}</p>
         ) : null}
       </div>
 
       <div>
         <FieldLabel icon={Calendar} htmlFor="task-interview">
-          Interview
-        </FieldLabel>
+          {"Собеседование "}</FieldLabel>
         <select
           id="task-interview"
           value={value.interviewId ?? ""}
@@ -162,7 +156,7 @@ export function TaskLinkFields({
           className={selectClassName(!value.candidateId)}
         >
           <option value="">
-            {value.candidateId ? "No interview linked" : "Select a candidate first"}
+            {value.candidateId ? "Нет ссылки на интервью" : "Сначала выберите кандидата"}
           </option>
           {interviews.map((interview) => (
             <option key={interview.id} value={interview.id}>

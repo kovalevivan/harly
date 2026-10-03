@@ -74,10 +74,10 @@ export function AddCandidateDrawer({
           : undefined,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Unable to create candidate.");
+        toast.error(result.error ?? "Невозможно создать кандидата.");
         return;
       }
-      toast.success("Candidate added");
+      toast.success("Кандидат добавлен");
       setOpen(false);
       reset();
       router.refresh();
@@ -96,39 +96,37 @@ export function AddCandidateDrawer({
       <SheetTrigger asChild>
         <Button variant="outline" size="sm" className="h-11 rounded-lg">
           <UserPlus className="size-4" />
-          Add candidate
-        </Button>
+          {"Добавить кандидата "}</Button>
       </SheetTrigger>
       <DrawerLayout
-        title="Add candidate"
-        description="Create a candidate manually, and optionally credit whoever recommended them."
+        title={"Добавить кандидата"}
+        description={"Создайте кандидата вручную и, при необходимости, укажите того, кто его рекомендовал."}
         footer={
           <>
             <SheetClose asChild>
               <Button variant="outline" disabled={isPending}>
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
             </SheetClose>
             <Button type="submit" form="add-candidate-form" disabled={isPending}>
-              {isPending ? "Adding…" : "Add candidate"}
+              {isPending ? "Добавление…" : "Добавить кандидата"}
             </Button>
           </>
         }
       >
         <form id="add-candidate-form" className="space-y-4" action={submit}>
           <div className="grid grid-cols-2 gap-3">
-            <Field name="firstName" label="First name" required />
-            <Field name="lastName" label="Last name" required />
+            <Field name="firstName" label={"Имя"} required />
+            <Field name="lastName" label={"Фамилия"} required />
           </div>
-          <Field name="email" label="Email" type="email" required />
-          <Field name="headline" label="Headline" />
+          <Field name="email" label={"Электронная почта"} type="email" required />
+          <Field name="headline" label={"Заголовок"} />
           <div className="grid grid-cols-2 gap-3">
-            <Field name="phone" label="Phone" />
-            <Field name="address" label="Address" />
+            <Field name="phone" label={"Телефон"} />
+            <Field name="address" label={"Адрес"} />
           </div>
           <Field name="linkedinUrl" label="LinkedIn" type="url" placeholder="https://linkedin.com/in/…" />
           <Field name="githubUrl" label="GitHub" type="url" placeholder="https://github.com/…" />
-          <Field name="websiteUrl" label="Website" type="url" placeholder="https://yoursite.com" />
+          <Field name="websiteUrl" label={"Веб-сайт"} type="url" placeholder="https://yoursite.com" />
 
           <div className="rounded-lg border bg-muted/20 p-4">
             <label className="flex items-center gap-2 text-sm font-medium">
@@ -136,12 +134,11 @@ export function AddCandidateDrawer({
                 checked={referring}
                 onCheckedChange={(checked) => setReferring(checked === true)}
               />
-              Refer this candidate
-            </label>
+              {"Рекомендовать этого кандидата "}</label>
             {referring ? (
               <div className="mt-3 space-y-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="add-candidate-referrer">Referred by</Label>
+                  <Label htmlFor="add-candidate-referrer">{"По рекомендации"}</Label>
                   <Select value={referredById} onValueChange={setReferredById}>
                     <SelectTrigger id="add-candidate-referrer" className="w-full">
                       <SelectValue />
@@ -149,20 +146,20 @@ export function AddCandidateDrawer({
                     <SelectContent>
                       {members.map((member) => (
                         <SelectItem key={member.userId} value={member.userId}>
-                          {member.userId === currentUserId ? "You" : member.name}
+                          {member.userId === currentUserId ? "ты" : member.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="add-candidate-job">Job (optional)</Label>
+                  <Label htmlFor="add-candidate-job">{"Работа (необязательно)"}</Label>
                   <Select value={jobId} onValueChange={setJobId}>
                     <SelectTrigger id="add-candidate-job" className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={NO_JOB}>No specific job</SelectItem>
+                      <SelectItem value={NO_JOB}>{"Нет конкретной работы"}</SelectItem>
                       {jobs.map((job) => (
                         <SelectItem key={job.id} value={job.id}>
                           {job.title}
@@ -172,12 +169,12 @@ export function AddCandidateDrawer({
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="add-candidate-referral-note">Note (optional)</Label>
+                  <Label htmlFor="add-candidate-referral-note">{"Примечание (необязательно)"}</Label>
                   <Textarea
                     id="add-candidate-referral-note"
                     name="referralNote"
                     rows={3}
-                    placeholder="Why are they a good fit?"
+                    placeholder={"Почему они хорошо подходят?"}
                   />
                 </div>
                 <label className="flex items-center gap-2 text-sm">
@@ -185,8 +182,7 @@ export function AddCandidateDrawer({
                     checked={featured}
                     onCheckedChange={(checked) => setFeatured(checked === true)}
                   />
-                  Featured referral
-                </label>
+                  {"Рекомендуемый реферал "}</label>
               </div>
             ) : null}
           </div>

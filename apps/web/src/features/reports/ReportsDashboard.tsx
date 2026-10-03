@@ -41,13 +41,13 @@ import type { ReportsData } from "./data";
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 const RANGE_OPTIONS = [
-  { value: "30", label: "Last 30 days" },
-  { value: "90", label: "Last 90 days" },
-  { value: "365", label: "Last 12 months" },
+  { value: "30", label: "Последние 30 дней" },
+  { value: "90", label: "Последние 90 дней" },
+  { value: "365", label: "Последние 12 месяцев" },
 ];
 
 function formatSource(source: string) {
-  if (source === "unknown") return "Unknown";
+  if (source === "unknown") return "Неизвестно";
   return source.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -152,13 +152,13 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
     () => [
       {
         key: "applications",
-        label: "Applications",
+        label: "Отклики",
         color: "var(--chart-1)",
         points: data.applicationsByMonth.map((p) => ({ label: p.label, sub: p.month, value: p.count })),
       },
       {
         key: "hires",
-        label: "Hires",
+        label: "Наняты",
         color: "var(--chart-2)",
         points: data.hiresByMonth.map((p) => ({ label: p.label, sub: p.month, value: p.count })),
       },
@@ -173,25 +173,25 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
 
   const rangeLabel =
     RANGE_OPTIONS.find((o) => Number(o.value) === comparison.rangeDays)?.label ??
-    `Last ${comparison.rangeDays} days`;
+    `Последние ${comparison.rangeDays} дней`;
 
   function exportReportCsv() {
     const rows: string[][] = [
-      ["Metric", "Period", "Value"],
-      ["Applications", rangeLabel, String(comparison.applications.current)],
-      ["Applications", "Previous period", String(comparison.applications.previous)],
-      ["Hires", rangeLabel, String(comparison.hires.current)],
-      ["Hires", "Previous period", String(comparison.hires.previous)],
-      ["Average time to hire (days)", rangeLabel, String(comparison.avgTimeToHireDays.current)],
-      ["Offer acceptance (%)", "All time", String(data.summary.offerAcceptRate ?? "")],
+      ["Метрика", "Период", "Значение"],
+      ["Отклики", rangeLabel, String(comparison.applications.current)],
+      ["Отклики", "Предыдущий период", String(comparison.applications.previous)],
+      ["Наняты", rangeLabel, String(comparison.hires.current)],
+      ["Наняты", "Предыдущий период", String(comparison.hires.previous)],
+      ["Среднее время найма (дней)", rangeLabel, String(comparison.avgTimeToHireDays.current)],
+      ["Принятие предложения (%)", "Все время", String(data.summary.offerAcceptRate ?? "")],
       [],
-      ["Applications by month", "Month", "Count"],
-      ...data.applicationsByMonth.map((point) => ["Applications", point.month, String(point.count)]),
+      ["Заявки по месяцам", "Месяц", "Граф"],
+      ...data.applicationsByMonth.map((point) => ["Отклики", point.month, String(point.count)]),
       [],
-      ["Hires by month", "Month", "Count"],
-      ...data.hiresByMonth.map((point) => ["Hires", point.month, String(point.count)]),
+      ["Нанимает по месяцам", "Месяц", "Граф"],
+      ...data.hiresByMonth.map((point) => ["Наняты", point.month, String(point.count)]),
       [],
-      ["Source", "Candidates", "Hires", "Conversion (%)"],
+      ["Источник", "Кандидаты", "Наняты", "Конверсия (%)"],
       ...data.sources.map((source) => [source.source, String(source.candidates), String(source.hires), String(source.conversion)]),
     ];
     const blob = new Blob([String.fromCharCode(0xfeff) + toSafeCsv(rows)], { type: "text/csv;charset=utf-8;" });
@@ -206,34 +206,34 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
   const stats = [
     {
       icon: Users,
-      label: "Applications",
-      value: comparison.applications.current.toLocaleString(),
-      hint: `${data.summary.applications90d.toLocaleString()} in the last 90 days`,
+      label: "Отклики",
+      value: comparison.applications.current.toLocaleString("ru-RU"),
+      hint: `${data.summary.applications90d.toLocaleString("ru-RU")} за последние 90 дней`,
       delta: comparison.applications.deltaPct,
     },
     {
       icon: Briefcase,
-      label: "Hires",
-      value: comparison.hires.current.toLocaleString(),
-      hint: `${data.summary.hires.toLocaleString()} hires all-time`,
+      label: "Наняты",
+      value: comparison.hires.current.toLocaleString("ru-RU"),
+      hint: `${data.summary.hires.toLocaleString("ru-RU")} нанимает постоянно`,
       delta: comparison.hires.deltaPct,
     },
     {
       icon: Clock,
-      label: "Avg time to hire",
+      label: "Среднее время найма",
       value: comparison.avgTimeToHireDays.current > 0 ? `${comparison.avgTimeToHireDays.current}d` : "No data",
       hint:
         comparison.avgTimeToHireDays.previous > 0
-          ? `${comparison.avgTimeToHireDays.previous}d prior period`
-          : "No prior data",
+          ? `${comparison.avgTimeToHireDays.previous}d предыдущего периода`
+          : "Нет предварительных данных",
       delta: comparison.avgTimeToHireDays.deltaPct,
       invertDelta: true,
     },
     {
       icon: TrendingUp,
-      label: "Offer acceptance",
+      label: "Принятие предложения",
       value: data.summary.offerAcceptRate != null ? `${data.summary.offerAcceptRate}%` : "No data",
-      hint: topSource ? `${formatSource(topSource.source)} leads source volume` : "No source data yet",
+      hint: topSource ? `${formatSource(topSource.source)} объем источника лидов` : "Исходных данных пока нет",
       delta: null,
     },
   ];
@@ -242,9 +242,9 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
     <div className="space-y-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight text-near-ink">Reports</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-near-ink">{"Отчеты"}</h1>
           <p className="mt-1 text-sm text-soft-ink">
-            {`Hiring performance and pipeline health, ${rangeLabel.toLowerCase()}.`}
+            {`Производительность найма и состояние конвейера, ${rangeLabel.toLowerCase()}.`}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -265,8 +265,7 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
           </Select>
           <Button variant="outline" size="sm" onClick={exportReportCsv}>
             <Download className="size-4" />
-            Export CSV
-          </Button>
+            {"Экспортировать CSV "}</Button>
         </div>
       </div>
 
@@ -287,7 +286,7 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
         transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.15 }}
       >
         <Tile className="gap-5 p-5">
-          <CardHead icon={LineChart} title="Hiring trend" subtitle="Applications received vs. hires made, by month." />
+          <CardHead icon={LineChart} title={"Динамика найма"} subtitle={"Полученные заявки и принятые на работу по месяцам."} />
           <TrendChart series={trendSeries} />
         </Tile>
       </motion.div>
@@ -299,16 +298,16 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
         className="grid gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]"
       >
         <Tile className="gap-5 p-5">
-          <CardHead icon={Funnel} title="Pipeline by stage" subtitle="Where active candidates sit right now." />
+          <CardHead icon={Funnel} title={"Конвейер по этапам"} subtitle={"Где сейчас сидят активные кандидаты."} />
           {data.funnel.some((s) => s.count > 0) ? (
             <FunnelChart stages={data.funnel} />
           ) : (
-            <EmptyPanel icon={Funnel} text="Stage distribution appears once candidates move through your pipeline." />
+            <EmptyPanel icon={Funnel} text={"Распределение по этапам появляется, как только кандидаты проходят через ваш конвейер."} />
           )}
         </Tile>
 
         <Tile className="gap-5 p-5">
-          <CardHead icon={Hourglass} title="Time to hire" subtitle="How long filled roles took, from apply to hire." />
+          <CardHead icon={Hourglass} title={"Время нанимать"} subtitle={"Сколько времени заняло заполненные должности, от подачи заявки до приема на работу."} />
           <Histogram data={data.timeToHire} />
         </Tile>
       </motion.section>
@@ -319,17 +318,17 @@ export function ReportsDashboard({ data }: { data: ReportsData }) {
         transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.25 }}
       >
         <Tile className="gap-5 p-5">
-          <CardHead icon={Target} title="Source effectiveness" subtitle="Volume and hire conversion by application source." />
+          <CardHead icon={Target} title={"Эффективность источника"} subtitle={"Конверсия объема и найма по источнику приложения."} />
           {sourceData.length ? (
             <SourceBars sources={sourceData} />
           ) : (
-            <EmptyPanel icon={Users} text="No applications yet. Sources appear once candidates apply." />
+            <EmptyPanel icon={Users} text={"Заявок пока нет. Источники появляются после подачи заявки кандидатами."} />
           )}
         </Tile>
       </motion.div>
 
       <p className="px-1 text-xs text-soft-ink">
-        {`${totalApplications.toLocaleString()} applications · ${last12Hires.toLocaleString()} hires in the last 12 months · ${data.summary.totalCandidates.toLocaleString()} candidates tracked · comparing to ${rangeLabel.toLowerCase()}.`}
+        {`${totalApplications.toLocaleString("ru-RU")} заявлений · ${last12Hires.toLocaleString("ru-RU")} наймов за последние 12 месяцев · ${data.summary.totalCandidates.toLocaleString("ru-RU")} отслеживаемых кандидатов · по сравнению с ${rangeLabel.toLowerCase()}.`}
       </p>
     </div>
   );

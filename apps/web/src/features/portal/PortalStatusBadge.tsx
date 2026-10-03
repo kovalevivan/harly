@@ -15,10 +15,10 @@ const BADGE_STYLES = {
 } as const;
 
 const BADGE_LABELS = {
-  active: "In Progress",
-  hired: "Offer",
-  rejected: "Not Selected",
-  withdrawn: "Withdrawn",
+  active: "В процессе",
+  hired: "Предложение",
+  rejected: "Не выбрано",
+  withdrawn: "снято",
 } as const;
 
 export function PortalStatusBadge({ status, size = "default" }: PortalStatusBadgeProps) {

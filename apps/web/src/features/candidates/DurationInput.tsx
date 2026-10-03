@@ -7,7 +7,7 @@ const PRESETS = [15, 30, 45, 60, 90, 120] as const;
 export function DurationInput({
   value,
   onChange,
-  label = "Duration",
+  label = "Продолжительность",
 }: {
   value: number;
   onChange: (mins: number) => void;
@@ -31,8 +31,7 @@ export function DurationInput({
                 : "text-muted-foreground hover:bg-muted",
             )}
           >
-            {preset}m
-          </button>
+            {preset}{"м "}</button>
         ))}
       </div>
       <div className="relative">
@@ -48,8 +47,7 @@ export function DurationInput({
           className="h-9 w-full rounded-lg border bg-transparent px-3 text-sm tabular-nums outline-none focus:ring-2 focus:ring-ring/20"
         />
         <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-          min
-        </span>
+          {"мин "}</span>
       </div>
     </div>
   );

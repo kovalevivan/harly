@@ -100,7 +100,7 @@ export function WorkspacePill({
         {workspace.name}
       </span>
       <span className="text-[14px] text-quiet-mist">/</span>
-      <span className="text-[14px] text-soft-ink">All</span>
+      <span className="text-[14px] text-soft-ink">{"Все"}</span>
     </>
   );
 
@@ -115,7 +115,7 @@ export function WorkspacePill({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        aria-label="Switch workspace"
+        aria-label={"Переключить рабочее пространство"}
         className="flex h-8 items-center gap-2 rounded-full border border-mist-border bg-pure-snow px-3 transition-colors hover:bg-row-wash focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
       >
         {label}
@@ -125,7 +125,7 @@ export function WorkspacePill({
         />
       </PopoverTrigger>
       <PopoverContent align="center" sideOffset={8} className="w-64 p-2">
-        <p className="type-col-head px-2 py-1.5">Workspace</p>
+        <p className="type-col-head px-2 py-1.5">{"Рабочая область"}</p>
         {workspaceOptions.map((ws) => (
           <button
             key={ws.authOrganizationId}

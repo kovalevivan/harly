@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, ChevronUp, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -34,14 +35,14 @@ export function ValidationPanel({
     return (
       <div className="flex items-center gap-1.5 rounded-full border border-border bg-pure-snow/90 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400 shadow-xs backdrop-blur-sm">
         <CheckCircle2 className="size-3.5 shrink-0" />
-        <span>All paths connected</span>
+        <span>{"Все пути связаны"}</span>
       </div>
     );
   }
 
   const uniqueNodeIds = new Set(issues.map((i) => i.nodeId));
   const stepCount = uniqueNodeIds.size;
-  const issuesText = `${issues.length} ${issues.length === 1 ? "issue" : "issues"} in ${stepCount} ${stepCount === 1 ? "step" : "steps"}`;
+  const issuesText = `${issues.length} ${russianPlural(issues.length, "ошибка", "ошибки", "ошибок")} в ${stepCount} ${russianPlural(stepCount, "шаг", "шага", "шагов")}`;
 
   // Non-floating presentation (e.g. mobile steps drawer)
   if (!floating) {
@@ -100,7 +101,7 @@ export function ValidationPanel({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Close issues panel"
+              aria-label={"Закрыть панель проблем"}
               className="rounded-lg p-1 text-soft-ink transition-colors hover:bg-soft-kraft hover:text-foreground"
             >
               <X className="size-3.5" />
@@ -125,7 +126,7 @@ export function ValidationPanel({
 
 function IssueRow({ issue, onSelect }: { issue: VisibleIssue; onSelect: (nodeId: string) => void }) {
   const message = looksLikeRawJson(issue.message)
-    ? "Needs attention to configure fields"
+    ? "Требуется внимание для настройки полей"
     : issue.message;
   return (
     <li>
@@ -146,7 +147,7 @@ function IssueRow({ issue, onSelect }: { issue: VisibleIssue; onSelect: (nodeId:
                 : "bg-soft-kraft text-soft-ink",
             )}
           >
-            {issue.category === "connection" ? "Connection" : "Config"}
+            {issue.category === "connection" ? "Подключение" : "Конфигурация"}
           </span>
         </div>
         <span className="mt-0.5 text-[11px] text-amber-700 dark:text-amber-400">

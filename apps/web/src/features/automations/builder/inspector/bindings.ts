@@ -15,54 +15,54 @@ export type BindingOption = {
 };
 
 const OUTPUT_PATHS: Record<string, { path: string; label: string; example: string }[]> = {
-  move_stage: [{ path: "stageId", label: "Stage id", example: "stg_123" }],
-  set_status: [{ path: "status", label: "Status", example: "hired" }],
-  add_note: [{ path: "noteId", label: "Note id", example: "note_123" }],
-  add_tag: [{ path: "label", label: "Tag", example: "onboarding" }],
-  remove_tag: [{ path: "label", label: "Removed tag", example: "onboarding" }],
-  create_task: [{ path: "taskId", label: "Task id", example: "tsk_123" }],
-  send_email: [{ path: "outboxId", label: "Queued email id", example: "mail_123" }],
+  move_stage: [{ path: "stageId", label: "Идентификатор этапа", example: "stg_123" }],
+  set_status: [{ path: "status", label: "Статус", example: "hired" }],
+  add_note: [{ path: "noteId", label: "Идентификатор заметки", example: "note_123" }],
+  add_tag: [{ path: "label", label: "Тег", example: "onboarding" }],
+  remove_tag: [{ path: "label", label: "Удален тег", example: "onboarding" }],
+  create_task: [{ path: "taskId", label: "Идентификатор задачи", example: "tsk_123" }],
+  send_email: [{ path: "outboxId", label: "Идентификатор электронной почты в очереди", example: "mail_123" }],
   http_request: [
-    { path: "status", label: "HTTP status", example: "200" },
-    { path: "body", label: "Response body", example: "{\"ok\":true}" },
+    { path: "status", label: "Статус HTTP", example: "200" },
+    { path: "body", label: "Тело ответа", example: "{\"ok\":true}" },
   ],
   send_booking_link: [
-    { path: "outboxId", label: "Queued email id", example: "mail_123" },
-    { path: "bookingUrl", label: "Booking URL", example: "https://cal.example.com/book" },
+    { path: "outboxId", label: "Идентификатор электронной почты в очереди", example: "mail_123" },
+    { path: "bookingUrl", label: "URL-адрес бронирования", example: "https://cal.example.com/book" },
   ],
   send_slack: [
-    { path: "provider", label: "Chat provider", example: "slack" },
-    { path: "queued", label: "Queued", example: "true" },
+    { path: "provider", label: "Поставщик чата", example: "slack" },
+    { path: "queued", label: "В очереди", example: "true" },
   ],
-  send_telegram: [{ path: "provider", label: "Chat provider", example: "telegram" }],
-  send_discord: [{ path: "provider", label: "Chat provider", example: "discord" }],
+  send_telegram: [{ path: "provider", label: "Поставщик чата", example: "telegram" }],
+  send_discord: [{ path: "provider", label: "Поставщик чата", example: "discord" }],
   send_in_app_alert: [
-    { path: "recipientUserId", label: "Recipient user id", example: "usr_123" },
-    { path: "notified", label: "Notified", example: "true" },
+    { path: "recipientUserId", label: "Идентификатор пользователя получателя", example: "usr_123" },
+    { path: "notified", label: "Уведомлено", example: "true" },
   ],
   request_documents: [
-    { path: "primaryRequestId", label: "Uploaded request id", example: "req_123" },
-    { path: "packageId", label: "Document package id", example: "pkg_123" },
+    { path: "primaryRequestId", label: "Идентификатор загруженного запроса", example: "req_123" },
+    { path: "packageId", label: "Идентификатор пакета документов", example: "pkg_123" },
   ],
   generate_document: [
-    { path: "documentId", label: "Generated document id", example: "doc_123" },
-    { path: "documentVersionId", label: "Document version id", example: "ver_123" },
+    { path: "documentId", label: "Идентификатор созданного документа", example: "doc_123" },
+    { path: "documentVersionId", label: "Идентификатор версии документа", example: "ver_123" },
   ],
   send_document_for_signature: [
-    { path: "documentId", label: "Signed document id", example: "doc_123" },
-    { path: "envelopeId", label: "Signature envelope id", example: "env_123" },
+    { path: "documentId", label: "Идентификатор подписанного документа", example: "doc_123" },
+    { path: "envelopeId", label: "Идентификатор конверта для подписи", example: "env_123" },
   ],
   schedule_interview: [
-    { path: "interviewId", label: "Interview id", example: "int_123" },
-    { path: "meetLink", label: "Meeting link", example: "https://meet.example.com/abc" },
+    { path: "interviewId", label: "Идентификатор интервью", example: "int_123" },
+    { path: "meetLink", label: "Ссылка на встречу", example: "https://meet.example.com/abc" },
   ],
   reschedule_interview: [
-    { path: "interviewId", label: "Interview id", example: "int_123" },
-    { path: "meetingUrl", label: "Meeting link", example: "https://meet.example.com/abc" },
+    { path: "interviewId", label: "Идентификатор интервью", example: "int_123" },
+    { path: "meetingUrl", label: "Ссылка на встречу", example: "https://meet.example.com/abc" },
   ],
-  cancel_interview: [{ path: "interviewId", label: "Canceled interview id", example: "int_123" }],
-  create_offer: [{ path: "offerId", label: "Offer id", example: "offer_123" }],
-  send_offer: [{ path: "offerId", label: "Sent offer id", example: "offer_123" }],
+  cancel_interview: [{ path: "interviewId", label: "Идентификатор отмененного интервью", example: "int_123" }],
+  create_offer: [{ path: "offerId", label: "Идентификатор предложения", example: "offer_123" }],
+  send_offer: [{ path: "offerId", label: "Отправлен идентификатор предложения", example: "offer_123" }],
 };
 
 function fieldExamples(kind: (typeof FIELD_KIND_CATALOG)[number]["kind"], path: string): string {
@@ -109,8 +109,8 @@ export function bindingOptionsFor(graph: WorkflowGraphV2, nodeId: string): Bindi
     const guaranteed = dominators.has(node.id);
     const outputs =
       node.type === "action"
-        ? (OUTPUT_PATHS[node.actionType] ?? [{ path: "result", label: "Result", example: "ok" }])
-        : [{ path: "result", label: "Result", example: "ok" }];
+        ? (OUTPUT_PATHS[node.actionType] ?? [{ path: "result", label: "Результат", example: "ok" }])
+        : [{ path: "result", label: "Результат", example: "ok" }];
     for (const output of outputs) {
       options.push({
         id: `output:${node.id}:${output.path}`,
@@ -132,10 +132,10 @@ export function bindingOptionsFor(graph: WorkflowGraphV2, nodeId: string): Bindi
 }
 
 export function describeBinding(binding: Binding | undefined, graph?: WorkflowGraphV2): string {
-  if (!binding) return "Not set";
+  if (!binding) return "Не установлено";
   if (binding.kind === "literal") {
-    if (binding.value === null) return "Empty";
-    if (typeof binding.value === "string") return binding.value || "Empty";
+    if (binding.value === null) return "Пустой";
+    if (typeof binding.value === "string") return binding.value || "Пустой";
     if (typeof binding.value === "number" || typeof binding.value === "boolean") {
       return String(binding.value);
     }
@@ -143,7 +143,7 @@ export function describeBinding(binding: Binding | undefined, graph?: WorkflowGr
   }
   if (binding.kind === "trigger") return `Event · ${binding.path}`;
   const source = graph?.nodes.find((node) => node.id === binding.nodeId);
-  return `${source ? nodeTitle(source) : "Earlier step"} · ${binding.path}`;
+  return `${source ? nodeTitle(source) : "Предыдущий шаг"} · ${binding.path}`;
 }
 
 export function asLiteral(value: unknown): Binding {

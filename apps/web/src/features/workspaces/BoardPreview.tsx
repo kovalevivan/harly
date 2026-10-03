@@ -13,9 +13,9 @@ type BoardPreviewProps = {
 };
 
 const SAMPLE_JOBS = [
-  { title: "Senior Product Designer", meta: "Design · Remote" },
-  { title: "Backend Engineer", meta: "Engineering · Berlin" },
-  { title: "Talent Partner", meta: "People · Hybrid" },
+  { title: "Старший дизайнер продукта", meta: "Дизайн · Удаленная работа" },
+  { title: "Бэкэнд-инженер", meta: "Инженерное дело · Берлин" },
+  { title: "Талантливый партнер", meta: "Люди · Гибрид" },
 ];
 
 /**
@@ -87,10 +87,10 @@ export function BoardPreview({
             {logo}
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-white">
-                {name || "Your company"}
+                {name || "Ваша компания"}
               </p>
               <p className="truncate text-xs text-white/80">
-                {tagline || "Your careers tagline"}
+                {tagline || "Слоган вашей карьеры"}
               </p>
             </div>
           </div>
@@ -101,10 +101,10 @@ export function BoardPreview({
             {logo}
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">
-                {name || "Your company"}
+                {name || "Ваша компания"}
               </p>
               <p className="truncate text-xs text-muted-foreground">
-                {tagline || "Your careers tagline"}
+                {tagline || "Слоган вашей карьеры"}
               </p>
             </div>
           </div>
@@ -118,8 +118,7 @@ export function BoardPreview({
       {/* Open roles */}
       <div className="space-y-2 p-3">
         <p className="px-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-          Open roles
-        </p>
+          {"Открытые вакансии "}</p>
         {SAMPLE_JOBS.map((job) => (
           <div
             key={job.title}
@@ -135,8 +134,7 @@ export function BoardPreview({
               className="rounded-full px-2 py-0.5 text-[10px] font-medium text-white"
               style={{ backgroundColor: primaryColor }}
             >
-              Apply
-            </span>
+              {"Откликнуться "}</span>
           </div>
         ))}
       </div>

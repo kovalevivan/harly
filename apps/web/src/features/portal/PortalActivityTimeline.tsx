@@ -41,7 +41,7 @@ const DOT_STYLES: Record<ActivityItem["type"], string> = {
 };
 
 function formatShortDate(date: Date): string {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     day: "numeric",
   }).format(date);
@@ -56,12 +56,12 @@ function formatRelativeOrAbsolute(date: Date): string {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     if (diffHours === 0) {
       const diffMins = Math.floor(diffMs / (1000 * 60));
-      return diffMins <= 1 ? "Just now" : `${diffMins} min ago`;
+      return diffMins <= 1 ? "только что" : `${diffMins} минуту назад`;
     }
-    return `${diffHours}h ago`;
+    return `${diffHours}ч назад`;
   }
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays === 1) return "Вчера";
+  if (diffDays < 7) return `${diffDays} дней назад`;
   return formatShortDate(date);
 }
 

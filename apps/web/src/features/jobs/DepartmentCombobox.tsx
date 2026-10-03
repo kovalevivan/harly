@@ -64,7 +64,7 @@ export function DepartmentCombobox({
             className={cn("h-10 w-full justify-between rounded-lg bg-card px-3.5 font-normal", className)}
           >
             <span className={cn("truncate", !value && "text-muted-foreground")}>
-              {value || "Select or create a department"}
+              {value || "Выберите или создайте отдел"}
             </span>
             <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
           </Button>
@@ -75,16 +75,15 @@ export function DepartmentCombobox({
         >
           <Command>
             <CommandInput
-              placeholder="Search or create…"
+              placeholder={"Найдите или создайте…"}
               value={query}
               onValueChange={setQuery}
             />
             <CommandList>
               <CommandEmpty className="py-3 text-center text-sm text-muted-foreground">
-                Type a name to create a department.
-              </CommandEmpty>
+                {"Введите имя, чтобы создать отдел. "}</CommandEmpty>
               {departments.length > 0 ? (
-                <CommandGroup heading="Existing">
+                <CommandGroup heading={"Существующий"}>
                   {departments.map((d) => (
                     <CommandItem key={d} value={d} onSelect={() => choose(d)}>
                       <Check
@@ -99,10 +98,10 @@ export function DepartmentCombobox({
                 </CommandGroup>
               ) : null}
               {trimmed && !exactExists ? (
-                <CommandGroup heading="Create new">
+                <CommandGroup heading={"Создать новый"}>
                   <CommandItem value={trimmed} onSelect={() => choose(trimmed)}>
                     <Plus className="size-4" />
-                    Create &ldquo;{trimmed}&rdquo;
+                    {"Создать «"}{trimmed}&rdquo;
                   </CommandItem>
                 </CommandGroup>
               ) : null}

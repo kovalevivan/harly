@@ -56,17 +56,17 @@ import { candidateAvatarFallbackSrcs } from "@/lib/candidate-avatar";
 export const dynamic = "force-dynamic";
 
 const SOURCE_LABEL: Record<string, string> = {
-  public_form: "Job board",
-  csv_import: "CSV import",
-  referral: "Referral",
+  public_form: "Доска объявлений",
+  csv_import: "CSV-импорт",
+  referral: "Направление",
   linkedin: "LinkedIn",
-  career_page: "Career page",
-  agency: "Agency",
-  direct_apply: "Direct apply",
-  internal: "Internal",
-  email: "Email",
+  career_page: "Страница карьеры",
+  agency: "Агентство",
+  direct_apply: "Прямая подача заявки",
+  internal: "Внутренний",
+  email: "Электронная почта",
   event: "Event",
-  manual: "Manual",
+  manual: "Руководство",
 };
 
 const SOURCE_ICON: Record<string, ReactNode> = {
@@ -286,8 +286,7 @@ export default async function CandidateDetailPage({
         <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit">
           <Link href="/dashboard/candidates">
             <ArrowLeft className="size-4" />
-            Back to candidates
-          </Link>
+            {"Вернуться к кандидатам "}</Link>
         </Button>
 
         <CandidatePager
@@ -433,8 +432,7 @@ export default async function CandidateDetailPage({
                         className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
                       >
                         <Globe className="size-4" strokeWidth={1.6} />
-                        Website
-                      </RedactLink>
+                        {"Веб-сайт "}</RedactLink>
                     ) : null}
                   </div>
 
@@ -464,8 +462,7 @@ export default async function CandidateDetailPage({
                         trigger={
                           <Button type="button" variant="outline" size="sm">
                             <UserPlus className="size-4" />
-                            Refer
-                          </Button>
+                            {"Обратитесь "}</Button>
                         }
                       />
                     ) : null}

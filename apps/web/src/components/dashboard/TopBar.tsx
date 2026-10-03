@@ -95,7 +95,7 @@ export function TopBar({
         <button
           type="button"
           onClick={() => setMobileNavOpen(true)}
-          aria-label="Open navigation"
+          aria-label={"Открыть меню"}
           className="flex size-9 items-center justify-center rounded-[12px] text-soft-ink transition-colors hover:bg-row-wash hover:text-near-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink md:hidden"
         >
           <Menu className="size-[18px]" strokeWidth={1.8} />
@@ -135,7 +135,7 @@ export function TopBar({
             workspaceOptions={workspaceOptions}
           />
           <IconButton
-            label="Search"
+            label={"Поиск"}
             onClick={() => setCommandOpen(true)}
             hint="⌘K"
           >
@@ -218,7 +218,7 @@ function AiSignalButton() {
         <button
           type="button"
           onClick={toggle}
-          aria-label={open ? "Close Harly AI" : "Ask Harly AI"}
+          aria-label={open ? "Закрыть Харли AI" : "Спросите Харли AI"}
           aria-pressed={open}
           className={cn(
             "mr-1 flex size-9 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink",
@@ -232,7 +232,7 @@ function AiSignalButton() {
           ) : (
             <Image
               src="/harly-ai-animado.svg"
-              alt="Harly AI"
+              alt={"Харли ИИ"}
               width={22}
               height={22}
               className="size-[22px] shrink-0"
@@ -242,7 +242,7 @@ function AiSignalButton() {
         </button>
       </TooltipTrigger>
       <TooltipContent>
-        {open ? "Close Harly AI" : "Ask Harly AI"}
+        {open ? "Закрыть Харли AI" : "Спросите Харли AI"}
       </TooltipContent>
     </Tooltip>
   );
@@ -255,7 +255,7 @@ function OverflowMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="More options"
+        aria-label={"Дополнительные действия"}
         className="flex size-9 items-center justify-center rounded-[12px] text-soft-ink transition-colors hover:bg-row-wash hover:text-near-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
       >
         <svg
@@ -283,7 +283,7 @@ function OverflowMenu() {
             className="hidden size-4 text-soft-ink dark:block"
             strokeWidth={1.8}
           />
-          {resolvedTheme === "dark" ? "Light mode" : "Dark mode"}
+          {resolvedTheme === "dark" ? "Светлый режим" : "Темный режим"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

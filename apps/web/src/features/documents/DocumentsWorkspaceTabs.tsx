@@ -12,7 +12,7 @@ export function DocumentsWorkspaceTabs({
 }) {
   return (
     <nav
-      aria-label="Documents workspace"
+      aria-label={"Рабочая область документов"}
       className="flex w-fit gap-1 rounded-lg border border-border bg-muted/40 p-1"
     >
       {canReadDocuments ? (
@@ -25,8 +25,7 @@ export function DocumentsWorkspaceTabs({
               : "rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           }
         >
-          Files
-        </Link>
+          {"Файлы "}</Link>
       ) : null}
       {canManageTemplates ? (
         <Link
@@ -38,8 +37,7 @@ export function DocumentsWorkspaceTabs({
               : "rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           }
         >
-          Workflow templates
-        </Link>
+          {"Шаблоны рабочих процессов "}</Link>
       ) : null}
     </nav>
   );

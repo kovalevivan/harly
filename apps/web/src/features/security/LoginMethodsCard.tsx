@@ -20,14 +20,14 @@ const METHOD_META: Record<
   LoginMethod,
   { label: string; hint: string }
 > = {
-  password: { label: "Email & password", hint: "Standard email + password sign-in." },
-  google: { label: "Google", hint: "OAuth via Google Workspace." },
-  microsoft: { label: "Microsoft / Entra ID", hint: "OAuth via Microsoft accounts." },
-  github: { label: "GitHub", hint: "OAuth via GitHub." },
-  linkedin: { label: "LinkedIn", hint: "OAuth via LinkedIn." },
-  sso: { label: "Enterprise SSO", hint: "SAML or OIDC single sign-on." },
-  magic_link: { label: "Magic link", hint: "Passwordless email sign-in link." },
-  passkey: { label: "Passkey", hint: "WebAuthn device / platform authenticator." },
+  password: { label: "Электронная почта и пароль", hint: "Стандартный вход по электронной почте + пароль." },
+  google: { label: "Гугл", hint: "OAuth через Google Workspace." },
+  microsoft: { label: "Microsoft/Энтра ID", hint: "OAuth через учетные записи Microsoft." },
+  github: { label: "GitHub", hint: "OAuth через GitHub." },
+  linkedin: { label: "LinkedIn", hint: "OAuth через LinkedIn." },
+  sso: { label: "Корпоративный единый вход", hint: "Единый вход SAML или OIDC." },
+  magic_link: { label: "Волшебная ссылка", hint: "Ссылка для входа в электронную почту без пароля." },
+  passkey: { label: "Ключ доступа", hint: "Аутентификатор устройства/платформы WebAuthn." },
 };
 
 /**
@@ -99,20 +99,20 @@ export function LoginMethodsCard({
       : [];
 
     if (customize && payload.length === 0) {
-      toast.error("Select at least one configured method, or turn off customization.");
+      toast.error("Выберите хотя бы один настроенный метод или отключите настройку.");
       return;
     }
 
     startTransition(async () => {
       const result = await updateEnabledLoginMethodsAction(payload);
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update login methods.");
+        toast.error(result.error ?? "Не удалось обновить методы входа.");
         return;
       }
       toast.success(
         customize
-          ? "Login methods updated."
-          : "Login screen will show all configured methods.",
+          ? "Обновлены методы входа."
+          : "На экране входа в систему будут показаны все настроенные методы.",
       );
       router.refresh();
     });
@@ -126,22 +126,22 @@ export function LoginMethodsCard({
     <Card className="gap-5 p-6">
       <SectionHeader
         icon={SsoDuotoneIcon}
-        title="Sign-in methods"
-        description="Choose which authentication methods appear on the staff login screen. Methods that aren't configured are never shown."
+        title={"Методы входа"}
+        description={"Выберите, какие методы аутентификации будут отображаться на экране входа в систему для сотрудников. Ненастроенные методы никогда не отображаются."}
         badge={
           <StatusPill tone={customize ? "on" : "off"}>
-            {customize ? `${activeCount} selected` : "Auto (all configured)"}
+            {customize ? `${activeCount} выбрано` : "Авто (все настроено)"}
           </StatusPill>
         }
         action={
           isOwner ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Customize</span>
+              <span className="text-xs text-muted-foreground">{"Настроить"}</span>
               <Switch
                 checked={customize}
                 onCheckedChange={handleToggleCustomize}
                 disabled={isPending}
-                aria-label="Customize which login methods are shown"
+                aria-label={"Настройте, какие методы входа будут отображаться"}
               />
             </div>
           ) : null
@@ -150,16 +150,13 @@ export function LoginMethodsCard({
 
       {!isOwner ? (
         <p className="text-xs text-muted-foreground">
-          Only workspace owners can change this setting.
-        </p>
+          {"Изменить этот параметр могут только владельцы рабочей области. "}</p>
       ) : (
         <>
           {!customize ? (
             <p className="rounded-xl border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-              The login screen automatically shows every method you&apos;ve
-              configured. Turn on <span className="font-medium">Customize</span>{" "}
-              to restrict staff to a specific set (for example, SSO only).
-            </p>
+              {"На экране входа в систему автоматически отображаются все настроенные вами методы. Включи "}<span className="font-medium">{"Настроить"}</span>{" "}
+              {"чтобы ограничить персонал определенным набором (например, только SSO). "}</p>
           ) : (
             <div className="space-y-2">
               {LOGIN_METHODS.map((method) => {
@@ -175,7 +172,7 @@ export function LoginMethodsCard({
                         {METHOD_META[method].label}
                         {!isConfigured ? (
                           <span className="ml-2 align-middle">
-                            <StatusPill tone="off">Not configured</StatusPill>
+                            <StatusPill tone="off">{"Не настроено"}</StatusPill>
                           </span>
                         ) : null}
                       </p>
@@ -187,16 +184,13 @@ export function LoginMethodsCard({
                       checked={isOn}
                       onCheckedChange={(v) => toggleMethod(method, v)}
                       disabled={isPending || !isConfigured}
-                      aria-label={`Show ${METHOD_META[method].label} on the login screen`}
+                      aria-label={`Показывать ${METHOD_META[method].label} на экране входа в систему.`}
                     />
                   </div>
                 );
               })}
               <p className="text-xs text-muted-foreground">
-                A method must be configured before it can be shown. Configure
-                OAuth providers and enterprise SSO above, and email delivery in
-                the email settings.
-              </p>
+                {"Прежде чем метод можно будет отобразить, его необходимо настроить. Настройте поставщиков OAuth и корпоративный единый вход выше, а также доставку электронной почты в настройках электронной почты. "}</p>
             </div>
           )}
 
@@ -207,7 +201,7 @@ export function LoginMethodsCard({
               disabled={isPending}
               className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-pine-strong disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isPending ? "Saving…" : "Save changes"}
+              {isPending ? "Сохранение…" : "Сохранить изменения"}
             </button>
           </div>
         </>

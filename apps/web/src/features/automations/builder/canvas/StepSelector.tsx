@@ -34,52 +34,52 @@ export const QUICK_STEP_OPTIONS: StepInsertOption[] = [
     id: "send_email",
     kind: "action",
     actionType: "send_email",
-    label: "Send email",
-    blurb: "Send an email to candidate or team",
+    label: "Отправить письмо",
+    blurb: "Отправьте электронное письмо кандидату или команде",
     Icon: Mail,
   },
   {
     id: "delay",
     kind: "delay",
-    label: "Wait",
-    blurb: "Pause for a duration or local time",
+    label: "Подожди",
+    blurb: "Пауза на определенное время или по местному времени",
     Icon: Clock,
   },
   {
     id: "condition",
     kind: "condition",
-    label: "Condition",
-    blurb: "Branch based on candidate or job rules",
+    label: "Состояние",
+    blurb: "Филиал в зависимости от кандидата или правил работы",
     Icon: GitBranch,
   },
   {
     id: "move_stage",
     kind: "action",
     actionType: "move_stage",
-    label: "Move stage",
-    blurb: "Advance candidate to another pipeline stage",
+    label: "Переместить этап",
+    blurb: "Перевести кандидата на другой этап конвейера",
     Icon: ArrowRight,
   },
   {
     id: "add_note",
     kind: "action",
     actionType: "add_note",
-    label: "Add note",
-    blurb: "Add an internal note to the candidate profile",
+    label: "Добавить примечание",
+    blurb: "Добавьте внутреннюю заметку в профиль кандидата",
     Icon: CheckSquare,
   },
   {
     id: "approval",
     kind: "approval",
-    label: "Approval",
-    blurb: "Require team member sign-off to proceed",
+    label: "Одобрение",
+    blurb: "Требовать подписания члена команды, чтобы продолжить",
     Icon: ShieldCheck,
   },
   {
     id: "end",
     kind: "end",
-    label: "End automation",
-    blurb: "Complete or stop this execution path",
+    label: "Завершить автоматизацию",
+    blurb: "Завершите или остановите этот путь выполнения",
     Icon: OctagonX,
   },
 ];
@@ -87,7 +87,7 @@ export const QUICK_STEP_OPTIONS: StepInsertOption[] = [
 export function StepSelector({
   onSelect,
   trigger,
-  title = "Insert step",
+  title = "Вставить шаг",
   align = "center",
 }: {
   onSelect: (kind: BlockKind, actionType?: ActionType) => void;
@@ -125,7 +125,7 @@ export function StepSelector({
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search steps…"
+              placeholder={"Шаги поиска…"}
               className="w-full bg-transparent text-xs text-foreground outline-none placeholder:text-soft-ink"
               autoFocus
             />
@@ -161,8 +161,7 @@ export function StepSelector({
           })}
           {filtered.length === 0 && (
             <p className="py-4 text-center text-xs text-soft-ink">
-              No steps match your search.
-            </p>
+              {"Нет шагов, соответствующих вашему запросу. "}</p>
           )}
         </div>
       </PopoverContent>

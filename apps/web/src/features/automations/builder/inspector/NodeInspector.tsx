@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ArrowRight, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -139,11 +140,10 @@ function InspectorEmptyState({
     <aside className="flex h-full min-h-0 w-full flex-col border-l border-border bg-warm-paper">
       <div className="border-b border-hairline-c px-4 py-3">
         <p className="font-display text-sm font-semibold text-foreground">
-          Workflow Overview
-        </p>
+          {"Обзор рабочего процесса "}</p>
         <p className="mt-0.5 text-[11px] text-soft-ink">
-          {nodes.length} {nodes.length === 1 ? "step" : "steps"} · {edges.length}{" "}
-          {edges.length === 1 ? "connection" : "connections"}
+          {nodes.length} {russianPlural(nodes.length, "шаг", "шага", "шагов")} · {edges.length}{" "}
+          {russianPlural(edges.length, "связь", "связи", "связей")}
         </p>
       </div>
 
@@ -151,15 +151,14 @@ function InspectorEmptyState({
         {/* Trigger status card */}
         <div className="rounded-xl border border-border bg-pure-snow p-3 shadow-xs">
           <p className="text-[10px] font-semibold uppercase tracking-wider text-soft-ink">
-            Trigger
-          </p>
+            {"Триггер "}</p>
           <div className="mt-1.5 flex items-center justify-between gap-2">
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">
-                {triggerNode ? triggerMeta(triggerNode.event).label : "No trigger selected"}
+                {triggerNode ? triggerMeta(triggerNode.event).label : "Триггер не выбран"}
               </p>
               <p className="text-[11px] text-soft-ink truncate">
-                {triggerNode ? nodeCaption(triggerNode) : "Choose what starts this automation"}
+                {triggerNode ? nodeCaption(triggerNode) : "Выберите, что запускает эту автоматизацию"}
               </p>
             </div>
             {triggerNode && onSelectNode && (
@@ -168,8 +167,7 @@ function InspectorEmptyState({
                 onClick={() => onSelectNode(triggerNode.id)}
                 className="shrink-0 rounded-lg border border-border bg-warm-paper px-2 py-1 text-[11px] font-medium text-foreground hover:bg-soft-kraft transition-colors"
               >
-                Configure
-              </button>
+                {"Настроить "}</button>
             )}
           </div>
         </div>
@@ -177,8 +175,8 @@ function InspectorEmptyState({
         {/* Steps outline / navigator */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-foreground">Steps in sequence</p>
-            <span className="text-[11px] text-soft-ink">Select to edit</span>
+            <p className="text-xs font-semibold text-foreground">{"Шаги по порядку"}</p>
+            <span className="text-[11px] text-soft-ink">{"Выберите для редактирования"}</span>
           </div>
 
           <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-pure-snow shadow-xs">
@@ -220,10 +218,9 @@ function InspectorEmptyState({
 
         {nodes.length <= 1 && (
           <div className="rounded-xl border border-dashed border-border bg-pure-snow/60 p-3.5 text-center">
-            <p className="text-xs font-medium text-foreground">Add your first action</p>
+            <p className="text-xs font-medium text-foreground">{"Добавьте свое первое действие"}</p>
             <p className="mt-1 text-[11px] text-soft-ink leading-relaxed">
-              Drag an action from the library on the left or click &quot;+&quot; on the canvas edge to build your automation.
-            </p>
+              {"Перетащите действие из библиотеки слева или нажмите «+» на краю холста, чтобы создать автоматизацию. "}</p>
           </div>
         )}
       </div>
@@ -297,7 +294,7 @@ function InspectorForm({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Deselect step"
+            aria-label={"Отменить выбор шага"}
             className="shrink-0 rounded-lg p-1 text-soft-ink hover:bg-soft-kraft hover:text-foreground transition-colors"
           >
             <X className="size-4" />
@@ -306,13 +303,13 @@ function InspectorForm({
       </div>
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-3">
         <label className="block">
-          <span className="mb-1 block text-xs font-medium text-foreground">Step name</span>
+          <span className="mb-1 block text-xs font-medium text-foreground">{"Имя шага"}</span>
           <input
             value={nameField.value}
             onChange={(event) => nameField.setValue(event.target.value)}
             onBlur={nameField.flush}
             className={inputClass}
-            placeholder="Optional label"
+            placeholder={"Дополнительная этикетка"}
           />
         </label>
 
@@ -345,7 +342,7 @@ function InspectorForm({
         ) : null}
         {node.type === "end" ? (
           <label className="block">
-            <span className="mb-1 block text-xs font-medium text-foreground">Result</span>
+            <span className="mb-1 block text-xs font-medium text-foreground">{"Результат"}</span>
             <BuilderSelect
               value={node.result}
               onChange={(event) =>
@@ -353,15 +350,15 @@ function InspectorForm({
               }
               className={inputClass}
             >
-              <option value="completed">Completed</option>
-              <option value="stopped">Stopped</option>
+              <option value="completed">{"Завершено"}</option>
+              <option value="stopped">{"Остановлено"}</option>
             </BuilderSelect>
           </label>
         ) : null}
 
         {ports.length > 0 ? (
           <div className="border-t border-hairline-c pt-3">
-            <p className="mb-2 text-xs font-medium text-foreground">Next steps</p>
+            <p className="mb-2 text-xs font-medium text-foreground">{"Следующие шаги"}</p>
             <div className="space-y-2">
               {ports.map((port) => {
                 const connectedEdge = state.graph.edges.find(
@@ -390,8 +387,8 @@ function InspectorForm({
                         type="button"
                         onClick={() => onDisconnect(connectedEdge.id)}
                         className="rounded-md p-1 text-soft-ink transition-colors hover:bg-danger-rust/10 hover:text-danger-rust"
-                        title={`Disconnect ${port} output`}
-                        aria-label={`Disconnect ${port} output`}
+                        title={`Отключить выход ${port}`}
+                        aria-label={`Отключить выход ${port}`}
                       >
                         <X className="size-3.5" />
                       </button>
@@ -402,8 +399,7 @@ function InspectorForm({
                 return (
                   <label key={port} className="block">
                     <span className="mb-1 block text-[11px] font-medium text-soft-ink">
-                      Connect <span className="font-semibold text-foreground">{port}</span> to:
-                    </span>
+                      {"Подключиться "}<span className="font-semibold text-foreground">{port}</span> {"кому: "}</span>
                     <BuilderSelect
                       value=""
                       onChange={(event) => {
@@ -412,7 +408,7 @@ function InspectorForm({
                       }}
                       className={inputClass}
                     >
-                      <option value="">Choose next step…</option>
+                      <option value="">{"Выберите следующий шаг…"}</option>
                       {targets.map((target) => {
                         const blocked = explainConnect(state.graph, node.id, port, target.id);
                         return (
@@ -448,7 +444,7 @@ function TriggerFields({
   const [createdEndpoints, setCreatedEndpoints] = useState<typeof builderData.webhookEndpoints>([]);
   const [endpointEnabledOverrides, setEndpointEnabledOverrides] = useState<Record<string, boolean>>({});
   const [endpointSchemaOverrides, setEndpointSchemaOverrides] = useState<Record<string, Record<string, unknown>>>({});
-  const [endpointName, setEndpointName] = useState("Partner webhook");
+  const [endpointName, setEndpointName] = useState("Партнерский вебхук");
   const [newSecret, setNewSecret] = useState<{ endpointUrl: string; secret: string } | null>(null);
   const [creating, startCreating] = useTransition();
   const jobId = typeof node.filter?.jobId === "string" ? node.filter.jobId : "";
@@ -473,7 +469,7 @@ function TriggerFields({
 
   const createEndpoint = (payloadSchema: Record<string, unknown>) => {
     if (!workflowId) {
-      toast.error("Save the workflow before creating an inbound endpoint.");
+      toast.error("Сохраните рабочий процесс перед созданием входящей конечной точки.");
       return;
     }
     startCreating(async () => {
@@ -501,12 +497,12 @@ function TriggerFields({
         filter: patchTriggerFilter(node.filter, { endpointId: result.endpoint.id }),
       });
       if (!result.endpointUrl) {
-        toast.error("The endpoint was created, but its URL could not be returned. Refresh before using it.");
+        toast.error("Конечная точка была создана, но ее URL-адрес не удалось вернуть. Обновите перед использованием.");
         return;
       }
       setNewSecret({ endpointUrl: result.endpointUrl, secret: result.secret });
       setEndpointName("");
-      toast.success("Inbound endpoint created. Copy its secret now.");
+      toast.success("Входящая конечная точка создана. Скопируйте его секрет сейчас.");
     });
   };
 
@@ -525,23 +521,23 @@ function TriggerFields({
         return;
       }
       setEndpointSchemaOverrides((current) => ({ ...current, [selectedEndpoint.id]: payloadSchema }));
-      toast.success("Webhook payload schema saved.");
+      toast.success("Схема полезной нагрузки вебхука сохранена.");
     });
   };
 
   const copyValue = async (value: string, label: string) => {
     try {
       await navigator.clipboard.writeText(value);
-      toast.success(`${label} copied.`);
+      toast.success(`${label} скопировано.`);
     } catch {
-      toast.error(`Could not copy the ${label.toLowerCase()}.`);
+      toast.error(`Не удалось скопировать ${label.toLowerCase()}.`);
     }
   };
 
   return (
     <>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">When</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Когда"}</span>
         <BuilderSelect
           value={node.event}
           onChange={(event) =>
@@ -561,12 +557,12 @@ function TriggerFields({
         </BuilderSelect>
       </label>
       <div>
-        <span className="mb-1 block text-xs font-medium text-foreground">Only this job</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Только эта работа"}</span>
         <ScopedSearchSelect
           kind="jobs"
           value={jobId}
-          placeholder="Any job"
-          emptyLabel="Any job"
+          placeholder={"Любая работа"}
+          emptyLabel={"Любая работа"}
           initialItems={builderData.jobs.map((job) => ({ id: job.id, label: job.title }))}
           onChange={(id) =>
             onChangeNode({
@@ -578,13 +574,13 @@ function TriggerFields({
       </div>
       {showStage ? (
         <div>
-          <span className="mb-1 block text-xs font-medium text-foreground">When they reach</span>
+          <span className="mb-1 block text-xs font-medium text-foreground">{"Когда они достигают"}</span>
           <ScopedSearchSelect
             kind="stages"
             value={jobId ? stageId : stageName}
             jobId={jobId || undefined}
-            placeholder="Any stage"
-            emptyLabel="Any stage"
+            placeholder={"Любой этап"}
+            emptyLabel={"Любой этап"}
             initialItems={
               jobId
                 ? jobStages.map((stage) => ({ id: stage.id, label: stage.name }))
@@ -607,13 +603,12 @@ function TriggerFields({
       {showWebhook ? (
         <div className="space-y-3 rounded-xl border border-border bg-pure-snow p-3">
           <div>
-            <p className="text-xs font-medium text-foreground">Inbound endpoint</p>
+            <p className="text-xs font-medium text-foreground">{"Входящая конечная точка"}</p>
             <p className="mt-1 text-[11px] leading-4 text-soft-ink">
-              Harly authenticates each signed JSON request and checks its payload schema before starting this automation.
-            </p>
+              {"Harly проверяет подлинность каждого подписанного запроса JSON и проверяет схему его полезных данных перед запуском автоматизации. "}</p>
           </div>
           <label className="block">
-            <span className="mb-1 block text-[11px] font-medium text-foreground">Endpoint</span>
+            <span className="mb-1 block text-[11px] font-medium text-foreground">{"Конечная точка"}</span>
             <BuilderSelect
               value={endpointId}
               onChange={(event) =>
@@ -624,10 +619,10 @@ function TriggerFields({
               }
               className={inputClass}
             >
-              <option value="">Choose an endpoint</option>
+              <option value="">{"Выберите конечную точку"}</option>
               {endpoints.map((endpoint) => (
                 <option key={endpoint.id} value={endpoint.id}>
-                  {endpoint.name}{endpoint.enabled ? "" : " — disabled"}
+                  {endpoint.name}{endpoint.enabled ? "" : " — отключено"}
                 </option>
               ))}
             </BuilderSelect>
@@ -644,13 +639,12 @@ function TriggerFields({
                     return;
                   }
                   setEndpointEnabledOverrides((current) => ({ ...current, [selectedEndpoint.id]: true }));
-                  toast.success("Inbound endpoint enabled.");
+                  toast.success("Входящая конечная точка включена.");
                 });
               }}
               disabled={creating}
             >
-              Enable this endpoint
-            </button>
+              {"Включить эту конечную точку "}</button>
           ) : null}
           {selectedEndpoint ? (
             <div className="border-t border-border pt-3">
@@ -659,22 +653,21 @@ function TriggerFields({
                 schema={selectedEndpoint.payloadSchema}
                 onSave={saveEndpointSchema}
                 disabled={creating}
-                saveLabel="Save payload schema"
+                saveLabel={"Сохранить схему полезных данных"}
                 showSavedStatus
               />
             </div>
           ) : null}
           <div className="border-t border-border pt-3">
-            <p className="text-[11px] font-medium text-foreground">Create endpoint</p>
+            <p className="text-[11px] font-medium text-foreground">{"Создать конечную точку"}</p>
             <p className="mt-1 text-[11px] leading-4 text-soft-ink">
-              The signing secret is shown once. Store it in the sending system before closing this panel.
-            </p>
+              {"Секрет подписи отображается один раз. Сохраните его в отправляющей системе, прежде чем закрывать эту панель. "}</p>
             <div className="mt-2 flex gap-2">
               <input
                 value={endpointName}
                 onChange={(event) => setEndpointName(event.target.value)}
                 className={inputClass}
-                placeholder="e.g. Greenhouse events"
+                placeholder={"например Тепличные мероприятия"}
                 maxLength={120}
                 disabled={creating}
               />
@@ -685,26 +678,25 @@ function TriggerFields({
                 schema={{}}
                 onSave={createEndpoint}
                 disabled={creating || !endpointName.trim() || !workflowId}
-                saveLabel={creating ? "Creating endpoint…" : "Create endpoint"}
+                saveLabel={creating ? "Создание конечной точки…" : "Создать конечную точку"}
               />
             </div>
             {!workflowId ? (
-              <p className="mt-2 text-[11px] text-danger-rust">Save this workflow to create its first endpoint.</p>
+              <p className="mt-2 text-[11px] text-danger-rust">{"Сохраните этот рабочий процесс, чтобы создать его первую конечную точку."}</p>
             ) : null}
           </div>
           {newSecret ? (
             <div className="space-y-2 rounded-lg border border-warning/30 bg-warning/10 p-2.5">
-              <p className="text-[11px] font-semibold text-foreground">Save this secret now</p>
-              <p className="text-[11px] leading-4 text-soft-ink">It will not be displayed again.</p>
-              <SecretRow label="URL" value={newSecret.endpointUrl} onCopy={() => void copyValue(newSecret.endpointUrl, "Endpoint URL")} />
-              <SecretRow label="Secret" value={newSecret.secret} onCopy={() => void copyValue(newSecret.secret, "Secret")} />
+              <p className="text-[11px] font-semibold text-foreground">{"Сохраните этот секрет сейчас"}</p>
+              <p className="text-[11px] leading-4 text-soft-ink">{"Он больше не будет отображаться."}</p>
+              <SecretRow label={"URL-адрес"} value={newSecret.endpointUrl} onCopy={() => void copyValue(newSecret.endpointUrl, "URL-адрес конечной точки")} />
+              <SecretRow label={"Секрет"} value={newSecret.secret} onCopy={() => void copyValue(newSecret.secret, "Секрет")} />
               <button
                 type="button"
                 className="text-[11px] font-medium text-foreground underline underline-offset-2"
                 onClick={() => setNewSecret(null)}
               >
-                I saved it — hide secret
-              </button>
+                {"Я сохранил — скрой секрет "}</button>
             </div>
           ) : null}
         </div>
@@ -719,8 +711,7 @@ function SecretRow({ label, value, onCopy }: { label: string; value: string; onC
       <div className="mb-1 flex items-center justify-between gap-2">
         <span className="font-chrome text-[11px] uppercase tracking-wide text-soft-ink">{label}</span>
         <button type="button" className="text-[10px] font-medium text-foreground underline underline-offset-2" onClick={onCopy}>
-          Copy
-        </button>
+          {"Копировать "}</button>
       </div>
       <code className="block max-h-16 overflow-auto rounded border border-border bg-warm-paper px-2 py-1.5 text-[10px] leading-4 text-foreground">
         {value}
@@ -803,7 +794,7 @@ function ActionFields({
   return (
     <>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">Action</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Действие"}</span>
         <BuilderSelect
           value={node.actionType}
           onChange={(event) => {
@@ -842,23 +833,20 @@ function ActionFields({
       ))}
       {reusableTemplateSelected ? (
         <p className="text-[11px] text-soft-ink">
-          This step uses the selected template snapshot. Clear the template to write custom document content instead.
-        </p>
+          {"На этом шаге используется выбранный снимок шаблона. Очистите шаблон, чтобы вместо этого записать собственное содержимое документа. "}</p>
       ) : null}
       {node.actionType === "schedule_interview" ? (
         <p className="text-[11px] text-soft-ink">
-          Automatic selection uses the workspace&apos;s connected provider. A specific provider must be connected; external meetings need a full URL in Location. Harly creates one video meeting per interview.
-        </p>
+          {"При автоматическом выборе используется подключенный к рабочей области поставщик. Должен быть подключен конкретный провайдер; для внешних собраний требуется полный URL-адрес в поле «Местоположение». Харли создает одну видеоконференцию для каждого интервью. "}</p>
       ) : null}
       {(node.actionType === "send_email" ||
         node.actionType === "send_slack" ||
         node.actionType === "add_note") && (
         <p className="text-[11px] text-soft-ink">
-          Use data from the event or an earlier step. Missing values stay missing — they do not become blank text.
-        </p>
+          {"Используйте данные из события или более раннего шага. Отсутствующие значения остаются отсутствующими — они не становятся пустым текстом. "}</p>
       )}
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">If this step fails</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Если этот шаг не удался"}</span>
         <BuilderSelect
           value={node.failurePolicy}
           onChange={(event) =>
@@ -869,9 +857,9 @@ function ActionFields({
           }
           className={inputClass}
         >
-          <option value="stop">Stop the automation</option>
-          <option value="continue">Continue with a warning</option>
-          <option value="route_error">Take the error path</option>
+          <option value="stop">{"Остановить автоматизацию"}</option>
+          <option value="continue">{"Продолжить с предупреждением"}</option>
+          <option value="route_error">{"Возьмите путь к ошибке"}</option>
         </BuilderSelect>
       </label>
     </>
@@ -904,8 +892,8 @@ function ConfigFieldEditor({
         <ScopedSearchSelect
           kind="stages"
           value={usingData ? "" : current}
-          placeholder="Select a stage"
-          emptyLabel="Select a stage"
+          placeholder={"Выберите этап"}
+          emptyLabel={"Выберите этап"}
           allowEmpty={!field.required}
           initialItems={builderData.stageNames.map((name) => ({ id: name, label: name }))}
           onChange={(id, item) => pickLiteral(item?.label ?? id)}
@@ -925,8 +913,8 @@ function ConfigFieldEditor({
         <ScopedSearchSelect
           kind="members"
           value={usingData ? "" : current}
-          placeholder="Assign to workflow owner"
-          emptyLabel="Assign to workflow owner"
+          placeholder={"Назначить владельцу рабочего процесса"}
+          emptyLabel={"Назначить владельцу рабочего процесса"}
           initialItems={builderData.members.map((member) => ({
             id: member.id,
             label: member.name,
@@ -948,14 +936,13 @@ function ConfigFieldEditor({
         <FieldLabel field={field} />
         {builderData.emailTemplates.length === 0 ? (
           <p className="text-[11px] text-soft-ink">
-            No email templates in this workspace yet. Create one in settings, then pick it here.
-          </p>
+            {"В этой рабочей области пока нет шаблонов электронной почты. Создайте его в настройках, затем выберите здесь. "}</p>
         ) : null}
         <ScopedSearchSelect
           kind="templates"
           value={usingData ? "" : current}
-          placeholder="Choose an email template"
-          emptyLabel="No template"
+          placeholder={"Выберите шаблон электронного письма"}
+          emptyLabel={"Нет шаблона"}
           initialItems={builderData.emailTemplates.map((template) => ({
             id: template.id,
             label: template.name,
@@ -976,8 +963,7 @@ function ConfigFieldEditor({
         <FieldLabel field={field} />
         {builderData.documentTemplates.length === 0 ? (
           <p className="text-[11px] text-soft-ink">
-            No document templates are available. Create one in Documents → Workflow templates, then return here.
-          </p>
+            {"Шаблоны документов недоступны. Создайте его в разделе «Документы» → «Шаблоны рабочих процессов», а затем вернитесь сюда. "}</p>
         ) : null}
         <BuilderSelect
           aria-label={field.label}
@@ -992,14 +978,13 @@ function ConfigFieldEditor({
           }}
           className={inputClass}
         >
-          <option value="">Choose a document template</option>
+          <option value="">{"Выберите шаблон документа"}</option>
           {builderData.documentTemplates.map((template) => (
             <option key={template.id} value={template.id}>{template.name}</option>
           ))}
         </BuilderSelect>
         <p className="mt-1 text-[11px] text-soft-ink">
-          The selected content is snapshotted into this workflow step when chosen.
-        </p>
+          {"При выборе выбранного содержимого сохраняется моментальный снимок этого шага рабочего процесса. "}</p>
       </div>
     );
   }
@@ -1009,14 +994,13 @@ function ConfigFieldEditor({
         <FieldLabel field={field} />
         {builderData.documents.length === 0 ? (
           <p className="text-[11px] text-soft-ink">
-            No active PDF documents are available for signing in this workspace.
-          </p>
+            {"В этом рабочем пространстве нет активных PDF-документов, доступных для подписи. "}</p>
         ) : null}
         <ScopedSearchSelect
           kind="documents"
           value={current}
-          placeholder="Choose a PDF document"
-          emptyLabel="No document"
+          placeholder={"Выберите PDF-документ"}
+          emptyLabel={"Нет документа"}
           initialItems={builderData.documents.map((document) => ({
             id: document.id,
             label: document.name,
@@ -1035,8 +1019,7 @@ function ConfigFieldEditor({
           />
         </div>
         <p className="mt-1 text-[11px] text-soft-ink">
-          Choose an existing document or bind a documentId returned by a prior step.
-        </p>
+          {"Выберите существующий документ или привяжите documentId, возвращенный на предыдущем шаге. "}</p>
       </div>
     );
   }
@@ -1052,8 +1035,7 @@ function ConfigFieldEditor({
           allowLiteral={false}
         />
         <p className="mt-1 text-[11px] text-soft-ink">
-          Bind <code>primaryRequestId</code> from a previous Request documents step. The uploaded PDF is resolved only when the run reaches this node.
-        </p>
+          {"Связать "}<code>{"первичныйрекуестид"}</code> {"из предыдущего шага запроса документов. Загруженный PDF-файл разрешается только тогда, когда выполнение достигает этого узла. "}</p>
       </div>
     );
   }
@@ -1064,8 +1046,8 @@ function ConfigFieldEditor({
         <ScopedSearchSelect
           kind="interviews"
           value={current}
-          placeholder={field.placeholder ?? "Choose an interview"}
-          emptyLabel="No interview"
+          placeholder={field.placeholder ?? "Выбрать интервью"}
+          emptyLabel={"Нет интервью"}
           initialItems={builderData.interviews}
           onChange={(id) => pickLiteral(id)}
           allowEmpty={!field.required}
@@ -1074,8 +1056,7 @@ function ConfigFieldEditor({
           <BindingPicker graph={graph} nodeId={nodeId} value={binding} onChange={onChange} allowLiteral={false} />
         </div>
         <p className="mt-1 text-[11px] text-soft-ink">
-          Choose an upcoming interview or bind interview.id from the trigger.
-        </p>
+          {"Выберите предстоящее интервью или привяжите интервью.id к триггеру. "}</p>
       </div>
     );
   }
@@ -1087,8 +1068,8 @@ function ConfigFieldEditor({
         <ScopedSearchSelect
           kind="tags"
           value={usingData ? "" : current}
-          placeholder={field.placeholder ?? "Tag"}
-          emptyLabel="Choose or type a tag"
+          placeholder={field.placeholder ?? "Тег"}
+          emptyLabel={"Выберите или введите тег"}
           initialItems={builderData.tags.map((tag) => ({ id: tag, label: tag }))}
           onChange={(id, item) => pickLiteral(item?.label ?? id)}
           disabled={usingData}
@@ -1097,7 +1078,7 @@ function ConfigFieldEditor({
           value={current}
           onChange={(event) => pickLiteral(event.target.value)}
           maxLength={field.maxLength}
-          placeholder="Or type a new tag"
+          placeholder={"Или введите новый тег"}
           className={`${inputClass} mt-1.5`}
           disabled={usingData}
         />
@@ -1114,12 +1095,12 @@ function ConfigFieldEditor({
       <div>
         <FieldLabel field={field} />
         <BuilderSelect aria-label={field.label} value={usingData ? "" : String(num)} onChange={(event) => onChange(asLiteral(Number(event.target.value)))} disabled={usingData} className={inputClass}>
-          <option value="0">Same day</option>
-          <option value="1">In 1 day</option>
-          <option value="2">In 2 days</option>
-          <option value="3">In 3 days</option>
-          <option value="7">In 1 week</option>
-          <option value="14">In 2 weeks</option>
+          <option value="0">{"В тот же день"}</option>
+          <option value="1">{"Через 1 день"}</option>
+          <option value="2">{"Через 2 дня"}</option>
+          <option value="3">{"Через 3 дня"}</option>
+          <option value="7">{"Через 1 неделю"}</option>
+          <option value="14">{"Через 2 недели"}</option>
         </BuilderSelect>
         <div className="mt-1.5">
           <BindingPicker graph={graph} nodeId={nodeId} value={binding} onChange={onChange} />
@@ -1133,7 +1114,7 @@ function ConfigFieldEditor({
       <div>
         <FieldLabel field={field} />
         <BuilderSelect aria-label={field.label} value={usingData ? "" : current} onChange={(event) => pickLiteral(event.target.value)} disabled={usingData} className={inputClass}>
-          <option value="">{field.placeholder ?? "Select…"}</option>
+          <option value="">{field.placeholder ?? "Выберите…"}</option>
           {field.options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -1199,13 +1180,13 @@ function ConfigFieldEditor({
           />
         )}
         <select
-          aria-label={`Insert variable into ${field.label}`}
+          aria-label={`Вставьте переменную в ${field.label}`}
           value=""
           disabled={Boolean(binding && binding.kind !== "literal")}
           onChange={(event) => appendVariable(event.target.value)}
           className="mt-1.5 h-8 w-full rounded-lg border border-border bg-pure-snow px-2 text-[11px] text-soft-ink outline-none focus:border-foreground/40 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <option value="">Insert a workflow variable…</option>
+          <option value="">{"Вставьте переменную рабочего процесса…"}</option>
           {Array.from(new Set(TEMPLATE_VARIABLES.map((variable) => variable.group))).map((group) => (
             <optgroup key={group} label={group}>
               {TEMPLATE_VARIABLES.filter((variable) => variable.group === group).map((variable) => (
@@ -1231,8 +1212,7 @@ function ConfigFieldEditor({
           onChange={(value) => onChange(asLiteral(value))}
         />
         <p className="mt-1 text-[11px] text-soft-ink">
-          The candidate will see these requests in the portal. Add a document-package wait after this step to continue when they are accepted.
-        </p>
+          {"Кандидат увидит эти запросы на портале. Добавьте ожидание пакета документов после этого шага, чтобы продолжить, когда они будут приняты. "}</p>
       </div>
     );
   }
@@ -1246,8 +1226,7 @@ function ConfigFieldEditor({
           onChange={(value) => onChange(asLiteral(value))}
         />
         <p className="mt-1 text-[11px] text-soft-ink">
-          Selected PDFs are appended in order and frozen by checksum when this workflow is published.
-        </p>
+          {"Выбранные PDF-файлы добавляются по порядку и фиксируются по контрольной сумме при публикации этого рабочего процесса. "}</p>
       </div>
     );
   }
@@ -1260,8 +1239,7 @@ function ConfigFieldEditor({
           onChange={(value) => onChange(value.length > 0 ? asLiteral(value) : undefined)}
         />
         <p className="mt-1 text-[11px] text-soft-ink">
-          Leave empty to sign as the candidate. Add up to ten recipients for ordered signing; the next signer is invited only after the previous one completes.
-        </p>
+          {"Оставьте пустым, чтобы подписать себя как кандидат. Добавьте до десяти получателей для заказанной подписи; следующий подписавшийся приглашается только после завершения предыдущего. "}</p>
       </div>
     );
   }
@@ -1301,7 +1279,7 @@ function ConfigFieldEditor({
           placeholder={field.placeholder}
           className={inputClass}
         />
-        <p className="mt-1 text-[11px] text-soft-ink">Reference secret names, never paste the secret itself.</p>
+        <p className="mt-1 text-[11px] text-soft-ink">{"Ссылайтесь на секретные имена, никогда не вставляйте сам секрет."}</p>
       </div>
     );
   }
@@ -1335,7 +1313,7 @@ function DelayFields({
   return (
     <>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">Wait until</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Подождите, пока"}</span>
         <BuilderSelect
           value={node.mode}
           onChange={(event) => {
@@ -1348,13 +1326,13 @@ function DelayFields({
           }}
           className={inputClass}
         >
-          <option value="duration">A duration from now</option>
-          <option value="next_local">The next local time</option>
+          <option value="duration">{"Продолжительность с настоящего момента"}</option>
+          <option value="next_local">{"В следующий раз по местному времени"}</option>
         </BuilderSelect>
       </label>
       {node.mode === "duration" ? (
         <label className="block">
-          <span className="mb-1 block text-xs font-medium text-foreground">Hours</span>
+          <span className="mb-1 block text-xs font-medium text-foreground">{"Часы"}</span>
           <input
             type="number"
             min={1}
@@ -1369,7 +1347,7 @@ function DelayFields({
       ) : (
         <>
           <label className="block">
-            <span className="mb-1 block text-xs font-medium text-foreground">Local time</span>
+            <span className="mb-1 block text-xs font-medium text-foreground">{"Местное время"}</span>
             <input
               type="time"
               value={node.localTime ?? "09:00"}
@@ -1382,11 +1360,11 @@ function DelayFields({
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-xs font-medium text-foreground">Time zone</span>
+            <span className="mb-1 block text-xs font-medium text-foreground">{"Часовой пояс"}</span>
             <input
               value={node.timeZone ?? defaultTimeZone}
               onChange={(event) => onChangeNode({ ...node, timeZone: event.target.value })}
-              placeholder="Workspace zone unless set"
+              placeholder={"Зона рабочей области, если не установлена"}
               className={inputClass}
             />
           </label>
@@ -1408,12 +1386,12 @@ function ApprovalFields({
   return (
     <>
       <div>
-        <span className="mb-1 block text-xs font-medium text-foreground">Who can approve</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Кто может одобрить"}</span>
         <ScopedSearchSelect
           kind="members"
           value=""
-          placeholder="Add a person"
-          emptyLabel="Close"
+          placeholder={"Добавить человека"}
+          emptyLabel={"Закрыть"}
           initialItems={builderData.members
             .filter((member) => !node.eligibleActorIds.includes(member.id))
             .map((member) => ({ id: member.id, label: member.name, hint: member.email }))}
@@ -1424,7 +1402,7 @@ function ApprovalFields({
         />
         <ul className="mt-2 space-y-1">
           {node.eligibleActorIds.length === 0 ? (
-            <li className="text-[11px] text-soft-ink">Add at least one person before publishing.</li>
+            <li className="text-[11px] text-soft-ink">{"Добавьте хотя бы одного человека перед публикацией."}</li>
           ) : (
             node.eligibleActorIds.map((id) => {
               const member = builderData.members.find((item) => item.id === id);
@@ -1441,8 +1419,7 @@ function ApprovalFields({
                       })
                     }
                   >
-                    Remove
-                  </button>
+                    {"Удалить "}</button>
                 </li>
               );
             })
@@ -1450,18 +1427,18 @@ function ApprovalFields({
         </ul>
       </div>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">Rule</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Правило"}</span>
         <BuilderSelect
           value={node.rule}
           onChange={(event) => onChangeNode({ ...node, rule: event.target.value as typeof node.rule })}
           className={inputClass}
         >
-          <option value="any">Anyone can approve</option>
-          <option value="all">Everyone must approve</option>
+          <option value="any">{"Любой может одобрить"}</option>
+          <option value="all">{"Каждый должен одобрить"}</option>
         </BuilderSelect>
       </label>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">Deadline (hours)</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Срок (часы)"}</span>
         <input
           type="number"
           min={1}
@@ -1487,7 +1464,7 @@ function WaitFields({
   return (
     <>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">Wait for</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Подождите"}</span>
         <BuilderSelect
           value={node.kind}
           onChange={(event) => {
@@ -1500,19 +1477,19 @@ function WaitFields({
           }}
           className={inputClass}
         >
-          <option value="event">An event</option>
-          <option value="document_package">A signed document package</option>
+          <option value="event">{"Событие"}</option>
+          <option value="document_package">{"Подписанный пакет документов"}</option>
         </BuilderSelect>
       </label>
       {node.kind === "event" ? (
         <label className="block">
-          <span className="mb-1 block text-xs font-medium text-foreground">Event name</span>
+          <span className="mb-1 block text-xs font-medium text-foreground">{"Название события"}</span>
           <BuilderSelect
             value={node.eventName ?? ""}
             onChange={(event) => onChangeNode({ ...node, eventName: event.target.value || undefined })}
             className={inputClass}
           >
-            <option value="">Choose an event</option>
+            <option value="">{"Выберите событие"}</option>
             {node.eventName && !WORKFLOW_EVENTS.includes(node.eventName as WorkflowEvent) ? (
               <option value={node.eventName}>{node.eventName} (custom)</option>
             ) : null}
@@ -1526,22 +1503,21 @@ function WaitFields({
       ) : null}
       {node.kind === "document_package" ? (
         <label className="block">
-          <span className="mb-1 block text-xs font-medium text-foreground">Completion resource</span>
+          <span className="mb-1 block text-xs font-medium text-foreground">{"Ресурс завершения"}</span>
           <BuilderSelect
             value={node.resourceType ?? "package"}
             onChange={(event) => onChangeNode({ ...node, resourceType: event.target.value as typeof node.resourceType })}
             className={inputClass}
           >
-            <option value="package">All requested uploads accepted</option>
-            <option value="document">Signature document completed</option>
+            <option value="package">{"Все запрошенные загрузки приняты"}</option>
+            <option value="document">{"Подпись документа завершена"}</option>
           </BuilderSelect>
           <p className="mt-1 text-[11px] text-soft-ink">
-            Choose package for portal uploads, or document for a signature step. Harly reconciles both after a restart.
-          </p>
+            {"Выберите пакет для загрузки на портал или документ для этапа подписи. Харли примиряет обоих после перезапуска. "}</p>
         </label>
       ) : null}
       <div>
-        <span className="mb-1 block text-xs font-medium text-foreground">Resource</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Ресурс"}</span>
         <BindingPicker
           graph={graph}
           nodeId={node.id}
@@ -1551,7 +1527,7 @@ function WaitFields({
         />
       </div>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-foreground">Deadline (hours)</span>
+        <span className="mb-1 block text-xs font-medium text-foreground">{"Срок (часы)"}</span>
         <input
           type="number"
           min={1}

@@ -110,10 +110,10 @@ export function OfferFieldPlacementDialog({
         })),
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not send the offer.");
+        toast.error(result.error ?? "Не удалось отправить предложение.");
         return;
       }
-      toast.success("Offer sent");
+      toast.success("Предложение отправлено");
       onOpenChange(false);
       router.refresh();
     });
@@ -123,11 +123,9 @@ export function OfferFieldPlacementDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex h-[90vh] max-h-[90vh] w-[min(1440px,calc(100%-2rem))] max-w-[min(1440px,calc(100%-2rem))] sm:max-w-[min(1440px,calc(100%-2rem))] flex-col overflow-hidden p-0">
         <DialogHeader className="border-b border-border px-6 py-4 text-left">
-          <DialogTitle>Place signature fields</DialogTitle>
+          <DialogTitle>{"Разместите поля для подписи"}</DialogTitle>
           <DialogDescription>
-            Mark where <strong>{offerTitle}</strong> needs a signature — or a date, name,
-            or other text — before sending it to the candidate.
-          </DialogDescription>
+            {"Отметьте, где "}<strong>{offerTitle}</strong> {"требуется подпись (или дата, имя или другой текст) перед отправкой кандидату. "}</DialogDescription>
         </DialogHeader>
         <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div
@@ -151,37 +149,33 @@ export function OfferFieldPlacementDialog({
           </div>
           <aside className="flex min-h-0 flex-col gap-4 overflow-y-auto p-6">
             <div>
-              <p className="text-sm font-semibold text-foreground">Fields</p>
+              <p className="text-sm font-semibold text-foreground">{"Поля"}</p>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                The candidate only fills these in — no dragging on their end.
-              </p>
+                {"Кандидат только заполняет их, не затягивая с их завершением. "}</p>
             </div>
             <div className="flex flex-col gap-2">
               <Button variant="outline" onClick={() => addField("signature")}>
                 <PenLine className="size-4" />
-                Add signature field
-              </Button>
+                {"Добавить поле для подписи "}</Button>
               <Button variant="outline" onClick={() => addField("text")}>
                 <TypeIcon className="size-4" />
-                Add text field
-              </Button>
+                {"Добавить текстовое поле "}</Button>
             </div>
             <p className="text-xs text-muted-foreground">
               {placements.length === 0
-                ? "Loading the offer letter…"
-                : `${placements.length} field${placements.length === 1 ? "" : "s"} placed.`}
+                ? "Загрузка письма с предложением…"
+                : `Поле ${placements.length} размещено.`}
             </p>
             <div className="mt-auto">
               {rotated ? (
                 <p className="mb-2 text-xs text-destructive" role="alert">
-                  This PDF has rotated pages. Re-export it without rotation before sending.
-                </p>
+                  {"В этом PDF-файле страницы повернуты. Реэкспортируйте его без вращения перед отправкой. "}</p>
               ) : null}
               <Button
                 onClick={submit}
                 disabled={placements.length === 0 || isPending || rotated}
               >
-                {isPending ? "Sending…" : "Send offer"}
+                {isPending ? "Отправка…" : "Отправить предложение"}
               </Button>
             </div>
           </aside>

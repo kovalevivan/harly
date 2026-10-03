@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/ui/UserAvatar";
@@ -27,17 +28,17 @@ export function InboxConversationList({
   onNewThread?: () => void;
 }) {
   return (
-    <section className="flex h-full min-h-0 flex-col" aria-label={person ? `Conversations with ${person.name}` : "Conversations"}>
+    <section className="flex h-full min-h-0 flex-col" aria-label={person ? `Разговоры с ${person.name}` : "Разговоры"}>
       <div className="flex shrink-0 items-center gap-3 border-b border-border/60 px-5 py-3">
         {person ? <UserAvatar name={person.name} src={person.avatarUrl} size="sm" /> : null}
         <div className="min-w-0">
-          <h2 className="truncate text-sm font-semibold">{person?.name ?? "Select a person"}</h2>
+          <h2 className="truncate text-sm font-semibold">{person?.name ?? "Выберите человека"}</h2>
           <p className="truncate text-xs text-muted-foreground">
-            {person ? `${threads.length} ${threads.length === 1 ? "conversation" : "conversations"}` : "Choose someone from the list"}
+            {person ? `${threads.length} ${russianPlural(threads.length, "переписка", "переписки", "переписок")}` : "Выберите кого-нибудь из списка"}
           </p>
         </div>
         {person?.email && onNewThread ? (
-          <Button type="button" variant="ghost" size="icon-sm" className="ml-auto shrink-0" onClick={onNewThread} aria-label="New thread" title="New thread">
+          <Button type="button" variant="ghost" size="icon-sm" className="ml-auto shrink-0" onClick={onNewThread} aria-label={"Новая тема"} title={"Новая тема"}>
             <PlusIcon className="size-4" />
           </Button>
         ) : null}
@@ -64,7 +65,7 @@ export function InboxConversationList({
                     <span className="flex size-7 items-center justify-center rounded-full bg-muted text-[11px] font-semibold text-muted-foreground">
                       {thread.subject.trim().charAt(0).toUpperCase() || "·"}
                     </span>
-                    {unread ? <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-card bg-primary" aria-label={`${thread.unreadCount} unread`} /> : null}
+                    {unread ? <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-card bg-primary" aria-label={`${thread.unreadCount} непрочитано`} /> : null}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-2">
@@ -73,8 +74,8 @@ export function InboxConversationList({
                         <RelativeTime value={thread.lastMessageAt} />
                       </time>
                     </span>
-                    <span className="mt-1 block truncate text-xs leading-5 text-muted-foreground">{thread.preview || "No message preview."}</span>
-                    {thread.needsReply ? <span className="mt-1.5 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">Needs reply</span> : null}
+                    <span className="mt-1 block truncate text-xs leading-5 text-muted-foreground">{thread.preview || "Нет предварительного просмотра сообщения."}</span>
+                    {thread.needsReply ? <span className="mt-1.5 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{"Нужен ответ"}</span> : null}
                   </span>
                 </button>
               </li>
@@ -84,8 +85,8 @@ export function InboxConversationList({
       ) : (
         <div className="flex min-h-0 flex-1 items-center p-5">
           <EmptyState
-            title={query ? "No matching conversations" : "No conversations"}
-            description={query ? "Try a different subject or message." : "This person has no conversations in the current view."}
+            title={query ? "Нет подходящих разговоров" : "Никаких разговоров"}
+            description={query ? "Попробуйте другую тему или сообщение." : "У этого человека нет разговоров в текущем представлении."}
             icon={EnvelopeSimpleDuotoneIcon}
             className="min-h-0 w-full border-0 bg-transparent py-10"
           />

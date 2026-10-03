@@ -106,7 +106,7 @@ describe("candidate decision application scope", () => {
       }),
     );
 
-    expect(markup).toContain('aria-label="Application to update"');
+    expect(markup).toContain('aria-label="Отклик для обновления"');
     expect(markup).toContain("Frontend Engineer");
     expect(markup).toContain("Product Designer");
   });

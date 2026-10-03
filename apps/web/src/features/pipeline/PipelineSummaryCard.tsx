@@ -26,14 +26,14 @@ export async function PipelineSummaryCard({ jobId }: { jobId: string }) {
 
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2 px-1">
-      <Stat label="active" value={summary.totalActive} />
-      {topFits > 0 ? <Stat label="rated a good fit" value={topFits} /> : null}
+      <Stat label={"активных"} value={summary.totalActive} />
+      {topFits > 0 ? <Stat label={"подходят по оценке"} value={topFits} /> : null}
       {summary.unscored > 0 ? (
-        <Stat label="not rated" value={summary.unscored} muted />
+        <Stat label={"без оценки"} value={summary.unscored} muted />
       ) : null}
       {summary.stalledCandidates > 0 ? (
         <Stat
-          label={`stuck ${summary.stalledDays}+ days`}
+          label={`без движения ${summary.stalledDays}+ дней`}
           value={summary.stalledCandidates}
           warning
         />

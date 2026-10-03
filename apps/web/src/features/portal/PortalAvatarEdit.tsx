@@ -43,7 +43,7 @@ async function portalUploadImage(file: Blob): Promise<{ fileUrl: string; key: st
     body: file,
   });
 
-  if (!put.ok) throw new Error("Upload failed.");
+  if (!put.ok) throw new Error("Загрузка не удалась.");
   return { fileUrl: data.fileUrl, key: data.key };
 }
 
@@ -91,14 +91,14 @@ export function PortalAvatarEdit({
         });
         if (!result.success) {
           setLocalAvatar(previousAvatar);
-          toast.error(result.error ?? "Could not update avatar.");
+          toast.error(result.error ?? "Не удалось обновить аватар.");
           return;
         }
         setLocalAvatar(fileUrl);
-        toast.success("Avatar updated.");
+        toast.success("Аватар обновлен.");
         router.refresh();
       } catch {
-        toast.error("Upload failed.");
+        toast.error("Загрузка не удалась.");
       } finally {
         if (cropSrc) URL.revokeObjectURL(cropSrc);
         setCropSrc(null);
@@ -114,11 +114,11 @@ export function PortalAvatarEdit({
       });
       if (!result.success) {
         setLocalAvatar(previousAvatar);
-        toast.error(result.error ?? "Could not remove avatar.");
+        toast.error(result.error ?? "Не удалось удалить аватар.");
         return;
       }
       setLocalAvatar(null);
-      toast.success("Avatar removed.");
+      toast.success("Аватар удален.");
       router.refresh();
     });
   }
@@ -132,7 +132,7 @@ export function PortalAvatarEdit({
           type="button"
           onClick={() => displaySrc ? setViewOpen(true) : inputRef.current?.click()}
           className="cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          aria-label={displaySrc ? "View photo" : "Add photo"}
+          aria-label={displaySrc ? "Посмотреть фото" : "Добавить фото"}
         >
           <UserAvatar
             name={name}
@@ -145,7 +145,7 @@ export function PortalAvatarEdit({
           type="button"
           onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
           disabled={saving}
-          aria-label="Change avatar"
+          aria-label={"Сменить аватар"}
           className="absolute bottom-0 right-0 flex size-7 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-sm transition-all duration-150 ease-out hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] sm:opacity-0 sm:group-hover:opacity-100"
         >
           <Pencil className="size-3.5" strokeWidth={1.8} />
@@ -155,7 +155,7 @@ export function PortalAvatarEdit({
             type="button"
             onClick={removeAvatar}
             disabled={saving}
-            aria-label="Remove avatar"
+            aria-label={"Удалить аватар"}
             className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-sm transition-all duration-150 hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:opacity-0 sm:group-hover:opacity-100"
           >
             <X className="size-3" />
@@ -177,7 +177,7 @@ export function PortalAvatarEdit({
         <Dialog open={viewOpen} onOpenChange={setViewOpen}>
           <DialogContent className="max-w-sm p-2">
             <DialogTitle className="sr-only">{name}</DialogTitle>
-            <DialogDescription className="sr-only">Photo of {name}</DialogDescription>
+            <DialogDescription className="sr-only">{"Фотография "}{name}</DialogDescription>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={displaySrc}

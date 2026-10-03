@@ -3,7 +3,7 @@ import { CalendarBoard } from "@/features/interviews/CalendarBoard";
 import { listJobOptions } from "@/features/jobs/data";
 import { listWorkspaceMembers } from "@/features/jobs/hiring-team-data";
 
-const MONTH_LABEL_FORMAT = new Intl.DateTimeFormat("en", {
+const MONTH_LABEL_FORMAT = new Intl.DateTimeFormat("ru-RU", {
   month: "long",
   year: "numeric",
 });
