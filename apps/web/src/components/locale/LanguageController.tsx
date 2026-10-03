@@ -27,11 +27,15 @@ function translated(value: string): string {
     const careers = clean.match(/^Careers at (.+)$/);
     const greeting = clean.match(/^Good (morning|afternoon|evening), (.+)!$/);
     const candidates = clean.match(/^(\d+) candidates? in play\.$/);
+    const drafts = clean.match(/^(\d+) drafts?$/);
+    const unpublished = clean.match(/^(\d+) not published$/);
     const nextStep = clean.match(/^(\d+) of (\d+) done · Next: (.+)$/);
     const unread = clean.match(/^Notifications \((\d+) unread\)$/);
     if (careers) replacement = `Вакансии в ${careers[1]}`;
     else if (greeting) replacement = `Здравствуйте, ${greeting[2]}!`;
     else if (candidates) replacement = `Кандидатов в работе: ${candidates[1]}.`;
+    else if (drafts) replacement = `${drafts[1]} черновиков`;
+    else if (unpublished) replacement = `${unpublished[1]} неопубликованных`;
     else if (nextStep) replacement = `Выполнено ${nextStep[1]} из ${nextStep[2]} · Далее: ${catalogue.get(nextStep[3]) ?? nextStep[3]}`;
     else if (unread) replacement = `Уведомления: ${unread[1]} непрочитанных`;
   }
