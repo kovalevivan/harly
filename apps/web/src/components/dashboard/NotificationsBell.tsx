@@ -167,7 +167,7 @@ export function NotificationsBell({
           size="icon"
           className="relative text-muted-foreground"
           aria-label={
-            unread > 0 ? `Уведомления (${unread} непрочитанные)` : "Уведомления"
+            unread > 0 ? `Уведомления (непрочитанных: ${unread})` : "Уведомления"
           }
         >
           <svg

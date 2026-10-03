@@ -138,11 +138,11 @@ export function JobCandidateRanking({
           <div className="min-w-0">
             {/* Framed as a suggestion from a colleague, not a verdict. */}
             <p className="text-[14px] font-medium text-near-ink">
-              {"Харли может предложить заказ "}</p>
+              {"Harly может предложить порядок кандидатов "}</p>
             <p className="truncate text-[12px] text-soft-ink">
               {unscored === 0
-                ? `Все активные кандидаты ${scored}${scored === 1 ? "" : "s"} имеют рейтинг. Ваше решение отменить.`
-                : `${unscored} из ${activeApplications.length} еще не оценено для ${jobTitle}.`}
+                ? `Все кандидаты в работе оценены (${scored}). Окончательное решение за вами.`
+                : `Без оценки: ${unscored} из ${activeApplications.length} · ${jobTitle}.`}
             </p>
           </div>
           {unscored === 0 ? null : (
@@ -158,7 +158,7 @@ export function JobCandidateRanking({
                     ranking && "animate-pulse motion-reduce:animate-none",
                   )}
                 />
-                {ranking ? "Оценка…" : aiConfigured ? "Оцените остальное" : "Оцените остальное"}
+                {ranking ? "Оценка…" : aiConfigured ? "Оценить остальных" : "Оценить остальных"}
               </Button>
             )}
         </div>
@@ -181,7 +181,7 @@ export function JobCandidateRanking({
               !showOrder && "-rotate-90",
             )}
           />
-          {showOrder ? "Скрыть предложенный заказ" : "Показать предлагаемый заказ"}
+          {showOrder ? "Скрыть рекомендуемый порядок" : "Показать рекомендуемый порядок"}
         </button>
 
         {showOrder ? (

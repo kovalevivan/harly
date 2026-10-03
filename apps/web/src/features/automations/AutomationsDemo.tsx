@@ -1,3 +1,4 @@
+import { russianPlural } from "@/lib/russian-plural";
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { cn } from "@/lib/utils";
 import {
@@ -144,7 +145,7 @@ export function AutomationsDemo() {
                 {recipe.trigger}
               </span>
               <span className="inline-flex items-center rounded-full bg-soft-kraft px-2.5 py-0.5 text-[11px] font-medium text-soft-ink">
-                {recipe.actionCount} {recipe.actionCount === 1 ? "action" : "actions"}
+                {recipe.actionCount} {russianPlural(recipe.actionCount, "действие", "действия", "действий")}
               </span>
               <span
                 className={cn(

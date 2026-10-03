@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/notification-island/toast";
@@ -92,7 +93,7 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
                   </div>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     {role.memberCount}{" "}
-                    {role.memberCount === 1 ? "member" : "members"}
+                    {russianPlural(role.memberCount, "участник", "участника", "участников")}
                   </p>
                 </div>
               </div>

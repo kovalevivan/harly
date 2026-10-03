@@ -144,8 +144,8 @@ export function CompanyBrandingSection({
       <Card className="gap-6 p-6 sm:p-8">
         <SectionHeader
           icon={BuildingsIcon}
-          title={"идентичность"}
-          description={"Логотип и имя отображаются на Harly и на странице вашей карьеры."}
+          title={"Название и логотип"}
+          description={"Название и логотип отображаются в Harly и на странице вакансий."}
         />
 
         <form
@@ -237,7 +237,7 @@ export function CompanyBrandingSection({
 
           <div className="flex justify-end border-t pt-6">
             <Button type="submit" disabled={!canEdit || savingProfile}>
-              {savingProfile ? "Сохранение…" : "Сохранить личность"}
+              {savingProfile ? "Сохранение…" : "Сохранить название и логотип"}
             </Button>
           </div>
         </form>
@@ -250,7 +250,7 @@ export function CompanyBrandingSection({
           title={"Бренд и ссылки"}
           description={
             <>
-              {"Цветной, веб-сайт и резервный баннер, используемый на ваших страницах вакансий, электронных письмах с заявлениями и сообщениях о вакансиях."}{" "}
+              {"Цвет, сайт и баннер используются на странице вакансий и в письмах кандидатам."}{" "}
               <Link
                 href="/dashboard/career-page"
                 className="inline-flex items-center gap-0.5 font-medium text-pine underline-offset-2 hover:underline"

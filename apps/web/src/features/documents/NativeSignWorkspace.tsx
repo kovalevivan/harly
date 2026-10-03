@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useEffect, useState } from "react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
@@ -147,7 +148,7 @@ export function NativeSignWorkspace({
         </div>
         <span className="ml-auto shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
           {placements.length}{" "}
-          {placements.length === 1 ? "signature" : "signatures"}
+          {russianPlural(placements.length, "подпись", "подписи", "подписей")}
         </span>
       </header>
 

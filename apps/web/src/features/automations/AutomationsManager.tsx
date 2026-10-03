@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import Link from "next/link";
@@ -177,7 +178,7 @@ function Header({ count, onCreate }: { count: number; onCreate: () => void }) {
         <h1 className="font-display text-2xl font-semibold tracking-tight text-near-ink">
           {"Автоматизация "}</h1>
         <p className="mt-1 text-sm text-soft-ink">
-          {count} {count === 1 ? "recipe" : "recipes"} {"· когда что-то происходит, Харли может отправить кандидату электронное письмо, отметить его, поставить ему задачу или переместить его. "}</p>
+          {count} {russianPlural(count, "сценарий", "сценария", "сценариев")} {"· когда что-то происходит, Харли может отправить кандидату электронное письмо, отметить его, поставить ему задачу или переместить его. "}</p>
       </div>
       <div className="flex items-center gap-2">
         <Link
@@ -265,7 +266,7 @@ function WorkflowCard({
           {meta.label}
         </span>
         <span className="inline-flex items-center rounded-full bg-soft-kraft px-2.5 py-0.5 text-[11px] font-medium text-soft-ink">
-          {actionCount} {actionCount === 1 ? "action" : "actions"}
+          {actionCount} {russianPlural(actionCount, "действие", "действия", "действий")}
         </span>
         <span
           className={cn(

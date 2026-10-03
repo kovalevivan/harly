@@ -44,7 +44,7 @@ export default async function DashboardJobsPage({ searchParams }: JobsPageProps)
       {!isTrash && jobs.length > 0 ? (
         <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <div className="duration-500 animate-in fade-in slide-in-from-bottom-2">
-            <StatTile label={"Открытые вакансии"} value={openRoles} hint={`${draftRoles} черновик`} icon={Briefcase} />
+            <StatTile label={"Открытые вакансии"} value={openRoles} hint={`Черновиков: ${draftRoles}`} icon={Briefcase} />
           </div>
           <div className="delay-75 duration-500 animate-in fade-in slide-in-from-bottom-2 fill-mode-backwards">
             <StatTile label={"Отклики"} value={totalApplicants} hint={"по всем вакансиям"} icon={Users} />
@@ -53,7 +53,7 @@ export default async function DashboardJobsPage({ searchParams }: JobsPageProps)
             <StatTile label={"Отклики за неделю"} value={newApplicants} hint={"откликов за 7 дней"} icon={TrendingUp} accent />
           </div>
           <div className="delay-200 duration-500 animate-in fade-in slide-in-from-bottom-2 fill-mode-backwards">
-            <StatTile label={"Всего вакансий"} value={jobs.length} hint={`${draftRoles} не опубликовано`} icon={Briefcase} />
+            <StatTile label={"Всего вакансий"} value={jobs.length} hint={`Не опубликовано: ${draftRoles}`} icon={Briefcase} />
           </div>
         </section>
       ) : null}

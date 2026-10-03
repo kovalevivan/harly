@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
+
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { useId, useState, useTransition } from "react";
 import Link from "next/link";
@@ -66,9 +68,9 @@ export function InboxActionsPanel({
         ? "снято"
         : thread.applicationStatus === "hired"
           ? "Нанят"
-          : thread.applicationStageName ?? "Отклик";
+          : localizeStageName(thread.applicationStageName ?? "Отклик");
   const stageVariant: "success" | "danger" | "neutral" | "secondary" =
-    stageLabel === "Hired" ? "success" : stageLabel === "Rejected" || stageLabel === "Withdrawn" ? "danger" : "secondary";
+    thread.applicationStatus === "hired" ? "success" : thread.applicationStatus === "rejected" || thread.applicationStatus === "withdrawn" ? "danger" : "secondary";
 
   function runAi(
     action: () => Promise<{ ok: boolean; summary?: AiSummary; draft?: { body: string }; error?: string }>,

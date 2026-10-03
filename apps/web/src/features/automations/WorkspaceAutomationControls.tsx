@@ -49,7 +49,7 @@ export function WorkspaceAutomationControls({
           <p className="mt-1 text-sm text-muted-foreground">
             {"Ограничения рабочего пространства: "}{policy.maxRunsPerMinute} {"новые пробеги и "}{policy.maxExternalActionsPerMinute} {"внешних действий в минуту, до "}{policy.maxConcurrentRuns} {"активные пробежки. "}</p>
           <p role="status" aria-live="polite" className="mt-2 text-sm font-medium">
-            {"Автоматизация "}{enabled ? "enabled" : "paused"} {"для этого рабочего пространства. "}</p>
+            {"Автоматизация "}{enabled ? "включена" : "приостановлена"} {"для этого рабочего пространства. "}</p>
           {!enabled && policy.pausedAt && (
             <p className="mt-1 text-sm text-muted-foreground">
               {"Приостановлено "}{new Date(policy.pausedAt).toLocaleString("ru-RU")}

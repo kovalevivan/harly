@@ -12,7 +12,10 @@ that come from the existing backend or stored data. It uses the smaller
 Do not apply this adapter to candidate text, notes, vacancy descriptions or
 user-defined titles. Internal enum values, form values and API contracts remain
 in their original format. `lib/toast.ts` applies this adapter before rendering
-API error notifications. Dates use `ru-RU` / date-fns' Russian locale.
+API error notifications, including the top-bar notification island. Dates use
+`ru-RU` / date-fns' Russian locale. Count labels use `lib/russian-plural.ts`
+with Russian singular, few and many forms. Stage filters preserve their raw
+values and use `localizeStageName` only for displayed labels.
 
 The scripts under `tooling/harly/` prepare reviewable source translations;
 they are not part of the build or runtime. If adding system copy to the backend,

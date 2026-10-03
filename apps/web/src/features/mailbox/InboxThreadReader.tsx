@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -190,7 +191,7 @@ export function InboxThreadReader({
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
               <span className="font-medium text-foreground/80">{participantName}</span>
               {thread.participantEmail ? <span> · {thread.participantEmail}</span> : null}
-              <span> · {messages.length} {messages.length === 1 ? "message" : "messages"}</span>
+              <span> · {messages.length} {russianPlural(messages.length, "сообщение", "сообщения", "сообщений")}</span>
             </p>
           </div>
         </div>

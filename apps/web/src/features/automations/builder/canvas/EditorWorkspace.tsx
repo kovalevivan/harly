@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Copy, Redo2, Trash2, Undo2 } from "lucide-react";
@@ -281,10 +282,10 @@ export function EditorWorkspace({
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline-c bg-warm-paper px-4 py-2 text-xs">
           <div className="flex items-center gap-2 text-soft-ink">
             <span className="font-chrome rounded-full bg-soft-kraft px-2 py-0.5 text-[11px] font-medium text-foreground">
-              {state.graph.nodes.length} {state.graph.nodes.length === 1 ? "step" : "steps"}
+              {state.graph.nodes.length} {russianPlural(state.graph.nodes.length, "шаг", "шага", "шагов")}
             </span>
             <span>·</span>
-            <span>{state.graph.edges.length} {state.graph.edges.length === 1 ? "connection" : "connections"}</span>
+            <span>{state.graph.edges.length} {russianPlural(state.graph.edges.length, "связь", "связи", "связей")}</span>
           </div>
           <div className="flex items-center gap-1 rounded-xl border border-border/80 bg-pure-snow p-1 shadow-2xs">
             <button

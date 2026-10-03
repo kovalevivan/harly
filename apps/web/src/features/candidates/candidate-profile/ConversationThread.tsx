@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import Link from "next/link";
 import { Mail, Paperclip } from "lucide-react";
 
@@ -40,7 +41,7 @@ export function ConversationThread({
             <p className="truncate text-sm font-semibold">{first.subject}</p>
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
               {candidateName} · {conversation.length}{" "}
-              {conversation.length === 1 ? "message" : "messages"} ·{" "}
+              {russianPlural(conversation.length, "сообщение", "сообщения", "сообщений")} ·{" "}
               <RelativeTime value={last.createdAt} />
             </p>
           </div>

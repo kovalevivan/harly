@@ -4,6 +4,8 @@ import { JobStatusBadge } from "@/components/ui/StatusBadge";
 import { PipelineSpine } from "@/components/ui/PipelineSpine";
 import { GreetingHeader, buildSubline } from "@/features/dashboard/GreetingHeader";
 import { localizeSystemText, localizeStageName } from "./localize-system-text";
+import { formatRelative, formatShort } from "./date";
+import { russianPlural } from "./russian-plural";
 import { formatDistanceToNow } from "./date-format";
 
 describe("Russian first render", () => {
@@ -32,6 +34,19 @@ describe("Russian first render", () => {
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
     expect(formatDistanceToNow(yesterday, { addSuffix: true })).toBe("1 день назад");
   });
+
+  it("formats directory dates on the server in Russian", () => {
+    expect(formatRelative(new Date(Date.now() - 2 * 60 * 60 * 1000))).toBe("2 часа назад");
+    expect(formatRelative(new Date(Date.now() + 5 * 60 * 1000))).toBe("через 5 минут");
+    expect(formatShort(new Date(new Date().getFullYear(), 9, 3))).toContain("окт.");
+  });
+
+  it.each([[0, "кандидатов"], [1, "кандидат"], [2, "кандидата"], [11, "кандидатов"],
+    [21, "кандидат"], [22, "кандидата"], [25, "кандидатов"], [101, "кандидат"]])(
+    "uses the correct Russian count form for %s", (count, expected) => {
+      expect(russianPlural(Number(count), "кандидат", "кандидата", "кандидатов")).toBe(expected);
+    },
+  );
 
   it("keeps stored stage values usable while displaying Russian copy", () => {
     const html = renderToStaticMarkup(<PipelineSpine current="Screening" showLabel />);

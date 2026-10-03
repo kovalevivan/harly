@@ -374,7 +374,7 @@ export function JoinTemplate({
                     {loc}
                   </span>
                   <span className="shrink-0 text-sm text-zinc-500 dark:text-zinc-400">
-                    {count} {"открытых "}{count === 1 ? "role" : "roles"}
+                    {"Открытых вакансий: "}{count}
                   </span>
                 </div>
               ))}

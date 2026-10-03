@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
+import { russianPlural } from "@/lib/russian-plural";
 import { useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -195,7 +197,7 @@ function ApplicationDisclosure({
       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 pl-[2.4rem]">
         {application.currentStageName ? (
           <ApplicationMetaItem icon={Layers}>
-            {application.currentStageName}
+            {localizeStageName(application.currentStageName ?? "")}
           </ApplicationMetaItem>
         ) : null}
         <ApplicationMetaItem icon={Calendar}>
@@ -320,7 +322,7 @@ export function CandidateDetailsPanel({
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <SectionLabel>{"Резюме"}</SectionLabel>
               <p className="text-xs text-muted-foreground">
-                {files.length} {files.length === 1 ? "file" : "files"}
+                {files.length} {russianPlural(files.length, "файл", "файла", "файлов")}
               </p>
             </div>
             <div className="mt-4">

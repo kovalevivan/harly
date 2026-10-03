@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import {localizeSystemText, localizeStageName } from "@/lib/localize-system-text";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -586,7 +586,7 @@ function ToolResultCard({
           {stages.map((s, i) => (
             <div key={s.stage} className="flex items-center gap-2">
               <span className="w-20 shrink-0 truncate text-[11px] text-muted-foreground">
-                {s.stage}
+                {localizeStageName(s.stage ?? "")}
               </span>
               <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                 <div
@@ -750,7 +750,7 @@ function ToolResultCard({
                 {c.name}
               </span>
               <span className="truncate text-[11px] text-muted-foreground">
-                {c.job} · {c.stage}
+                {c.job} · {localizeStageName(c.stage ?? "")}
               </span>
             </div>
             <span
@@ -848,7 +848,7 @@ function ToolResultCard({
                     STATUS_TONE[a.status] ?? "text-muted-foreground",
                   )}
                 >
-                  {a.stage ?? a.status}
+                  {localizeStageName(a.stage ?? "") ?? a.status}
                 </span>
               </div>
             ))}
@@ -1137,7 +1137,7 @@ function ToolResultCard({
               </span>
               <span className="truncate text-[11px] text-muted-foreground">
                 {s.author ?? ""}
-                {s.stage ? ` · ${s.stage}` : ""}
+                {s.stage ? ` · ${localizeStageName(s.stage ?? "")}` : ""}
               </span>
             </div>
             {s.comment && (
@@ -1174,7 +1174,7 @@ function ToolResultCard({
                 <span className="truncate text-[11px] text-muted-foreground">
                   {of.currency ?? ""} {of.salaryAmount.toLocaleString("ru-RU")}
                   {of.salaryPeriod
-                    ? `/${of.salaryPeriod === "annual" ? "yr" : "mo"}`
+                    ? `/${of.salaryPeriod === "annual" ? "год" : "мес."}`
                     : ""}
                 </span>
               )}

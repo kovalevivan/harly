@@ -1,3 +1,4 @@
+import { localizeStageName } from "@/lib/localize-system-text";
 import Link from "next/link";
 import type { Route } from "next";
 import { ArrowRight, ClipboardCheck } from "lucide-react";
@@ -48,7 +49,7 @@ export function CandidatesNeedingReview({
                     <p className="truncate text-xs text-muted-foreground" title={c.job}>{c.job}</p>
                   </div>
                   <Badge variant="secondary" className="hidden shrink-0 sm:inline-flex">
-                    {c.stage}
+                    {localizeStageName(c.stage ?? "")}
                   </Badge>
                   <div className="hidden w-36 shrink-0 text-right md:block">
                     <p className="truncate text-sm font-medium">{c.action}</p>

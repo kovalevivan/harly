@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { Minus, ThumbsDown, ThumbsUp } from "lucide-react";
@@ -143,7 +144,7 @@ export function EvaluationDrawer({
       open={open}
       onOpenChange={setOpen}
       trigger={trigger}
-      title={`Добавить оценку${stageName ? ` · ${stageName}` : ""}`}
+      title={`Добавить оценку${stageName ? ` · ${localizeStageName(stageName ?? "")}` : ""}`}
       description={"Оцените этого кандидата и оставьте отзыв для команды."}
       footer={
         <>

@@ -155,7 +155,7 @@ export function ApplicationSection({
       >
         <VisibilityField
           name="applicationResumeVisibility"
-          label={"Резюме / Резюме"}
+          label={"Резюме"}
           value={applicationConfig.sections.profile.resume}
           description={"Кандидаты могут загружать PDF, DOC или DOCX."}
         />

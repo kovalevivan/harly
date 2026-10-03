@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/ui/UserAvatar";
@@ -33,7 +34,7 @@ export function InboxConversationList({
         <div className="min-w-0">
           <h2 className="truncate text-sm font-semibold">{person?.name ?? "Выберите человека"}</h2>
           <p className="truncate text-xs text-muted-foreground">
-            {person ? `${threads.length} ${threads.length === 1 ? "conversation" : "conversations"}` : "Выберите кого-нибудь из списка"}
+            {person ? `${threads.length} ${russianPlural(threads.length, "переписка", "переписки", "переписок")}` : "Выберите кого-нибудь из списка"}
           </p>
         </div>
         {person?.email && onNewThread ? (

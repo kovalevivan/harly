@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, ChevronUp, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -41,7 +42,7 @@ export function ValidationPanel({
 
   const uniqueNodeIds = new Set(issues.map((i) => i.nodeId));
   const stepCount = uniqueNodeIds.size;
-  const issuesText = `${issues.length} ${issues.length === 1 ? "issue" : "issues"} в ${stepCount} ${stepCount === 1 ? "step" : "steps"}`;
+  const issuesText = `${issues.length} ${russianPlural(issues.length, "ошибка", "ошибки", "ошибок")} в ${stepCount} ${russianPlural(stepCount, "шаг", "шага", "шагов")}`;
 
   // Non-floating presentation (e.g. mobile steps drawer)
   if (!floating) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Link2, MapPin, Phone, Video } from "lucide-react";
@@ -296,7 +297,7 @@ export function ScheduleDialog({
                           >
                             {application.jobTitle}
                             {application.currentStageName
-                              ? ` · ${application.currentStageName}`
+                              ? ` · ${localizeStageName(application.currentStageName ?? "")}`
                               : ""}
                           </SelectItem>
                         ))}

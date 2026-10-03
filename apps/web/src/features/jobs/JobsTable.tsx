@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -182,7 +183,7 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
           <span className="font-semibold tabular-nums text-foreground">
             {filtered.length}
           </span>{" "}
-          {filtered.length === 1 ? "role" : "roles"}
+          {russianPlural(filtered.length, "вакансия", "вакансии", "вакансий")}
         </p>
       </div>
 
@@ -215,14 +216,14 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
                 in the pipeline (details in the tooltip, not a third text line). */}
             <div
               className="hidden min-w-0 sm:block"
-              title={`${job.applicants} ${job.applicants === 1 ? "candidate" : "candidates"}, ${job.activeApplicants} активны`}
+              title={`${job.applicants} ${russianPlural(job.applicants, "кандидат", "кандидата", "кандидатов")}, ${job.activeApplicants} активны`}
             >
               <div className="flex items-baseline justify-between gap-2">
                 <span className="truncate text-xs text-muted-foreground">
                   <span className="text-sm font-semibold tabular-nums text-foreground">
                     {job.applicants}
                   </span>{" "}
-                  {job.applicants === 1 ? "candidate" : "candidates"}
+                  {russianPlural(job.applicants, "кандидат", "кандидата", "кандидатов")}
                 </span>
                 {job.newApplicants > 0 ? (
                   <span className="shrink-0 text-[0.65rem] font-medium text-primary">

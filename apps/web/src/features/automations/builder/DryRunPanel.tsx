@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { useMemo, useState, useTransition } from "react";
 import {
@@ -480,7 +481,7 @@ export function DryRunPanel({
             <h3 className="text-sm font-semibold text-foreground">
               {"Результаты моделирования "}</h3>
             <span className="text-xs text-soft-ink">
-              {result.steps.length} {result.steps.length === 1 ? "step" : "steps"}{" "}
+              {result.steps.length} {russianPlural(result.steps.length, "шаг", "шага", "шагов")}{" "}
               {"проверено "}</span>
           </div>
 

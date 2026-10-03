@@ -89,13 +89,13 @@ const STATUS_ACTIONS: Array<{
     status: "hired",
     label: "Отметить как нанятого",
     icon: CheckCircle2,
-    confirm: "Mark {name}'s application for {job} as hired?",
+    confirm: "Отметить кандидата {name} как нанятого на вакансию «{job}»?",
   },
   {
     status: "active",
     label: "Повторно активировать",
     icon: RotateCcw,
-    confirm: "Reactivate {name}'s application for {job}?",
+    confirm: "Возобновить отклик {name} на вакансию «{job}»?",
   },
 ];
 

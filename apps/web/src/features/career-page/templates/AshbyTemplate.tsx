@@ -1,3 +1,4 @@
+import { russianPlural } from "@/lib/russian-plural";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -249,7 +250,7 @@ export function AshbyTemplate({
           {/* Job list */}
           <main>
             <div className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-              {shown.length} {"открытых "}{shown.length === 1 ? "role" : "roles"}
+              {"Открытых вакансий: "}{shown.length}
             </div>
 
             {groups.length === 0 ? (
@@ -269,7 +270,7 @@ export function AshbyTemplate({
                       </h2>
                       <span className="text-xs tabular-nums text-zinc-400">
                         {deptJobs.length}{" "}
-                        {deptJobs.length === 1 ? "role" : "roles"}
+                        {russianPlural(deptJobs.length, "вакансия", "вакансии", "вакансий")}
                       </span>
                     </div>
                     <div className="mt-3 divide-y divide-zinc-100 rounded-xl border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">

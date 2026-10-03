@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ArrowRight, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -141,8 +142,8 @@ function InspectorEmptyState({
         <p className="font-display text-sm font-semibold text-foreground">
           {"Обзор рабочего процесса "}</p>
         <p className="mt-0.5 text-[11px] text-soft-ink">
-          {nodes.length} {nodes.length === 1 ? "step" : "steps"} · {edges.length}{" "}
-          {edges.length === 1 ? "connection" : "connections"}
+          {nodes.length} {russianPlural(nodes.length, "шаг", "шага", "шагов")} · {edges.length}{" "}
+          {russianPlural(edges.length, "связь", "связи", "связей")}
         </p>
       </div>
 

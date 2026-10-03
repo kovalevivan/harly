@@ -46,7 +46,7 @@ export function ReviewSection({
             </p>
             <p className="mt-0.5 text-sm text-muted-foreground">
               {WORKPLACE_LABEL[workplace] ?? workplace}
-              {job ? " · Готов сохранить" : ` · Готов к ${submitLabel.toLowerCase()}`}
+              {job ? " · Готова к сохранению" : ` · Действие: ${submitLabel}`}
             </p>
           </div>
         </div>
@@ -71,9 +71,9 @@ export function ReviewSection({
           <span className="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <Rocket className="size-5" />
           </span>
-          <p className="text-sm font-medium">{"Найм команды, сопоставление с искусственным интеллектом и разблокировка предварительного просмотра в реальном времени после публикации"}</p>
+          <p className="text-sm font-medium">{"Команда найма, подбор с помощью ИИ и просмотр публикации"}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            {"Сначала сохраните это задание. Вы сможете назначить команду по найму, ранжировать свой пул кандидатов и сразу после этого просмотреть общедоступный список. "}</p>
+            {"Сначала сохраните вакансию. Затем можно назначить команду найма, оценить кандидатов и посмотреть страницу вакансии. "}</p>
         </div>
       )}
     </div>

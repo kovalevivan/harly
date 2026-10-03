@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
+import { russianPlural } from "@/lib/russian-plural";
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -524,6 +526,7 @@ export function CandidatesTable({
           value={stage}
           onChange={(value) => { setStage(value); navigateWithFilter("stage", value); }}
           options={stages}
+          labelMap={Object.fromEntries(stages.map((name) => [name, localizeStageName(name)]))}
         />
         <FilterPill
           label={"Статус"}
@@ -562,7 +565,7 @@ export function CandidatesTable({
             recent: "Сначала новые",
             oldest: "Самый старый",
             modified: "Последнее изменение",
-            name: "Name A–Z",
+            name: "По имени А–Я",
           }}
           allValue="recent"
         />
@@ -579,7 +582,7 @@ export function CandidatesTable({
           <span className="font-semibold tabular-nums text-foreground">
             {pageInfo?.total ?? filtered.length}
           </span>{" "}
-          {filtered.length === 1 ? "candidate" : "candidates"}
+          {russianPlural(pageInfo?.total ?? filtered.length, "кандидат", "кандидата", "кандидатов")}
         </p>
       </div>
 
@@ -780,7 +783,7 @@ export function CandidatesTable({
                     {row.stage ? (
                       <>
                         <p className="text-xs font-medium text-foreground">
-                          {row.stage}
+                          {localizeStageName(row.stage ?? "")}
                         </p>
                         <PipelineSpine
                           current={row.stage}
