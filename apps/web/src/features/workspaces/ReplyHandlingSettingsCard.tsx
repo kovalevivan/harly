@@ -457,7 +457,7 @@ function SharedMailboxFields({
           label={"Используйте TLS"}
           checked={form.imapTls}
           onCheckedChange={(value) => set("imapTls", value)}
-          ariaLabel="Use IMAP TLS"
+          ariaLabel={"Используйте IMAP TLS"}
         />
       </div>
 
@@ -516,7 +516,7 @@ function SharedMailboxFields({
           label={"Используйте TLS"}
           checked={form.smtpTls}
           onCheckedChange={(value) => set("smtpTls", value)}
-          ariaLabel="Use SMTP TLS"
+          ariaLabel={"Используйте SMTP TLS"}
         />
       </div>
 

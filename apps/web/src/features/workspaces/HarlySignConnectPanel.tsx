@@ -58,7 +58,7 @@ export function HarlySignConnectPanel({
         tileClassName={tileClassName}
         name="Harly Sign"
         description={description}
-        statusLabel="Connected"
+        statusLabel={"Подключено"}
         statusTone="on"
         action={
           <Button variant="outline" asChild>

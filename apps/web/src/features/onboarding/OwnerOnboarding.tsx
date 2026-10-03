@@ -248,7 +248,7 @@ export function OwnerOnboarding({
 
   return (
     <OnboardingShell
-      railTitle="Get set up"
+      railTitle={"Настроить"}
       railFootnote="Takes about 2 minutes. You can change everything later in Settings."
       steps={STEPS}
       current={step}

@@ -1,4 +1,5 @@
 "use client";
+import { localizeStageName } from "@/lib/localize-system-text";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -216,8 +217,8 @@ export function JobCandidateRanking({
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
                         {application.candidateHeadline ??
-                          stageNameById.get(application.currentStageId) ??
-                          application.candidateEmail}
+                          localizeStageName(stageNameById.get(application.currentStageId) ??
+                          application.candidateEmail)}
                       </span>
                     </span>
                   </Link>

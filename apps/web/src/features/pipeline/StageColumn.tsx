@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -81,7 +81,7 @@ export function StageColumn({
               aria-hidden
             />
             <h2 className="truncate text-[13px] font-medium text-near-ink">
-              {localizeSystemText(stage.name)}
+              {localizeStageName(stage.name)}
             </h2>
             <span className="font-chrome tabular text-[12px] text-quiet-mist">
               {applications.length}
@@ -95,7 +95,7 @@ export function StageColumn({
           */}
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label={`${stage.name} настройки`}
+              aria-label={`Настройки этапа: ${localizeStageName(stage.name)}`}
               disabled={disabled}
               className="flex size-6 shrink-0 items-center justify-center rounded-md text-quiet-mist opacity-0 transition-opacity hover:text-near-ink focus-visible:opacity-100 focus-visible:outline-none group-hover/board:opacity-100 data-[state=open]:opacity-100"
             >

@@ -261,7 +261,7 @@ export function InboxThreadReader({
                 defaultSubject={replySubject}
                 defaultBody={suggestedReply ?? ""}
                 placeholder={`Ответить на ${participantName}…`}
-                sendLabel="Send reply"
+                sendLabel={"Отправить ответ"}
                 disabled={isPending}
                 onCancel={() => setComposerOpen(false)}
                 onSend={async ({ subject, text, html, attachments, idempotencyKey }) => {

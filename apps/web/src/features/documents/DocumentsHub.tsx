@@ -641,7 +641,7 @@ export function DocumentsHub({
                       {document.ownerId ? (
                         <>
                           <UserAvatar
-                            name={document.ownerName ?? "Рабочая область"}
+                            name={document.ownerName ?? "Workspace"}
                             src={document.ownerImage}
                             size="sm"
                             className="size-5 text-[9px]"

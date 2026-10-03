@@ -1,4 +1,4 @@
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeStageName } from "@/lib/localize-system-text";
 import { GitBranch } from "lucide-react";
 
 import type { PipelineOverview } from "@/features/dashboard/widgets";
@@ -71,7 +71,7 @@ export function PipelineOverviewCard({
                       style={{ backgroundColor: LANE_COLORS[i % LANE_COLORS.length] }}
                     />
                     <span className="truncate text-xs text-muted-foreground">
-                      {localizeSystemText(stage.name)}
+                      {localizeStageName(stage.name)}
                     </span>
                   </div>
                   <p className="mt-1 text-xl font-semibold tabular-nums">

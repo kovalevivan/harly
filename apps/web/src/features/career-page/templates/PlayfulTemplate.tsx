@@ -204,7 +204,7 @@ export function PlayfulTemplate({
               return (
                 <div
                   key={value.title}
-                  className={`группа ${reveal}`}
+                  className={`group ${reveal}`}
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div

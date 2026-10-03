@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeSystemText, localizeStageName } from "@/lib/localize-system-text";
 import { useMemo, useState } from "react";
 import {
   DndContext,
@@ -585,7 +585,7 @@ export function PipelineBoard({
                 key={stage.id}
                 onClick={() => void handleBulkMove(stage.id)}
               >
-                {localizeSystemText(stage.name)}
+                {localizeStageName(stage.name)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -654,7 +654,7 @@ export function PipelineBoard({
                     className="size-2 shrink-0 rounded-full"
                     style={{ backgroundColor: stage.color ?? "#a1a1aa" }}
                   />
-                  {localizeSystemText(stage.name)}
+                  {localizeStageName(stage.name)}
                   <span className="text-muted-foreground">
                     ({filteredColumns.get(stage.id)?.length ?? 0})
                   </span>

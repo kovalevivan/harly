@@ -55,7 +55,7 @@ export function PreviewFrame({
           style={{
             width: designWidth,
             transform: `scale(${scale})`,
-            transformOrigin: "вверху слева",
+            transformOrigin: "top left",
             background,
           }}
         >

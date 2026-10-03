@@ -28,7 +28,7 @@ export function InboxNewThreadSheet({
           <MailComposer
             to={person.email}
             placeholder={`Напишите на ${person.name}…`}
-            sendLabel="Send email"
+            sendLabel={"Отправить письмо"}
             onCancel={() => onOpenChange(false)}
             onSend={async ({ subject, text, html, attachments, idempotencyKey }) => {
               const result = await createMailboxThreadAction({

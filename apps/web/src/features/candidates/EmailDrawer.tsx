@@ -108,7 +108,7 @@ export function EmailDrawer({
             placeholder={"Напишите свое сообщение…"}
             templates={composerTemplates}
             aiConfigured={aiConfigured}
-            sendLabel="Send email"
+            sendLabel={"Отправить письмо"}
             onCancel={() => setOpen(false)}
             onDraftAI={async () => {
               const result = await generateEmailDraftAction({ candidateId, threadId, type: selectedDraftType });

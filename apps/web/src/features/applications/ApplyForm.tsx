@@ -1864,7 +1864,7 @@ export function ApplyForm({
                       className="flex size-12 items-center justify-center rounded-full transition-transform duration-150 group-hover:-translate-y-0.5 motion-reduce:transform-none"
                       style={{
                         backgroundColor:
-                          "color-mix(в srgb, var(--board-primary) 10%, прозрачный)",
+                          "color-mix(in srgb, var(--board-primary) 10%, transparent)",
                         color: "var(--board-primary)",
                       }}
                       aria-hidden
@@ -1894,7 +1894,7 @@ export function ApplyForm({
                       className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-lg"
                       style={{
                         backgroundColor:
-                          "color-mix(в srgb, var(--board-primary) 12%, прозрачный)",
+                          "color-mix(in srgb, var(--board-primary) 12%, transparent)",
                         color: "var(--board-primary)",
                       }}
                       aria-hidden
@@ -1913,7 +1913,7 @@ export function ApplyForm({
                     className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-transform duration-150 active:scale-[0.98]"
                     style={{
                       borderColor:
-                        "color-mix(в srgb, var(--board-primary) 40%, прозрачный)",
+                        "color-mix(in srgb, var(--board-primary) 40%, transparent)",
                       color: "var(--board-primary)",
                     }}
                   >
@@ -1949,7 +1949,7 @@ export function ApplyForm({
                       className="inline-flex h-10 items-center gap-2 rounded-lg border bg-white px-4 text-sm font-semibold transition-transform duration-150 group-active:scale-[0.98] dark:bg-zinc-900"
                       style={{
                         borderColor:
-                          "color-mix(в srgb, var(--board-primary) 40%, прозрачный)",
+                          "color-mix(in srgb, var(--board-primary) 40%, transparent)",
                         color: "var(--board-primary)",
                       }}
                     >
@@ -1963,7 +1963,7 @@ export function ApplyForm({
                 )}
                 {!resumeFile ? (
                   <p className="mt-2 text-center text-xs text-zinc-400 dark:text-zinc-500 sm:text-left">
-                    .pdf, .doc, .docx · up to 10MB
+                    .pdf, .doc, .docx · до 10 МБ
                   </p>
                 ) : null}
                 {resumeStatus}
@@ -2636,7 +2636,7 @@ export function ApplyForm({
                     className="mb-3 flex size-11 items-center justify-center rounded-full transition-transform duration-150 group-hover:-translate-y-0.5 motion-reduce:transform-none"
                     style={{
                       backgroundColor:
-                        "color-mix(в srgb, var(--board-primary) 14%, прозрачный)",
+                        "color-mix(in srgb, var(--board-primary) 14%, transparent)",
                       color: "var(--board-primary)",
                     }}
                     aria-hidden
@@ -2653,7 +2653,7 @@ export function ApplyForm({
                     {isDragging ? "Отпустите для загрузки" : "или перетащите сюда"}
                   </p>
                   <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-                    .pdf, .doc, .docx · up to 10MB
+                    .pdf, .doc, .docx · до 10 МБ
                   </p>
                 </label>
               )}

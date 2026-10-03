@@ -81,7 +81,7 @@ export function BulkEmailDrawer({
         open={open}
         onOpenChange={onOpenChange}
         title={`Электронная почта ${candidateIds.length} кандидата${candidateIds.length === 1 ? "" : "s"}`}
-        description="Variables like {{candidate_first_name}} are filled in per candidate when sending."
+        description="Переменные вида {{candidate_first_name}} подставляются для каждого кандидата при отправке."
         footer={
           <>
             <Button variant="outline" disabled={isPending} onClick={() => onOpenChange(false)}>
@@ -130,7 +130,7 @@ export function BulkEmailDrawer({
               id="bulk-subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="An update on {{job_title}}"
+              placeholder="Новости по вакансии {{job_title}}"
             />
           </div>
 
@@ -144,7 +144,7 @@ export function BulkEmailDrawer({
               id="bulk-body"
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              placeholder={"Hi {{candidate_first_name}},\n\n…"}
+              placeholder={"Здравствуйте, {{candidate_first_name}},\n\n…"}
               className="min-h-44"
             />
             <div className="flex flex-wrap gap-1.5 pt-1">

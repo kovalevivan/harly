@@ -78,7 +78,7 @@ export function SignupForm({ googleEnabled = false }: { googleEnabled?: boolean 
   }
 
   return (
-    <div className={`auth-stagger пробел-y-7 ${leaving ? "auth-leaving" : ""}`}>
+    <div className={`auth-stagger space-y-7 ${leaving ? "auth-leaving" : ""}`}>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <Field
           id="name"

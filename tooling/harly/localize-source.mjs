@@ -13,7 +13,7 @@ const catalogue = {
 };
 const pending = new Set();
 const changes = [];
-const copyKeys = /^(label|title|description|hint|placeholder|emptyText|text|message|subject|error|subtitle|heading|helpText|loadingText|tooltip|blurb|summary|ctaLabel|aria-label|alt|name)$/;
+const copyKeys = /^(label|title|description|hint|placeholder|emptyText|text|message|subject|error|subtitle|heading|helpText|loadingText|tooltip|blurb|summary|eyebrow|caption|ctaLabel|aria-label|alt|name|.*(?:Label|Title|Description|Text|Message|Placeholder|Caption|Hint))$/;
 const technicalKeys = /^(className|class|style|href|src|id|key|value|type|name|role|variant|size|status|method|mode|action|field|icon|event|category|group|color|background|border|font|fontFamily|boxShadow|rootMargin|margin|padding|display|position|cursor|pointerEvents|textAlign|overflow|width|height|stroke|fill|htmlFor|content|prompt|system|accept|rel|target|autoComplete|data-.*)$/;
 function normalize(value) {
   return value.replace(/&apos;|&#39;/g, "'").replace(/&quot;|&#34;/g, '"')
@@ -61,7 +61,7 @@ function allowed(node, source) {
     if (ts.isJsxExpression(parent)) return true;
     if (ts.isReturnStatement(parent)) return source.fileName.endsWith("tsx") || Boolean(catalogue[normalize(node.text ?? "")]);
     if (ts.isVariableDeclaration(parent)) {
-      if (/class|style|url|href|path|route|slug|key|id|prompt|system|sql|query|token|endpoint|origin|^group$|^category$/i.test(parent.name.getText(source))) return false;
+      if (/class|style|url|href|path|route|slug|key|id|prompt|system|sql|query|token|endpoint|origin|^group$|^category$|^CANONICAL_STAGES$/i.test(parent.name.getText(source))) return false;
       return source.fileName.endsWith("tsx") || Boolean(catalogue[normalize(node.text ?? "")]);
     }
     if (ts.isStatement(parent)) return Boolean(catalogue[normalize(node.text ?? "")]);

@@ -107,7 +107,7 @@ export function RecruiterOnboarding({
         <h2 className="mt-5 font-display text-2xl font-semibold tracking-tight text-foreground">
           {"Ты в "}</h2>
         <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-          {"Добро пожаловать в "}{workspaceName}. Your pipeline, candidates and tasks are ready.
+          {"Добро пожаловать в "}{workspaceName}. Воронка найма, кандидаты и задачи готовы к работе.
         </p>
         <Button
           className="mt-7 w-full"
@@ -126,7 +126,7 @@ export function RecruiterOnboarding({
 
   return (
     <OnboardingShell
-      railTitle="Welcome"
+      railTitle={"Добро пожаловать"}
       railFootnote="Less than a minute. You can update these in your account anytime."
       steps={STEPS}
       current={step}
@@ -149,7 +149,7 @@ export function RecruiterOnboarding({
         <StepStagger>
           <StepField>
             <StepHeading
-              eyebrow={`Hi ${userName}`}
+              eyebrow={`Здравствуйте, ${userName}`}
               title={`Добро пожаловать в ${workspaceName}`}
               subtitle={"Пара быстрых действий, и вы нанимаете. Во-первых, как товарищи по команде должны вас знать?"}
             />

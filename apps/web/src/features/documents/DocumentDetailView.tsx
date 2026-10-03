@@ -652,7 +652,7 @@ export function DocumentDetailView({
                 {document.ownerId ? (
                   <>
                     <UserAvatar
-                      name={document.ownerName ?? "Рабочая область"}
+                      name={document.ownerName ?? "Workspace"}
                       src={document.ownerImage}
                       size="sm"
                     />
@@ -988,7 +988,7 @@ export function DocumentDetailView({
                   <LockKeyhole className="size-4" />
                   {"Аннулировать запрос "}</Button>
               ) : canSendForSignature ? (
-                <div className={data.esign.connected && data.remoteSignEnabled ? "сетка Grid-cols-2 разрыв-2" : "разрыв сетки-2"}>
+                <div className={data.esign.connected && data.remoteSignEnabled ? "grid grid-cols-2 gap-2" : "grid gap-2"}>
                   {data.remoteSignEnabled ? (
                     <Button
                       size="sm"

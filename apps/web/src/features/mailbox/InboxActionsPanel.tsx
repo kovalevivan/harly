@@ -91,7 +91,7 @@ export function InboxActionsPanel({
       <div className="space-y-5 px-5 py-5">
         <section className="rounded-lg border border-border/70 bg-background p-3.5">
           <div className="flex items-start gap-3">
-            <UserAvatar name={thread.candidateName ?? thread.participantEmail ?? "Неизвестный отправитель"} src={thread.candidateAvatarUrl} size="md" className="shrink-0" />
+            <UserAvatar name={thread.candidateName ?? thread.participantEmail ?? "Unknown sender"} src={thread.candidateAvatarUrl} size="md" className="shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">{thread.candidateName ?? "Неизвестный отправитель"}</p>
               <p className="mt-0.5 truncate text-xs text-muted-foreground">{thread.participantEmail ?? "Нет адреса для ответа"}</p>

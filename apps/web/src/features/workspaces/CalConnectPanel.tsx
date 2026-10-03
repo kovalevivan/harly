@@ -329,7 +329,7 @@ function CalConnectForm({
               className="underline underline-offset-2 hover:text-foreground"
             >
               {"Ключи API "}</a>
-            . Needs booking + webhook scopes.
+            . Нужны права на запись и вебхуки.
           </p>
         </div>
 

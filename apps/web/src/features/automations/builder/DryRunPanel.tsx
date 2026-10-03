@@ -322,7 +322,7 @@ export function DryRunPanel({
                 kind="candidates"
                 value={candidateId}
                 placeholder={"Последнее обновление"}
-                emptyLabel="Most recently updated"
+                emptyLabel={"Последнее обновление"}
                 initialItems={candidates.map((candidate) => ({
                   id: candidate.id,
                   label: candidate.name,

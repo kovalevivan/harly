@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeStageName } from "@/lib/localize-system-text";
 /**
  * Reports chart primitives , hand-built, dependency-free SVG.
  *
@@ -305,7 +305,7 @@ export function FunnelChart({ stages }: { stages: FunnelDatum[] }) {
           transition={{ duration: 0.25, ease: EASE_OUT, delay: i * 0.04 }}
           className="grid grid-cols-[minmax(90px,120px)_1fr_auto] items-center gap-3 sm:gap-4"
         >
-          <span className="truncate text-sm font-medium text-near-ink">{localizeSystemText(stage.name)}</span>
+          <span className="truncate text-sm font-medium text-near-ink">{localizeStageName(stage.name)}</span>
           <span className="relative h-7 overflow-hidden rounded-lg bg-warm-paper">
             <span
               className="absolute inset-y-0 left-0 rounded-lg transition-[width] duration-300"

@@ -164,7 +164,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
       {suggestions.length > 0 ? (
         <div
           className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 space-y-2.5"
-          style={{ animation: "FadeUp 200 мс кубического Безье (0,23,1,0,32,1) оба" }}
+          style={{ animation: "fadeUp 200ms cubic-bezier(0.23,1,0.32,1) both" }}
         >
           <div className="flex items-center justify-between gap-2">
             <p className="text-[12px] font-semibold uppercase tracking-wide text-primary/70">
@@ -183,7 +183,7 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
                 type="button"
                 onClick={() => addSuggestion(s)}
                 style={{
-                  animation: `FadeUp 180 мс кубического Безье (0,23,1,0,32,1) ${i * 35}мс оба`,
+                  animation: `fadeUp 180ms cubic-bezier(0.23,1,0.32,1) ${i * 35}ms both`,
                 }}
                 className={cn(
                   "group flex w-full items-start gap-2.5 rounded-lg border bg-background px-3 py-2.5 text-left",
@@ -321,14 +321,14 @@ export function JobQuestionBuilder({ initialQuestions, aiContext }: JobQuestionB
             <div className="grid gap-3 md:grid-cols-2">
               <FieldBox label={"Принять этикетку"}>
                 <Input
-                  value={question.agreeLabel ?? "Я согласен"}
+                  value={question.agreeLabel ?? "I agree"}
                   onChange={(event) => updateQuestion(index, { agreeLabel: event.target.value })}
                   className={fieldBoxControlClassName}
                 />
               </FieldBox>
               <FieldBox label={"Отклонить ярлык"}>
                 <Input
-                  value={question.disagreeLabel ?? "Я не согласен"}
+                  value={question.disagreeLabel ?? "I do not agree"}
                   onChange={(event) => updateQuestion(index, { disagreeLabel: event.target.value })}
                   className={fieldBoxControlClassName}
                 />

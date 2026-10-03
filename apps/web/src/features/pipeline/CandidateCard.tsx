@@ -81,7 +81,7 @@ function AiFitNote({
         </span>
       </TooltipTrigger>
       <TooltipContent>
-        {source === "rules" ? "Алгоритм Харли" : "Харли ИИ"} {"оценивает это как "}{score}/100 fit. A suggestion, not a decision.
+        {source === "rules" ? "Алгоритм Харли" : "Харли ИИ"} {"оценивает это как "}{score}/100 — соответствие вакансии. Это рекомендация, а не решение.
       </TooltipContent>
     </Tooltip>
   );

@@ -35,7 +35,7 @@ export default async function NewJobPage({ searchParams }: { searchParams: Promi
   return (
     <JobForm
       action={createJobAction}
-      submitLabel="Publish"
+      submitLabel={"Опубликовать"}
       departments={departments}
       previewWorkspace={careerPageData?.workspace ?? null}
       previewConfig={careerPageData?.config ?? null}

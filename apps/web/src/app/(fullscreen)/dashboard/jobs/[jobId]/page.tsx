@@ -60,13 +60,13 @@ export default async function DashboardJobPage({
     <JobForm
       action={updateJobAction}
       job={job}
-      submitLabel="Save changes"
+      submitLabel={"Сохранить изменения"}
       departments={departments}
       hiringTeam={hiringTeam}
       workspaceMembers={workspaceMembers}
       aiConfigured={aiStatus.enabled && aiStatus.hasApiKey}
       candidatePoolCount={candidatePoolCount}
-      eyebrow="Job detail"
+      eyebrow={"Детали работы"}
       statusBadge={<JobStatusBadge status={job.status} />}
       previewWorkspace={careerPageData?.workspace ?? null}
       previewConfig={careerPageData?.config ?? null}

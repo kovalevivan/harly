@@ -310,7 +310,7 @@ function ThinkingShimmer({ label = "Thinking" }: { label?: string }) {
       className="bg-[length:200%_100%] bg-clip-text text-[13px] font-medium text-transparent animate-shimmer"
       style={{
         backgroundImage:
-          "линейный градиент (90 градусов, var (--muted-foreground) 0%, var (--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%, var(--muted-foreground) 100%)",
+          "linear-gradient(90deg, var(--muted-foreground) 0%, var(--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%, var(--muted-foreground) 100%)",
       }}
     >
       {label}…
@@ -345,7 +345,7 @@ function ToolStatus({
           className="bg-[length:200%_100%] bg-clip-text text-[12px] font-medium text-transparent animate-shimmer"
           style={{
             backgroundImage:
-              "линейный градиент (90 градусов, var (--muted-foreground) 0%, var (--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%, var(--muted-foreground) 100%)",
+              "linear-gradient(90deg, var(--muted-foreground) 0%, var(--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%, var(--muted-foreground) 100%)",
           }}
         >
           {label}…
@@ -1518,12 +1518,12 @@ function getWriteActionPreview(
       const count = taskIds.length || (optionalText(input.taskId) ? 1 : 0);
       const changes = [
         input.status
-          ? `Status: ${String(input.status).replace(/_/g, " ")}`
+          ? `Статус: ${String(input.status).replace(/_/g, " ")}`
           : null,
         optionalText(input.title)
-          ? `Title: ${optionalText(input.title)}`
+          ? `Название: ${optionalText(input.title)}`
           : null,
-        input.priority ? `Priority: ${String(input.priority)}` : null,
+        input.priority ? `Приоритет: ${String(input.priority)}` : null,
         input.clearDueDate === true
           ? "Срок сдачи: удалить"
           : formatDateTime(input.dueDate)
@@ -1647,7 +1647,7 @@ function getWriteActionPreview(
         title: "Оценить кандидатов",
         details: [
           ...detail("Роль", optionalText(input.jobTitle)),
-          { label: "Область применения", value: "All currently unscored applicants" },
+          { label: "Область применения", value: "Все отклики без оценки ИИ" },
           { label: "Данные отправлены", value: "Resumes and application answers" },
         ],
       };
@@ -1830,7 +1830,7 @@ function WriteConfirmCard({
           disabled={
             pending || verifying || Boolean(serverPreview && !serverPreview.ok)
           }
-          aria-label={`Confirm: ${preview.title}`}
+          aria-label={`Подтвердить: ${preview.title}`}
         >
           {pending ? "Работаю…" : "Подтвердить"}
         </Button>
@@ -1840,7 +1840,7 @@ function WriteConfirmCard({
           className="h-7 px-3 text-xs"
           onClick={onCancel}
           disabled={pending}
-          aria-label={`Cancel: ${preview.title}`}
+          aria-label={`Отменить: ${preview.title}`}
         >
           {"Отмена "}</Button>
       </div>
@@ -1899,7 +1899,7 @@ function AutomationProposalCard({ preview }: { preview: AgentWritePreview }) {
       humanizeAutomationLabel,
     );
     if (uses.length > 0) {
-      needLines.push(`Uses: ${uses.join(", ")}`);
+      needLines.push(`Использует: ${uses.join(", ")}`);
     }
   }
   return (

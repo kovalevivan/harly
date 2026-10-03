@@ -440,7 +440,7 @@ function SlackConfigForm({
         <h2 className="font-display text-base font-semibold tracking-tight">
           {"Настройка Slack "}</h2>
         <p className="text-sm text-muted-foreground">
-          {"Подключено к "}{status.teamName ?? "Slack"}. Choose a channel and events.
+          {"Подключено к "}{status.teamName ?? "Slack"}. Выберите канал и события.
         </p>
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -184,7 +184,7 @@ export function PipelineList({
           .map((stage) => (
             <StageTab
               key={stage.id}
-              label={localizeSystemText(stage.name)}
+              label={localizeStageName(stage.name)}
               count={counts.get(stage.id) ?? 0}
               active={activeStage === stage.id}
               onClick={() => setActiveStage(stage.id)}
@@ -210,7 +210,7 @@ export function PipelineList({
                   .sort((a, b) => a.order - b.order)
                   .map((stage) => (
                     <DropdownMenuItem key={stage.id} onClick={() => moveToStage(stage.id)}>
-                      {localizeSystemText(stage.name)}
+                      {localizeStageName(stage.name)}
                     </DropdownMenuItem>
                   ))}
               </DropdownMenuContent>
@@ -290,7 +290,7 @@ export function PipelineList({
                   </div>
                 </Link>
                 <div className="col-start-2 min-w-0 sm:col-auto">
-                  <p className="text-xs font-medium text-foreground">{localizeSystemText(stageName)}</p>
+                  <p className="text-xs font-medium text-foreground">{localizeStageName(stageName)}</p>
                   <PipelineSpine
                     current={stageName}
                     stages={orderedStageNames}

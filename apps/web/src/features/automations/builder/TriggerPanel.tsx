@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Trigger } from "../schema";
@@ -174,7 +174,7 @@ export function TriggerPanel({
                 <option value="">{"Любой этап"}</option>
                 {stageOptions.map((stage) => (
                   <option key={stage.id} value={stage.id}>
-                    {localizeSystemText(stage.name)}
+                    {localizeStageName(stage.name)}
                   </option>
                 ))}
               </BuilderSelect>

@@ -2,6 +2,15 @@ import catalogue from "@/locales/system-ru.json";
 import type { ReactNode } from "react";
 
 const strings: Record<string, string> = catalogue;
+const stageNames: Record<string, string> = {
+  Applied: "Отклик", Screening: "Первичный отбор", Interview: "Собеседование",
+  Offer: "Предложение", Hired: "Нанят", Rejected: "Отказ",
+};
+
+/** Only the built-in stage names are copy; all other stage names are user data. */
+export function localizeStageName(value: string): string {
+  return Object.hasOwn(stageNames, value) ? stageNames[value] : value;
+}
 const templates = Object.entries(strings)
   .filter(([key]) => key.includes("⟦"))
   .map(([key, replacement]) => {

@@ -75,7 +75,7 @@ export function BoardPreview({
           style={{
             backgroundImage: heroImageUrl
               ? `url(${heroImageUrl})`
-              : `линейный градиент (135 градусов, ${primaryColor}, ${primaryColor}bb)`,
+              : `linear-gradient(135deg, ${primaryColor}, ${primaryColor}bb)`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

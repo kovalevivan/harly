@@ -41,7 +41,7 @@ export function AuthSpinner({ className }: { className?: string }) {
       height="16"
       viewBox="0 0 24 24"
       fill="none"
-      className={`счетчик авторизации ${className ?? ""}`}
+      className={`auth-spinner ${className ?? ""}`}
       aria-hidden="true"
     >
       <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" opacity="0.25" />

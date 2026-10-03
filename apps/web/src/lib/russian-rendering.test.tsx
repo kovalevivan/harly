@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { JobStatusBadge } from "@/components/ui/StatusBadge";
+import { PipelineSpine } from "@/components/ui/PipelineSpine";
 import { GreetingHeader, buildSubline } from "@/features/dashboard/GreetingHeader";
-import { localizeSystemText } from "./localize-system-text";
+import { localizeSystemText, localizeStageName } from "./localize-system-text";
 import { formatDistanceToNow } from "./date-format";
 
 describe("Russian first render", () => {
@@ -30,5 +31,12 @@ describe("Russian first render", () => {
   it("formats relative dates in Russian regardless of the browser language", () => {
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
     expect(formatDistanceToNow(yesterday, { addSuffix: true })).toBe("1 день назад");
+  });
+
+  it("keeps stored stage values usable while displaying Russian copy", () => {
+    const html = renderToStaticMarkup(<PipelineSpine current="Screening" showLabel />);
+    expect(html).toContain("Первичный отбор (2 из 5)");
+    expect(html).not.toContain("Stage:");
+    expect(localizeStageName("My custom stage")).toBe("My custom stage");
   });
 });

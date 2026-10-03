@@ -1,6 +1,6 @@
 "use client";
 
-import { localizeSystemText } from "@/lib/localize-system-text";
+import { localizeStageName } from "@/lib/localize-system-text";
 import { cn } from "@/lib/utils";
 import { CheckCircleIcon, XCircleIcon } from "@/components/ui/icons/phosphor";
 
@@ -108,7 +108,7 @@ export function PortalHorizontalPipeline({
                   isTerminalCurrent && applicationStatus === "withdrawn" && "font-medium text-muted-foreground",
                 )}
               >
-                {localizeSystemText(stage.name)}
+                {localizeStageName(stage.name)}
               </span>
             </div>
           );

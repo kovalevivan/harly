@@ -132,7 +132,7 @@ export function CandidateAvatarEdit({
 
   return (
     <>
-      <div className={`относительное сжатие группы-0 ${className ?? ""}`}>
+      <div className={`group relative shrink-0 ${className ?? ""}`}>
         <button
           type="button"
           onClick={() => displaySrc ? setViewOpen(true) : inputRef.current?.click()}

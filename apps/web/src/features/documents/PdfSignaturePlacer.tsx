@@ -291,7 +291,7 @@ export function PdfSignaturePlacer({
                 />
                 {/* Resize handle — larger hit area for laptop trackpads. */}
                 <div
-                  className={`absolute -bottom-2.5 -right-2.5 flex size-6 cursor-se-resize touch-none items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform hover:scale-110 ${isText ? "border-info" : "border-primary"} ${isActive ? "opacity-100" : "непрозрачность-0 группа-hover/поле: непрозрачность-100"}`}
+                  className={`absolute -bottom-2.5 -right-2.5 flex size-6 cursor-se-resize touch-none items-center justify-center rounded-full border-2 bg-background shadow-sm transition-transform hover:scale-110 ${isText ? "border-info" : "border-primary"} ${isActive ? "opacity-100" : "opacity-0 group-hover/field:opacity-100"}`}
                   onPointerDown={(event) => startResize(event, index)}
                   onPointerMove={(event) => resize(event, index)}
                   onPointerUp={() => {

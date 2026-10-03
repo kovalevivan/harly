@@ -561,7 +561,7 @@ function TriggerFields({
           kind="jobs"
           value={jobId}
           placeholder={"Любая работа"}
-          emptyLabel="Any job"
+          emptyLabel={"Любая работа"}
           initialItems={builderData.jobs.map((job) => ({ id: job.id, label: job.title }))}
           onChange={(id) =>
             onChangeNode({
@@ -579,7 +579,7 @@ function TriggerFields({
             value={jobId ? stageId : stageName}
             jobId={jobId || undefined}
             placeholder={"Любой этап"}
-            emptyLabel="Any stage"
+            emptyLabel={"Любой этап"}
             initialItems={
               jobId
                 ? jobStages.map((stage) => ({ id: stage.id, label: stage.name }))
@@ -652,7 +652,7 @@ function TriggerFields({
                 schema={selectedEndpoint.payloadSchema}
                 onSave={saveEndpointSchema}
                 disabled={creating}
-                saveLabel="Save payload schema"
+                saveLabel={"Сохранить схему полезных данных"}
                 showSavedStatus
               />
             </div>
@@ -892,7 +892,7 @@ function ConfigFieldEditor({
           kind="stages"
           value={usingData ? "" : current}
           placeholder={"Выберите этап"}
-          emptyLabel="Select a stage"
+          emptyLabel={"Выберите этап"}
           allowEmpty={!field.required}
           initialItems={builderData.stageNames.map((name) => ({ id: name, label: name }))}
           onChange={(id, item) => pickLiteral(item?.label ?? id)}
@@ -913,7 +913,7 @@ function ConfigFieldEditor({
           kind="members"
           value={usingData ? "" : current}
           placeholder={"Назначить владельцу рабочего процесса"}
-          emptyLabel="Assign to workflow owner"
+          emptyLabel={"Назначить владельцу рабочего процесса"}
           initialItems={builderData.members.map((member) => ({
             id: member.id,
             label: member.name,
@@ -941,7 +941,7 @@ function ConfigFieldEditor({
           kind="templates"
           value={usingData ? "" : current}
           placeholder={"Выберите шаблон электронного письма"}
-          emptyLabel="No template"
+          emptyLabel={"Нет шаблона"}
           initialItems={builderData.emailTemplates.map((template) => ({
             id: template.id,
             label: template.name,
@@ -999,7 +999,7 @@ function ConfigFieldEditor({
           kind="documents"
           value={current}
           placeholder={"Выберите PDF-документ"}
-          emptyLabel="No document"
+          emptyLabel={"Нет документа"}
           initialItems={builderData.documents.map((document) => ({
             id: document.id,
             label: document.name,
@@ -1046,7 +1046,7 @@ function ConfigFieldEditor({
           kind="interviews"
           value={current}
           placeholder={field.placeholder ?? "Выбрать интервью"}
-          emptyLabel="No interview"
+          emptyLabel={"Нет интервью"}
           initialItems={builderData.interviews}
           onChange={(id) => pickLiteral(id)}
           allowEmpty={!field.required}
@@ -1068,7 +1068,7 @@ function ConfigFieldEditor({
           kind="tags"
           value={usingData ? "" : current}
           placeholder={field.placeholder ?? "Тег"}
-          emptyLabel="Choose or type a tag"
+          emptyLabel={"Выберите или введите тег"}
           initialItems={builderData.tags.map((tag) => ({ id: tag, label: tag }))}
           onChange={(id, item) => pickLiteral(item?.label ?? id)}
           disabled={usingData}
@@ -1390,7 +1390,7 @@ function ApprovalFields({
           kind="members"
           value=""
           placeholder={"Добавить человека"}
-          emptyLabel="Close"
+          emptyLabel={"Закрыть"}
           initialItems={builderData.members
             .filter((member) => !node.eligibleActorIds.includes(member.id))
             .map((member) => ({ id: member.id, label: member.name, hint: member.email }))}
