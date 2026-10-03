@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import raw from "@/locales/ru.json";
 import overrides from "@/locales/ru-overrides.json";
 
@@ -22,7 +22,15 @@ const attributes = ["placeholder", "aria-label", "title", "alt"] as const;
 
 function translated(value: string): string {
   const clean = normalize(value);
-  const replacement = catalogue.get(clean);
+  let replacement = catalogue.get(clean);
+  if (!replacement) {
+    const careers = clean.match(/^Careers at (.+)$/);
+    const greeting = clean.match(/^Good (morning|afternoon|evening), (.+)!$/);
+    const candidates = clean.match(/^(\d+) candidates? in play\.$/);
+    if (careers) replacement = `Вакансии в ${careers[1]}`;
+    else if (greeting) replacement = `Здравствуйте, ${greeting[2]}!`;
+    else if (candidates) replacement = `Кандидатов в работе: ${candidates[1]}.`;
+  }
   if (!replacement) return value;
   const leading = value.match(/^\s*/)?.[0] ?? "";
   const trailing = value.match(/\s*$/)?.[0] ?? "";
@@ -72,6 +80,7 @@ function translateTree(root: Node, language: Language) {
 
 export function LanguageController() {
   const [language, setLanguage] = useState<Language>("ru");
+  const initialPassComplete = useRef(false);
   useEffect(() => {
     const saved = document.cookie.match(/(?:^|; )harly_lang=(ru|en)(?:;|$)/)?.[1];
     if (saved === "en") setLanguage("en");
@@ -79,8 +88,9 @@ export function LanguageController() {
   useEffect(() => {
     document.documentElement.lang = language;
     document.cookie = `harly_lang=${language}; Path=/; Max-Age=31536000; SameSite=Lax`;
-    translateTree(document.body, language);
-    let pending = false;
+    // Next.js hydrates streamed route segments after this component's effect.
+    // Give hydration time to own the server HTML before changing text nodes.
+    let timer: ReturnType<typeof setTimeout> | null = null;
     const changed = new Set<Node>();
     const observer = new MutationObserver((records) => {
       for (const record of records) {
@@ -88,16 +98,30 @@ export function LanguageController() {
           for (const added of record.addedNodes) changed.add(added);
         } else changed.add(record.target);
       }
-      if (pending) return;
-      pending = true;
-      queueMicrotask(() => {
-        pending = false;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
         for (const node of changed) translateTree(node, language);
         changed.clear();
-      });
+      }, 250);
     });
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: [...attributes] });
-    return () => observer.disconnect();
+    const start = () => {
+      const apply = () => {
+        timer = null;
+        translateTree(document.body, language);
+        initialPassComplete.current = true;
+        observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: [...attributes] });
+      };
+      if (initialPassComplete.current) apply();
+      else timer = setTimeout(apply, 1500);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.removeEventListener("load", start);
+      if (timer) clearTimeout(timer);
+      observer.disconnect();
+    };
   }, [language]);
   return <div data-harly-no-translate className="fixed bottom-3 left-3 z-50 flex gap-1 rounded-lg border bg-background/95 p-1 text-xs shadow-sm">
     <button type="button" aria-label="Русский язык" aria-pressed={language === "ru"} onClick={() => setLanguage("ru")} className={language === "ru" ? "rounded bg-primary px-2 py-1 text-primary-foreground" : "rounded px-2 py-1 text-foreground"}>RU</button>
