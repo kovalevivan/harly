@@ -1,10 +1,10 @@
 import { asSchema, tool } from "ai";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { automationPatchV1Schema, automationPlanV1Schema } from "@/features/automations/definition/plan-compiler";
 
-import { prepareXaiPayload, toolsForProvider } from "./provider-tools";
+import { prepareXaiPayload, toolsForProvider, xaiCompatibleFetch } from "./provider-tools";
 
 type JsonSchema = {
   const?: unknown;
@@ -143,4 +143,21 @@ describe("toolsForProvider", () => {
     expect(parsed?.success).toBe(true);
     if (parsed?.success) expect(parsed.value).toEqual({ version: "1", count: 2 });
   });
+});
+
+
+describe("xAI transport", () => {
+  it.each([undefined, "invalid json", JSON.stringify({ tools: [{ function: { parameters: { additionalProperties: false } } }] })])(
+    "uses the supplied AI transport for every payload form", async (body) => {
+      const request = vi.fn<typeof globalThis.fetch>().mockResolvedValue(new Response("ok"));
+      const signal = new AbortController().signal;
+      await xaiCompatibleFetch("https://api.x.ai/v1/chat/completions", { method: "POST", body, signal }, request);
+      expect(request).toHaveBeenCalledOnce();
+      const init = request.mock.calls[0]![1];
+      expect(init?.signal).toBe(signal);
+      expect(init?.method).toBe("POST");
+      if (body?.startsWith("{")) expect(init?.body).not.toContain('"additionalProperties":false');
+      else expect(init?.body).toBe(body);
+    },
+  );
 });

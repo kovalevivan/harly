@@ -4,6 +4,7 @@ import { embed, cosineSimilarity as aiCosineSimilarity } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 
 import type { AiModelConfig } from "@/lib/ai/providers";
+import { aiFetch } from "./transport";
 
 /**
  * Semantic match needs one fixed embedding model shared across a workspace's
@@ -22,7 +23,7 @@ export function supportsEmbeddings(
 
 /** Embed a single piece of text. Caps input to keep cost and latency bounded. */
 export async function embedText(config: AiModelConfig, text: string): Promise<number[]> {
-  const openai = createOpenAI({ apiKey: config.apiKey, baseURL: config.baseUrl });
+  const openai = createOpenAI({ apiKey: config.apiKey, baseURL: config.baseUrl, fetch: aiFetch });
   const { embedding } = await embed({
     model: openai.embeddingModel(EMBEDDING_MODEL_ID),
     value: text.slice(0, 8000),

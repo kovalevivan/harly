@@ -175,14 +175,15 @@ export function prepareXaiPayload<T>(value: T): T {
 export function xaiCompatibleFetch(
   input: RequestInfo | URL,
   init?: RequestInit,
+  request: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<Response> {
   const body = init?.body;
-  if (typeof body !== "string") return fetch(input, init);
+  if (typeof body !== "string") return request(input, init);
   try {
     const prepared = JSON.stringify(prepareXaiPayload(JSON.parse(body)));
-    return fetch(input, { ...init, body: prepared });
+    return request(input, { ...init, body: prepared });
   } catch {
-    return fetch(input, init);
+    return request(input, init);
   }
 }
 
