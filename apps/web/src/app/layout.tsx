@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CookiePanel } from "@/components/CookieConsentBanner";
+import { LanguageController } from "@/components/locale/LanguageController";
 import { getHarlyPublicOrigin } from "@/lib/public-origin";
 
 import "./globals.css";
@@ -55,7 +56,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ru"
       suppressHydrationWarning
       className={`${onest.variable} ${onestVariable.variable} ${GeistMono.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
@@ -76,6 +77,7 @@ export default function RootLayout({
           <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           <Toaster position="bottom-right" richColors closeButton />
           <CookiePanel />
+          <LanguageController />
         </ThemeProvider>
       </body>
     </html>

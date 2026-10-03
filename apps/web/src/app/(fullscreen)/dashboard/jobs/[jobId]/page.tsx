@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 import { JobStatusBadge } from "@/components/ui/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -74,6 +75,9 @@ export default async function DashboardJobPage({
       }
       railActions={
         <>
+          <Button asChild variant="outline" size="sm" className="w-full justify-start">
+            <Link href={`/dashboard/jobs/${job.id}/headhunter-demo`}>HeadHunter · демо</Link>
+          </Button>
           <Button asChild variant="outline" size="sm" className="w-full justify-start">
             <a href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
               <ExternalLink className="size-4" />

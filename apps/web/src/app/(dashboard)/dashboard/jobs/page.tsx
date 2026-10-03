@@ -10,6 +10,7 @@ import {
   listTrashedJobs,
 } from "@/features/jobs/data";
 import { JobsTable } from "@/features/jobs/JobsTable";
+import { listJobBriefs } from "@/features/jobs/briefing/actions";
 import { JobIdentity } from "@/features/jobs/JobIdentity";
 import { TrashJobActions } from "@/features/jobs/TrashJobActions";
 import { cn } from "@/lib/utils";
@@ -27,9 +28,10 @@ export default async function DashboardJobsPage({ searchParams }: JobsPageProps)
   const { view } = await searchParams;
   const isTrash = view === "trash";
 
-  const [jobs, trashed] = await Promise.all([
+  const [jobs, trashed, briefs] = await Promise.all([
     listJobsWithStats(),
     listTrashedJobs(),
+    listJobBriefs(),
   ]);
 
   const openRoles = jobs.filter((j) => j.status === "open").length;
@@ -69,12 +71,21 @@ export default async function DashboardJobsPage({ searchParams }: JobsPageProps)
           </Tab>
         </div>
         <Button asChild size="sm">
-          <Link href="/dashboard/jobs/new">
+          <Link href="/dashboard/jobs/briefs/new">
             <Plus className="size-4" />
-            New job
+            Создать профиль позиции
           </Link>
         </Button>
       </div>
+
+      {!isTrash && briefs.length > 0 ? (
+        <section className="rounded-2xl border bg-card p-4">
+          <h2 className="mb-3 font-semibold">Брифы до создания вакансии</h2>
+          <div className="space-y-2">
+            {briefs.map((brief) => <Link key={brief.id} href={`/dashboard/jobs/briefs/${brief.id}`} className="block rounded-lg border px-3 py-2 hover:bg-muted">{brief.title}{brief.jobId ? " · вакансия создана" : " · черновик"}</Link>)}
+          </div>
+        </section>
+      ) : null}
 
       {isTrash ? (
         trashed.length > 0 ? (

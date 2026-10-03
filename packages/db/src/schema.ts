@@ -1264,6 +1264,32 @@ export type CustomRole = typeof customRoles.$inferSelect;
 export type NewCustomRole = typeof customRoles.$inferInsert;
 
 // Jobs and hiring pipeline
+// A hiring manager's intake can exist before a public job is created.
+export const jobBriefs = pgTable(
+  "job_briefs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    createdById: text("created_by_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "restrict" }),
+    title: text("title").notNull(),
+    answers: jsonb("answers").default(sql`'[]'::jsonb`).notNull(),
+    currentQuestion: text("current_question"),
+    profile: jsonb("profile"),
+    generatedDraft: jsonb("generated_draft"),
+    jobId: uuid("job_id"),
+    ...timestamps(),
+  },
+  (table) => [
+    index("job_briefs_workspace_created_idx").on(table.workspaceId, table.createdAt),
+  ],
+);
+
+export type JobBrief = typeof jobBriefs.$inferSelect;
+
 export const jobs = pgTable(
   "jobs",
   {

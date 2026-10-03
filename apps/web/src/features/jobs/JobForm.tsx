@@ -58,6 +58,12 @@ type JobFormProps = {
   railActions?: ReactNode;
   previewWorkspace?: (WorkspaceBoardBranding & { id: string }) | null;
   previewConfig?: CareerPageConfig | null;
+  briefPrefill?: {
+    id: string;
+    title: string;
+    description: string;
+    sections: JobContentSection[];
+  };
 };
 
 function initialSectionsFor(job?: Job): JobContentSection[] {
@@ -190,6 +196,7 @@ export function JobForm({
   railActions,
   previewWorkspace,
   previewConfig,
+  briefPrefill,
 }: JobFormProps) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -198,18 +205,18 @@ export function JobForm({
     job?.applicationConfig,
   );
 
-  const [title, setTitle] = useState(job?.title ?? "");
+  const [title, setTitle] = useState(job?.title ?? briefPrefill?.title ?? "");
   const [titleError, setTitleError] = useState(false);
   const [workplace, setWorkplace] = useState<string>(
     job?.workplaceType ?? "remote",
   );
 
   const [description, setDescription] = useState(
-    job?.description ??
+    job?.description ?? briefPrefill?.description ??
       "<p>Describe the role, the team, and the impact this person will have.</p>",
   );
   const [sections, setSections] = useState<JobContentSection[]>(() =>
-    initialSectionsFor(job),
+    job ? initialSectionsFor(job) : (briefPrefill?.sections ?? initialSectionsFor()),
   );
   const [keywords, setKeywords] = useState<string[]>(() =>
     parseKeywords(job?.keywords),
@@ -217,7 +224,7 @@ export function JobForm({
   const [photos, setPhotos] = useState<string[]>(() =>
     parseOfficePhotos(job?.officePhotos),
   );
-  const [descriptionVersion, setDescriptionVersion] = useState(0);
+  const [descriptionVersion, setDescriptionVersion] = useState(briefPrefill ? 1 : 0);
   const [aiPending, startAi] = useTransition();
 
   const [dirty, setDirty] = useState(false);
@@ -421,6 +428,7 @@ export function JobForm({
   return (
     <form ref={formRef} action={action} className="contents">
       {job ? <input type="hidden" name="jobId" value={job.id} /> : null}
+      {briefPrefill ? <input type="hidden" name="briefId" value={briefPrefill.id} /> : null}
       <input
         type="hidden"
         name="contentSectionsJson"
