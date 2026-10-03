@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
   Pencil,
   Trash2,
+  Users,
 } from "lucide-react";
 import { toast } from "@/lib/notification-island/toast";
 
@@ -104,6 +105,12 @@ export function JobActionsMenu({
         <DropdownMenuItem onClick={copyLink}>
           <Link2 />
           Copy link
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <a href={`/dashboard/jobs/${jobId}/headhunter-demo`}>
+            <Users />
+            HeadHunter · демо
+          </a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={moveToTrash}>
