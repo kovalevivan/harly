@@ -19,14 +19,14 @@ import {
 
 const SECTION_TEMPLATES: Record<string, { title: string; body: string }[]> = {
   Engineering: [
-    { title: "Что ты будешь делать", body: "<ul><li>Ship features end to end</li><li>Collaborate on architecture</li></ul>" },
-    { title: "Требования", body: "<ul><li>3+ years building web apps</li><li>Strong in TypeScript</li></ul>" },
-    { title: "Преимущества", body: "<ul><li>Remote-first</li><li>Equity</li></ul>" },
+    { title: "Что ты будешь делать", body: "<ul><li>Разрабатывать и выпускать новые функции</li><li>Участвовать в проектировании архитектуры</li></ul>" },
+    { title: "Требования", body: "<ul><li>Опыт разработки веб-приложений от 3 лет</li><li>Уверенное знание TypeScript</li></ul>" },
+    { title: "Преимущества", body: "<ul><li>Возможность удалённой работы</li><li>Участие в капитале компании</li></ul>" },
   ],
   Sales: [
-    { title: "О роли", body: "<p>Own a pipeline and close deals.</p>" },
-    { title: "Требования", body: "<ul><li>2+ years in B2B sales</li><li>CRM fluency</li></ul>" },
-    { title: "Компенсация", body: "<p>Base + uncapped commission.</p>" },
+    { title: "О роли", body: "<p>Вести клиентов по воронке продаж и заключать сделки.</p>" },
+    { title: "Требования", body: "<ul><li>Опыт продаж корпоративным клиентам от 2 лет</li><li>Уверенная работа в CRM</li></ul>" },
+    { title: "Компенсация", body: "<p>Оклад и процент от продаж без верхнего ограничения.</p>" },
   ],
   Generic: [
     { title: "Обязанности", body: "" },
@@ -106,7 +106,7 @@ export function DescriptionSection({
 
     if (keywords.length > 0) {
       const list = `<ul>${keywords.map((kw) => `<li>${escapeHtml(kw)}</li>`).join("")}</ul>`;
-      const ri = base.findIndex((s) => /require/i.test(s.title));
+      const ri = base.findIndex((s) => /требован/i.test(s.title));
       if (ri >= 0) base[ri] = { ...base[ri], body: list };
       else base.push({ id: newSectionId(), title: "Требования", body: list });
     }
@@ -114,7 +114,7 @@ export function DescriptionSection({
     const roleName = title.trim() || "эта роль";
     setSections(base);
     setDescription(
-      `<p>We're hiring a <strong>${escapeHtml(roleName)}</strong> to join our team. Outline the mission, the team, and the impact of this role.</p>`,
+      `<p>Приглашаем в команду на позицию <strong>${escapeHtml(roleName)}</strong>. Расскажите о задачах, команде и ожидаемых результатах.</p>`,
     );
     setDescriptionVersion((v) => v + 1);
   }
@@ -181,7 +181,7 @@ export function DescriptionSection({
                     key={name}
                     onClick={() => applyTemplate(name as keyof typeof SECTION_TEMPLATES)}
                   >
-                    {name}
+                    {({ Engineering: "Разработка", Sales: "Продажи", Generic: "Общий" } as Record<string, string>)[name] ?? name}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

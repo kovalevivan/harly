@@ -102,34 +102,34 @@ const STARTER_TEMPLATES: Array<{
   body: string;
 }> = [
   {
-    name: "Interview invitation",
+    name: "Приглашение на собеседование",
     type: "interview_invite",
-    subject: "Interview invitation, {{job_title}} at {{company_name}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>We'd love to invite you to an interview for the <strong>{{job_title}}</strong> role at {{company_name}}.</p><p><strong>Date:</strong> {{interview_date}}<br><strong>Time:</strong> {{interview_time}}<br><strong>Location:</strong> {{interview_location}}</p><p>Please let us know if this works for you.</p><p>Best,<br>{{sender_name}}</p>",
+    subject: "Собеседование: {{job_title}} в {{company_name}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Приглашаем вас на собеседование на позицию <strong>{{job_title}}</strong> в компании {{company_name}}.</p><p><strong>Дата:</strong> {{interview_date}}<br><strong>Время:</strong> {{interview_time}}<br><strong>Место:</strong> {{interview_location}}</p><p>Пожалуйста, подтвердите, удобно ли вам это время.</p><p>С уважением,<br>{{sender_name}}</p>",
   },
   {
-    name: "Application rejection",
+    name: "Отказ по отклику",
     type: "rejection",
-    subject: "Your application for {{job_title}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>Thank you for your interest in the <strong>{{job_title}}</strong> position at {{company_name}} and for taking the time to apply.</p><p>After careful consideration, we've decided to move forward with other candidates whose experience more closely matches our current needs.</p><p>We'll keep your profile on file and encourage you to apply for future openings that may be a better fit.</p><p>Best of luck,<br>{{sender_name}}</p>",
+    subject: "Ваш отклик на позицию {{job_title}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Спасибо за интерес к позиции <strong>{{job_title}}</strong> в компании {{company_name}} и за ваш отклик.</p><p>После рассмотрения откликов мы решили продолжить общение с кандидатами, чей опыт ближе к текущим требованиям.</p><p>Мы сохраним ваш профиль для будущих вакансий.</p><p>Желаем успехов,<br>{{sender_name}}</p>",
   },
   {
-    name: "Offer extended",
+    name: "Предложение о работе",
     type: "offer",
-    subject: "Offer letter, {{job_title}} at {{company_name}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>We're thrilled to offer you the <strong>{{job_title}}</strong> position at {{company_name}}.</p><p><strong>Compensation:</strong> {{offer_salary}}<br><strong>Offer expires:</strong> {{offer_expiry}}</p><p>Please review the attached offer letter and let us know if you have any questions.</p><p>We're excited to have you on board,<br>{{sender_name}}</p>",
+    subject: "Предложение: {{job_title}} в {{company_name}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Рады предложить вам позицию <strong>{{job_title}}</strong> в компании {{company_name}}.</p><p><strong>Оплата:</strong> {{offer_salary}}<br><strong>Предложение действует до:</strong> {{offer_expiry}}</p><p>Изучите приложенное предложение и напишите нам, если возникнут вопросы.</p><p>Будем рады видеть вас в команде,<br>{{sender_name}}</p>",
   },
   {
-    name: "Screening call",
+    name: "Первичный звонок",
     type: "screening",
-    subject: "Quick intro call, {{job_title}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>We reviewed your application for <strong>{{job_title}}</strong> at {{company_name}} and we're impressed with your background.</p><p>We'd love to schedule a quick 30-minute call to learn more about you and share details about the role.</p><p>Looking forward to connecting,<br>{{sender_name}}</p>",
+    subject: "Знакомство: {{job_title}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Мы рассмотрели ваш отклик на позицию <strong>{{job_title}}</strong> в компании {{company_name}}.</p><p>Предлагаем созвониться на 30 минут, чтобы познакомиться и рассказать о вакансии.</p><p>До встречи,<br>{{sender_name}}</p>",
   },
   {
-    name: "Stage update",
+    name: "Изменение этапа",
     type: "stage_change",
-    subject: "You're moving to {{stage_name}}, {{job_title}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>Good news. Your application for <strong>{{job_title}}</strong> at {{company_name}} has moved to the <strong>{{stage_name}}</strong> stage.</p><p>Someone from the team will reach out shortly with next steps.</p><p>Best,<br>{{sender_name}}</p>",
+    subject: "Новый этап: {{stage_name}} · {{job_title}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Ваш отклик на позицию <strong>{{job_title}}</strong> в компании {{company_name}} перешёл на этап <strong>{{stage_name}}</strong>.</p><p>Мы скоро свяжемся с вами и расскажем о следующих шагах.</p><p>С уважением,<br>{{sender_name}}</p>",
   },
 ];
 

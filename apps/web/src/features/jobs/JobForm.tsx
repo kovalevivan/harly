@@ -213,7 +213,7 @@ export function JobForm({
 
   const [description, setDescription] = useState(
     job?.description ?? briefPrefill?.description ??
-      "<p>Describe the role, the team, and the impact this person will have.</p>",
+      "<p>Опишите задачи, команду и результаты, которых ждёте от нового сотрудника.</p>",
   );
   const [sections, setSections] = useState<JobContentSection[]>(() =>
     job ? initialSectionsFor(job) : (briefPrefill?.sections ?? initialSectionsFor()),

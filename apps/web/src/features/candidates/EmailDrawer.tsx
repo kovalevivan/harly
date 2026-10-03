@@ -104,7 +104,7 @@ export function EmailDrawer({
 
           <MailComposer
             to={email}
-            defaultBody={`<p>Hi ${firstName},</p><p></p>`}
+            defaultBody={`<p>Здравствуйте, ${firstName}!</p><p></p>`}
             placeholder={"Напишите свое сообщение…"}
             templates={composerTemplates}
             aiConfigured={aiConfigured}

@@ -1080,7 +1080,7 @@ function EmbedSection({
       body: JSON.stringify(body),
     });
     if (!response.ok) throw new Error("Application failed");
-    form.innerHTML = "<p>Application received. Thank you!</p>";
+    form.innerHTML = "<p>Отклик получен. Спасибо!</p>";
   });
 </script>`,
     },
