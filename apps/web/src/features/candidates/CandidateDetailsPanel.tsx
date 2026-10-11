@@ -168,11 +168,13 @@ function DetailRow({
 function ApplicationDisclosure({
   application,
   reviewOpen,
+  reviewSummary,
   onReviewOpenChange,
   onReviewSummaryChange,
 }: {
   application: Application;
   reviewOpen: boolean;
+  reviewSummary?: HiringReviewSummary;
   onReviewOpenChange: (open: boolean) => void;
   onReviewSummaryChange: (summary: HiringReviewSummary) => void;
 }) {
@@ -242,6 +244,7 @@ function ApplicationDisclosure({
       <ApplicationHiringReview
         applicationId={application.id}
         open={reviewOpen}
+        reviewSummary={reviewSummary}
         onOpenChange={onReviewOpenChange}
         onSummaryChange={onReviewSummaryChange}
       />
@@ -276,6 +279,7 @@ export type CandidateDetailsPanelProps = {
   files: CandidateFileItem[];
   applications: Application[];
   openReviewId: string | null;
+  reviewSummaries: HiringReviewSummary[];
   onOpenReviewChange: (applicationId: string | null) => void;
   onReviewSummaryChange: (summary: HiringReviewSummary) => void;
   email: string;
@@ -295,6 +299,7 @@ export function CandidateDetailsPanel({
   files,
   applications,
   openReviewId,
+  reviewSummaries,
   onOpenReviewChange,
   onReviewSummaryChange,
   email,
@@ -534,6 +539,9 @@ export function CandidateDetailsPanel({
                     key={application.id}
                     application={application}
                     reviewOpen={openReviewId === application.id}
+                    reviewSummary={reviewSummaries.find(
+                      (s) => s.applicationId === application.id,
+                    )}
                     onReviewOpenChange={(open) =>
                       onOpenReviewChange(open ? application.id : null)
                     }

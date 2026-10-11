@@ -1,13 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition } from "react";
 import { Download, ExternalLink, FileText, Upload } from "lucide-react";
 import { toast } from "@/lib/notification-island/toast";
 
-import type {
-  ResumeEducationItem,
-  ResumeExperienceItem,
-} from "@harly/db";
+import type { ResumeEducationItem, ResumeExperienceItem } from "@harly/db";
 
 import { attachCandidateFile } from "@/features/candidates/actions";
 import { getResumeFileValidationError } from "@/lib/storage-validation";
@@ -105,7 +103,7 @@ async function uploadFile(file: File) {
   const payload: unknown = await presignResponse.json();
 
   if (!presignResponse.ok || !isPresignResponse(payload)) {
-    throw new Error("Unable to prepare file upload.");
+    throw new Error("Не удалось подготовить загрузку файла.");
   }
 
   const uploadResponse = await fetch(payload.uploadUrl, {
@@ -130,26 +128,36 @@ function groupFiles(files: CandidateFileItem[]): GroupedFile[] {
   const groups = new Map<string, CandidateFileItem[]>();
 
   for (const file of files) {
-    const key = file.contentHash ?? `${file.fileName.toLowerCase()}-${file.fileSize ?? "unknown"}`;
+    const key =
+      file.contentHash ??
+      `${file.fileName.toLowerCase()}-${file.fileSize ?? "unknown"}`;
     groups.set(key, [...(groups.get(key) ?? []), file]);
   }
 
   return Array.from(groups.values()).map((items) => {
     const sorted = [...items].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
     return { latest: sorted[0]!, duplicates: sorted.slice(1) };
   });
 }
 
-function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateCount: number }) {
+function FileRow({
+  file,
+  duplicateCount,
+}: {
+  file: CandidateFileItem;
+  duplicateCount: number;
+}) {
   const meta = (
     <div className="min-w-0 flex-1">
       <div className="flex min-w-0 items-center gap-2">
         <p className="truncate text-sm font-medium">{file.fileName}</p>
         {duplicateCount > 0 ? (
           <Badge variant="secondary" className="shrink-0 px-1.5 text-[10px]">
-            {duplicateCount + 1} {"копий "}</Badge>
+            {duplicateCount + 1} {"копий "}
+          </Badge>
         ) : null}
         {file.contentHash ? (
           <Badge variant="outline" className="shrink-0 px-1.5 text-[10px]">
@@ -188,11 +196,13 @@ function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateC
               <Button asChild size="sm" variant="outline">
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">
                   <Download className="size-4" />
-                  {"Скачать "}</a>
+                  {"Скачать "}
+                </a>
               </Button>
             </DialogTitle>
             <DialogDescription className="sr-only">
-              {"Предварительный просмотр для "}{file.fileName}
+              {"Предварительный просмотр для "}
+              {file.fileName}
             </DialogDescription>
           </DialogHeader>
           <PdfViewer
@@ -224,15 +234,20 @@ function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateC
               <Button asChild size="sm" variant="outline">
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">
                   <Download className="size-4" />
-                  {"Скачать "}</a>
+                  {"Скачать "}
+                </a>
               </Button>
             </DialogTitle>
             <DialogDescription className="sr-only">
-              {"Предварительный просмотр для "}{file.fileName}
+              {"Предварительный просмотр для "}
+              {file.fileName}
             </DialogDescription>
           </DialogHeader>
           <div className="h-[82vh] overflow-hidden rounded-lg border">
-            <DocxViewer fileUrl={file.fileUrl} className="h-full rounded-none border-0" />
+            <DocxViewer
+              fileUrl={file.fileUrl}
+              className="h-full rounded-none border-0"
+            />
           </div>
         </DialogContent>
       </Dialog>
@@ -258,6 +273,7 @@ export function CandidateFileUpload({
   workspaceId,
   initialFiles,
 }: CandidateFileUploadProps) {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState(initialFiles);
   const [isPending, startTransition] = useTransition();
@@ -276,7 +292,9 @@ export function CandidateFileUpload({
     startTransition(async () => {
       try {
         const contentHash = await sha256(file);
-        const existing = files.find((current) => current.contentHash === contentHash);
+        const existing = files.find(
+          (current) => current.contentHash === contentHash,
+        );
 
         if (existing) {
           toast.info("Этот файл уже существует в профиле кандидата.");
@@ -300,7 +318,10 @@ export function CandidateFileUpload({
         }
 
         setFiles((current) => {
-          if (result.file!.contentHash && current.some((f) => f.contentHash === result.file!.contentHash)) {
+          if (
+            result.file!.contentHash &&
+            current.some((f) => f.contentHash === result.file!.contentHash)
+          ) {
             return current;
           }
           const next: CandidateFileItem = {
@@ -323,7 +344,10 @@ export function CandidateFileUpload({
           };
           return [next, ...current];
         });
-        toast.success("Файл загружен.");
+        toast.success(
+          "Файл загружен. Разбор по утверждённым профилям запускается автоматически.",
+        );
+        router.refresh();
       } catch (uploadError) {
         toast.error(
           uploadError instanceof Error
@@ -380,7 +404,11 @@ export function CandidateFileUpload({
           onClick={() => inputRef.current?.click()}
         >
           <Upload className="size-4" />
-          {isPending ? "Загрузка…" : files.length === 0 ? "Загрузить файл" : "Добавить файл"}
+          {isPending
+            ? "Загрузка…"
+            : files.length === 0
+              ? "Загрузить файл"
+              : "Добавить файл"}
         </Button>
       </div>
 
@@ -390,7 +418,8 @@ export function CandidateFileUpload({
           onClick={() => inputRef.current?.click()}
           className="w-full rounded-lg border border-dashed bg-muted/40 p-6 text-center text-sm text-muted-foreground transition hover:border-ring/40 hover:bg-accent/40"
         >
-          {"Пришлите резюме или подтверждающий файл. "}</button>
+          {"Пришлите резюме или подтверждающий файл. "}
+        </button>
       ) : (
         <div className="rounded-md border border-border/70 bg-background px-3 divide-y divide-border/60">
           {groupedFiles.map(({ latest, duplicates }) => (

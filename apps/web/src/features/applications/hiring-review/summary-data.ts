@@ -1,4 +1,5 @@
 import "server-only";
+import { loadReviewQueueStates } from "./queue";
 import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 import { db, jobs, jobBriefs } from "@harly/db";
 import { savedVacancyDraft } from "@/features/jobs/briefing/job-description";
@@ -49,6 +50,10 @@ export async function loadHiringReviewSummaries(
       ),
     )
     .orderBy(desc(jobBriefs.updatedAt), desc(jobBriefs.id));
+  const queueStates = await loadReviewQueueStates(
+    workspaceId,
+    applications.map((a) => a.id),
+  );
   return applications.map((application) => {
     const own = rows.filter((row) => row.job.id === application.jobId);
     const latest = own.find((row) => row.brief)?.brief;
@@ -62,6 +67,7 @@ export async function loadHiringReviewSummaries(
     const profile = readEmployeeProfile(latest?.profile);
     const intake = readIntake(latest?.intake);
     return summarizeHiringReview(application.id, {
+      queue: queueStates.get(application.id),
       ready: Boolean(
         profile && intake.profileApproved && intake.vacancyApproved,
       ),

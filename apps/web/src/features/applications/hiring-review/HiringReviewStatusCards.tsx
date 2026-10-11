@@ -24,9 +24,13 @@ export function HiringReviewStatusCards({
         const label =
           status === "needs_profile"
             ? "Открыть требования"
-            : summary?.reviewId
-              ? "Открыть результат"
-              : "Оценить по профилю";
+            : status === "queued" || status === "running"
+              ? "Открыть разбор"
+              : status === "failed"
+                ? "Повторить разбор"
+                : summary?.reviewId
+                  ? "Открыть результат"
+                  : "Оценить по профилю";
         return (
           <Card
             key={application.id}
@@ -43,32 +47,39 @@ export function HiringReviewStatusCards({
                 <p className="break-words text-sm font-medium">
                   {application.jobTitle}
                 </p>
-                {status ? (
-                  <Badge
-                    variant={
-                      status === "ready"
-                        ? "success"
-                        : status === "stale"
-                          ? "warning"
-                          : "neutral"
-                    }
-                  >
-                    {reviewStatusLabels[status]}
-                  </Badge>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    Не удалось определить статус разбора.
-                  </p>
-                )}
+                <div role="status" aria-live="polite">
+                  {status ? (
+                    <Badge
+                      variant={
+                        status === "ready"
+                          ? "success"
+                          : status === "stale"
+                            ? "warning"
+                            : "neutral"
+                      }
+                    >
+                      {reviewStatusLabels[status]}
+                    </Badge>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Не удалось определить статус разбора.
+                    </p>
+                  )}
+                </div>
                 {summary?.summary && (
                   <p className="line-clamp-2 text-sm text-muted-foreground">
                     {summary.summary}
                   </p>
                 )}
+                {status === "failed" && (
+                  <p className="text-xs text-muted-foreground">
+                    Откройте разбор, чтобы увидеть причину и повторить попытку.
+                  </p>
+                )}
                 {status === "stale" && (
                   <p className="text-xs text-muted-foreground">
-                    Требования изменились. Сохранённый результат доступен; нужен
-                    новый разбор.
+                    Требования или резюме изменились. Сохранённый результат
+                    доступен; нужен новый разбор.
                   </p>
                 )}
                 {status === "needs_profile" && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,8 +12,8 @@ import {
 import { summarizeHiringReview, type HiringReviewSummary } from "./summary";
 import {
   getApplicationHiringReviewAction,
-  reviewApplicationResumeAction,
-  extractApplicationResumeAction,
+  queueApplicationResumeAction,
+  uploadApplicationResumeAction,
 } from "./actions";
 
 type ReviewData = Extract<
@@ -23,20 +23,36 @@ type ReviewData = Extract<
 
 export function ApplicationHiringReview({
   applicationId,
+  reviewSummary,
   open,
   onOpenChange,
   onSummaryChange,
 }: {
   applicationId: string;
+  reviewSummary?: HiringReviewSummary;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSummaryChange: (summary: HiringReviewSummary) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
+  const loadedQueueId = useRef<string | null>(null);
   const [data, setData] = useState<ReviewData | null>(null);
   const [resumeText, setResumeText] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, start] = useTransition();
+  const reviewing =
+    data?.queue?.status === "queued" || data?.queue?.status === "running";
+  const loaded = useCallback(
+    (next: ReviewData) => {
+      setData(next);
+      if (next.queue && loadedQueueId.current !== next.queue.id) {
+        loadedQueueId.current = next.queue.id;
+        setResumeText(next.queue.resumeText);
+      }
+      onSummaryChange(summarizeHiringReview(applicationId, next));
+    },
+    [applicationId, onSummaryChange],
+  );
   function run(operation: () => Promise<void>) {
     setNotice("");
     start(async () => {
@@ -53,23 +69,25 @@ export function ApplicationHiringReview({
     run(async () => {
       const result = await getApplicationHiringReviewAction(applicationId);
       if (!result.ok) return setNotice(result.error);
-      setData(result.data);
-      onSummaryChange(summarizeHiringReview(applicationId, result.data));
+      loaded(result.data);
     });
   }
   useEffect(() => {
     if (!open) return;
-    let active = true;
     container.current?.focus({ preventScroll: true });
     container.current?.scrollIntoView({ block: "start" });
+  }, [open]);
+  const refreshKey = `${reviewSummary?.status ?? ""}:${reviewSummary?.reviewId ?? ""}`;
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
     start(async () => {
       try {
         const result = await getApplicationHiringReviewAction(applicationId);
         if (!active) return;
         if (!result.ok) return setNotice(result.error);
         setNotice("");
-        setData(result.data);
-        onSummaryChange(summarizeHiringReview(applicationId, result.data));
+        loaded(result.data);
       } catch {
         if (active) setNotice("Не удалось открыть разбор. Повторите загрузку.");
       }
@@ -77,7 +95,44 @@ export function ApplicationHiringReview({
     return () => {
       active = false;
     };
-  }, [open, applicationId, onSummaryChange]);
+  }, [open, applicationId, onSummaryChange, loaded, refreshKey]);
+  useEffect(() => {
+    if (!open || !reviewing) return;
+    let active = true,
+      polling = false;
+    const timer = setInterval(async () => {
+      if (polling) return;
+      polling = true;
+      try {
+        const result = await getApplicationHiringReviewAction(applicationId);
+        if (active && result.ok) {
+          setData(result.data);
+          onSummaryChange(summarizeHiringReview(applicationId, result.data));
+        }
+      } catch {
+        /* Retry on the next poll; the durable task keeps running. */
+      } finally {
+        polling = false;
+      }
+    }, 3000);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, [open, reviewing, applicationId, onSummaryChange]);
+  async function queueReview(text: string) {
+    const result = await queueApplicationResumeAction(applicationId, text);
+    if (!result.ok) return setNotice(result.error);
+    const refreshed = await getApplicationHiringReviewAction(applicationId);
+    if (refreshed.ok) loaded(refreshed.data);
+    setNotice(
+      result.cached
+        ? "Готовый разбор этого резюме уже сохранён."
+        : result.status === "failed"
+          ? "Автоматический разбор не выполнен. Причина указана выше."
+          : "Разбор запущен. Можно закрыть страницу — результат сохранится в отклике.",
+    );
+  }
   const preferredReviewId = data
     ? summarizeHiringReview(applicationId, data).reviewId
     : null;
@@ -183,7 +238,24 @@ export function ApplicationHiringReview({
                   на совместную работу с кандидатом.
                 </p>
               )}
-              {data.ready && data.canWrite && (
+              {reviewing && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className="rounded-lg bg-muted p-3 text-sm"
+                >
+                  {data.queue?.status === "queued"
+                    ? "Разбор резюме в очереди"
+                    : "Разбираем резюме…"}{" "}
+                  Можно закрыть страницу — разбор продолжится.
+                </p>
+              )}
+              {data.queue?.lastError && (
+                <p role="alert" className="rounded-lg bg-muted p-3 text-sm">
+                  {data.queue.lastError}
+                </p>
+              )}
+              {data.canWrite && (
                 <>
                   <label
                     htmlFor={`${fieldId}-file`}
@@ -201,14 +273,20 @@ export function ApplicationHiringReview({
                       const form = new FormData();
                       form.set("file", file);
                       run(async () => {
-                        const result = await extractApplicationResumeAction(
+                        const result = await uploadApplicationResumeAction(
                           applicationId,
                           form,
                         );
+                        if ("text" in result && typeof result.text === "string")
+                          setResumeText(result.text);
                         if (!result.ok) return setNotice(result.error);
-                        setResumeText(result.text);
+                        const refreshed =
+                          await getApplicationHiringReviewAction(applicationId);
+                        if (refreshed.ok) loaded(refreshed.data);
                         setNotice(
-                          "Текст извлечён. Проверьте его перед разбором.",
+                          result.cached
+                            ? "Готовый разбор этого резюме уже сохранён."
+                            : "Резюме загружено. Разбор запущен автоматически.",
                         );
                       });
                       event.target.value = "";
@@ -225,45 +303,32 @@ export function ApplicationHiringReview({
                     rows={7}
                     maxLength={20000}
                     value={resumeText}
-                    disabled={busy}
+                    disabled={busy || reviewing}
                     onChange={(e) => setResumeText(e.target.value)}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Можно вставить текст или оставить поле пустым, чтобы
-                    использовать резюме, сохранённое в карточке кандидата.
+                    Загрузка файла автоматически запускает разбор по
+                    утверждённым требованиям. Можно вставить текст или оставить
+                    поле пустым, чтобы использовать резюме, сохранённое в
+                    карточке кандидата.
                   </p>
                   <Button
                     disabled={
                       busy ||
+                      reviewing ||
+                      !data.ready ||
                       Boolean(
                         resumeText.trim() && resumeText.trim().length < 50,
                       )
                     }
-                    onClick={() =>
-                      run(async () => {
-                        const result = await reviewApplicationResumeAction({
-                          applicationId,
-                          resumeText,
-                          expectedVersion: data.version,
-                          expectedReference: data.reference,
-                        });
-                        if (!result.ok) return setNotice(result.error);
-                        const nextData = {
-                          ...data,
-                          version: result.version,
-                          reviews: [...data.reviews, result.review],
-                        };
-                        setData(nextData);
-                        onSummaryChange(
-                          summarizeHiringReview(applicationId, nextData),
-                        );
-                        setNotice("Разбор сохранён в этом отклике.");
-                      })
-                    }
+                    onClick={() => run(() => queueReview(resumeText))}
                   >
-                    {busy
+                    {busy || reviewing
                       ? "Разбираем резюме…"
-                      : "Сопоставить с профилем и вакансией"}
+                      : data.queue?.status === "failed" ||
+                          data.queue?.status === "cancelled"
+                        ? "Повторить разбор"
+                        : "Сопоставить с профилем и вакансией"}
                   </Button>
                 </>
               )}

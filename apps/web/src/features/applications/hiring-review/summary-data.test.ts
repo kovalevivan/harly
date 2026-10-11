@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { callCenterProfile } from "@/features/jobs/briefing/call-center";
 import { savedVacancyDraft } from "@/features/jobs/briefing/job-description";
 import { reviewReference } from "@/features/jobs/briefing/workflow";
+vi.mock("./queue", () => ({
+  loadReviewQueueStates: vi.fn(async () => new Map()),
+}));
 const m = vi.hoisted(() => ({
   select: vi.fn(),
   eq: vi.fn(),

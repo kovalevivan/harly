@@ -3436,6 +3436,49 @@ export const evaluationJobs = pgTable(
   ],
 );
 
+// Resume evidence review against the approved hiring profile. Durable work is
+// independent of the optional native numeric auto-score setting.
+export const hiringReviewJobs = pgTable(
+  "hiring_review_jobs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    applicationId: uuid("application_id")
+      .notNull()
+      .references(() => applications.id, { onDelete: "cascade" }),
+    candidateId: uuid("candidate_id")
+      .notNull()
+      .references(() => candidates.id, { onDelete: "cascade" }),
+    resumeText: text("resume_text").notNull(),
+    reference: text("reference").notNull(),
+    dedupeKey: text("dedupe_key").notNull(),
+    status: text("status").default("queued").notNull(),
+    attempts: integer("attempts").default(0).notNull(),
+    requestedAt: timestamp("requested_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    leaseUntil: timestamp("lease_until", { withTimezone: true }),
+    leaseId: uuid("lease_id"),
+    reviewId: text("review_id"),
+    lastError: text("last_error"),
+    ...timestamps(),
+  },
+  (table) => [
+    uniqueIndex("hiring_review_jobs_application_dedupe_idx").on(
+      table.applicationId,
+      table.dedupeKey,
+    ),
+    index("hiring_review_jobs_due_idx").on(table.status, table.leaseUntil),
+    index("hiring_review_jobs_workspace_application_idx").on(
+      table.workspaceId,
+      table.applicationId,
+      table.requestedAt,
+    ),
+  ],
+);
+
 // Embedding vector for a candidate's combined profile text (resume + skills +
 // headline). Powers semantic candidate-to-job matching across the whole
 // workspace, not just active applicants. Plain jsonb float array — no pgvector

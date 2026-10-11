@@ -111,3 +111,66 @@ describe("application hiring review status", () => {
     expect(html).toContain("Открыть требования: Врач");
   });
 });
+
+describe("automatic review status", () => {
+  const queue = {
+    id: "task",
+    status: "running",
+    reference: "current",
+    reviewId: null,
+    lastError: null,
+    requestedAt: "2026-10-12T12:00:00Z",
+  };
+  it("shows pending and failed work even when a previous resume has a ready report", () => {
+    for (const status of ["queued", "running", "failed"] as const)
+      expect(
+        summarizeHiringReview("own", {
+          ready: true,
+          reference: "current",
+          reviews: [report("previous")],
+          queue: { ...queue, status },
+        }).status,
+      ).toBe(status);
+  });
+  it("opens the report for the last uploaded resume when its cached report is older", () => {
+    const result = summarizeHiringReview("own", {
+      ready: true,
+      reference: "current",
+      reviews: [
+        report("latest", "own", "current", "2026-10-13T12:00:00Z"),
+        report("cached"),
+      ],
+      queue: { ...queue, status: "completed", reviewId: "cached" },
+    });
+    expect(result.status).toBe("ready");
+    expect(result.reviewId).toBe("cached");
+  });
+  it("does not call queued work current after requirements changed", () => {
+    expect(
+      summarizeHiringReview("own", {
+        ready: true,
+        reference: "changed",
+        reviews: [report("previous")],
+        queue,
+      }).status,
+    ).toBe("stale");
+  });
+  it("renders a retry action and failure instead of a successful old result", () => {
+    const html = renderToStaticMarkup(
+      <HiringReviewStatusCards
+        applications={[{ id: "own", jobTitle: "Врач" }]}
+        summaries={[
+          summarizeHiringReview("own", {
+            ready: true,
+            reference: "current",
+            reviews: [report("previous")],
+            queue: { ...queue, status: "failed" },
+          }),
+        ]}
+        onOpen={() => {}}
+      />,
+    );
+    expect(html).toContain("Разбор не выполнен");
+    expect(html).toContain("Повторить разбор: Врач");
+  });
+});

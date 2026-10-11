@@ -185,6 +185,11 @@ const jobs: Job[] = [
     path: "/api/cron/evaluation-jobs",
     intervalMs: 60_000,
   },
+  {
+    name: "hiring-reviews",
+    path: "/api/cron/hiring-reviews",
+    intervalMs: 60_000,
+  },
   { name: "mailbox-sync", path: "/api/cron/mailbox-sync", intervalMs: 120_000 },
   {
     name: "document-expiry",
@@ -271,7 +276,7 @@ async function scheduler() {
     const runId = randomUUID();
     const started = Date.now();
     let status = "success";
-    let counters: Record<string, unknown> = {};
+    let counters: Record<string, number | boolean> = {};
     try {
       const response = await fetch(`${appOrigin}${job.path}`, {
         method: "POST",
@@ -288,8 +293,8 @@ async function scheduler() {
       >;
       counters = Object.fromEntries(
         Object.entries(body).filter(
-          ([, value]) =>
-            typeof value === "number" || typeof value === "boolean",
+          (entry): entry is [string, number | boolean] =>
+            typeof entry[1] === "number" || typeof entry[1] === "boolean",
         ),
       );
       if (!response.ok && response.status !== 409)

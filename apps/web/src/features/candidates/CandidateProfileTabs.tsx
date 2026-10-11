@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   CalendarClock,
   ClipboardCheck,
@@ -9,6 +9,7 @@ import {
   Plus,
 } from "lucide-react";
 
+import { getHiringReviewStatusesAction } from "@/features/applications/hiring-review/actions";
 import { HiringReviewStatusCards } from "@/features/applications/hiring-review/HiringReviewStatusCards";
 import type { HiringReviewSummary } from "@/features/applications/hiring-review/summary";
 import { russianPlural } from "@/lib/russian-plural";
@@ -101,6 +102,39 @@ export function CandidateProfileTabs({
       summary,
     ]);
   }, []);
+  const pendingIds = summaries
+    .filter(
+      (s) =>
+        (s.status === "queued" || s.status === "running") &&
+        !(tab === "profile" && openReviewId === s.applicationId),
+    )
+    .map((s) => s.applicationId)
+    .sort()
+    .join(",");
+  useEffect(() => {
+    if (!pendingIds) return;
+    let active = true;
+    let polling = false;
+    const timer = setInterval(async () => {
+      if (polling) return;
+      polling = true;
+      try {
+        const result = await getHiringReviewStatusesAction(
+          pendingIds.split(","),
+        );
+        if (active && result.ok)
+          for (const summary of result.summaries) updateReviewSummary(summary);
+      } catch {
+        /* Poll again after a transient connection failure. */
+      } finally {
+        polling = false;
+      }
+    }, 3000);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, [pendingIds, summaries, updateReviewSummary]);
   function openReview(applicationId: string) {
     setTab("profile");
     setOpenReviewId(applicationId);
@@ -172,6 +206,7 @@ export function CandidateProfileTabs({
           files={files}
           applications={applications}
           openReviewId={openReviewId}
+          reviewSummaries={summaries}
           onOpenReviewChange={setOpenReviewId}
           onReviewSummaryChange={updateReviewSummary}
           email={candidateEmail}

@@ -12,6 +12,9 @@ const m = vi.hoisted(() => ({
   requireCandidatePermission: vi.fn(),
   generateText: vi.fn(),
   loadResumeText: vi.fn(),
+  extract: vi.fn(),
+  enqueue: vi.fn(),
+  after: vi.fn(),
 }));
 vi.mock("drizzle-orm", () => ({
   and: vi.fn(),
@@ -38,7 +41,7 @@ vi.mock("@/lib/ai/registry", () => ({ getModel: vi.fn(() => "model") }));
 vi.mock("@/lib/resume/load-resume-text", () => ({
   loadResumeText: m.loadResumeText,
 }));
-vi.mock("@/lib/resume/extract-text", () => ({ extractResumeText: vi.fn() }));
+vi.mock("@/lib/resume/extract-text", () => ({ extractResumeText: m.extract }));
 vi.mock("@/features/jobs/briefing/service", () => ({
   versionMatch: vi.fn(),
   leaseFree: vi.fn(),
@@ -48,9 +51,17 @@ vi.mock("ai", () => ({
   Output: { object: vi.fn() },
 }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+vi.mock("./queue", () => ({
+  loadReviewQueueDetail: vi.fn(async () => null),
+  enqueueHiringReview: m.enqueue,
+  processHiringReviewQueue: vi.fn(),
+}));
+vi.mock("next/server", () => ({ after: m.after }));
 import {
   getApplicationHiringReviewAction,
   reviewApplicationResumeAction,
+  uploadApplicationResumeAction,
+  queueApplicationResumeAction,
 } from "./actions";
 const applicationId = "11111111-1111-4111-8111-111111111111";
 const job = {
@@ -206,5 +217,75 @@ describe("application-scoped hiring review", () => {
     expect(result.ok).toBe(true);
     if (result.ok)
       expect(result.data.reviews.map((r) => r.id)).toEqual(["review"]);
+  });
+});
+
+describe("automatic review submission", () => {
+  const form = () => {
+    const f = new FormData();
+    f.set(
+      "file",
+      new File([input().resumeText], "resume.txt", { type: "text/plain" }),
+    );
+    return f;
+  };
+  it("rejects an unauthorized upload before reading the file or queuing work", async () => {
+    m.requireApplicationPermission.mockRejectedValue(new Error("forbidden"));
+    expect(
+      (await uploadApplicationResumeAction(applicationId, form())).ok,
+    ).toBe(false);
+    expect(m.extract).not.toHaveBeenCalled();
+    expect(m.enqueue).not.toHaveBeenCalled();
+    expect(m.after).not.toHaveBeenCalled();
+  });
+  it("extracts and persists queued work in the same authenticated request", async () => {
+    m.extract.mockResolvedValue({ text: input().resumeText });
+    m.enqueue.mockResolvedValue({
+      ok: true,
+      jobId: "job",
+      cached: false,
+      status: "queued",
+      willRun: true,
+    });
+    const result = await uploadApplicationResumeAction(applicationId, form());
+    expect(result).toMatchObject({
+      ok: true,
+      text: input().resumeText,
+      status: "queued",
+    });
+    expect(m.requireCandidatePermission).toHaveBeenCalledWith(
+      "collab:write",
+      "candidate",
+    );
+    expect(m.enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({
+        workspaceId: "ws",
+        application: { id: applicationId },
+      }),
+      input().resumeText,
+    );
+    expect(m.after).toHaveBeenCalledTimes(1);
+    expect(m.generateText).not.toHaveBeenCalled();
+  });
+  it("does not launch another worker for an existing completed result", async () => {
+    m.enqueue.mockResolvedValue({
+      ok: true,
+      jobId: "job",
+      cached: true,
+      status: "completed",
+      willRun: false,
+    });
+    expect(
+      (await queueApplicationResumeAction(applicationId, input().resumeText))
+        .ok,
+    ).toBe(true);
+    expect(m.after).not.toHaveBeenCalled();
+  });
+  it("does not queue an unreadable scan and provides an actionable message", async () => {
+    m.extract.mockResolvedValue({ text: "" });
+    const result = await uploadApplicationResumeAction(applicationId, form());
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain("Для скана");
+    expect(m.enqueue).not.toHaveBeenCalled();
   });
 });
