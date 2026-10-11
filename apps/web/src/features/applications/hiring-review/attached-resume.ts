@@ -44,6 +44,7 @@ export async function enqueueAttachedResumeReviews(input: {
       and(
         eq(applications.workspaceId, input.workspaceId),
         eq(applications.candidateId, input.candidateId),
+        eq(applications.status, "active"),
       ),
     );
   for (const row of rows) {

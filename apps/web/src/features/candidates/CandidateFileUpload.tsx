@@ -7,6 +7,7 @@ import { toast } from "@/lib/notification-island/toast";
 
 import type { ResumeEducationItem, ResumeExperienceItem } from "@harly/db";
 
+import { reviewAttachedCandidateFileAction } from "@/features/applications/hiring-review/actions";
 import { attachCandidateFile } from "@/features/candidates/actions";
 import { getResumeFileValidationError } from "@/lib/storage-validation";
 import { formatFileSize } from "@/lib/utils";
@@ -297,7 +298,18 @@ export function CandidateFileUpload({
         );
 
         if (existing) {
-          toast.info("Этот файл уже существует в профиле кандидата.");
+          const review = await reviewAttachedCandidateFileAction(
+            candidateId,
+            existing.id,
+          );
+          if (!review.ok) {
+            toast.error(review.error);
+            return;
+          }
+          toast.info(
+            "Файл уже сохранён. Разборы по утверждённым профилям обновляются автоматически.",
+          );
+          router.refresh();
           return;
         }
 

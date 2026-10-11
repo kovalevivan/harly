@@ -2,12 +2,13 @@
 
 import { after } from "next/server";
 import { and, eq, inArray } from "drizzle-orm";
-import { db, applications } from "@harly/db";
+import { db, applications, candidateFiles } from "@harly/db";
 import {
   loadReviewQueueDetail,
   enqueueHiringReview,
   processHiringReviewQueue,
 } from "./queue";
+import { enqueueAttachedResumeReviews } from "./attached-resume";
 import { loadHiringReviewSummaries } from "./summary-data";
 import { z } from "zod";
 import { loadResumeText } from "@/lib/resume/load-resume-text";
@@ -237,6 +238,52 @@ export async function getHiringReviewStatusesAction(applicationIds: string[]) {
     return {
       ok: false as const,
       error: "Не удалось обновить статус разбора. Повторите загрузку страницы.",
+    };
+  }
+}
+
+export async function reviewAttachedCandidateFileAction(
+  candidateId: string,
+  fileId: string,
+) {
+  try {
+    z.uuid().parse(candidateId);
+    z.uuid().parse(fileId);
+    const context = await requireCandidatePermission(
+      "collab:write",
+      candidateId,
+    );
+    const [file] = await db
+      .select({
+        fileUrl: candidateFiles.fileUrl,
+        fileName: candidateFiles.fileName,
+      })
+      .from(candidateFiles)
+      .where(
+        and(
+          eq(candidateFiles.id, fileId),
+          eq(candidateFiles.candidateId, candidateId),
+          eq(candidateFiles.workspaceId, context.organization.id),
+        ),
+      )
+      .limit(1);
+    if (!file)
+      return {
+        ok: false as const,
+        error: "Резюме не найдено в карточке этого кандидата.",
+      };
+    await enqueueAttachedResumeReviews({
+      workspaceId: context.organization.id,
+      candidateId,
+      ...file,
+    });
+    revalidatePath(`/dashboard/candidates/${candidateId}`);
+    return { ok: true as const };
+  } catch {
+    return {
+      ok: false as const,
+      error:
+        "Не удалось запустить разбор сохранённого резюме. Проверьте доступ и повторите попытку.",
     };
   }
 }

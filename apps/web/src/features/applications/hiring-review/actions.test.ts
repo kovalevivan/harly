@@ -15,6 +15,7 @@ const m = vi.hoisted(() => ({
   extract: vi.fn(),
   enqueue: vi.fn(),
   after: vi.fn(),
+  attached: vi.fn(),
 }));
 vi.mock("drizzle-orm", () => ({
   and: vi.fn(),
@@ -27,6 +28,7 @@ vi.mock("@harly/db", () => ({
   db: { select: m.select, update: m.update },
   applications: {},
   candidates: {},
+  candidateFiles: {},
   jobs: {},
   jobBriefs: {},
 }));
@@ -50,6 +52,9 @@ vi.mock("ai", () => ({
   generateText: m.generateText,
   Output: { object: vi.fn() },
 }));
+vi.mock("./attached-resume", () => ({
+  enqueueAttachedResumeReviews: m.attached,
+}));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("./queue", () => ({
   loadReviewQueueDetail: vi.fn(async () => null),
@@ -62,6 +67,7 @@ import {
   reviewApplicationResumeAction,
   uploadApplicationResumeAction,
   queueApplicationResumeAction,
+  reviewAttachedCandidateFileAction,
 } from "./actions";
 const applicationId = "11111111-1111-4111-8111-111111111111";
 const job = {
@@ -287,5 +293,48 @@ describe("automatic review submission", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error).toContain("Для скана");
     expect(m.enqueue).not.toHaveBeenCalled();
+  });
+});
+
+describe("re-uploading an attached resume", () => {
+  const candidateId = "33333333-3333-4333-8333-333333333333",
+    fileId = "44444444-4444-4444-8444-444444444444";
+  it("requires scoped candidate access before looking up or processing a file", async () => {
+    m.requireCandidatePermission.mockRejectedValue(new Error("scope"));
+    expect(
+      (await reviewAttachedCandidateFileAction(candidateId, fileId)).ok,
+    ).toBe(false);
+    expect(m.select).not.toHaveBeenCalled();
+    expect(m.attached).not.toHaveBeenCalled();
+  });
+  it("does not accept a missing file or a file attached to another candidate", async () => {
+    m.requireCandidatePermission.mockResolvedValue({
+      organization: { id: "ws" },
+    });
+    m.select.mockReset();
+    m.select.mockReturnValue(chain([]));
+    expect(
+      (await reviewAttachedCandidateFileAction(candidateId, fileId)).ok,
+    ).toBe(false);
+    expect(m.attached).not.toHaveBeenCalled();
+  });
+  it("uses the canonical stored source and rechecks current requirements without re-uploading", async () => {
+    m.requireCandidatePermission.mockResolvedValue({
+      organization: { id: "ws" },
+    });
+    m.select.mockReset();
+    m.select.mockReturnValue(
+      chain([{ fileUrl: "/stored/resume", fileName: "Резюме.pdf" }]),
+    );
+    expect(
+      (await reviewAttachedCandidateFileAction(candidateId, fileId)).ok,
+    ).toBe(true);
+    expect(m.attached).toHaveBeenCalledWith({
+      workspaceId: "ws",
+      candidateId,
+      fileUrl: "/stored/resume",
+      fileName: "Резюме.pdf",
+    });
+    expect(m.generateText).not.toHaveBeenCalled();
   });
 });
