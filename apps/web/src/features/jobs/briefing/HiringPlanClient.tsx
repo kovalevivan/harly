@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { RussianFileInput } from "./RussianFileInput";
 import type { JobDraft } from "@/lib/ai/schemas";
 import { briefTopics, type BriefAnswer } from "./model";
 import {
@@ -424,9 +425,8 @@ export function HiringPlanClient({
             <label htmlFor="brief-source" className="text-sm font-medium">
               Исходные материалы для руководителя (PDF, DOCX или TXT до 10 МБ)
             </label>
-            <input
+            <RussianFileInput
               id="brief-source"
-              type="file"
               accept=".pdf,.docx,.txt"
               disabled={busy || intake.completed}
               onChange={(event) => {
@@ -1112,9 +1112,8 @@ export function HiringPlanClient({
               >
                 Загрузить резюме (PDF, DOCX или TXT)
               </label>
-              <input
+              <RussianFileInput
                 id="resume-file"
-                type="file"
                 accept=".pdf,.docx,.txt"
                 disabled={busy}
                 onChange={(event) => {
