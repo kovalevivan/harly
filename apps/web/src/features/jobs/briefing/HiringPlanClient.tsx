@@ -51,12 +51,12 @@ export function CallCenterEntry() {
               const result = await createCallCenterPlanAction();
               router.push(`/dashboard/jobs/briefs/${result.briefId}`);
             } catch {
-              setError("Не удалось открыть пример. Повторите попытку.");
+              setError("Не удалось открыть план подбора. Повторите попытку.");
             }
           })
         }
       >
-        {busy ? "Открываем…" : "Пример подбора в колл-центр"}
+        {busy ? "Открываем…" : "Подбор в контакт-центр"}
       </Button>
       {error && <p role="alert">{error}</p>}
     </div>
@@ -289,7 +289,7 @@ export function HiringPlanClient({
       {intake.caseId === callCenterCase.id && (
         <details className={panel}>
           <summary className="cursor-pointer font-semibold">
-            Реальный кейс Артдент: 1 033 отклика → 2 выхода
+            История подбора Артдент: 1 033 отклика → 2 выхода
           </summary>
           <p className="text-sm text-muted-foreground">
             {callCenterCase.source}. {callCenterCase.period}. Это исторические
@@ -321,7 +321,7 @@ export function HiringPlanClient({
           <p className="text-sm">
             В исходном подборе руководителю передавали только резюме. Здесь к
             нему добавляется проверяемая матрица требований и вопросы для
-            интервью. Образцы резюме подготовлены для демонстрации.
+            интервью.
           </p>
         </details>
       )}
@@ -1024,7 +1024,7 @@ export function HiringPlanClient({
           )}
           {intake.caseId === callCenterCase.id && (
             <div>
-              <p className="mb-2 text-sm font-medium">Образцы резюме</p>
+              <p className="mb-2 text-sm font-medium">Резюме кандидатов</p>
               <div className="flex flex-wrap gap-2">
                 {sampleResumes.map((sample) => (
                   <Button

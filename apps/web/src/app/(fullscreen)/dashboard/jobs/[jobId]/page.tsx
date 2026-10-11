@@ -36,16 +36,23 @@ export default async function DashboardJobPage({
 }: DashboardJobPageProps) {
   const { jobId } = await params;
   const { organization: workspace } = await getWorkspaceContext();
-  const [result, departments, hiringTeam, workspaceMembers, aiStatus, candidatePoolCount, careerPageData] =
-    await Promise.all([
-      getDashboardJob(jobId),
-      listWorkspaceDepartments(),
-      listJobHiringTeam(jobId),
-      listWorkspaceMembers(),
-      getWorkspaceAiStatus(workspace.id),
-      countCandidatePool(workspace.id),
-      getCareerPageData(workspace.slug),
-    ]);
+  const [
+    result,
+    departments,
+    hiringTeam,
+    workspaceMembers,
+    aiStatus,
+    candidatePoolCount,
+    careerPageData,
+  ] = await Promise.all([
+    getDashboardJob(jobId),
+    listWorkspaceDepartments(),
+    listJobHiringTeam(jobId),
+    listWorkspaceMembers(),
+    getWorkspaceAiStatus(workspace.id),
+    countCandidatePool(workspace.id),
+    getCareerPageData(workspace.slug),
+  ]);
 
   if (!result) {
     notFound();
@@ -75,13 +82,26 @@ export default async function DashboardJobPage({
       }
       railActions={
         <>
-          <Button asChild variant="outline" size="sm" className="w-full justify-start">
-            <Link href={`/dashboard/jobs/${job.id}/headhunter-demo`}>HeadHunter · демо</Link>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+          >
+            <Link href={`/dashboard/jobs/${job.id}/headhunter-demo`}>
+              HeadHunter
+            </Link>
           </Button>
-          <Button asChild variant="outline" size="sm" className="w-full justify-start">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+          >
             <a href={`/jobs/${job.slug}`} target="_blank" rel="noreferrer">
               <ExternalLink className="size-4" />
-              {"Посмотреть вакансию "}</a>
+              {"Посмотреть вакансию "}
+            </a>
           </Button>
           <JobShareButton
             url={publicUrl}

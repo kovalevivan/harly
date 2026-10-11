@@ -40,8 +40,7 @@ export function JobActionsMenu({
   const [isPending, startTransition] = useTransition();
 
   function publicUrl() {
-    const origin =
-      typeof window !== "undefined" ? window.location.origin : "";
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
     return `${origin}/jobs/${slug}`;
   }
 
@@ -54,7 +53,9 @@ export function JobActionsMenu({
     startTransition(async () => {
       const result = await trashJobAction(jobId);
       if (!result.success) {
-        toast.error(result.error ?? "Не удалось переместить задание в корзину.");
+        toast.error(
+          result.error ?? "Не удалось переместить задание в корзину.",
+        );
         return;
       }
       toast.success("Работа перемещена в корзину.", {
@@ -94,25 +95,29 @@ export function JobActionsMenu({
           onClick={() => router.push(`/dashboard/jobs/${jobId}`)}
         >
           <Pencil />
-          {"Редактировать "}</DropdownMenuItem>
+          {"Редактировать "}
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`/jobs/${slug}`} target="_blank" rel="noreferrer">
             <ExternalLink />
-            {"Посмотреть общедоступную страницу "}</a>
+            {"Посмотреть общедоступную страницу "}
+          </a>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={copyLink}>
           <Link2 />
-          {"Копировать ссылку "}</DropdownMenuItem>
+          {"Копировать ссылку "}
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`/dashboard/jobs/${jobId}/headhunter-demo`}>
             <Users />
-            HeadHunter · демо
+            HeadHunter
           </a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={moveToTrash}>
           <Trash2 />
-          {"Переместить в корзину "}</DropdownMenuItem>
+          {"Переместить в корзину "}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

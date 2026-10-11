@@ -20,17 +20,17 @@ BEGIN
     RETURN;
   END IF;
 
-  UPDATE organization SET name = 'Артдент · демо' WHERE id = workspace_id;
+  UPDATE organization SET name = 'Артдент' WHERE id = workspace_id;
   UPDATE workspace_settings SET
-    description = 'Демонстрационное пространство подбора персонала для сети стоматологических клиник.',
+    description = 'Подбор персонала для сети стоматологических клиник Артдент.',
     website_url = 'https://artdentnn.ru/'
   WHERE organization_id = workspace_id;
 
   FOR role IN SELECT * FROM jsonb_array_elements($roles$[
-    {"slug":"stomatolog-terapevt","title":"Врач-стоматолог терапевт","department":"Врачи","description":"<p>Демонстрационная вакансия для стоматологической клиники в Нижнем Новгороде. Врач ведёт терапевтический приём и объясняет пациентам план лечения.</p>"},
-    {"slug":"stomatolog-hirurg","title":"Врач-стоматолог хирург","department":"Врачи","description":"<p>Демонстрационная вакансия. Врач проводит хирургический приём, планирует лечение и работает в команде клиники.</p>"},
-    {"slug":"menedzher-prodazh","title":"Менеджер по продажам стоматологических услуг","department":"Продажи","description":"<p>Демонстрационная вакансия. Помогайте пациентам разобраться в планах лечения и сопровождайте обращения до записи.</p>"},
-    {"slug":"operator-kontakt-centra","title":"Оператор контакт-центра","department":"Контакт-центр","description":"<p>Демонстрационная вакансия. Принимайте обращения пациентов, помогайте с записью и передавайте сложные вопросы профильным специалистам.</p>"}
+    {"slug":"stomatolog-terapevt","title":"Врач-стоматолог терапевт","department":"Врачи","description":"<p>Вакансия для стоматологической клиники в Нижнем Новгороде. Врач ведёт терапевтический приём и объясняет пациентам план лечения.</p>"},
+    {"slug":"stomatolog-hirurg","title":"Врач-стоматолог хирург","department":"Врачи","description":"<p>Врач проводит хирургический приём, планирует лечение и работает в команде клиники.</p>"},
+    {"slug":"menedzher-prodazh","title":"Менеджер по продажам стоматологических услуг","department":"Продажи","description":"<p>Помогайте пациентам разобраться в планах лечения и сопровождайте обращения до записи.</p>"},
+    {"slug":"operator-kontakt-centra","title":"Оператор контакт-центра","department":"Контакт-центр","description":"<p>Принимайте обращения пациентов, помогайте с записью и передавайте сложные вопросы профильным специалистам.</p>"}
   ]$roles$::jsonb) LOOP
     INSERT INTO jobs (workspace_id, created_by_id, slug, title, department, location,
       employment_type, workplace_type, description, status, published_at,
@@ -48,14 +48,14 @@ BEGIN
   END LOOP;
 
   FOR person IN SELECT * FROM jsonb_array_elements($people$[
-    {"first":"Алина","last":"Морозова","slug":"stomatolog-terapevt","stage":"Interview","headline":"Врач-стоматолог терапевт · демо"},
-    {"first":"Павел","last":"Белов","slug":"stomatolog-terapevt","stage":"Screening","headline":"Врач-стоматолог терапевт · демо"},
-    {"first":"Ольга","last":"Соколова","slug":"stomatolog-hirurg","stage":"Applied","headline":"Врач-стоматолог хирург · демо"},
-    {"first":"Кирилл","last":"Орлов","slug":"stomatolog-hirurg","stage":"Interview","headline":"Врач-стоматолог хирург · демо"},
-    {"first":"Екатерина","last":"Романова","slug":"menedzher-prodazh","stage":"Screening","headline":"Менеджер по продажам · демо"},
-    {"first":"Максим","last":"Зайцев","slug":"menedzher-prodazh","stage":"Applied","headline":"Менеджер по продажам · демо"},
-    {"first":"Дарья","last":"Крылова","slug":"operator-kontakt-centra","stage":"Interview","headline":"Оператор контакт-центра · демо"},
-    {"first":"Игорь","last":"Мельников","slug":"operator-kontakt-centra","stage":"Applied","headline":"Оператор контакт-центра · демо"}
+    {"first":"Алина","last":"Морозова","slug":"stomatolog-terapevt","stage":"Interview","headline":"Врач-стоматолог терапевт"},
+    {"first":"Павел","last":"Белов","slug":"stomatolog-terapevt","stage":"Screening","headline":"Врач-стоматолог терапевт"},
+    {"first":"Ольга","last":"Соколова","slug":"stomatolog-hirurg","stage":"Applied","headline":"Врач-стоматолог хирург"},
+    {"first":"Кирилл","last":"Орлов","slug":"stomatolog-hirurg","stage":"Interview","headline":"Врач-стоматолог хирург"},
+    {"first":"Екатерина","last":"Романова","slug":"menedzher-prodazh","stage":"Screening","headline":"Менеджер по продажам"},
+    {"first":"Максим","last":"Зайцев","slug":"menedzher-prodazh","stage":"Applied","headline":"Менеджер по продажам"},
+    {"first":"Дарья","last":"Крылова","slug":"operator-kontakt-centra","stage":"Interview","headline":"Оператор контакт-центра"},
+    {"first":"Игорь","last":"Мельников","slug":"operator-kontakt-centra","stage":"Applied","headline":"Оператор контакт-центра"}
   ]$people$::jsonb) LOOP
     SELECT id INTO job_id FROM jobs WHERE jobs.workspace_id = workspace_id AND slug = person->>'slug';
     SELECT id INTO stage_id FROM job_stages WHERE job_stages.job_id = job_id AND name = person->>'stage';
@@ -65,7 +65,7 @@ BEGIN
       person->>'headline') RETURNING id INTO candidate_id;
     INSERT INTO applications (workspace_id, candidate_id, job_id, current_stage_id,
       source, status, applied_at)
-    VALUES (workspace_id, candidate_id, job_id, stage_id, 'Демо · сайт клиники', 'active', now());
+    VALUES (workspace_id, candidate_id, job_id, stage_id, 'Сайт клиники', 'active', now());
   END LOOP;
 
   SELECT id INTO job_id FROM jobs WHERE jobs.workspace_id = workspace_id AND slug = 'stomatolog-terapevt';
@@ -81,5 +81,5 @@ BEGIN
       {"topic":"selection","question":"Как оценить кандидата?","answer":"Обсудить клинический случай и коммуникацию с пациентом."}
     ]$answers$::jsonb,
     $profile${"purpose":"Расширить команду терапевтического приёма","outcomes":["Самостоятельно вести приём","Составлять понятные планы лечения"],"responsibilities":["Диагностика и терапевтическое лечение","Коммуникация с пациентами","Ведение документации"],"mustHave":["Профильное медицинское образование","Действующая аккредитация"],"niceToHave":["Опыт цифровой диагностики"],"conditions":["Очный приём в Нижнем Новгороде","График обсуждается на встрече"],"selection":["Разбор клинического случая","Коммуникация с пациентом"]}$profile$::jsonb,
-    $draft${"summary":"В демонстрационной клинике ищем врача-стоматолога терапевта для очного приёма в Нижнем Новгороде.","sections":[{"title":"Задачи","bullets":["Проводить диагностику и терапевтическое лечение","Объяснять пациентам план лечения","Вести медицинскую документацию"]},{"title":"Требования","bullets":["Профильное медицинское образование","Действующая аккредитация по специальности"]}]}$draft$::jsonb);
+    $draft${"summary":"В клинике Артдент ищем врача-стоматолога терапевта для очного приёма в Нижнем Новгороде.","sections":[{"title":"Задачи","bullets":["Проводить диагностику и терапевтическое лечение","Объяснять пациентам план лечения","Вести медицинскую документацию"]},{"title":"Требования","bullets":["Профильное медицинское образование","Действующая аккредитация по специальности"]}]}$draft$::jsonb);
 END $seed$;
