@@ -27,6 +27,7 @@ import { CandidateActionBar } from "@/features/candidates/CandidateActionBar";
 import { CandidateActivityRail } from "@/features/candidates/CandidateActivityRail";
 import { CandidatePager } from "@/features/candidates/CandidatePager";
 import { CandidateStickyHeader } from "@/features/candidates/CandidateStickyHeader";
+import { loadHiringReviewSummaries } from "@/features/applications/hiring-review/summary-data";
 import { CandidateProfileTabs } from "@/features/candidates/CandidateProfileTabs";
 import { filterApplicationScopedItems } from "@/features/candidates/profile-scope";
 import { CandidateTags } from "@/features/candidates/CandidateTags";
@@ -214,6 +215,7 @@ export default async function CandidateDetailPage({
     canDeleteCandidates,
     canCollaborate,
     canEditCandidates,
+    hiringReviewSummaries,
   ] = await Promise.all([
     getWorkspaceCalStatus(workspaceId),
     getWorkspaceAiStatus(workspaceId),
@@ -223,6 +225,7 @@ export default async function CandidateDetailPage({
     can("candidates:delete"),
     can("collab:write"),
     can("candidates:edit"),
+    loadHiringReviewSummaries(workspaceId, applications),
   ]);
   const workspaceName = workspaceContext.organization.name;
   const currentUserName = workspaceContext.user.name;
@@ -602,6 +605,7 @@ export default async function CandidateDetailPage({
             interviews={interviews}
             members={members}
             aiEvaluations={aiEvaluations}
+            hiringReviewSummaries={hiringReviewSummaries}
             scheduleApplications={scheduleApplications}
             scheduleMembers={members}
             scheduleCal={{

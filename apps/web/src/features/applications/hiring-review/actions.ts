@@ -70,7 +70,7 @@ async function reviewContext(
         eq(jobBriefs.workspaceId, context.organization.id),
       ),
     )
-    .orderBy(desc(jobBriefs.updatedAt));
+    .orderBy(desc(jobBriefs.updatedAt), desc(jobBriefs.id));
   const brief = briefs[0];
   const profile = brief ? readEmployeeProfile(brief.profile) : null;
   const intake = readIntake(brief?.intake);

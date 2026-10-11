@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   CalendarClock,
   ClipboardCheck,
@@ -9,6 +9,9 @@ import {
   Plus,
 } from "lucide-react";
 
+import { HiringReviewStatusCards } from "@/features/applications/hiring-review/HiringReviewStatusCards";
+import type { HiringReviewSummary } from "@/features/applications/hiring-review/summary";
+import { russianPlural } from "@/lib/russian-plural";
 import { AiScoreCard } from "@/features/candidates/AiScoreCard";
 import { CandidateDetailsPanel } from "@/features/candidates/CandidateDetailsPanel";
 import { EmailDrawer } from "@/features/candidates/EmailDrawer";
@@ -69,6 +72,7 @@ export function CandidateProfileTabs({
   interviews,
   members,
   aiEvaluations,
+  hiringReviewSummaries,
   aiConfigured,
   offers,
   offerSignatureChannel,
@@ -82,6 +86,28 @@ export function CandidateProfileTabs({
   canFulfilErasure = false,
 }: CandidateProfileTabsProps) {
   const [tab, setTab] = useState("profile");
+  const [openReviewId, setOpenReviewId] = useState<string | null>(null);
+  const [summaries, setSummaries] = useState(hiringReviewSummaries);
+  const [lastSummaries, setLastSummaries] = useState(hiringReviewSummaries);
+  if (hiringReviewSummaries !== lastSummaries) {
+    setLastSummaries(hiringReviewSummaries);
+    setSummaries(hiringReviewSummaries);
+  }
+  const updateReviewSummary = useCallback((summary: HiringReviewSummary) => {
+    setSummaries((previous) => [
+      ...previous.filter(
+        (item) => item.applicationId !== summary.applicationId,
+      ),
+      summary,
+    ]);
+  }, []);
+  function openReview(applicationId: string) {
+    setTab("profile");
+    setOpenReviewId(applicationId);
+    const panel = document.getElementById(`hiring-review-${applicationId}`);
+    panel?.focus({ preventScroll: true });
+    panel?.scrollIntoView({ block: "start" });
+  }
   const conversations = groupIntoConversations(messages);
   const jobOptions = applications.map((application) => ({
     id: application.id,
@@ -105,35 +131,39 @@ export function CandidateProfileTabs({
       >
         <TabsTrigger value="profile">{"Профиль"}</TabsTrigger>
         <TabsTrigger value="interviews">
-          {"Собеседования "}<TabCount value={interviews.length} />
+          {"Собеседования "}
+          <TabCount value={interviews.length} />
         </TabsTrigger>
         <TabsTrigger value="communication">
-          {"Общение "}<TabCount value={messages.length} />
+          {"Общение "}
+          <TabCount value={messages.length} />
         </TabsTrigger>
         <TabsTrigger value="evaluation">
-          {"Оценка "}<TabCount value={scorecards.length} />
+          {"Оценка "}
+          <TabCount value={scorecards.length} />
         </TabsTrigger>
         <TabsTrigger value="offers">
-          {"Предложения "}<TabCount value={offers.length} />
+          {"Предложения "}
+          <TabCount value={offers.length} />
         </TabsTrigger>
         <TabsTrigger value="activity">
-          {"Деятельность "}<TabCount value={activity.length + notes.length} />
+          {"Деятельность "}
+          <TabCount value={activity.length + notes.length} />
         </TabsTrigger>
         {privacyRequests.length > 0 ? (
           <TabsTrigger value="privacy">
-            {"Конфиденциальность "}<TabCount value={privacyRequests.length} />
+            {"Конфиденциальность "}
+            <TabCount value={privacyRequests.length} />
           </TabsTrigger>
         ) : null}
       </TabsList>
 
       {/* ── Profile , AI match leads, single "Details" panel follows ── */}
       <TabsContent value="profile" className="mt-5 space-y-4">
-        <AiScoreCard
+        <HiringReviewStatusCards
           applications={jobOptions}
-          evaluations={aiEvaluations}
-          aiConfigured={aiConfigured}
-          variant="condensed"
-          onViewDetailsAction={() => setTab("evaluation")}
+          summaries={summaries}
+          onOpen={openReview}
         />
 
         <CandidateDetailsPanel
@@ -141,6 +171,9 @@ export function CandidateProfileTabs({
           workspaceId={workspaceId}
           files={files}
           applications={applications}
+          openReviewId={openReviewId}
+          onOpenReviewChange={setOpenReviewId}
+          onReviewSummaryChange={updateReviewSummary}
           email={candidateEmail}
           phone={candidatePhone}
           address={candidateAddress}
@@ -167,7 +200,8 @@ export function CandidateProfileTabs({
             trigger={
               <Button size="sm">
                 <Plus className="size-4" />
-                {"Назначить собеседование "}</Button>
+                {"Назначить собеседование "}
+              </Button>
             }
           />
         </div>
@@ -175,7 +209,9 @@ export function CandidateProfileTabs({
           <EmptySection
             icon={CalendarClock}
             title={"Пока нет интервью"}
-            hint={"Запланируйте его с помощью кнопки выше. Ссылка для присоединения, интервьюер и заметки остаются на карте."}
+            hint={
+              "Запланируйте его с помощью кнопки выше. Ссылка для присоединения, интервьюер и заметки остаются на карте."
+            }
           />
         ) : (
           <div className="space-y-3 duration-300 animate-in fade-in slide-in-from-bottom-1">
@@ -208,7 +244,8 @@ export function CandidateProfileTabs({
             trigger={
               <Button size="sm">
                 <Mail className="size-4" />
-                {"Новое сообщение "}</Button>
+                {"Новое сообщение "}
+              </Button>
             }
           />
         </div>
@@ -216,13 +253,17 @@ export function CandidateProfileTabs({
           <EmptySection
             icon={Mail}
             title={`Вы еще не отправили электронное письмо ${candidateName.split(" ")[0]}`}
-            hint={"Напишите первое сообщение выше. Их ответы поступают в папку «Входящие» и автоматически возвращаются сюда."}
+            hint={
+              "Напишите первое сообщение выше. Их ответы поступают в папку «Входящие» и автоматически возвращаются сюда."
+            }
           />
         ) : (
           <div className="space-y-4 duration-300 animate-in fade-in slide-in-from-bottom-1">
             {conversations.map((conversation) => (
               <ConversationThread
-                key={conversation[0]!.threadId ?? `legacy:${conversation[0]!.id}`}
+                key={
+                  conversation[0]!.threadId ?? `legacy:${conversation[0]!.id}`
+                }
                 conversation={conversation}
                 candidateId={candidateId}
                 candidateName={candidateName}
@@ -237,16 +278,34 @@ export function CandidateProfileTabs({
 
       {/* ── Evaluation: automatic evaluation + scorecards ── */}
       <TabsContent value="evaluation" className="mt-4 space-y-4">
-        <AiScoreCard
+        <HiringReviewStatusCards
           applications={jobOptions}
-          evaluations={aiEvaluations}
-          aiConfigured={aiConfigured}
+          summaries={summaries}
+          onOpen={openReview}
         />
+        {aiEvaluations.length > 0 && (
+          <details className="rounded-xl border bg-card p-4">
+            <summary className="cursor-pointer text-sm font-medium">
+              Ранее сохранённые оценки Harly
+            </summary>
+            <div className="mt-4">
+              <AiScoreCard
+                applications={jobOptions.filter((application) =>
+                  aiEvaluations.some(
+                    (evaluation) => evaluation.applicationId === application.id,
+                  ),
+                )}
+                evaluations={aiEvaluations}
+                aiConfigured={aiConfigured}
+              />
+            </div>
+          </details>
+        )}
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
             {scorecards.length === 0
-              ? "Никто в команде еще не забил этого кандидата."
-              : `${scorecards.length} оценка от команды.`}
+              ? "Команда ещё не оценила этого кандидата."
+              : `${scorecards.length} ${russianPlural(scorecards.length, "оценка", "оценки", "оценок")} от команды.`}
           </p>
           {applications[0] ? (
             <EvaluationDrawer
@@ -257,13 +316,19 @@ export function CandidateProfileTabs({
               trigger={
                 <Button size="sm">
                   <ClipboardCheck className="size-4" />
-                  {"Добавить оценку "}</Button>
+                  {"Добавить оценку "}
+                </Button>
               }
             />
           ) : (
-            <Button size="sm" disabled title={"У этого кандидата нет заявки на получение баллов"}>
+            <Button
+              size="sm"
+              disabled
+              title={"Для оценки нужен отклик на вакансию"}
+            >
               <ClipboardCheck className="size-4" />
-              {"Добавить оценку "}</Button>
+              {"Добавить оценку "}
+            </Button>
           )}
         </div>
         <ScorecardList scorecards={scorecards} />
@@ -284,7 +349,8 @@ export function CandidateProfileTabs({
         {/* Notes always on top so the form is reachable without scrolling */}
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {"Примечания и комментарии "}</p>
+            {"Примечания и комментарии "}
+          </p>
           <NoteForm
             candidateId={candidateId}
             workspaceId={workspaceId}
@@ -296,7 +362,8 @@ export function CandidateProfileTabs({
         {activity.length > 0 ? (
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              {"Хронология "}</p>
+              {"Хронология "}
+            </p>
             <ActivityTimeline activity={activity} />
           </div>
         ) : null}
@@ -305,7 +372,9 @@ export function CandidateProfileTabs({
           <EmptySection
             icon={MessageSquare}
             title={"Еще ничего не произошло"}
-            hint={"Сценические ходы, заметки, электронные письма и интервью — все это размещается здесь по порядку, чтобы вы могли увидеть, как этот кандидат добился того, чего он достиг."}
+            hint={
+              "Сценические ходы, заметки, электронные письма и интервью — все это размещается здесь по порядку, чтобы вы могли увидеть, как этот кандидат добился того, чего он достиг."
+            }
           />
         ) : null}
       </TabsContent>

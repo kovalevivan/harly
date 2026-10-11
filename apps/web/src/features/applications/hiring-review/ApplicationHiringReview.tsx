@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +9,7 @@ import {
   statusLabels,
   verificationLabels,
 } from "@/features/jobs/briefing/workflow";
+import { summarizeHiringReview, type HiringReviewSummary } from "./summary";
 import {
   getApplicationHiringReviewAction,
   reviewApplicationResumeAction,
@@ -22,10 +23,16 @@ type ReviewData = Extract<
 
 export function ApplicationHiringReview({
   applicationId,
+  open,
+  onOpenChange,
+  onSummaryChange,
 }: {
   applicationId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSummaryChange: (summary: HiringReviewSummary) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const container = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<ReviewData | null>(null);
   const [resumeText, setResumeText] = useState("");
   const [notice, setNotice] = useState("");
@@ -47,22 +54,59 @@ export function ApplicationHiringReview({
       const result = await getApplicationHiringReviewAction(applicationId);
       if (!result.ok) return setNotice(result.error);
       setData(result.data);
+      onSummaryChange(summarizeHiringReview(applicationId, result.data));
     });
   }
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    container.current?.focus({ preventScroll: true });
+    container.current?.scrollIntoView({ block: "start" });
+    start(async () => {
+      try {
+        const result = await getApplicationHiringReviewAction(applicationId);
+        if (!active) return;
+        if (!result.ok) return setNotice(result.error);
+        setNotice("");
+        setData(result.data);
+        onSummaryChange(summarizeHiringReview(applicationId, result.data));
+      } catch {
+        if (active) setNotice("Не удалось открыть разбор. Повторите загрузку.");
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [open, applicationId, onSummaryChange]);
+  const preferredReviewId = data
+    ? summarizeHiringReview(applicationId, data).reviewId
+    : null;
+  const reviews = data
+    ? [...data.reviews].sort((a, b) => {
+        if (a.id === preferredReviewId) return -1;
+        if (b.id === preferredReviewId) return 1;
+        return b.createdAt.localeCompare(a.createdAt);
+      })
+    : [];
   const fieldId = `resume-${applicationId}`;
   return (
-    <div className="mt-3 rounded-xl border bg-card p-4">
+    <div
+      ref={container}
+      id={`hiring-review-${applicationId}`}
+      tabIndex={-1}
+      className="mt-3 scroll-mt-24 rounded-xl border bg-card p-4 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
       <Button
         variant="outline"
         disabled={busy}
         aria-expanded={open}
         aria-controls={`review-${applicationId}`}
         onClick={() => {
-          setOpen(!open);
-          if (!open) refresh();
+          setNotice("");
+          onOpenChange(!open);
         }}
       >
-        Оценить по профилю вакансии
+        {open ? "Свернуть разбор резюме" : "Открыть разбор по профилю"}
       </Button>
       {open && (
         <section
@@ -76,12 +120,12 @@ export function ApplicationHiringReview({
             Harly. Отсутствие сведений требует уточнения; решение о найме
             принимает человек.
           </p>
-          {busy && (
+          {(busy || (!data && !notice)) && (
             <p role="status" aria-live="polite" className="text-sm">
               Выполняем запрос…
             </p>
           )}
-          {!data && !busy && (
+          {!data && !busy && notice && (
             <Button variant="outline" onClick={refresh}>
               Повторить загрузку
             </Button>
@@ -204,11 +248,15 @@ export function ApplicationHiringReview({
                           expectedReference: data.reference,
                         });
                         if (!result.ok) return setNotice(result.error);
-                        setData({
+                        const nextData = {
                           ...data,
                           version: result.version,
                           reviews: [...data.reviews, result.review],
-                        });
+                        };
+                        setData(nextData);
+                        onSummaryChange(
+                          summarizeHiringReview(applicationId, nextData),
+                        );
                         setNotice("Разбор сохранён в этом отклике.");
                       })
                     }
@@ -225,7 +273,7 @@ export function ApplicationHiringReview({
                   Этот отклик ещё не разбирали.
                 </p>
               )}
-              {[...data.reviews].reverse().map((review, index) => (
+              {reviews.map((review, index) => (
                 <details
                   key={review.id}
                   open={index === 0}

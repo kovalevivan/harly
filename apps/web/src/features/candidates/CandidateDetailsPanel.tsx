@@ -1,5 +1,6 @@
 "use client";
 
+import type { HiringReviewSummary } from "@/features/applications/hiring-review/summary";
 import { ApplicationHiringReview } from "@/features/applications/hiring-review/ApplicationHiringReview";
 import { localizeStageName } from "@/lib/localize-system-text";
 import { russianPlural } from "@/lib/russian-plural";
@@ -164,7 +165,17 @@ function DetailRow({
   );
 }
 
-function ApplicationDisclosure({ application }: { application: Application }) {
+function ApplicationDisclosure({
+  application,
+  reviewOpen,
+  onReviewOpenChange,
+  onReviewSummaryChange,
+}: {
+  application: Application;
+  reviewOpen: boolean;
+  onReviewOpenChange: (open: boolean) => void;
+  onReviewSummaryChange: (summary: HiringReviewSummary) => void;
+}) {
   const [open, setOpen] = useState(false);
   const hasAnswers = application.answers.length > 0;
   const sourceMeta = application.source
@@ -228,7 +239,12 @@ function ApplicationDisclosure({ application }: { application: Application }) {
         ) : null}
       </div>
 
-      <ApplicationHiringReview applicationId={application.id} />
+      <ApplicationHiringReview
+        applicationId={application.id}
+        open={reviewOpen}
+        onOpenChange={onReviewOpenChange}
+        onSummaryChange={onReviewSummaryChange}
+      />
 
       <div
         className="grid transition-[grid-template-rows] duration-200 ease-out"
@@ -259,6 +275,9 @@ export type CandidateDetailsPanelProps = {
   workspaceId: string;
   files: CandidateFileItem[];
   applications: Application[];
+  openReviewId: string | null;
+  onOpenReviewChange: (applicationId: string | null) => void;
+  onReviewSummaryChange: (summary: HiringReviewSummary) => void;
   email: string;
   phone: string | null;
   address: string | null;
@@ -275,6 +294,9 @@ export function CandidateDetailsPanel({
   workspaceId,
   files,
   applications,
+  openReviewId,
+  onOpenReviewChange,
+  onReviewSummaryChange,
   email,
   phone,
   address,
@@ -286,6 +308,7 @@ export function CandidateDetailsPanel({
   experienceEntries,
 }: CandidateDetailsPanelProps) {
   const [open, setOpen] = useState(true);
+  const expanded = open || openReviewId !== null;
   const latestFile = files[0] ?? null;
   const resumeSummary = latestFile?.parsedSummary ?? null;
   const profileSummary = summary ?? resumeSummary;
@@ -311,12 +334,17 @@ export function CandidateDetailsPanel({
     <section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm shadow-black/[0.03]">
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          if (expanded) {
+            onOpenReviewChange(null);
+            setOpen(false);
+          } else setOpen(true);
+        }}
         className="flex w-full items-center justify-between gap-3 bg-muted/40 px-5 py-3.5 text-left sm:px-6"
-        aria-expanded={open}
+        aria-expanded={expanded}
       >
         <span className="text-sm font-semibold">{"Подробности"}</span>
-        {open ? (
+        {expanded ? (
           <ChevronUp
             className="size-4 text-muted-foreground"
             strokeWidth={1.8}
@@ -329,7 +357,7 @@ export function CandidateDetailsPanel({
         )}
       </button>
 
-      {open ? (
+      {expanded ? (
         <div className="divide-y divide-border/70 border-t bg-card">
           <Section>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -505,6 +533,11 @@ export function CandidateDetailsPanel({
                   <ApplicationDisclosure
                     key={application.id}
                     application={application}
+                    reviewOpen={openReviewId === application.id}
+                    onReviewOpenChange={(open) =>
+                      onOpenReviewChange(open ? application.id : null)
+                    }
+                    onReviewSummaryChange={onReviewSummaryChange}
                   />
                 ))}
               </div>

@@ -1,3 +1,4 @@
+import type { HiringReviewSummary } from "@/features/applications/hiring-review/summary";
 import type {
   ScheduleApplicationOption,
   ScheduleCalConfig,
@@ -123,6 +124,7 @@ export type CandidateProfileTabsProps = {
   interviews: CandidateInterviewItem[];
   members: NoteMention[];
   aiEvaluations: CandidateAiEvaluationItem[];
+  hiringReviewSummaries: HiringReviewSummary[];
   aiConfigured: boolean;
   offers: CandidateOfferItem[];
   offerSignatureChannel: "email" | "esign" | "native";

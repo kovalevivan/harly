@@ -36,10 +36,16 @@ const PROVIDER_LOGO: Record<
 };
 
 const RECOMMENDATION_META = {
-  strong_yes: { label: "Сильный да", className: "bg-primary/10 text-primary" },
-  yes: { label: "Да", className: "bg-primary/10 text-primary" },
-  maybe: { label: "Может быть", className: "bg-clay/15 text-clay" },
-  no: { label: "Нет", className: "bg-destructive/10 text-destructive" },
+  strong_yes: {
+    label: "Выраженное соответствие",
+    className: "bg-primary/10 text-primary",
+  },
+  yes: { label: "Соответствует", className: "bg-primary/10 text-primary" },
+  maybe: { label: "Требует уточнения", className: "bg-clay/15 text-clay" },
+  no: {
+    label: "Есть несоответствия",
+    className: "bg-destructive/10 text-destructive",
+  },
 } as const;
 
 function scoreTone(score: number | null | undefined) {
@@ -56,20 +62,38 @@ function formatCriterionScore(score: number | null | undefined): string {
 }
 
 const CRITERION_STATUS_META = {
-  met: { label: "Встретились", className: "bg-primary/10 text-primary" },
-  partially_met: { label: "Частично выполнено", className: "bg-clay/15 text-clay" },
-  not_met: { label: "Не выполнено", className: "bg-destructive/10 text-destructive" },
-  not_demonstrated: { label: "Не продемонстрировано", className: "bg-muted text-muted-foreground" },
+  met: { label: "Соответствует", className: "bg-primary/10 text-primary" },
+  partially_met: {
+    label: "Частично соответствует",
+    className: "bg-clay/15 text-clay",
+  },
+  not_met: {
+    label: "Не соответствует",
+    className: "bg-destructive/10 text-destructive",
+  },
+  not_demonstrated: {
+    label: "Не продемонстрировано",
+    className: "bg-muted text-muted-foreground",
+  },
   unknown: { label: "Неизвестно", className: "bg-muted text-muted-foreground" },
 } as const;
 
-function ScoreRing({ score, compact = false }: { score: number; compact?: boolean }) {
+function ScoreRing({
+  score,
+  compact = false,
+}: {
+  score: number;
+  compact?: boolean;
+}) {
   const radius = compact ? 19 : 26;
   const circumference = 2 * Math.PI * radius;
   const box = compact ? 48 : 64;
   return (
     <div className={cn("relative shrink-0", compact ? "size-12" : "size-16")}>
-      <svg viewBox={`0 0 ${box} ${box}`} className={cn("-rotate-90", compact ? "size-12" : "size-16")}>
+      <svg
+        viewBox={`0 0 ${box} ${box}`}
+        className={cn("-rotate-90", compact ? "size-12" : "size-16")}
+      >
         <circle
           cx={box / 2}
           cy={box / 2}
@@ -87,7 +111,11 @@ function ScoreRing({ score, compact = false }: { score: number; compact?: boolea
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={circumference * (1 - score / 100)}
-          className={cn("transition-[stroke-dashoffset] duration-700", scoreTone(score), "stroke-current")}
+          className={cn(
+            "transition-[stroke-dashoffset] duration-700",
+            scoreTone(score),
+            "stroke-current",
+          )}
         />
       </svg>
       <span
@@ -124,7 +152,9 @@ function GenerateButton({
         toast.error(result.error);
         return;
       }
-      toast.success(aiConfigured ? "Оценка ИИ готова" : "Автоматическая оценка готова");
+      toast.success(
+        aiConfigured ? "Оценка ИИ готова" : "Автоматическая оценка готова",
+      );
       (router as { refresh?: () => void }).refresh?.();
     });
   }
@@ -135,9 +165,13 @@ function GenerateButton({
       variant={hasEvaluation ? "ghost" : "default"}
       onClick={run}
       loading={isPending}
-      loadingText={"Подсчет очков"}
+      loadingText={"Рассчитываем оценку…"}
     >
-      {hasEvaluation ? "Регенерировать" : aiConfigured ? "Забивайте очки с помощью ИИ" : "Оценивать автоматически"}
+      {hasEvaluation
+        ? "Повторить оценку"
+        : aiConfigured
+          ? "Оценить с помощью ИИ"
+          : "Рассчитать оценку"}
     </AiButton>
   );
 }
@@ -185,10 +219,15 @@ export function AiScoreCard({
                       <HarlyAILogoMark className="size-4" />
                     </span>
                     <p className="truncate text-sm text-muted-foreground">
-                      {"Автоматической оценки пока нет "}{application.jobTitle}.
+                      По вакансии «{application.jobTitle}» оценка ещё не
+                      выполнена.
                     </p>
                   </div>
-                  <GenerateButton applicationId={application.id} hasEvaluation={false} aiConfigured={aiConfigured} />
+                  <GenerateButton
+                    applicationId={application.id}
+                    hasEvaluation={false}
+                    aiConfigured={aiConfigured}
+                  />
                 </CardContent>
               </Card>
             );
@@ -203,15 +242,25 @@ export function AiScoreCard({
                 <ScoreRing score={evaluation.score} compact />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate text-sm font-semibold">{application.jobTitle}</p>
-                    <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", meta.className)}>
+                    <p className="truncate text-sm font-semibold">
+                      {application.jobTitle}
+                    </p>
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-xs font-semibold",
+                        meta.className,
+                      )}
+                    >
                       {meta.label}
                     </span>
                   </div>
                   {highlights.length > 0 ? (
                     <ul className="mt-1 space-y-0.5">
                       {highlights.map((item) => (
-                        <li key={item} className="flex gap-1.5 text-xs text-muted-foreground">
+                        <li
+                          key={item}
+                          className="flex gap-1.5 text-xs text-muted-foreground"
+                        >
                           <span className="mt-1.5 size-1 shrink-0 rounded-full bg-current opacity-60" />
                           <span className="line-clamp-1">{item}</span>
                         </li>
@@ -226,7 +275,8 @@ export function AiScoreCard({
                     className="shrink-0 text-muted-foreground"
                     onClick={onViewDetailsAction}
                   >
-                    {"Посмотреть детали "}</Button>
+                    {"Посмотреть детали "}
+                  </Button>
                 ) : null}
               </CardContent>
             </Card>
@@ -250,9 +300,12 @@ export function AiScoreCard({
                     <HarlyAILogoMark className="size-4.5" />
                   </span>
                   <div>
-                    <p className="text-sm font-medium">{application.jobTitle}</p>
+                    <p className="text-sm font-medium">
+                      {application.jobTitle}
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      {"Для этого отклика пока нет автоматической оценки. "}</p>
+                      {"Для этого отклика пока нет автоматической оценки. "}
+                    </p>
                   </div>
                 </div>
                 <GenerateButton
@@ -290,7 +343,11 @@ export function AiScoreCard({
                     </p>
                   </div>
                 </div>
-                    <GenerateButton applicationId={application.id} hasEvaluation aiConfigured={aiConfigured} />
+                <GenerateButton
+                  applicationId={application.id}
+                  hasEvaluation
+                  aiConfigured={aiConfigured}
+                />
               </div>
 
               {evaluation.criteria.length > 0 ? (
@@ -298,16 +355,27 @@ export function AiScoreCard({
                   {evaluation.criteria.map((criterion) => (
                     <div key={criterion.label}>
                       <div className="flex items-baseline justify-between gap-2">
-                        <p className="text-[13px] font-medium">{criterion.label}</p>
+                        <p className="text-[13px] font-medium">
+                          {criterion.label}
+                        </p>
                         <span className="flex items-center gap-2">
                           {criterion.status ? (
-                            <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold", CRITERION_STATUS_META[criterion.status].className)}>
+                            <span
+                              className={cn(
+                                "rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                                CRITERION_STATUS_META[criterion.status]
+                                  .className,
+                              )}
+                            >
                               {CRITERION_STATUS_META[criterion.status].label}
                             </span>
                           ) : null}
                           {criterion.matchMethod === "semantic_assist" ? (
                             <span className="rounded-full bg-clay/15 px-2 py-0.5 text-[11px] font-semibold text-clay">
-                              {"Семантически связан · Рекомендуется просмотреть "}</span>
+                              {
+                                "Семантически связан · Рекомендуется просмотреть "
+                              }
+                            </span>
                           ) : null}
                           <span
                             className={cn(
@@ -326,7 +394,9 @@ export function AiScoreCard({
                             scoreTone(criterion.score),
                             criterion.score == null && "opacity-40",
                           )}
-                          style={{ width: `${criterion.score == null ? 0 : criterion.score}%` }}
+                          style={{
+                            width: `${criterion.score == null ? 0 : criterion.score}%`,
+                          }}
                         />
                       </div>
                       {criterion.evidence ? (
@@ -342,7 +412,8 @@ export function AiScoreCard({
               {evaluation.impactHighlights.length > 0 ? (
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {"Количественные доказательства "}</p>
+                    {"Количественные доказательства "}
+                  </p>
                   <ul className="mt-2 space-y-1.5">
                     {evaluation.impactHighlights.map((item) => (
                       <li key={item.text} className="flex gap-2 text-sm">
@@ -350,7 +421,9 @@ export function AiScoreCard({
                         <span>
                           {item.text}{" "}
                           <span className="text-xs tabular-nums text-muted-foreground">
-                            {item.metrics.map((metric) => metric.rawText).join(" · ")}
+                            {item.metrics
+                              .map((metric) => metric.rawText)
+                              .join(" · ")}
                           </span>
                         </span>
                       </li>
@@ -359,11 +432,13 @@ export function AiScoreCard({
                 </div>
               ) : null}
 
-              {evaluation.strengths.length > 0 || evaluation.gaps.length > 0 ? (                <div className="grid gap-4 sm:grid-cols-2">
+              {evaluation.strengths.length > 0 || evaluation.gaps.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
                   {evaluation.strengths.length > 0 ? (
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                        {"Сильные стороны "}</p>
+                        {"Сильные стороны "}
+                      </p>
                       <ul className="mt-2 space-y-1.5">
                         {evaluation.strengths.map((item) => (
                           <li key={item} className="flex gap-2 text-sm">
@@ -377,7 +452,8 @@ export function AiScoreCard({
                   {evaluation.gaps.length > 0 ? (
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-clay">
-                        {"Пробелы "}</p>
+                        {"Пробелы "}
+                      </p>
                       <ul className="mt-2 space-y-1.5">
                         {evaluation.gaps.map((item) => (
                           <li key={item} className="flex gap-2 text-sm">
@@ -394,7 +470,8 @@ export function AiScoreCard({
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-3 text-xs text-muted-foreground">
                 <Badge variant="outline" className="gap-1.5 font-normal">
                   {(() => {
-                    const Logo = PROVIDER_LOGO[evaluation.provider as AiProviderId];
+                    const Logo =
+                      PROVIDER_LOGO[evaluation.provider as AiProviderId];
                     return Logo ? <Logo className="size-3.5" /> : null;
                   })()}
                   {evaluation.source === "rules"
@@ -408,14 +485,19 @@ export function AiScoreCard({
                     : "Только профиль. Нет читабельного резюме"}
                 </span>
                 <span>
-                  {"Обновлено "}<RelativeTime value={evaluation.updatedAt} />
+                  {"Обновлено "}
+                  <RelativeTime value={evaluation.updatedAt} />
                 </span>
                 {evaluation.evidenceCoverage != null ? (
-                  <span>{"Доказательства "}{evaluation.evidenceCoverage}%</span>
+                  <span>
+                    {"Доказательства "}
+                    {evaluation.evidenceCoverage}%
+                  </span>
                 ) : null}
                 {evaluation.requiresHumanReview ? (
                   <Badge variant="outline" className="font-normal text-clay">
-                    {"Требуется человеческая проверка "}</Badge>
+                    {"Требуется человеческая проверка "}
+                  </Badge>
                 ) : null}
               </div>
               <p className="text-xs leading-5 text-muted-foreground">
