@@ -3,7 +3,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSessionCookie } from "@harly/auth/cookies";
 
 import { mustSetUp2fa } from "@/lib/two-factor";
-import { detectSuspiciousSession, getTrustedClientIp, isEmailDomainAllowed, isIpAllowed } from "@/server/security/policy";
+import {
+  detectSuspiciousSession,
+  getTrustedClientIp,
+  isEmailDomainAllowed,
+  isIpAllowed,
+} from "@/server/security/policy";
 
 const PORTAL_SESSION_COOKIE = "harly_portal_session";
 
@@ -48,6 +53,7 @@ const PUBLIC_PATHS = [
   // visitors, so the proxy must let them through (page handles !session).
   "/join",
   "/invite",
+  "/briefing",
   // Portal public routes , pages enforce isPortalEnabled themselves
   "/portal",
   "/api/portal",
@@ -64,7 +70,12 @@ const SECURITY_EXEMPT_PREFIXES = ["/settings/security", "/account", "/api"];
 const CHANGE_PASSWORD_EXEMPT = ["/change-password", "/api", "/setup-2fa"];
 
 // Portal protected paths , require portal session cookie (no DB needed)
-const PORTAL_PROTECTED = ["/portal/dashboard", "/portal/jobs", "/portal/profile", "/portal/notifications"];
+const PORTAL_PROTECTED = [
+  "/portal/dashboard",
+  "/portal/jobs",
+  "/portal/profile",
+  "/portal/notifications",
+];
 
 function isProtected(pathname: string): boolean {
   return PROTECTED_PATH_PREFIXES.some((p) => pathname.startsWith(p));
@@ -75,7 +86,9 @@ function isSecurityExempt(pathname: string): boolean {
 }
 
 function isPortalProtected(pathname: string): boolean {
-  return PORTAL_PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  return PORTAL_PROTECTED.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`),
+  );
 }
 
 function publicRedirectUrl(request: NextRequest, pathname: string): URL {
@@ -88,7 +101,12 @@ function publicRedirectUrl(request: NextRequest, pathname: string): URL {
 
 // In demo mode the standard auth entry points are replaced by the shared-
 // credential `/enter` screen. The career board at `/` is untouched.
-const DEMO_REDIRECT_TO_ENTER = ["/login", "/signup", "/forgot-password", "/setup"];
+const DEMO_REDIRECT_TO_ENTER = [
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/setup",
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -98,7 +116,9 @@ export async function proxy(request: NextRequest) {
   // `/enter`, and `/api/*` are left alone so entry + APIs keep working.
   if (
     process.env.DEMO_MODE === "true" &&
-    DEMO_REDIRECT_TO_ENTER.some((p) => pathname === p || pathname.startsWith(`${p}/`))
+    DEMO_REDIRECT_TO_ENTER.some(
+      (p) => pathname === p || pathname.startsWith(`${p}/`),
+    )
   ) {
     return NextResponse.redirect(publicRedirectUrl(request, "/enter"));
   }
@@ -144,10 +164,16 @@ export async function proxy(request: NextRequest) {
       const { db, workspaceSettings } = await import("@harly/db");
       const { and, eq } = await import("drizzle-orm");
 
-      const { member: authMembers, user: userTable, passkeys, session: authSessions } = await import("@harly/db");
+      const {
+        member: authMembers,
+        user: userTable,
+        passkeys,
+        session: authSessions,
+      } = await import("@harly/db");
 
       // Resolve org: activeOrganizationId → first membership (same as workspace/context.ts)
-      const activeOrgId = (session.session as Record<string, unknown>).activeOrganizationId as string | undefined;
+      const activeOrgId = (session.session as Record<string, unknown>)
+        .activeOrganizationId as string | undefined;
       let orgId = activeOrgId;
       if (!orgId) {
         const [firstMember] = await db
@@ -159,14 +185,21 @@ export async function proxy(request: NextRequest) {
       }
 
       if (orgId) {
-        const [[wsRow], [memberRow], [userRow], [existingPasskey], [sessionMeta]] = await Promise.all([
+        const [
+          [wsRow],
+          [memberRow],
+          [userRow],
+          [existingPasskey],
+          [sessionMeta],
+        ] = await Promise.all([
           db
             .select({
               require2fa: workspaceSettings.require2fa,
               ipAllowlist: workspaceSettings.securityIpAllowlist,
               allowedDomains: workspaceSettings.securityAllowedDomains,
               requirePasskey: workspaceSettings.securityRequirePasskey,
-              riskDetectionEnabled: workspaceSettings.securityRiskDetectionEnabled,
+              riskDetectionEnabled:
+                workspaceSettings.securityRiskDetectionEnabled,
             })
             .from(workspaceSettings)
             .where(eq(workspaceSettings.organizationId, orgId))
@@ -195,20 +228,33 @@ export async function proxy(request: NextRequest) {
             .where(eq(passkeys.userId, session.user.id))
             .limit(1),
           db
-            .select({ ipAddress: authSessions.ipAddress, userAgent: authSessions.userAgent })
+            .select({
+              ipAddress: authSessions.ipAddress,
+              userAgent: authSessions.userAgent,
+            })
             .from(authSessions)
             .where(eq(authSessions.id, session.session.id))
             .limit(1),
         ]);
 
         const requestIp = getTrustedClientIp(request);
-        const ipAllowlist = Array.isArray(wsRow?.ipAllowlist) ? wsRow.ipAllowlist as string[] : [];
+        const ipAllowlist = Array.isArray(wsRow?.ipAllowlist)
+          ? (wsRow.ipAllowlist as string[])
+          : [];
         if (!isIpAllowed(requestIp, ipAllowlist)) {
-          return new NextResponse("Workspace access is restricted by IP policy.", { status: 403 });
+          return new NextResponse(
+            "Workspace access is restricted by IP policy.",
+            { status: 403 },
+          );
         }
-        const allowedDomains = Array.isArray(wsRow?.allowedDomains) ? wsRow.allowedDomains as string[] : [];
+        const allowedDomains = Array.isArray(wsRow?.allowedDomains)
+          ? (wsRow.allowedDomains as string[])
+          : [];
         if (!isEmailDomainAllowed(session.user.email, allowedDomains)) {
-          return new NextResponse("Your email domain is not allowed for this workspace.", { status: 403 });
+          return new NextResponse(
+            "Your email domain is not allowed for this workspace.",
+            { status: 403 },
+          );
         }
         if (
           wsRow?.riskDetectionEnabled &&
@@ -219,11 +265,18 @@ export async function proxy(request: NextRequest) {
             currentUserAgent: request.headers.get("user-agent"),
           })
         ) {
-          await db.delete(authSessions).where(eq(authSessions.id, session.session.id));
-          return new NextResponse("Suspicious session activity detected. Please sign in again.", {
-            status: 403,
-            headers: { "x-harly-security-event": "reauthentication-required" },
-          });
+          await db
+            .delete(authSessions)
+            .where(eq(authSessions.id, session.session.id));
+          return new NextResponse(
+            "Suspicious session activity detected. Please sign in again.",
+            {
+              status: 403,
+              headers: {
+                "x-harly-security-event": "reauthentication-required",
+              },
+            },
+          );
         }
 
         // A forced password change takes priority over the 2FA gate: the member
@@ -241,15 +294,20 @@ export async function proxy(request: NextRequest) {
         if (
           mustSetUp2fa({
             workspaceRequires2fa: wsRow?.require2fa ?? false,
-            userHas2fa: Boolean(userRow?.twoFactorEnabled) || Boolean(existingPasskey),
+            userHas2fa:
+              Boolean(userRow?.twoFactorEnabled) || Boolean(existingPasskey),
             roleKey: memberRow?.role,
           })
         ) {
-          return NextResponse.redirect(publicRedirectUrl(request, "/setup-2fa"));
+          return NextResponse.redirect(
+            publicRedirectUrl(request, "/setup-2fa"),
+          );
         }
 
         if (wsRow?.requirePasskey && !existingPasskey) {
-          return NextResponse.redirect(publicRedirectUrl(request, "/setup-2fa"));
+          return NextResponse.redirect(
+            publicRedirectUrl(request, "/setup-2fa"),
+          );
         }
       }
     } catch {
@@ -261,5 +319,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };

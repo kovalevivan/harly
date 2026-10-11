@@ -1,0 +1,1 @@
+ALTER TABLE "briefing_turns" ADD COLUMN "attempts" integer DEFAULT 1 NOT NULL;

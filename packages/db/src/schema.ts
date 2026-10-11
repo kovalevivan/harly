@@ -1276,19 +1276,68 @@ export const jobBriefs = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "restrict" }),
     title: text("title").notNull(),
-    answers: jsonb("answers").default(sql`'[]'::jsonb`).notNull(),
+    answers: jsonb("answers")
+      .default(sql`'[]'::jsonb`)
+      .notNull(),
     currentQuestion: text("current_question"),
     profile: jsonb("profile"),
     generatedDraft: jsonb("generated_draft"),
+    intake: jsonb("intake"),
+    agentLeaseId: uuid("agent_lease_id"),
+    agentLeaseUntil: timestamp("agent_lease_until", { withTimezone: true }),
+    resumeReviews: jsonb("resume_reviews")
+      .default(sql`'[]'::jsonb`)
+      .notNull(),
     jobId: uuid("job_id"),
     ...timestamps(),
   },
   (table) => [
-    index("job_briefs_workspace_created_idx").on(table.workspaceId, table.createdAt),
+    index("job_briefs_workspace_created_idx").on(
+      table.workspaceId,
+      table.createdAt,
+    ),
   ],
 );
 
 export type JobBrief = typeof jobBriefs.$inferSelect;
+
+// Bearer invitations are scoped to one intake; only token hashes reach storage.
+export const briefingInvitations = pgTable(
+  "briefing_invitations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    briefId: uuid("brief_id")
+      .notNull()
+      .references(() => jobBriefs.id, { onDelete: "cascade" }),
+    tokenHash: text("token_hash").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [index("briefing_invitations_brief_idx").on(t.briefId)],
+);
+
+// Durable input and idempotency precede every paid model run.
+export const briefingTurns = pgTable(
+  "briefing_turns",
+  {
+    id: uuid("id").primaryKey(),
+    briefId: uuid("brief_id")
+      .notNull()
+      .references(() => jobBriefs.id, { onDelete: "cascade" }),
+    message: text("message").notNull(),
+    attempts: integer("attempts").notNull().default(1),
+    status: text("status").notNull().default("pending"),
+    result: jsonb("result"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [index("briefing_turns_brief_created_idx").on(t.briefId, t.createdAt)],
+);
 
 export const jobs = pgTable(
   "jobs",
@@ -3297,7 +3346,9 @@ export const aiEvaluationRevisions = pgTable(
       .references(() => applications.id, { onDelete: "cascade" }),
     revision: integer("revision").notNull(),
     snapshot: jsonb("snapshot").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => [
     uniqueIndex("ai_evaluation_revisions_evaluation_revision_idx").on(
@@ -5276,9 +5327,11 @@ export const automationAiJobs = pgTable(
     workspaceId: text("workspace_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    actorId: text("actor_id").notNull().references(() => user.id, {
-      onDelete: "cascade",
-    }),
+    actorId: text("actor_id")
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
     kind: text("kind").notNull(),
     status: text("status").default("queued").notNull(),
     idempotencyKey: text("idempotency_key"),
@@ -5524,7 +5577,10 @@ export const workspaceAutomationRunBuckets = pgTable(
       table.bucketStart,
     ),
     index("workspace_automation_run_buckets_cleanup_idx").on(table.bucketStart),
-    check("workspace_automation_run_buckets_reserved_check", sql`${table.reserved} >= 0`),
+    check(
+      "workspace_automation_run_buckets_reserved_check",
+      sql`${table.reserved} >= 0`,
+    ),
   ],
 );
 
@@ -5576,7 +5632,10 @@ export const workflowExternalActionBuckets = pgTable(
       table.bucketStart,
     ),
     index("workflow_external_action_buckets_cleanup_idx").on(table.bucketStart),
-    check("workflow_external_action_buckets_reserved_check", sql`${table.reserved} >= 0`),
+    check(
+      "workflow_external_action_buckets_reserved_check",
+      sql`${table.reserved} >= 0`,
+    ),
   ],
 );
 

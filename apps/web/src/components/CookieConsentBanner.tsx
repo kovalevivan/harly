@@ -53,7 +53,9 @@ function Switch({
       className={cn(
         "relative inline-flex h-[22px] w-9 shrink-0 items-center rounded-full transition-colors duration-200",
         locked ? "cursor-not-allowed opacity-60" : "cursor-pointer",
-        checked ? "bg-zinc-900 dark:bg-zinc-100" : "bg-zinc-200 dark:bg-zinc-700",
+        checked
+          ? "bg-zinc-900 dark:bg-zinc-100"
+          : "bg-zinc-200 dark:bg-zinc-700",
       )}
     >
       <span
@@ -86,7 +88,8 @@ function PrefRow({
           {label}
           {locked && (
             <span className="rounded-full bg-zinc-100 px-1.5 py-[1px] text-[10px] font-medium tracking-wide text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
-              {"ОБЯЗАТЕЛЬНО "}</span>
+              {"ОБЯЗАТЕЛЬНО "}
+            </span>
           )}
         </div>
         <p className="mt-0.5 text-[12.5px] leading-snug text-zinc-500 dark:text-zinc-400">
@@ -97,7 +100,7 @@ function PrefRow({
         checked={checked}
         locked={locked}
         onToggle={() => !locked && onToggle()}
-        label={`${label} печенье`}
+        label={`${label}: файлы cookie`}
       />
     </div>
   );
@@ -105,11 +108,11 @@ function PrefRow({
 
 const CookiePanel = (props: CookiePanelProps) => {
   const {
-    title = "Cookies on this site",
-    message = "Harly uses only the cookies needed to run the site. Videos, maps, and other embeds added by this organization stay off until you allow them.",
-    acceptText = "Accept all",
-    necessaryText = "Necessary only",
-    customizeText = "Manage preferences",
+    title = "Файлы cookie на этом сайте",
+    message = "Harly использует файлы cookie для работы сайта. Видео, карты и другие внешние материалы загружаются только с вашего разрешения.",
+    acceptText = "Разрешить все",
+    necessaryText = "Только необходимые",
+    customizeText = "Настроить",
     icon = "cookie",
     className,
     privacyHref = "/legal/privacy-policy",
@@ -151,7 +154,8 @@ const CookiePanel = (props: CookiePanelProps) => {
   useEffect(() => {
     const open = () => show({ preferences: true });
     window.addEventListener(OPEN_COOKIE_PREFERENCES_EVENT, open);
-    return () => window.removeEventListener(OPEN_COOKIE_PREFERENCES_EVENT, open);
+    return () =>
+      window.removeEventListener(OPEN_COOKIE_PREFERENCES_EVENT, open);
   }, [show]);
 
   useEffect(() => {
@@ -218,7 +222,11 @@ const CookiePanel = (props: CookiePanelProps) => {
 
         <div className="flex flex-col items-start gap-3 pr-6">
           <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
-            <IconEl className="size-[18px]" strokeWidth={2} aria-hidden="true" />
+            <IconEl
+              className="size-[18px]"
+              strokeWidth={2}
+              aria-hidden="true"
+            />
           </span>
 
           <h2 className="text-[16px] font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
@@ -232,13 +240,15 @@ const CookiePanel = (props: CookiePanelProps) => {
             href={cookieHref}
             className="font-medium text-zinc-700 underline decoration-zinc-300 underline-offset-2 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:decoration-zinc-600 dark:hover:text-zinc-100"
           >
-            {"Политика использования файлов cookie "}</a>{" "}
+            {"Политика использования файлов cookie "}
+          </a>{" "}
           {"и"}{" "}
           <a
             href={privacyHref}
             className="font-medium text-zinc-700 underline decoration-zinc-300 underline-offset-2 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:decoration-zinc-600 dark:hover:text-zinc-100"
           >
-            {"Политика конфиденциальности "}</a>
+            {"Политика конфиденциальности "}
+          </a>
           .
         </p>
 
@@ -253,16 +263,18 @@ const CookiePanel = (props: CookiePanelProps) => {
           >
             <PrefRow
               label={"Строго необходимо"}
-              desc="Session when you sign in, and storing this choice. Always on."
+              desc="Сессия входа и сохранение вашего выбора. Всегда включены."
               locked
               checked
               onToggle={() => {}}
             />
             <PrefRow
               label={"Встроенный контент"}
-              desc="Videos, maps, and other third-party embeds this organization adds."
+              desc="Видео, карты и другие внешние материалы организации."
               checked={prefs.embeds}
-              onToggle={() => setPrefs((current) => ({ ...current, embeds: !current.embeds }))}
+              onToggle={() =>
+                setPrefs((current) => ({ ...current, embeds: !current.embeds }))
+              }
             />
           </div>
         </div>
@@ -309,7 +321,8 @@ const CookiePanel = (props: CookiePanelProps) => {
               "mt-2 w-full animate-in fade-in slide-in-from-top-1 duration-200",
             )}
           >
-            {"Сохранить настройки "}</button>
+            {"Сохранить настройки "}
+          </button>
         )}
       </div>
     </div>

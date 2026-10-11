@@ -53,6 +53,7 @@ export async function createJobBriefAction(input: { title: string }) {
     workspaceId: context.organization.id,
     createdById: context.user.id,
     title,
+    intake: { messages: [], profileApproved: false, vacancyApproved: false, caseId: null },
   }).returning({ id: jobBriefs.id });
   return { ok: true as const, briefId: brief.id };
 }

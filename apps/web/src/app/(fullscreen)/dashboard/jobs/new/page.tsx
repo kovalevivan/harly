@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { readIntake } from "@/features/jobs/briefing/workflow";
 import { createJobAction } from "@/features/jobs/actions";
 import { listWorkspaceDepartments } from "@/features/jobs/data";
 import { getCareerPageData } from "@/features/career-page/data";
@@ -9,10 +11,18 @@ import { jobDraftSchema } from "@/lib/ai/schemas";
 export const dynamic = "force-dynamic";
 
 function escapeHtml(value: string) {
-  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
-export default async function NewJobPage({ searchParams }: { searchParams: Promise<{ briefId?: string }> }) {
+export default async function NewJobPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ briefId?: string }>;
+}) {
   const { organization: workspace } = await getWorkspaceContext();
   const { briefId } = await searchParams;
   const [departments, careerPageData, brief] = await Promise.all([
@@ -20,17 +30,26 @@ export default async function NewJobPage({ searchParams }: { searchParams: Promi
     getCareerPageData(workspace.slug),
     briefId ? getJobBrief(briefId) : Promise.resolve(null),
   ]);
+  if (
+    brief?.intake &&
+    (!readIntake(brief.intake).profileApproved ||
+      !readIntake(brief.intake).vacancyApproved)
+  )
+    redirect(`/dashboard/jobs/briefs/${brief.id}?step=3`);
   const draft = jobDraftSchema.safeParse(brief?.generatedDraft);
-  const briefPrefill = brief && draft.success ? {
-    id: brief.id,
-    title: brief.title,
-    description: `<p>${escapeHtml(draft.data.summary)}</p>`,
-    sections: draft.data.sections.map((section, index) => ({
-      id: `brief-${index}`,
-      title: section.title,
-      body: `<ul>${section.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}</ul>`,
-    })),
-  } : undefined;
+  const briefPrefill =
+    brief && draft.success
+      ? {
+          id: brief.id,
+          title: brief.title,
+          description: `<p>${escapeHtml(draft.data.summary)}</p>`,
+          sections: draft.data.sections.map((section, index) => ({
+            id: `brief-${index}`,
+            title: section.title,
+            body: `<ul>${section.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}</ul>`,
+          })),
+        }
+      : undefined;
 
   return (
     <JobForm
