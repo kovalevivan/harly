@@ -29,7 +29,11 @@ import {
 } from "@/features/jobs/config";
 import { buildQuestionAnswerRows } from "@/features/applications/questions";
 import { lockApplicationPipelineOrder } from "@/features/applications/pipeline-order";
-import { verifyResumeUpload } from "@/features/applications/resume-upload";
+import {
+  verifyResumeUpload,
+  type VerifiedResumeUpload,
+} from "@/features/applications/resume-upload";
+import { enqueuePublicApplicationReview } from "@/features/applications/hiring-review/public-application";
 import { emitWebhookEvent } from "@/server/webhooks/emit";
 import {
   persistDomainEvent,
@@ -211,6 +215,7 @@ export async function createPublicApplication(
     jobTitle: string;
     candidateEmail: string;
     candidateName: string;
+    resume: VerifiedResumeUpload | null;
   };
   // Held in a ref object so the transaction closure can populate it without
   // tripping TypeScript's "assigned-in-closure" narrowing of a bare `let`.
@@ -594,6 +599,7 @@ export async function createPublicApplication(
         jobTitle: job.title,
         candidateEmail: candidate.email,
         candidateName: `${candidate.firstName} ${candidate.lastName}`,
+        resume: verifiedResume,
       };
       createdDomainEvent.current = await persistDomainEvent(tx, {
         name: "application.created",
@@ -633,6 +639,15 @@ export async function createPublicApplication(
   }
 
   const event = createdEvent.current;
+  // The application and file have committed. Persist the review task before
+  // returning to either public caller; only the AI request runs after response.
+  if (result.ok && event?.resume) {
+    await enqueuePublicApplicationReview({
+      applicationId: event.applicationId,
+      workspaceId: event.workspaceId,
+      resume: event.resume,
+    });
+  }
   if (createdDomainEvent.current) {
     await publishPersistedDomainEvents([createdDomainEvent.current]);
   }

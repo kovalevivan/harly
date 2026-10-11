@@ -8,8 +8,13 @@ const mocks = vi.hoisted(() => {
   const transactionImpl = vi.fn();
   const selectImpl = vi.fn();
   const storageRead = vi.fn();
-  return { transactionImpl, selectImpl, storageRead };
+  const enqueuePublicReview = vi.fn();
+  return { transactionImpl, selectImpl, storageRead, enqueuePublicReview };
 });
+
+vi.mock("@/features/applications/hiring-review/public-application", () => ({
+  enqueuePublicApplicationReview: mocks.enqueuePublicReview,
+}));
 
 vi.mock("@harly/db", () => ({
   db: {
@@ -137,6 +142,7 @@ describe("F1-07 re-application duplicate detection order", () => {
     mocks.transactionImpl.mockReset();
     mocks.selectImpl.mockReset();
     mocks.storageRead.mockReset();
+    mocks.enqueuePublicReview.mockReset();
   });
 
   it("publishes legal configuration through the public job application context", async () => {
@@ -202,6 +208,7 @@ describe("F1-07 re-application duplicate detection order", () => {
     // …and crucially the candidate was never updated (no overwrite on retry).
     expect(calls.update).toBe(0);
     expect(calls.insert).toBe(0);
+    expect(mocks.enqueuePublicReview).not.toHaveBeenCalled();
   });
 
   it("does not restore a trashed candidate when the same-job application is still blocking", async () => {
@@ -352,6 +359,64 @@ describe("F1-07 re-application duplicate detection order", () => {
     expect(calls.insert).toBe(0);
   });
 
+  it.each([false, true])("queues only a committed public application with a verified resume (resume=%s)", async (withResume) => {
+    const bytes = Buffer.from("%PDF-1.7\nresume");
+    mocks.storageRead.mockResolvedValue(bytes);
+    const key = "workspaces/ws-1/resumes/upload/cv.pdf";
+    const { tx } = makeTx([
+      [JOB], [ORG], [{ ...EXISTING_CANDIDATE, firstName: "Ada", lastName: "User", email: VALUES.email }],
+      [], [{ id: "stage-1" }], [{ value: 1 }], [{ id: "accepted-application" }],
+      ...(withResume ? [[]] : []), [], [], [], [],
+    ]);
+    let committed = false;
+    mocks.transactionImpl.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+      const value = await fn(tx);
+      committed = true;
+      return value;
+    });
+    mocks.enqueuePublicReview.mockImplementation(async () => {
+      expect(committed).toBe(true);
+    });
+    const result = await createPublicApplication(
+      { jobSlug: "engineer", workspaceSlug: "acme" },
+      { ...VALUES, ...(withResume ? {
+        resumeKey: key,
+        resumeFileName: "cv.pdf",
+        resumeFileType: "application/pdf",
+        resumeFileSize: bytes.byteLength,
+      } : {}) },
+    );
+    expect(result.ok).toBe(true);
+    if (withResume) {
+      expect(mocks.enqueuePublicReview).toHaveBeenCalledExactlyOnceWith({
+        applicationId: "accepted-application",
+        workspaceId: "ws-1",
+        resume: expect.objectContaining({ key, bytes, fileName: "cv.pdf" }),
+      });
+      expect(mocks.storageRead).toHaveBeenCalledOnce();
+      expect(result).not.toHaveProperty("resume");
+      expect(JSON.stringify(result)).not.toContain("%PDF");
+    } else expect(mocks.enqueuePublicReview).not.toHaveBeenCalled();
+  });
+
+  it("does not queue a resume when the application transaction rolls back", async () => {
+    const bytes = Buffer.from("%PDF-1.7\nresume");
+    mocks.storageRead.mockResolvedValue(bytes);
+    const { tx } = makeTx([
+      [JOB], [ORG], [{ ...EXISTING_CANDIDATE, firstName: "Ada", lastName: "User", email: VALUES.email }],
+      [], [{ id: "stage-1" }], [{ value: 1 }], [{ id: "accepted-application" }], [], [], [], [], [],
+    ]);
+    mocks.transactionImpl.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+      await fn(tx);
+      throw new Error("transaction rolled back");
+    });
+    await expect(createPublicApplication(
+      { jobSlug: "engineer", workspaceSlug: "acme" },
+      { ...VALUES, resumeKey: "workspaces/ws-1/resumes/upload/cv.pdf", resumeFileName: "cv.pdf" },
+    )).rejects.toThrow("transaction rolled back");
+    expect(mocks.enqueuePublicReview).not.toHaveBeenCalled();
+  });
+
   it("maps an application uniqueness race to the known idempotent conflict", () => {
     expect(
       getApplicationConflictMessage({
@@ -377,6 +442,28 @@ describe("F1-07 re-application duplicate detection order", () => {
 
     expect(result).toEqual({ ok: false, message: "Resume upload is invalid." });
     expect(calls.insert).toBe(0);
+  });
+
+  it("still rejects a missing required resume without queuing AI work", async () => {
+    const { tx, calls } = makeTx([[{ ...JOB, applicationConfig: { resumeRequired: true } }]]);
+    mocks.transactionImpl.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn(tx));
+    const result = await createPublicApplication(
+      { jobSlug: "engineer", workspaceSlug: "acme" }, VALUES,
+    );
+    expect(result).toEqual({ ok: false, message: "Resume is required." });
+    expect(calls.insert).toBe(0);
+    expect(mocks.enqueuePublicReview).not.toHaveBeenCalled();
+  });
+
+  it("never queues for an unpublished or unavailable vacancy", async () => {
+    const { tx, calls } = makeTx([[]]);
+    mocks.transactionImpl.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn(tx));
+    const result = await createPublicApplication(
+      { jobSlug: "engineer", workspaceSlug: "acme" }, VALUES,
+    );
+    expect(result).toEqual({ ok: false, message: "Job not available." });
+    expect(calls.insert).toBe(0);
+    expect(mocks.enqueuePublicReview).not.toHaveBeenCalled();
   });
 
   it("rejects a canonical-looking resume key when the object does not exist", async () => {

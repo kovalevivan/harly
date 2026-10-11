@@ -11,6 +11,9 @@ import {
 type ResumeContentType = (typeof allowedResumeContentTypes)[number];
 
 export type VerifiedResumeUpload = {
+  // Internal only: reuse the verified object for extraction after commit rather
+  // than rereading storage or accidentally reviewing a different candidate file.
+  bytes: Uint8Array;
   key: string;
   fileUrl: string;
   fileName: string;
@@ -47,8 +50,7 @@ function extensionMatches(fileName: string, fileType: ResumeContentType) {
   const expected: Record<string, ResumeContentType> = {
     pdf: "application/pdf",
     doc: "application/msword",
-    docx:
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   };
   return !expected[extension] || expected[extension] === fileType;
 }
@@ -82,7 +84,8 @@ export async function verifyResumeUpload(input: {
   }
   if (
     input.fileSize !== undefined &&
-    (!Number.isSafeInteger(input.fileSize) || input.fileSize !== bytes.byteLength)
+    (!Number.isSafeInteger(input.fileSize) ||
+      input.fileSize !== bytes.byteLength)
   ) {
     return null;
   }
@@ -95,12 +98,14 @@ export async function verifyResumeUpload(input: {
     return null;
   }
 
-  const fileName = input.fileName?.trim() || input.key.split("/").pop() || "resume";
+  const fileName =
+    input.fileName?.trim() || input.key.split("/").pop() || "resume";
   if (!extensionMatches(fileName, detectedType)) {
     return null;
   }
 
   return {
+    bytes,
     key: input.key,
     fileUrl: privateResumeFileUrl(input.key),
     fileName,
