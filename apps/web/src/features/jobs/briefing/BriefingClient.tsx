@@ -1,6 +1,5 @@
 "use client";
 
-import { CallCenterEntry } from "./HiringPlanClient";
 import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import Link from "next/link";
@@ -39,7 +38,7 @@ export function NewBriefingClient() {
   }
 
   return (
-    <main className="mx-auto max-w-2xl space-y-6 px-6 py-10">
+    <main className="mx-auto h-full max-w-2xl space-y-6 overflow-y-auto px-6 py-10">
       <div className="space-y-2">
         <Link
           href="/dashboard/jobs"
@@ -53,7 +52,6 @@ export function NewBriefingClient() {
           подготовит внутренний профиль до публикации вакансии.
         </p>
       </div>
-      <CallCenterEntry />
       <div className="rounded-2xl border bg-card p-6 space-y-4">
         <label htmlFor="brief-title" className="block font-medium">
           Кого планируете нанять?
@@ -63,7 +61,7 @@ export function NewBriefingClient() {
           value={title}
           maxLength={160}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="Например, врач-стоматолог терапевт"
+          placeholder="Название должности"
           onKeyDown={(event) => {
             if (event.key === "Enter") create();
           }}

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { listJobsWithStats, listTrashedJobs } from "@/features/jobs/data";
 import { JobsTable } from "@/features/jobs/JobsTable";
-import { CallCenterEntry } from "@/features/jobs/briefing/HiringPlanClient";
 import { listJobBriefs } from "@/features/jobs/briefing/actions";
 import { JobIdentity } from "@/features/jobs/JobIdentity";
 import { TrashJobActions } from "@/features/jobs/TrashJobActions";
@@ -103,7 +102,6 @@ export default async function DashboardJobsPage({
         </Button>
       </div>
 
-      {!isTrash && <CallCenterEntry />}
       {!isTrash && briefs.length > 0 ? (
         <section className="rounded-2xl border bg-card p-4">
           <h2 className="mb-3 font-semibold">

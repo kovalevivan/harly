@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { BriefingChat } from "./BriefingChat";
 import { RussianFileInput } from "./RussianFileInput";
 import type { JobDraft } from "@/lib/ai/schemas";
 import { briefTopics, type BriefAnswer } from "./model";
@@ -19,7 +20,6 @@ import { callCenterCase } from "./call-center";
 import {
   chatHiringPlanAction,
   compileEmployeeProfileAction,
-  createCallCenterPlanAction,
   generateHiringDescriptionAction,
   saveEmployeeProfileAction,
   saveHiringDescriptionAction,
@@ -29,33 +29,6 @@ import {
   completePlanBriefingAction,
   editPlanAnswersAction,
 } from "./workflow-actions";
-
-export function CallCenterEntry() {
-  const router = useRouter();
-  const [busy, start] = useTransition();
-  const [error, setError] = useState("");
-  return (
-    <div>
-      <Button
-        variant="outline"
-        disabled={busy}
-        onClick={() =>
-          start(async () => {
-            try {
-              const result = await createCallCenterPlanAction();
-              router.push(`/dashboard/jobs/briefs/${result.briefId}`);
-            } catch {
-              setError("Не удалось открыть план подбора. Повторите попытку.");
-            }
-          })
-        }
-      >
-        {busy ? "Открываем…" : "Подбор в контакт-центр"}
-      </Button>
-      {error && <p role="alert">{error}</p>}
-    </div>
-  );
-}
 
 const sections = [
   ["outcomes", "Ожидаемые результаты"],
@@ -121,6 +94,7 @@ export function HiringPlanClient({
   const [profileDirty, setProfileDirty] = useState(false);
   const [draftDirty, setDraftDirty] = useState(false);
   const [message, setMessage] = useState("");
+  const [chatWaiting, setChatWaiting] = useState(false);
   const [notice, setNotice] = useState("");
   const [busy, start] = useTransition();
   const [lastServerVersion, setLastServerVersion] = useState(initialVersion);
@@ -163,30 +137,35 @@ export function HiringPlanClient({
   }
   function send() {
     run(async () => {
-      const id =
-        pendingRequest?.message === message
-          ? pendingRequest.id
-          : crypto.randomUUID();
-      setPendingRequest({ id, message });
-      const result = await chatHiringPlanAction({
-        briefId,
-        message,
-        requestId: id,
-        expectedVersion: version,
-      });
-      if (!result.ok) {
-        router.refresh();
-        return setNotice(result.error);
+      setChatWaiting(true);
+      try {
+        const id =
+          pendingRequest?.message === message
+            ? pendingRequest.id
+            : crypto.randomUUID();
+        setPendingRequest({ id, message });
+        const result = await chatHiringPlanAction({
+          briefId,
+          message,
+          requestId: id,
+          expectedVersion: version,
+        });
+        if (!result.ok) {
+          router.refresh();
+          return setNotice(result.error);
+        }
+        setPendingRequest(null);
+        setVersion(result.updatedAt);
+        setAnswers(result.answers);
+        setIntake(result.intake);
+        setProfile(null);
+        setDraft(null);
+        setProfileDirty(false);
+        setDraftDirty(false);
+        setMessage("");
+      } finally {
+        setChatWaiting(false);
       }
-      setPendingRequest(null);
-      setVersion(result.updatedAt);
-      setAnswers(result.answers);
-      setIntake(result.intake);
-      setProfile(null);
-      setDraft(null);
-      setProfileDirty(false);
-      setDraftDirty(false);
-      setMessage("");
     });
   }
   function compile() {
@@ -218,7 +197,7 @@ export function HiringPlanClient({
     (topic) => !answers.some((answer) => answer.topic === topic.key),
   );
   return (
-    <main className="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6">
+    <main className="mx-auto h-full max-w-5xl space-y-6 overflow-y-auto px-4 py-8 sm:px-6">
       <Link
         href="/dashboard/jobs"
         className="text-sm text-muted-foreground underline"
@@ -436,48 +415,25 @@ export function HiringPlanClient({
             условиях, уточнить или исправить предыдущий ответ. Изменение
             требований потребует повторного утверждения профиля и описания.
           </p>
-          <div
-            className="max-h-[480px] space-y-3 overflow-y-auto"
-            aria-label="История чата"
-          >
-            {chat.map((item, index) => (
-              <article
-                key={index}
-                className={`rounded-xl border p-4 ${item.role === "user" ? "ml-6 bg-muted" : "mr-6 bg-background"}`}
-              >
-                <p className="mb-1 text-xs font-medium text-muted-foreground">
-                  {item.role === "user" ? "Руководитель" : "HR-партнёр"}
-                </p>
-                <p className="whitespace-pre-wrap">{item.content}</p>
-              </article>
-            ))}
-            {!chat.length && <p>{briefTopics[0].question}</p>}
-          </div>
+          <BriefingChat
+            className="h-[65dvh] min-h-80"
+            messages={chat}
+            value={message}
+            onChange={setMessage}
+            onSend={send}
+            disabled={busy || intake.completed}
+            closed={intake.completed}
+            waiting={chatWaiting}
+            pendingMessage={chatWaiting ? pendingRequest?.message : undefined}
+            inputId="manager-message"
+          />
           <p className="text-sm">
             Сводка требований: {answers.length} из 7.{" "}
             {unanswered.length
               ? "ИИ уточнит недостающие сведения."
               : "Можно сформировать профиль или уточнить требования."}
           </p>
-          <label className="block font-medium" htmlFor="manager-message">
-            Сообщение руководителя
-          </label>
-          <Textarea
-            id="manager-message"
-            rows={4}
-            value={message}
-            maxLength={5000}
-            disabled={busy}
-            onChange={(event) => setMessage(event.target.value)}
-            placeholder="Расскажите, кого ищете и какой результат нужен…"
-          />
           <div className="flex flex-wrap gap-2">
-            <Button
-              disabled={busy || intake.completed || message.trim().length < 2}
-              onClick={send}
-            >
-              {busy ? "Обрабатываем…" : "Отправить"}
-            </Button>
             <Button
               variant="outline"
               disabled={

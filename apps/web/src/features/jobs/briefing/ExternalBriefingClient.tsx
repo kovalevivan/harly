@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { BriefingChat } from "./BriefingChat";
 import { briefTopics, type BriefAnswer } from "./model";
 import type { HiringIntake } from "./workflow";
 
@@ -20,6 +21,7 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [requestId, setRequestId] = useState<string | null>(null);
+  const [pendingMessage, setPendingMessage] = useState<string>();
   const [summary, setSummary] = useState(false);
   const [edits, setEdits] = useState<BriefAnswer[]>([]);
   const activeRequest = useRef<AbortController | null>(null);
@@ -81,6 +83,7 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
     activeRequest.current = controller;
     setBusy(true);
     setRequestId(id);
+    setPendingMessage(text);
     setError("");
     try {
       setBrief(
@@ -108,6 +111,7 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
         activeRequest.current = null;
         setBusy(false);
         setRequestId(null);
+        setPendingMessage(undefined);
       }
     }
   }
@@ -119,6 +123,7 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
       activeRequest.current = null;
       setBusy(false);
       setRequestId(null);
+      setPendingMessage(undefined);
       setError("Запрос отменён. Сообщение сохранено, требования не изменены.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Не удалось отменить запрос.");
@@ -141,22 +146,25 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
   }
   const closed = brief?.intake.completed;
   return (
-    <main className="mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-6">
-      <header>
+    <main className="mx-auto flex h-dvh max-w-6xl flex-col gap-3 overflow-hidden px-3 py-3 sm:gap-4 sm:px-6 sm:py-5">
+      <header className="shrink-0">
         <p className="text-sm text-muted-foreground">
           Harly · Брифинг руководителя
         </p>
-        <h1 className="mt-2 text-3xl font-semibold">
+        <h1 className="mt-1 truncate text-xl font-semibold sm:text-2xl">
           {brief?.title || "Требования к сотруднику"}
         </h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           Расскажите, кого ищете. ИИ уточнит требования, а итог вы проверите
           перед передачей HR.
         </p>
       </header>
       {loading && <p role="status">Открываем брифинг…</p>}
       {error && (
-        <p role="alert" className="rounded-xl border bg-muted p-4">
+        <p
+          role="alert"
+          className="shrink-0 rounded-xl border bg-muted p-3 text-sm"
+        >
           {error}
         </p>
       )}
@@ -168,77 +176,46 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
       {brief && (
         <>
           {closed && (
-            <p role="status" className="rounded-xl border bg-muted p-4">
+            <p
+              role="status"
+              className="shrink-0 rounded-xl border bg-muted p-3 text-sm"
+            >
               Брифинг передан HR. Спасибо! Можно просмотреть итог. Для уточнений
               попросите HR новое приглашение.
             </p>
           )}
-          <div className="grid items-start gap-5 lg:grid-cols-3">
-            <section
-              className="space-y-4 rounded-2xl border bg-card p-5 lg:col-span-2"
-              aria-label="Разговор с ИИ"
-            >
-              <div
-                className="max-h-[55vh] space-y-3 overflow-y-auto"
-                aria-live="polite"
-              >
-                {brief.intake.messages.map((item, i) => (
-                  <article
-                    key={i}
-                    className={`rounded-xl border p-4 ${item.role === "user" ? "ml-5 bg-muted" : "mr-5"}`}
-                  >
-                    <p className="text-xs font-medium text-muted-foreground">
-                      {item.role === "user" ? "Руководитель" : "ИИ-партнёр"}
-                    </p>
-                    <p className="mt-1 whitespace-pre-wrap">{item.content}</p>
-                  </article>
-                ))}
-                {!brief.intake.messages.length && (
-                  <p>
-                    Начните с того, какую задачу должен решить новый сотрудник.
-                    Если HR приложил материалы, нажмите «Начать по исходным
-                    данным».
-                  </p>
-                )}
-              </div>
-              {!closed && (
-                <>
-                  {!brief.intake.messages.length && (
-                    <Button
-                      variant="outline"
-                      disabled={busy || brief.busy}
-                      onClick={() =>
-                        send(
-                          "Начнём брифинг. Изучи исходные данные и уточни самое важное для профиля сотрудника.",
-                        )
-                      }
-                    >
-                      Начать по исходным данным
-                    </Button>
-                  )}
-                  <label
-                    htmlFor="external-message"
-                    className="block font-medium"
-                  >
-                    Ваш ответ или уточнение
-                  </label>
-                  <Textarea
-                    id="external-message"
-                    rows={4}
-                    value={message}
-                    maxLength={5000}
+          {!summary && (
+            <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-3">
+              <BriefingChat
+                className="h-full lg:col-span-2"
+                messages={brief.intake.messages}
+                value={message}
+                onChange={setMessage}
+                onSend={() => void send(message)}
+                disabled={busy || brief.busy}
+                closed={closed}
+                waiting={Boolean(requestId) || brief.busy}
+                pendingMessage={pendingMessage}
+                inputId="external-message"
+                emptyAction={
+                  <Button
+                    variant="outline"
+                    size="sm"
                     disabled={busy || brief.busy}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Можно ответить на несколько вопросов или исправить предыдущие требования…"
-                  />
-                  <div className="flex flex-wrap gap-2">
+                    onClick={() =>
+                      send(
+                        "Начнём брифинг. Изучи исходные данные и уточни самое важное для профиля сотрудника.",
+                      )
+                    }
+                  >
+                    Начать по исходным данным
+                  </Button>
+                }
+                controls={
+                  <>
                     <Button
-                      disabled={busy || brief.busy || message.trim().length < 2}
-                      onClick={() => send(message)}
-                    >
-                      {busy ? "ИИ готовит ответ…" : "Отправить"}
-                    </Button>
-                    <Button
+                      type="button"
+                      size="sm"
                       variant="outline"
                       disabled={
                         busy ||
@@ -254,81 +231,96 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
                       Проверить итог
                     </Button>
                     {busy && requestId && (
-                      <Button variant="outline" onClick={cancel}>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={cancel}
+                      >
                         Отменить запрос
                       </Button>
                     )}
-                  </div>
-                  {brief.busy && !busy && (
-                    <p role="status">
-                      Сообщение ещё обрабатывается.{" "}
-                      <button
-                        className="underline"
+                    {brief.busy && !busy && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
                         onClick={() =>
                           reload().catch(() =>
                             setError("Не удалось обновить данные."),
                           )
                         }
                       >
-                        Обновить
-                      </button>
-                    </p>
-                  )}
-                  {!busy &&
-                    !brief.busy &&
-                    brief.lastTurn &&
-                    ["failed", "pending"].includes(brief.lastTurn.status) && (
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          send(brief.lastTurn!.message, brief.lastTurn!.id)
-                        }
-                      >
-                        Повторить сохранённое сообщение
+                        Обновить ответ
                       </Button>
                     )}
-                </>
-              )}
-              {busy && (
-                <p role="status" className="text-sm text-muted-foreground">
-                  Обрабатываем сообщение. Оно уже сохранено: можно продолжить
-                  позже.
-                </p>
-              )}
-            </section>
-            <aside className="space-y-4 rounded-2xl border bg-card p-5">
-              <h2 className="text-lg font-semibold">Что выяснили</h2>
-              {!brief.answers.length && (
-                <p className="text-sm text-muted-foreground">
-                  Сводка появится после первых ответов.
-                </p>
-              )}
-              {brief.answers.map((a) => (
-                <div key={a.topic}>
-                  <h3 className="text-sm font-semibold">
-                    {briefTopics.find((t) => t.key === a.topic)?.question}
-                  </h3>
-                  <p className="mt-1 whitespace-pre-wrap text-sm">{a.answer}</p>
-                </div>
-              ))}
-              <h3 className="font-semibold">Открытые вопросы</h3>
-              {brief.intake.openQuestions.length ? (
-                <ul className="list-disc space-y-2 pl-5 text-sm">
-                  {brief.intake.openQuestions.map((q, i) => (
-                    <li key={i}>{q}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Пока не отмечены. Проверьте итоговые требования.
-                </p>
-              )}
-            </aside>
-          </div>
-          {summary && !closed && (
-            <section className="space-y-4 rounded-2xl border bg-card p-5">
+                    {!busy &&
+                      !brief.busy &&
+                      brief.lastTurn &&
+                      ["failed", "pending"].includes(brief.lastTurn.status) && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            send(brief.lastTurn!.message, brief.lastTurn!.id)
+                          }
+                        >
+                          Повторить сохранённое сообщение
+                        </Button>
+                      )}
+                  </>
+                }
+              />
+              <aside className="hidden min-h-0 space-y-4 overflow-y-auto rounded-2xl border bg-card p-5 lg:block">
+                <h2 className="text-lg font-semibold">Что выяснили</h2>
+                {!brief.answers.length && (
+                  <p className="text-sm text-muted-foreground">
+                    Сводка появится после первых ответов.
+                  </p>
+                )}
+                {brief.answers.map((a) => (
+                  <div key={a.topic}>
+                    <h3 className="text-sm font-semibold">
+                      {briefTopics.find((t) => t.key === a.topic)?.question}
+                    </h3>
+                    <p className="mt-1 whitespace-pre-wrap text-sm">
+                      {a.answer}
+                    </p>
+                  </div>
+                ))}
+                <h3 className="font-semibold">Открытые вопросы</h3>
+                {brief.intake.openQuestions.length ? (
+                  <ul className="list-disc space-y-2 pl-5 text-sm">
+                    {brief.intake.openQuestions.map((q, i) => (
+                      <li key={i}>{q}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Пока не отмечены. Проверьте итоговые требования.
+                  </p>
+                )}
+              </aside>
+            </div>
+          )}
+          {closed && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSummary(!summary);
+                setEdits(brief.answers);
+              }}
+            >
+              {summary ? "Вернуться к разговору" : "Посмотреть итог"}
+            </Button>
+          )}
+          {summary && (
+            <section className="min-h-0 flex-1 space-y-4 overflow-y-auto rounded-2xl border bg-card p-5">
               <h2 className="text-xl font-semibold">
-                Проверьте итог перед передачей HR
+                {closed
+                  ? "Требования переданы HR"
+                  : "Проверьте итог перед передачей HR"}
               </h2>
               {edits.map((a, i) => (
                 <div key={a.topic}>
@@ -350,47 +342,62 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
                         ),
                       )
                     }
-                    disabled={busy}
+                    disabled={busy || closed}
                   />
                 </div>
               ))}
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  disabled={busy}
-                  onClick={async () => {
-                    setBusy(true);
-                    try {
-                      setBrief(
-                        await request({
-                          action: "edit",
-                          answers: edits,
-                          expectedVersion: brief.updatedAt,
-                        }),
-                      );
-                      setError("");
-                    } catch (e) {
-                      setError(
-                        e instanceof Error
-                          ? e.message
-                          : "Не удалось сохранить.",
-                      );
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  Сохранить исправления
-                </Button>
-                <Button
-                  disabled={
-                    busy ||
-                    JSON.stringify(edits) !== JSON.stringify(brief.answers)
-                  }
-                  onClick={finish}
-                >
-                  Подтвердить и передать HR
-                </Button>
+              {brief.intake.openQuestions.length > 0 && (
+                <div>
+                  <h3 className="font-medium">Открытые вопросы</h3>
+                  <ul className="list-disc space-y-2 pl-5 text-sm">
+                    {brief.intake.openQuestions.map((question, i) => (
+                      <li key={i}>{question}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="sticky bottom-0 flex flex-wrap gap-2 border-t bg-card py-3">
+                {!closed && (
+                  <>
+                    <Button
+                      variant="outline"
+                      disabled={busy || closed}
+                      onClick={async () => {
+                        setBusy(true);
+                        try {
+                          setBrief(
+                            await request({
+                              action: "edit",
+                              answers: edits,
+                              expectedVersion: brief.updatedAt,
+                            }),
+                          );
+                          setError("");
+                        } catch (e) {
+                          setError(
+                            e instanceof Error
+                              ? e.message
+                              : "Не удалось сохранить.",
+                          );
+                        } finally {
+                          setBusy(false);
+                        }
+                      }}
+                    >
+                      Сохранить исправления
+                    </Button>
+                    <Button
+                      disabled={
+                        busy ||
+                        closed ||
+                        JSON.stringify(edits) !== JSON.stringify(brief.answers)
+                      }
+                      onClick={finish}
+                    >
+                      Подтвердить и передать HR
+                    </Button>
+                  </>
+                )}
                 <Button
                   variant="ghost"
                   disabled={busy}
