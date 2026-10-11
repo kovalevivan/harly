@@ -194,7 +194,10 @@ export function HiringPlanClient({
         requestId: id,
         expectedVersion: version,
       });
-      if (!result.ok) return setNotice(result.error);
+      if (!result.ok) {
+        router.refresh();
+        return setNotice(result.error);
+      }
       setPendingRequest(null);
       setVersion(result.updatedAt);
       setAnswers(result.answers);

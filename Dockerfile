@@ -43,6 +43,10 @@ ENV NODE_ENV=production \
     UPLOADS_DIR=/data/uploads \
     HARLY_SERVER_PATH=/app/apps/web/server.js
 WORKDIR /app
+# Apply security fixes that landed after the upstream Node image was published.
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 # The runtime only executes the bundled Node server. Removing npm keeps the
 # base image's package tree out of the production artifact and avoids shipping
 # a second, independently managed dependency tree.
