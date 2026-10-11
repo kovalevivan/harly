@@ -44,7 +44,7 @@ BEGIN
       END IF;
       linked_reviews := linked_reviews || jsonb_build_array(review);
     END LOOP;
-    UPDATE job_briefs SET resume_reviews=linked_reviews WHERE id=plan.id AND resume_reviews IS DISTINCT FROM linked_reviews;
+    UPDATE job_briefs SET resume_reviews=linked_reviews, updated_at=date_trunc('milliseconds',greatest(now(),updated_at+interval '1 millisecond')) WHERE id=plan.id AND resume_reviews IS DISTINCT FROM linked_reviews;
   END LOOP;
 END $link$;
 COMMIT;
