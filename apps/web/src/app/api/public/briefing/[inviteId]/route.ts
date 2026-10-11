@@ -33,7 +33,18 @@ export async function GET(
       "Ссылка недействительна, отозвана или срок её действия истёк. Попросите HR прислать новую ссылку.",
       401,
     );
-  return NextResponse.json(await publicBrief(invite.briefId), { headers });
+  const brief = await publicBrief(invite.briefId);
+  if (!brief) return fail("Брифинг не найден.", 404);
+  return NextResponse.json(
+    {
+      ...brief,
+      intake: {
+        ...brief.intake,
+        completed: Boolean(invite.completedAt) || brief.intake.completed,
+      },
+    },
+    { headers },
+  );
 }
 
 export async function POST(

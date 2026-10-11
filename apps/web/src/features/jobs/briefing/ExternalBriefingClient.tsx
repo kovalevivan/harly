@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { briefTopics, type BriefAnswer } from "./model";
@@ -22,8 +22,9 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
   const [requestId, setRequestId] = useState<string | null>(null);
   const [summary, setSummary] = useState(false);
   const [edits, setEdits] = useState<BriefAnswer[]>([]);
+  const activeRequest = useRef<AbortController | null>(null);
   const endpoint = `/api/public/briefing/${inviteId}`;
-  async function request(body?: object) {
+  async function request(body?: object, signal?: AbortSignal) {
     const response = await fetch(
       endpoint,
       body
@@ -31,8 +32,9 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
+            signal,
           }
-        : { cache: "no-store" },
+        : { cache: "no-store", signal },
     );
     const data = await response.json();
     if (!response.ok)
@@ -75,20 +77,26 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
   async function send(text: string, retryId?: string) {
     if (!brief) return;
     const id = retryId || crypto.randomUUID();
+    const controller = new AbortController();
+    activeRequest.current = controller;
     setBusy(true);
     setRequestId(id);
     setError("");
     try {
       setBrief(
-        await request({
-          action: "message",
-          message: text,
-          requestId: id,
-          expectedVersion: brief.updatedAt,
-        }),
+        await request(
+          {
+            action: "message",
+            message: text,
+            requestId: id,
+            expectedVersion: brief.updatedAt,
+          },
+          controller.signal,
+        ),
       );
       setMessage("");
     } catch (e) {
+      if (controller.signal.aborted) return;
       setError(e instanceof Error ? e.message : "Не удалось получить ответ.");
       try {
         await reload();
@@ -96,14 +104,21 @@ export function ExternalBriefingClient({ inviteId }: { inviteId: string }) {
         /* Preserve the draft while offline. */
       }
     } finally {
-      setBusy(false);
-      setRequestId(null);
+      if (activeRequest.current === controller) {
+        activeRequest.current = null;
+        setBusy(false);
+        setRequestId(null);
+      }
     }
   }
   async function cancel() {
     if (!requestId) return;
     try {
       setBrief(await request({ action: "cancel", requestId }));
+      activeRequest.current?.abort();
+      activeRequest.current = null;
+      setBusy(false);
+      setRequestId(null);
       setError("Запрос отменён. Сообщение сохранено, требования не изменены.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Не удалось отменить запрос.");
