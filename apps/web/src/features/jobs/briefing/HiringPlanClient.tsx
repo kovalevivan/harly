@@ -12,23 +12,17 @@ import { briefTopics, type BriefAnswer } from "./model";
 import {
   categoryLabels,
   verificationLabels,
-  statusLabels,
-  reviewReference,
   type EmployeeProfile,
   type HiringIntake,
-  type ResumeReview,
 } from "./workflow";
-import { callCenterCase, sampleResumes } from "./call-center";
+import { callCenterCase } from "./call-center";
 import {
   chatHiringPlanAction,
   compileEmployeeProfileAction,
   createCallCenterPlanAction,
   generateHiringDescriptionAction,
-  listPlanCandidatesAction,
-  reviewHiringResumeAction,
   saveEmployeeProfileAction,
   saveHiringDescriptionAction,
-  extractPlanResumeAction,
   createBriefingInviteAction,
   revokeBriefingInviteAction,
   attachBriefSourceAction,
@@ -77,22 +71,17 @@ export function HiringPlanClient({
   initialVersion,
   initialInvitations,
   initialStep,
-  initialCandidateId,
-  initialCandidateName,
   briefId,
   title,
   initialAnswers,
   initialIntake,
   initialProfile,
   initialDraft,
-  initialReviews,
   jobId,
   aiConfigured,
 }: {
   initialVersion: string;
   initialStep: number;
-  initialCandidateId: string;
-  initialCandidateName: string;
   initialInvitations: Array<{
     id: string;
     expiresAt: string;
@@ -106,7 +95,6 @@ export function HiringPlanClient({
   initialIntake: HiringIntake;
   initialProfile: EmployeeProfile | null;
   initialDraft: JobDraft | null;
-  initialReviews: ResumeReview[];
   jobId: string | null;
   aiConfigured: boolean;
 }) {
@@ -132,16 +120,9 @@ export function HiringPlanClient({
   const [draft, setDraft] = useState(initialDraft);
   const [profileDirty, setProfileDirty] = useState(false);
   const [draftDirty, setDraftDirty] = useState(false);
-  const [reviews, setReviews] = useState(initialReviews);
   const [message, setMessage] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, start] = useTransition();
-  const [candidateName, setCandidateName] = useState(initialCandidateName);
-  const [resumeText, setResumeText] = useState("");
-  const [candidateId, setCandidateId] = useState(initialCandidateId);
-  const [savedCandidates, setSavedCandidates] = useState<
-    Array<{ id: string; firstName: string; lastName: string }>
-  >([]);
   const [lastServerVersion, setLastServerVersion] = useState(initialVersion);
   if (initialVersion !== lastServerVersion) {
     setLastServerVersion(initialVersion);
@@ -151,7 +132,6 @@ export function HiringPlanClient({
       setIntake(initialIntake);
       setProfile(initialProfile);
       setDraft(initialDraft);
-      setReviews(initialReviews);
       setProfileDirty(false);
       setDraftDirty(false);
     }
@@ -161,7 +141,6 @@ export function HiringPlanClient({
     intake.vacancyApproved &&
     !profileDirty &&
     !draftDirty;
-  const reference = profile && draft ? reviewReference(profile, draft) : "";
   function run(operation: () => Promise<void>) {
     setNotice("");
     start(async () => {
@@ -250,31 +229,28 @@ export function HiringPlanClient({
         <p className="text-sm text-muted-foreground">План подбора</p>
         <h1 className="text-3xl font-semibold">{title}</h1>
         <p className="text-muted-foreground">
-          Требования руководителя связывают профиль, вакансию и каждый разбор
-          резюме.
+          Подготовьте требования, утвердите профиль и передайте описание в
+          редактор вакансии Harly.
         </p>
       </header>
       <nav
         aria-label="Этапы плана подбора"
-        className="grid grid-cols-2 gap-2 sm:grid-cols-4"
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3"
       >
-        {[
-          "Чат с руководителем",
-          "Профиль сотрудника",
-          "Описание вакансии",
-          "Разбор резюме",
-        ].map((label, index) => (
-          <Button
-            key={label}
-            variant={step === index + 1 ? "default" : "outline"}
-            aria-current={step === index + 1 ? "step" : undefined}
-            disabled={busy}
-            onClick={() => setStep(index + 1)}
-            className="h-auto whitespace-normal py-3"
-          >
-            {index + 1}. {label}
-          </Button>
-        ))}
+        {["Чат с руководителем", "Профиль сотрудника", "Описание вакансии"].map(
+          (label, index) => (
+            <Button
+              key={label}
+              variant={step === index + 1 ? "default" : "outline"}
+              aria-current={step === index + 1 ? "step" : undefined}
+              disabled={busy}
+              onClick={() => setStep(index + 1)}
+              className="h-auto whitespace-normal py-3"
+            >
+              {index + 1}. {label}
+            </Button>
+          ),
+        )}
       </nav>
       {!aiConfigured && (
         <p className="rounded-xl border bg-muted p-4 text-sm">
@@ -977,26 +953,30 @@ export function HiringPlanClient({
                     setDraft(result.draft);
                     setIntake(result.intake);
                     setDraftDirty(false);
-                    setStep(4);
                     setNotice("Описание сохранено и утверждено.");
                   })
                 }
               >
-                Утвердить описание и перейти к резюме
+                Сохранить и утвердить описание
               </Button>
               {ready && (
                 <div>
+                  <p className="mb-3 text-sm text-muted-foreground">
+                    В редакторе Harly проверьте описание, условия и страницу
+                    вакансии. После появления откликов оценка резюме будет
+                    доступна в карточке каждого отклика.
+                  </p>
                   {jobId ? (
                     <Link
                       className="underline"
-                      href={`/dashboard/jobs/${jobId}`}
+                      href={`/dashboard/jobs/${jobId}?briefId=${briefId}`}
                     >
-                      Открыть связанную вакансию
+                      Перенести описание в редактор вакансии
                     </Link>
                   ) : (
                     <Button asChild>
                       <Link href={`/dashboard/jobs/new?briefId=${briefId}`}>
-                        Создать вакансию из описания
+                        Перейти к оформлению вакансии
                       </Link>
                     </Button>
                   )}
@@ -1004,270 +984,6 @@ export function HiringPlanClient({
               )}
             </>
           )}
-        </section>
-      )}
-      {step === 4 && (
-        <section className={panel}>
-          <h2 className="text-xl font-semibold">
-            4. Разбор резюме по профилю и вакансии
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Подтверждения с цитатами, расхождения и вопросы для интервью.
-            Отсутствие сведений не означает отсутствие навыка. Решение принимает
-            HR и руководитель.
-          </p>
-          {!ready && (
-            <p>
-              Для нового разбора утвердите профиль и описание на предыдущих
-              этапах.
-            </p>
-          )}
-          {intake.caseId === callCenterCase.id && (
-            <div>
-              <p className="mb-2 text-sm font-medium">Резюме кандидатов</p>
-              <div className="flex flex-wrap gap-2">
-                {sampleResumes.map((sample) => (
-                  <Button
-                    key={sample.name}
-                    variant="outline"
-                    disabled={busy}
-                    onClick={() => {
-                      setCandidateId("");
-                      setCandidateName(sample.name);
-                      setResumeText(sample.text);
-                    }}
-                  >
-                    {sample.name}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-          {jobId && (
-            <div className="space-y-2">
-              <Button
-                variant="outline"
-                disabled={busy}
-                onClick={() =>
-                  run(async () => {
-                    const rows = await listPlanCandidatesAction(briefId);
-                    setSavedCandidates(rows);
-                    if (!rows.length)
-                      setNotice(
-                        "У связанной вакансии пока нет доступных кандидатов.",
-                      );
-                  })
-                }
-              >
-                Выбрать резюме из Harly
-              </Button>
-              {savedCandidates.length > 0 && (
-                <>
-                  <label htmlFor="plan-candidate" className="sr-only">
-                    Кандидат из Harly
-                  </label>
-                  <select
-                    id="plan-candidate"
-                    className="w-full rounded-lg border bg-background p-2"
-                    disabled={busy}
-                    value={candidateId}
-                    onChange={(event) => {
-                      const id = event.target.value;
-                      setCandidateId(id);
-                      const candidate = savedCandidates.find(
-                        (item) => item.id === id,
-                      );
-                      if (candidate)
-                        setCandidateName(
-                          `${candidate.firstName} ${candidate.lastName}`,
-                        );
-                    }}
-                  >
-                    <option value="">Вставить резюме вручную</option>
-                    {savedCandidates.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.firstName} {item.lastName}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              )}
-            </div>
-          )}
-          <label htmlFor="resume-name" className="block font-medium">
-            Имя кандидата
-          </label>
-          <Input
-            id="resume-name"
-            value={candidateName}
-            maxLength={160}
-            disabled={busy || Boolean(candidateId)}
-            onChange={(event) => setCandidateName(event.target.value)}
-          />
-          {!candidateId && (
-            <>
-              <label
-                htmlFor="resume-file"
-                className="block text-sm font-medium"
-              >
-                Загрузить резюме (PDF, DOCX или TXT)
-              </label>
-              <RussianFileInput
-                id="resume-file"
-                accept=".pdf,.docx,.txt"
-                disabled={busy}
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  if (!file) return;
-                  const data = new FormData();
-                  data.set("file", file);
-                  run(async () => {
-                    const result = await extractPlanResumeAction(data);
-                    if (!result.ok) return setNotice(result.error);
-                    setResumeText(result.text);
-                    setNotice("Текст извлечён. Проверьте его перед разбором.");
-                  });
-                  event.target.value = "";
-                }}
-              />
-              <label htmlFor="resume-text" className="block font-medium">
-                Текст резюме
-              </label>
-              <Textarea
-                id="resume-text"
-                rows={9}
-                value={resumeText}
-                maxLength={20000}
-                disabled={busy}
-                onChange={(event) => setResumeText(event.target.value)}
-              />
-            </>
-          )}
-          <Button
-            disabled={
-              busy ||
-              !ready ||
-              !aiConfigured ||
-              candidateName.trim().length < 2 ||
-              (!candidateId && resumeText.trim().length < 50)
-            }
-            onClick={() =>
-              run(async () => {
-                const result = await reviewHiringResumeAction({
-                  briefId,
-                  candidateName,
-                  resumeText,
-                  expectedVersion: version,
-                  ...(candidateId ? { candidateId } : {}),
-                });
-                if (!result.ok) return setNotice(result.error);
-                setVersion(result.updatedAt);
-                setReviews((previous) => [...previous, result.review]);
-                setNotice(
-                  "Разбор сохранён. Проверьте доказательства и вопросы ниже.",
-                );
-              })
-            }
-          >
-            {busy ? "Разбираем резюме…" : "Сопоставить с профилем и вакансией"}
-          </Button>
-          <h3 className="font-semibold">Сохранённые разборы</h3>
-          {reviews.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              Пока нет разборов. Загрузите резюме или выберите образец.
-            </p>
-          )}
-          {[...reviews].reverse().map((review) => (
-            <article
-              key={review.id}
-              className="space-y-3 rounded-xl border p-4"
-            >
-              <h4 className="text-lg font-semibold">{review.candidateName}</h4>
-              <p className="text-xs text-muted-foreground">
-                {new Date(review.createdAt).toLocaleString("ru-RU")} ·{" "}
-                {
-                  review.assessments.filter(
-                    (item) => item.status === "confirmed",
-                  ).length
-                }{" "}
-                подтверждений ·{" "}
-                {
-                  review.assessments.filter(
-                    (item) => item.status === "unverified",
-                  ).length
-                }{" "}
-                вопросов для проверки
-              </p>
-              {(review.reference !== reference || !ready) && (
-                <p className="rounded-lg bg-muted p-3 text-sm">
-                  Разбор относится к прежней версии требований. После
-                  утверждения изменений выполните новый разбор.
-                </p>
-              )}
-              <p>{review.summary}</p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <caption className="sr-only">
-                    Матрица соответствия резюме требованиям
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th className="p-2">Критерий</th>
-                      <th className="p-2">Подтверждения и проверка</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {review.assessments.map((assessment) => {
-                      const criterion = review.criteria.find(
-                        (item) => item.id === assessment.id,
-                      );
-                      return (
-                        <tr key={assessment.id} className="border-t">
-                          <td className="p-2 align-top">
-                            <strong>{criterion?.label}</strong>
-                            <p className="text-xs text-muted-foreground">
-                              {criterion &&
-                                verificationLabels[criterion.verification]}
-                            </p>
-                          </td>
-                          <td className="space-y-1 p-2 align-top">
-                            <p className="font-medium">
-                              {statusLabels[assessment.status]}
-                            </p>
-                            {assessment.evidence && (
-                              <blockquote className="border-l-2 pl-3">
-                                «{assessment.evidence}»
-                              </blockquote>
-                            )}
-                            <p>{assessment.explanation}</p>
-                            <p className="text-muted-foreground">
-                              Уточнить: {assessment.question}
-                            </p>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-              <details>
-                <summary className="cursor-pointer text-sm">
-                  Исходное резюме
-                </summary>
-                <p className="whitespace-pre-wrap text-sm">
-                  {review.resumeText}
-                </p>
-              </details>
-              {review.candidateId && (
-                <Link
-                  className="text-sm underline"
-                  href={`/dashboard/candidates/${review.candidateId}`}
-                >
-                  Карточка кандидата
-                </Link>
-              )}
-            </article>
-          ))}
         </section>
       )}
       {busy && (

@@ -9,7 +9,8 @@ import {
   type ReactNode,
 } from "react";
 import { toast } from "@/lib/notification-island/toast";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, unstable_rethrow } from "next/navigation";
 import type { Job } from "@harly/db";
 
 import {
@@ -60,6 +61,7 @@ type JobFormProps = {
   previewConfig?: CareerPageConfig | null;
   briefPrefill?: {
     id: string;
+    version: string;
     title: string;
     description: string;
     sections: JobContentSection[];
@@ -96,23 +98,25 @@ const SECTIONS = [
   {
     key: "essentials",
     label: "Подробности",
-    blurb: "Укажите понятное название позиции. Создавайте отдельную вакансию для каждой роли.",
+    blurb:
+      "Укажите понятное название позиции. Создавайте отдельную вакансию для каждой роли.",
   },
   {
     key: "description",
     label: "Описание",
-    blurb: "Расскажите о команде, задачах и требованиях. Оставьте только то, что важно кандидату.",
+    blurb:
+      "Расскажите о команде, задачах и требованиях. Оставьте только то, что важно кандидату.",
   },
   {
     key: "compensation",
     label: "Компенсация",
-    blurb: "Укажите диапазон оплаты — это поможет привлечь подходящих кандидатов.",
+    blurb:
+      "Укажите диапазон оплаты — это поможет привлечь подходящих кандидатов.",
   },
   {
     key: "application",
     label: "Форма отклика",
-    blurb:
-      "Запрашивайте только информацию, которая поможет принять решение.",
+    blurb: "Запрашивайте только информацию, которая поможет принять решение.",
   },
   {
     key: "advanced",
@@ -212,11 +216,12 @@ export function JobForm({
   );
 
   const [description, setDescription] = useState(
-    job?.description ?? briefPrefill?.description ??
+    briefPrefill?.description ??
+      job?.description ??
       "<p>Опишите задачи, команду и результаты, которых ждёте от нового сотрудника.</p>",
   );
-  const [sections, setSections] = useState<JobContentSection[]>(() =>
-    job ? initialSectionsFor(job) : (briefPrefill?.sections ?? initialSectionsFor()),
+  const [sections, setSections] = useState<JobContentSection[]>(
+    () => briefPrefill?.sections ?? initialSectionsFor(job),
   );
   const [keywords, setKeywords] = useState<string[]>(() =>
     parseKeywords(job?.keywords),
@@ -224,9 +229,28 @@ export function JobForm({
   const [photos, setPhotos] = useState<string[]>(() =>
     parseOfficePhotos(job?.officePhotos),
   );
-  const [descriptionVersion, setDescriptionVersion] = useState(briefPrefill ? 1 : 0);
+  const [descriptionVersion, setDescriptionVersion] = useState(
+    briefPrefill ? 1 : 0,
+  );
   const [aiPending, startAi] = useTransition();
 
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  async function submit(formData: FormData) {
+    setSaving(true);
+    setSaveError("");
+    try {
+      await action(formData);
+    } catch (error) {
+      unstable_rethrow(error);
+      const message =
+        "Не удалось сохранить вакансию. Ваши изменения остались в редакторе. Если план менялся, загрузите его актуальное описание и повторите.";
+      setSaveError(message);
+      toast.error(message);
+    } finally {
+      setSaving(false);
+    }
+  }
   const [dirty, setDirty] = useState(false);
   const { confirmDiscard, discardDialogProps } = useUnsavedChangesGuard(dirty);
 
@@ -405,29 +429,37 @@ export function JobForm({
     <>
       <Button
         type="submit"
+        disabled={saving}
         name="intent"
         value="draft"
         variant="ghost"
         size="sm"
         onClick={validateBeforeSubmit}
       >
-        {"Сохранить как черновик "}</Button>
+        {"Сохранить как черновик "}
+      </Button>
       <Button
         type="submit"
+        disabled={saving}
         name="intent"
         value="continue"
         size="sm"
         onClick={validateBeforeSubmit}
       >
-        {submitLabel}
+        {saving ? "Сохраняем…" : submitLabel}
       </Button>
     </>
   );
 
   return (
-    <form ref={formRef} action={action} className="contents">
+    <form ref={formRef} action={submit} className="contents">
       {job ? <input type="hidden" name="jobId" value={job.id} /> : null}
-      {briefPrefill ? <input type="hidden" name="briefId" value={briefPrefill.id} /> : null}
+      {briefPrefill ? (
+        <input type="hidden" name="briefId" value={briefPrefill.id} />
+      ) : null}
+      {briefPrefill ? (
+        <input type="hidden" name="briefVersion" value={briefPrefill.version} />
+      ) : null}
       <input
         type="hidden"
         name="contentSectionsJson"
@@ -444,8 +476,8 @@ export function JobForm({
         value={JSON.stringify(photos)}
       />
 
-        <FocusModeShell
-          topBar={
+      <FocusModeShell
+        topBar={
           <JobEditorTopBar
             onExit={handleExit}
             title={title}
@@ -479,6 +511,42 @@ export function JobForm({
             before it rather than a forced full-viewport stretch.
           */}
           <div className="flex flex-col px-6 py-8">
+            {saveError && (
+              <p
+                role="alert"
+                className="mb-4 rounded-xl border bg-muted p-4 text-sm"
+              >
+                {saveError}
+              </p>
+            )}
+            {briefPrefill && (
+              <div
+                role="status"
+                className="mb-6 space-y-2 rounded-xl border bg-muted p-4 text-sm"
+              >
+                <p className="font-medium">
+                  Описание перенесено из плана подбора
+                </p>
+                <p>
+                  Проверьте текст и условия. Изменения появятся на странице
+                  вакансии после сохранения.
+                </p>
+                <Link
+                  className="underline"
+                  href={`/dashboard/jobs/briefs/${briefPrefill.id}?step=3`}
+                >
+                  Вернуться к плану
+                </Link>
+                {job && (
+                  <Link
+                    className="ml-4 underline"
+                    href={`/dashboard/jobs/${job.id}`}
+                  >
+                    Открыть сохранённую вакансию
+                  </Link>
+                )}
+              </div>
+            )}
             <div className="space-y-10">
               {SECTIONS.map((s) => (
                 <section

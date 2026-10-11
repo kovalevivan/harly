@@ -10,41 +10,30 @@ import {
 } from "./service";
 import { briefingLimits } from "./agent";
 import { saveBriefAnswers } from "./edit-brief";
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { and, desc, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Output, generateText } from "ai";
 import { z } from "zod";
 import {
   db,
   jobBriefs,
   jobs,
-  candidates,
-  applications,
   briefingInvitations,
   type JobBrief,
 } from "@harly/db";
-import {
-  requirePermission,
-  requireCandidatePermission,
-} from "@/features/workspaces/permissions-server";
+import { requirePermission } from "@/features/workspaces/permissions-server";
 import { getWorkspaceAiConfig } from "@/lib/ai/config";
 import { getModel } from "@/lib/ai/registry";
 import { withUntrustedDataGuardrail } from "@/lib/ai/prompts/guardrails";
 import { extractResumeText } from "@/lib/resume/extract-text";
-import { loadResumeText } from "@/lib/resume/load-resume-text";
 import { jobDraftSchema } from "@/lib/ai/schemas";
 import { generateJobDraftAction } from "../actions";
 import { briefAnswersSchema, fallbackProfile, profileAsText } from "./model";
 import { getJobBrief } from "./actions";
 import {
   employeeProfileSchema,
-  groundAssessments,
   readEmployeeProfile,
   readIntake,
-  resumeAnalysisSchema,
-  resumeReviewsSchema,
-  reviewReference,
   upgradeProfile,
   type EmployeeProfile,
   type HiringIntake,
@@ -443,225 +432,6 @@ export async function saveHiringDescriptionAction(input: {
     return {
       ok: false as const,
       error: "План изменился. Обновите страницу перед сохранением описания.",
-    };
-  }
-}
-
-export async function listPlanCandidatesAction(briefId: string) {
-  const brief = await getJobBrief(briefId);
-  if (!brief?.jobId) return [];
-  await requirePermission("candidates:view");
-  const rows = await db
-    .select({
-      id: candidates.id,
-      firstName: candidates.firstName,
-      lastName: candidates.lastName,
-    })
-    .from(applications)
-    .innerJoin(
-      candidates,
-      and(
-        eq(candidates.id, applications.candidateId),
-        eq(candidates.workspaceId, brief.workspaceId),
-      ),
-    )
-    .where(
-      and(
-        eq(applications.workspaceId, brief.workspaceId),
-        eq(applications.jobId, brief.jobId),
-      ),
-    )
-    .orderBy(desc(applications.createdAt));
-  // Resolve per-candidate visibility before exposing names to a scoped role.
-  const visible = await Promise.all(
-    rows.map(async (row) => {
-      try {
-        await requireCandidatePermission("candidates:view", row.id);
-        return row;
-      } catch {
-        return null;
-      }
-    }),
-  );
-  return visible.filter((row) => row !== null);
-}
-
-export async function reviewHiringResumeAction(input: {
-  briefId: string;
-  expectedVersion: string;
-  candidateName: string;
-  resumeText: string;
-  candidateId?: string;
-}) {
-  const parsed = z
-    .object({
-      briefId: z.uuid(),
-      expectedVersion: z.iso.datetime(),
-      candidateName: z.string().trim().min(2).max(160),
-      resumeText: z.string().max(20000),
-      candidateId: z.uuid().optional(),
-    })
-    .safeParse(input);
-  if (!parsed.success)
-    return {
-      ok: false as const,
-      error: "Укажите имя кандидата и текст резюме до 20 000 символов.",
-    };
-  const brief = await getJobBrief(parsed.data.briefId);
-  if (!brief) return { ok: false as const, error: "План не найден." };
-  const profile = readEmployeeProfile(brief.profile),
-    draft = jobDraftSchema.safeParse(brief.generatedDraft),
-    intake = readIntake(brief.intake);
-  if (
-    !profile ||
-    !draft.success ||
-    !intake.profileApproved ||
-    !intake.vacancyApproved
-  )
-    return {
-      ok: false as const,
-      error: "Сначала утвердите профиль и описание вакансии.",
-    };
-  const reviews = resumeReviewsSchema.parse(brief.resumeReviews);
-  if (reviews.length >= 30)
-    return {
-      ok: false as const,
-      error:
-        "Сохранено 30 разборов. Для дальнейшего подбора используйте отдельный план.",
-    };
-  let resumeText = parsed.data.resumeText.trim();
-  let candidateName = parsed.data.candidateName;
-  try {
-    if (parsed.data.candidateId) {
-      const context = await requireCandidatePermission(
-        "collab:write",
-        parsed.data.candidateId,
-      );
-      if (context.organization.id !== brief.workspaceId)
-        return { ok: false as const, error: "Кандидат недоступен." };
-      const [candidate] = await db
-        .select()
-        .from(candidates)
-        .where(
-          and(
-            eq(candidates.id, parsed.data.candidateId),
-            eq(candidates.workspaceId, brief.workspaceId),
-          ),
-        )
-        .limit(1);
-      if (!candidate)
-        return { ok: false as const, error: "Кандидат не найден." };
-      candidateName = `${candidate.firstName} ${candidate.lastName}`;
-      const loaded = await loadResumeText({
-        workspaceId: brief.workspaceId,
-        candidateId: candidate.id,
-      });
-      if (!loaded.text)
-        return {
-          ok: false as const,
-          error:
-            "Не удалось извлечь текст резюме. Загрузите резюме в карточку кандидата или вставьте текст вручную.",
-        };
-      if (loaded.text.length > 20000)
-        return {
-          ok: false as const,
-          error:
-            "Резюме длиннее 20 000 символов. Вставьте релевантный фрагмент вручную.",
-        };
-      resumeText = loaded.text;
-    }
-    if (resumeText.length < 50)
-      return {
-        ok: false as const,
-        error: "Для разбора необходимо резюме от 50 символов.",
-      };
-    const config = await getWorkspaceAiConfig(brief.workspaceId);
-    if (!config)
-      return {
-        ok: false as const,
-        error: "Подключите ИИ в настройках для анализа резюме.",
-      };
-    const result = await generateText({
-      model: getModel(config),
-      abortSignal: AbortSignal.timeout(60000),
-      system: withUntrustedDataGuardrail(
-        "Ты помощник HR. Сравни резюме с утверждённым профилем сотрудника и описанием вакансии. Пиши по-русски. Не оценивай личность, здоровье, возраст, пол, семейный статус и внешность. Не делай выводов о пригодности или решения о найме. Для каждого переданного id верни confirmed/mismatch/unverified, дословную цитату evidence или null, explanation и уточняющий question. confirmed и mismatch допустимы только с точной цитатой из резюме. Отсутствие сведений — unverified, не mismatch. Поведение и критерии с verification=interview/work_sample всегда unverified, независимо от самоописания. summary — описание подтверждений и неизвестного, без рейтинга, процента соответствия или рекомендации отказать. Используй только переданные критерии.",
-      ),
-      prompt: JSON.stringify({
-        profile,
-        vacancy: draft.data,
-        resume: resumeText,
-      }),
-      output: Output.object({ schema: resumeAnalysisSchema }),
-    });
-    if (!result.output) throw new Error("empty");
-    const review = {
-      ...result.output,
-      assessments: groundAssessments(
-        profile.criteria,
-        resumeText,
-        result.output,
-      ),
-      id: randomUUID(),
-      candidateName,
-      candidateId: parsed.data.candidateId ?? null,
-      resumeText,
-      createdAt: new Date().toISOString(),
-      reference: reviewReference(profile, draft.data),
-      criteria: profile.criteria,
-    };
-    const updatedAt = await updatePlan(
-      brief,
-      { resumeReviews: [...reviews, review] },
-      input.expectedVersion,
-    );
-    return { ok: true as const, review, updatedAt };
-  } catch {
-    return {
-      ok: false as const,
-      error:
-        "Не удалось выполнить или сохранить разбор. Исходное резюме осталось в поле. Обновите страницу, если план менялся, и повторите.",
-    };
-  }
-}
-
-export async function extractPlanResumeAction(form: FormData) {
-  await requirePermission("jobs:create");
-  const file = form.get("file");
-  if (
-    !(file instanceof File) ||
-    file.size === 0 ||
-    file.size > 10 * 1024 * 1024 ||
-    !/\.(pdf|docx|txt)$/i.test(file.name)
-  )
-    return {
-      ok: false as const,
-      error: "Выберите PDF, DOCX или TXT до 10 МБ.",
-    };
-  try {
-    const result = await extractResumeText({
-      buffer: Buffer.from(await file.arrayBuffer()),
-      fileName: file.name,
-    });
-    const text = result.text.trim();
-    if (text.length < 50)
-      return {
-        ok: false as const,
-        error:
-          "В файле не найден текст резюме. Для скана потребуется текстовая версия.",
-      };
-    if (text.length > 20000)
-      return {
-        ok: false as const,
-        error:
-          "Текст длиннее 20 000 символов. Вставьте релевантный фрагмент вручную.",
-      };
-    return { ok: true as const, text };
-  } catch {
-    return {
-      ok: false as const,
-      error:
-        "Не удалось прочитать файл. Попробуйте другой формат или вставьте текст.",
     };
   }
 }

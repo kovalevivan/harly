@@ -107,7 +107,7 @@ export default async function DashboardJobsPage({
       {!isTrash && briefs.length > 0 ? (
         <section className="rounded-2xl border bg-card p-4">
           <h2 className="mb-3 font-semibold">
-            Планы подбора: от требований до резюме
+            Планы подбора: от требований до вакансии
           </h2>
           <div className="space-y-2">
             {briefs.map((brief) => (

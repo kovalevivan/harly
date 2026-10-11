@@ -5,7 +5,7 @@ import {
   type BriefAnswer,
   type BriefProfile,
 } from "./model";
-import type { JobDraft } from "@/lib/ai/schemas";
+import { jobDraftSchema, type JobDraft } from "@/lib/ai/schemas";
 
 export const criterionSchema = z.object({
   id: z.string().min(1).max(80),
@@ -68,6 +68,8 @@ export const resumeReviewSchema = resumeAnalysisSchema.extend({
   id: z.string(),
   candidateName: z.string().max(160),
   candidateId: z.string().nullable(),
+  applicationId: z.string().nullable().default(null),
+  vacancySnapshot: jobDraftSchema.optional(),
   resumeText: z.string().max(20000),
   createdAt: z.string(),
   reference: z.string(),

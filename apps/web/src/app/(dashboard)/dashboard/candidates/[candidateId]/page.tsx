@@ -1,5 +1,3 @@
-import { db, jobBriefs } from "@harly/db";
-import { and, eq, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -321,22 +319,6 @@ export default async function CandidateDetailPage({
     createdAt: event.createdAt.toISOString(),
   }));
 
-  const canUseHiringPlan = await can("jobs:create");
-  const hiringPlans =
-    canUseHiringPlan && applications.length
-      ? await db
-          .select({ id: jobBriefs.id, title: jobBriefs.title })
-          .from(jobBriefs)
-          .where(
-            and(
-              eq(jobBriefs.workspaceId, workspaceId),
-              inArray(
-                jobBriefs.jobId,
-                applications.map((a) => a.jobId),
-              ),
-            ),
-          )
-      : [];
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -586,26 +568,6 @@ export default async function CandidateDetailPage({
             }
           />
 
-          {hiringPlans.length > 0 && (
-            <div className="mb-4 space-y-2 rounded-xl border bg-card p-4">
-              <h2 className="font-semibold">Оценка по профилю сотрудника</h2>
-              <p className="text-sm text-muted-foreground">
-                Сопоставьте резюме с утверждённым профилем и вакансией,
-                проверьте цитаты и подготовьте вопросы.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {hiringPlans.map((plan) => (
-                  <Button key={plan.id} variant="outline" asChild>
-                    <Link
-                      href={`/dashboard/jobs/briefs/${plan.id}?step=4&candidateId=${candidate.id}&candidateName=${encodeURIComponent(fullName)}`}
-                    >
-                      {plan.title}: оценить резюме
-                    </Link>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
           <CandidateProfileTabs
             candidateId={candidate.id}
             workspaceId={workspaceId}

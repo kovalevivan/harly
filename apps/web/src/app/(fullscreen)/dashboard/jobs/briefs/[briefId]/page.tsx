@@ -1,13 +1,12 @@
 import { db, briefingInvitations } from "@harly/db";
 import { eq, desc, sql } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { getJobBrief } from "@/features/jobs/briefing/actions";
 import { HiringPlanClient } from "@/features/jobs/briefing/HiringPlanClient";
 import {
   readIntake,
   readEmployeeProfile,
-  resumeReviewsSchema,
 } from "@/features/jobs/briefing/workflow";
 import { briefAnswersSchema } from "@/features/jobs/briefing/model";
 import { jobDraftSchema } from "@/lib/ai/schemas";
@@ -36,6 +35,9 @@ export default async function BriefPage({
   const profile = readEmployeeProfile(brief.profile);
   const draft = jobDraftSchema.safeParse(brief.generatedDraft);
   const query = await searchParams;
+  if (query.step === "4" && query.candidateId)
+    redirect(`/dashboard/candidates/${query.candidateId}`);
+  if (query.step === "4") redirect(`/dashboard/jobs/briefs/${brief.id}?step=3`);
   const invitations = await db
     .select({
       id: briefingInvitations.id,
@@ -59,19 +61,16 @@ export default async function BriefPage({
         completedAt: v.completedAt?.toISOString() ?? null,
       }))}
       initialStep={
-        Number(query.step) >= 1 && Number(query.step) <= 4
+        Number(query.step) >= 1 && Number(query.step) <= 3
           ? Number(query.step)
           : 1
       }
-      initialCandidateId={query.candidateId ?? ""}
-      initialCandidateName={query.candidateName ?? ""}
       briefId={brief.id}
       title={brief.title}
       initialAnswers={answers}
       initialProfile={profile}
       initialDraft={draft.success ? draft.data : null}
       initialIntake={readIntake(brief.intake)}
-      initialReviews={resumeReviewsSchema.parse(brief.resumeReviews)}
       jobId={brief.jobId}
       aiConfigured={ai.enabled && ai.encryptionReady && ai.hasApiKey}
     />

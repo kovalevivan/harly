@@ -99,6 +99,15 @@ export async function createJobAction(formData: FormData) {
       )
       .limit(1);
     if (!brief) throw new Error("План подбора не найден.");
+    if (brief.jobId)
+      redirect(`/dashboard/jobs/${brief.jobId}?briefId=${brief.id}`);
+    if (
+      String(formData.get("briefVersion") ?? "") !==
+      brief.updatedAt.toISOString()
+    )
+      throw new Error(
+        "План изменился. Откройте актуальное описание перед созданием вакансии.",
+      );
     if (
       brief.intake &&
       (!readIntake(brief.intake).profileApproved ||
@@ -151,6 +160,31 @@ export async function updateJobAction(formData: FormData) {
   const jobId = String(formData.get("jobId") ?? "");
   const context = await requireJobPermission("jobs:edit", jobId);
   const values = parseJobFormData(formData);
+  const briefId = String(formData.get("briefId") ?? "");
+  if (briefId) {
+    const [brief] = await db
+      .select()
+      .from(jobBriefs)
+      .where(
+        and(
+          eq(jobBriefs.id, briefId),
+          eq(jobBriefs.workspaceId, context.organization.id),
+          eq(jobBriefs.jobId, jobId),
+        ),
+      )
+      .limit(1);
+    if (!brief) throw new Error("План не связан с этой вакансией.");
+    const intake = readIntake(brief.intake);
+    if (brief.intake && (!intake.profileApproved || !intake.vacancyApproved))
+      throw new Error("Сначала утвердите профиль и описание в плане подбора.");
+    if (
+      String(formData.get("briefVersion") ?? "") !==
+      brief.updatedAt.toISOString()
+    )
+      throw new Error(
+        "План изменился. Загрузите актуальное описание в редактор.",
+      );
+  }
   const job = await updateJob(jobId, values);
 
   if (!job) {

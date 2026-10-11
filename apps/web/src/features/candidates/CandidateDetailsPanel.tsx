@@ -1,5 +1,6 @@
 "use client";
 
+import { ApplicationHiringReview } from "@/features/applications/hiring-review/ApplicationHiringReview";
 import { localizeStageName } from "@/lib/localize-system-text";
 import { russianPlural } from "@/lib/russian-plural";
 import { useState } from "react";
@@ -109,13 +110,15 @@ function SkillsList({ skills }: { skills: string[] }) {
   return (
     <div className="flex flex-wrap gap-2">
       {visible.map((skill) => (
-        <Badge key={skill} variant="outline" className="font-normal text-foreground/80">
+        <Badge
+          key={skill}
+          variant="outline"
+          className="font-normal text-foreground/80"
+        >
           {skill}
         </Badge>
       ))}
-      {overflow > 0 ? (
-        <Badge variant="outline">+{overflow}</Badge>
-      ) : null}
+      {overflow > 0 ? <Badge variant="outline">+{overflow}</Badge> : null}
     </div>
   );
 }
@@ -125,7 +128,9 @@ function ExperienceHeadline({ years }: { years: number | null }) {
   return (
     <p className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/90">
       <Sparkles className="size-3.5 text-muted-foreground" strokeWidth={1.8} />
-      {years}{"+ многолетний опыт "}</p>
+      {years}
+      {"+ многолетний опыт "}
+    </p>
   );
 }
 
@@ -159,11 +164,7 @@ function DetailRow({
   );
 }
 
-function ApplicationDisclosure({
-  application,
-}: {
-  application: Application;
-}) {
+function ApplicationDisclosure({ application }: { application: Application }) {
   const [open, setOpen] = useState(false);
   const hasAnswers = application.answers.length > 0;
   const sourceMeta = application.source
@@ -190,7 +191,8 @@ function ApplicationDisclosure({
         >
           <Link href={`/dashboard/pipeline?job=${application.jobId}` as Route}>
             <ExternalLink className="size-3.5" strokeWidth={1.8} />
-            {"Воронка найма "}</Link>
+            {"Воронка найма "}
+          </Link>
         </Button>
       </div>
 
@@ -225,6 +227,8 @@ function ApplicationDisclosure({
           </button>
         ) : null}
       </div>
+
+      <ApplicationHiringReview applicationId={application.id} />
 
       <div
         className="grid transition-[grid-template-rows] duration-200 ease-out"
@@ -287,11 +291,14 @@ export function CandidateDetailsPanel({
   const profileSummary = summary ?? resumeSummary;
   const skills = latestFile?.parsedSkills ?? [];
   const experienceYears = latestFile?.parsedExperienceYears ?? null;
-  const resumeExperience: ResumeExperienceItem[] = latestFile?.parsedExperience ?? [];
-  const resumeEducation: ResumeEducationItem[] = latestFile?.parsedEducationItems ?? [];
+  const resumeExperience: ResumeExperienceItem[] =
+    latestFile?.parsedExperience ?? [];
+  const resumeEducation: ResumeEducationItem[] =
+    latestFile?.parsedEducationItems ?? [];
   const experience =
     experienceEntries.length > 0 ? experienceEntries : resumeExperience;
-  const education = educationEntries.length > 0 ? educationEntries : resumeEducation;
+  const education =
+    educationEntries.length > 0 ? educationEntries : resumeEducation;
   const educationFallback = latestFile?.parsedEducation ?? null;
   const applicationsWithAnswers = applications.filter(
     (application) => application.answers.length > 0,
@@ -310,9 +317,15 @@ export function CandidateDetailsPanel({
       >
         <span className="text-sm font-semibold">{"Подробности"}</span>
         {open ? (
-          <ChevronUp className="size-4 text-muted-foreground" strokeWidth={1.8} />
+          <ChevronUp
+            className="size-4 text-muted-foreground"
+            strokeWidth={1.8}
+          />
         ) : (
-          <ChevronDown className="size-4 text-muted-foreground" strokeWidth={1.8} />
+          <ChevronDown
+            className="size-4 text-muted-foreground"
+            strokeWidth={1.8}
+          />
         )}
       </button>
 
@@ -322,7 +335,8 @@ export function CandidateDetailsPanel({
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <SectionLabel>{"Резюме"}</SectionLabel>
               <p className="text-xs text-muted-foreground">
-                {files.length} {russianPlural(files.length, "файл", "файла", "файлов")}
+                {files.length}{" "}
+                {russianPlural(files.length, "файл", "файла", "файлов")}
               </p>
             </div>
             <div className="mt-4">
@@ -341,7 +355,9 @@ export function CandidateDetailsPanel({
             </p>
           </Section>
 
-          <Section hidden={!summary || !resumeSummary || summary === resumeSummary}>
+          <Section
+            hidden={!summary || !resumeSummary || summary === resumeSummary}
+          >
             <SectionLabel>{"Краткое содержание резюме"}</SectionLabel>
             <p className="mt-3 max-w-4xl text-sm leading-6 text-foreground/85">
               {resumeSummary}
@@ -350,21 +366,29 @@ export function CandidateDetailsPanel({
 
           <Section hidden={experience.length === 0}>
             <SectionLabel meta={`${experience.length} записей`}>
-              {"Опыт работы "}</SectionLabel>
+              {"Опыт работы "}
+            </SectionLabel>
             <div className="mt-4">
               <ExperienceTimeline experience={experience} />
             </div>
           </Section>
 
           <Section
-            hidden={education.length === 0 && !educationFallback && experienceYears === null}
+            hidden={
+              education.length === 0 &&
+              !educationFallback &&
+              experienceYears === null
+            }
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <SectionLabel>{"Образование"}</SectionLabel>
               <ExperienceHeadline years={experienceYears} />
             </div>
             <div className="mt-4">
-              <EducationList education={education} fallback={educationFallback} />
+              <EducationList
+                education={education}
+                fallback={educationFallback}
+              />
             </div>
           </Section>
 
@@ -474,20 +498,23 @@ export function CandidateDetailsPanel({
           {applications.length > 0 ? (
             <section className="px-5 py-5 sm:px-6">
               <SectionLabel meta={`${applications.length} всего`}>
-                {"Отклики "}</SectionLabel>
+                {"Отклики "}
+              </SectionLabel>
               <div className="mt-4 divide-y divide-border/60">
                 {applications.map((application) => (
-                  <ApplicationDisclosure key={application.id} application={application} />
+                  <ApplicationDisclosure
+                    key={application.id}
+                    application={application}
+                  />
                 ))}
               </div>
             </section>
           ) : null}
 
           <Section hidden={applicationsWithAnswers.length === 0}>
-            <SectionLabel
-              meta={`${applicationsWithAnswers.length} отклик`}
-            >
-              {"Ответы в форме отклика "}</SectionLabel>
+            <SectionLabel meta={`${applicationsWithAnswers.length} отклик`}>
+              {"Ответы в форме отклика "}
+            </SectionLabel>
             <div className="mt-4 divide-y divide-border/60">
               {applicationsWithAnswers.map((application) => (
                 <div key={application.id} className="py-4 first:pt-0 last:pb-0">
@@ -496,7 +523,10 @@ export function CandidateDetailsPanel({
                   </p>
                   <dl className="mt-4 space-y-4">
                     {application.answers.map((answer) => (
-                      <div key={answer.id} className="border-l border-border/70 pl-4">
+                      <div
+                        key={answer.id}
+                        className="border-l border-border/70 pl-4"
+                      >
                         <dt className="text-sm text-muted-foreground">
                           {answer.label}
                         </dt>
