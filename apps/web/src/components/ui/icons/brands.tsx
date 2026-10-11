@@ -111,7 +111,7 @@ export function GoogleMeetLogo({ className }: IconProps) {
   return (
     <img
       src={`${THESVG_BASE}/google-meet/default.svg`}
-      alt="Google Meet"
+      alt={"Google Встреча"}
       className={cn("size-5", className)}
       aria-hidden="true"
     />
@@ -133,7 +133,7 @@ export function MicrosoftTeamsLogo({ className }: IconProps) {
   return (
     <img
       src={`${THESVG_BASE}/microsoft-teams/default.svg`}
-      alt="Microsoft Teams"
+      alt={"Команды Майкрософт"}
       className={cn("size-5", className)}
       aria-hidden="true"
     />
@@ -170,7 +170,7 @@ export function ZoomLogo({ className }: IconProps) {
   return (
     <img
       src={`${THESVG_BASE}/zoom/default.svg`}
-      alt="Zoom"
+      alt={"Увеличить"}
       className={cn("size-5", className)}
       aria-hidden="true"
     />

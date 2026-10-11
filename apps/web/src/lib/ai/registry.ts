@@ -10,6 +10,7 @@ import type { LanguageModel } from "ai";
 import type { AiModelConfig, OpenRouterModel } from "./providers";
 import { assertSafeAiBaseUrl } from "./base-url";
 import { xaiCompatibleFetch } from "./provider-tools";
+import { aiFetch } from "./transport";
 
 /** Build a Vercel AI SDK LanguageModel for the given provider + key + model id. */
 export function getModel(config: AiModelConfig): LanguageModel {
@@ -19,7 +20,7 @@ export function getModel(config: AiModelConfig): LanguageModel {
   // any unsafe value here too (e.g. a key set via env or a future path).
   assertSafeAiBaseUrl(provider, baseUrl);
 
-  const opts = { apiKey, baseURL: baseUrl };
+  const opts = { apiKey, baseURL: baseUrl, fetch: aiFetch };
 
   switch (provider) {
     case "openai":
@@ -29,9 +30,12 @@ export function getModel(config: AiModelConfig): LanguageModel {
     case "google":
       return createGoogleGenerativeAI(opts)(modelId);
     case "xai":
-      return createXai({ ...opts, fetch: xaiCompatibleFetch })(modelId);
+      return createXai({
+        ...opts,
+        fetch: (input, init) => xaiCompatibleFetch(input, init, aiFetch),
+      })(modelId);
     case "openrouter":
-      return createOpenRouter({ apiKey, baseURL: baseUrl })(modelId);
+      return createOpenRouter(opts)(modelId);
     default:
       throw new Error(`Unknown AI provider: ${provider as string}`);
   }
@@ -40,7 +44,7 @@ export function getModel(config: AiModelConfig): LanguageModel {
 /** Live OpenRouter catalog for the searchable model picker. Public endpoint. */
 export async function fetchOpenRouterModels(): Promise<OpenRouterModel[]> {
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/models", {
+    const response = await aiFetch("https://openrouter.ai/api/v1/models", {
       headers: { Accept: "application/json" },
     });
 

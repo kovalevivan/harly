@@ -38,7 +38,7 @@ const PRIMARY_FILTERS: InboxFilter[] = ["all", "needs-reply", "unread", "assigne
 const MORE_FILTERS: InboxFilter[] = ["replies", "unassigned", "candidates", "assigned"];
 
 function filterLabel(value: InboxFilter) {
-  return inboxFilters.find(([key]) => key === value)?.[1] ?? "All";
+  return inboxFilters.find(([key]) => key === value)?.[1] ?? "Все";
 }
 
 function normalizeSearch(value: string) {
@@ -52,17 +52,17 @@ function personKey(thread: InboxThread) {
 }
 
 function personName(thread: InboxThread) {
-  return thread.candidateName ?? thread.participantEmail ?? "Unknown sender";
+  return thread.candidateName ?? thread.participantEmail ?? "Неизвестный отправитель";
 }
 
 function ConnectionStrip({ status }: { status: InboxMailboxStatus }) {
   const conflict = status.route === "conflict";
   const title = conflict
-    ? "Two incoming email routes are enabled"
-    : "Incoming email is not connected yet";
+    ? "Включены два маршрута входящей электронной почты."
+    : "Входящая электронная почта еще не подключена";
   const description = conflict
-    ? "A shared mailbox and a webhook are both on. Choose one to avoid duplicate conversations."
-    : "Connect a shared mailbox or threaded replies so candidate messages land here.";
+    ? "Общий почтовый ящик и веб-перехватчик включены. Выберите один, чтобы избежать дублирования разговоров."
+    : "Подключите общий почтовый ящик или ветку ответов, чтобы сообщения кандидатов попадали сюда.";
 
   return (
     <div
@@ -78,8 +78,7 @@ function ConnectionStrip({ status }: { status: InboxMailboxStatus }) {
         href="/settings/email/replies"
         className="shrink-0 font-semibold text-foreground underline underline-offset-4 hover:text-primary"
       >
-        Email settings
-      </Link>
+        {"Настройки электронной почты "}</Link>
     </div>
   );
 }
@@ -130,18 +129,18 @@ function InboxCommandBar({
   return (
     <header className="flex h-12 items-center gap-3 border-b border-border/70 pl-3 pr-4">
       <label className="relative flex w-full shrink-0 items-center lg:w-[328px]">
-        <span className="sr-only">Search conversations</span>
+        <span className="sr-only">{"Поиск бесед"}</span>
         <SearchIcon className="pointer-events-none absolute left-2.5 size-4 text-muted-foreground" />
         <input
           ref={searchRef}
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Search mail"
+          placeholder={"Поиск почты"}
           className="h-9 w-full rounded-md border border-transparent bg-muted/50 pl-8 pr-3 text-sm outline-none transition-[border-color,background-color] placeholder:text-muted-foreground/70 hover:bg-muted focus:border-ring focus:bg-background focus:ring-2 focus:ring-ring/20"
         />
       </label>
 
-      <nav role="tablist" aria-label="Inbox filters" className="ml-auto hidden min-w-0 items-center gap-1 overflow-x-auto sm:flex [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <nav role="tablist" aria-label={"Фильтры входящих сообщений"} className="ml-auto hidden min-w-0 items-center gap-1 overflow-x-auto sm:flex [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {PRIMARY_FILTERS.map((value) => <FilterButton key={value} value={value} />)}
         <Popover>
           <PopoverTrigger asChild>
@@ -152,7 +151,7 @@ function InboxCommandBar({
                 moreActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              {moreActive ? filterLabel(filter) : "More"}
+              {moreActive ? filterLabel(filter) : "Подробнее"}
               <CaretDownIcon className="size-3" />
             </button>
           </PopoverTrigger>
@@ -179,7 +178,7 @@ function InboxCommandBar({
         </Popover>
       </nav>
 
-      <Button type="button" variant="ghost" size="icon-sm" className="shrink-0 active:scale-[0.97] motion-reduce:active:scale-100" onClick={onRefresh} disabled={syncing} aria-label="Check for new messages" title="Check for new messages">
+      <Button type="button" variant="ghost" size="icon-sm" className="shrink-0 active:scale-[0.97] motion-reduce:active:scale-100" onClick={onRefresh} disabled={syncing} aria-label={"Проверьте наличие новых сообщений"} title={"Проверьте наличие новых сообщений"}>
         <ArrowsClockwiseIcon className={cn("size-4", syncing && "animate-spin motion-reduce:animate-none")} />
       </Button>
     </header>
@@ -197,10 +196,10 @@ function InboxEmptyState({ status, filter, demoMode = false }: { status: InboxMa
           <span className="mx-auto flex size-11 items-center justify-center rounded-xl bg-muted text-muted-foreground">
             <EnvelopeIcon className="size-5" />
           </span>
-          <h2 className="mt-4 text-base font-semibold">No conversations in this view</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">This filter is empty right now. Switch back to All to see every conversation.</p>
+          <h2 className="mt-4 text-base font-semibold">{"В этом представлении нет разговоров"}</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{"Сейчас этот фильтр пуст. Вернитесь в режим «Все», чтобы увидеть каждый разговор."}</p>
           <Button asChild className="mt-5" size="sm">
-            <Link href="/dashboard/inbox">View all conversations</Link>
+            <Link href="/dashboard/inbox">{"Просмотреть все разговоры"}</Link>
           </Button>
         </div>
       </div>
@@ -214,10 +213,10 @@ function InboxEmptyState({ status, filter, demoMode = false }: { status: InboxMa
           <span className="mx-auto flex size-11 items-center justify-center rounded-xl bg-warning/10 text-warning">
             <EnvelopeIcon className="size-5" />
           </span>
-          <h2 className="mt-4 text-base font-semibold">Connect incoming email to start receiving replies</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">Choose a shared mailbox or threaded replies in Email settings. Once connected, candidate replies become conversations here.</p>
+          <h2 className="mt-4 text-base font-semibold">{"Подключите входящую электронную почту, чтобы начать получать ответы"}</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{"Выберите общий почтовый ящик или ветку ответов в настройках электронной почты. После подключения ответы кандидатов становятся здесь беседами."}</p>
           <Button asChild className="mt-5" size="sm">
-            <Link href="/settings/email/replies">Set up incoming email</Link>
+            <Link href="/settings/email/replies">{"Настройка входящей электронной почты"}</Link>
           </Button>
         </div>
       </div>
@@ -231,15 +230,15 @@ function InboxEmptyState({ status, filter, demoMode = false }: { status: InboxMa
           <span className="mx-auto flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <CheckCircleIcon className="size-5" />
           </span>
-          <h2 className="mt-4 text-lg font-semibold tracking-[-0.02em]">Your inbox is ready</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">No candidate has replied yet. When they reply to a Harly email, the message appears here automatically.</p>
+          <h2 className="mt-4 text-lg font-semibold tracking-[-0.02em]">{"Ваш почтовый ящик готов"}</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">{"Ни один кандидат еще не ответил. Когда они отвечают на электронное письмо Харли, сообщение автоматически появляется здесь."}</p>
         </div>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           {[
-            ["1", "Send an email", "Contact a candidate from Harly."],
-            ["2", "Candidate replies", "Their reply goes to your Harly address."],
-            ["3", "Review here", "The conversation appears in this Inbox."],
+            ["1", "Отправить электронное письмо", "Свяжитесь с кандидатом из Harly."],
+            ["2", "Ответы кандидатов", "Их ответ придет на ваш адрес Harly."],
+            ["3", "Обзор здесь", "Разговор появится в этом почтовом ящике."],
           ].map(([step, title, description]) => (
             <div key={step} className="rounded-lg border border-border/70 bg-muted/20 px-4 py-3.5 text-left">
               <span className="font-mono text-xs font-semibold text-primary">{step}</span>
@@ -379,17 +378,17 @@ export function RecruitingInbox({
       if (result.ok) {
         setAnnouncement(success);
         router.refresh();
-      } else setAnnouncement(result.error ?? "Action failed.");
+      } else setAnnouncement(result.error ?? "Действие не удалось.");
       return result;
     } catch {
-      const result = { ok: false, error: "You do not have permission to change this thread." } as T;
-      setAnnouncement(result.error ?? "Action failed.");
+      const result = { ok: false, error: "У вас нет разрешения на изменение этой темы." } as T;
+      setAnnouncement(result.error ?? "Действие не удалось.");
       return result;
     }
   }
 
   function handleMarkRead(target: InboxThread) {
-    startTransition(() => { void runAction(() => markInboxThreadReadAction({ threadId: target.id, source: target.source }), `Marked “${target.subject}” as read.`); });
+    startTransition(() => { void runAction(() => markInboxThreadReadAction({ threadId: target.id, source: target.source }), `Помечено «${target.subject}» как прочитанное.`); });
   }
 
   function handleSelectPerson(person: InboxPerson) {
@@ -415,7 +414,7 @@ export function RecruitingInbox({
     params.set("thread", target.id);
     router.push(`/dashboard/inbox?${params.toString()}`);
     if (target.unreadCount) {
-      startTransition(() => { void runAction(() => markInboxThreadReadAction({ threadId: target.id, source: target.source }), `Marked “${target.subject}” as read.`); });
+      startTransition(() => { void runAction(() => markInboxThreadReadAction({ threadId: target.id, source: target.source }), `Помечено «${target.subject}» как прочитанное.`); });
     }
   }
 
@@ -439,8 +438,8 @@ export function RecruitingInbox({
 
   async function retrySync() {
     setSyncing(true);
-    const result = await retryMailboxSyncAction().catch(() => ({ ok: false as const, error: "You do not have permission to sync the mailbox." }));
-    setAnnouncement(result.ok ? `Sync complete. Imported ${"imported" in result ? result.imported : 0} messages; skipped ${"skipped" in result ? result.skipped : 0} duplicates.` : result.error ?? "Sync failed.");
+    const result = await retryMailboxSyncAction().catch(() => ({ ok: false as const, error: "У вас нет разрешения на синхронизацию почтового ящика." }));
+    setAnnouncement(result.ok ? `Синхронизация завершена. Импортированы ${"imported" in result ? result.imported : 0} сообщения; пропущено ${"skipped" in result ? result.skipped : 0} дубликатов.` : result.error ?? "Синхронизация не удалась.");
     setSyncing(false);
     router.refresh();
   }
@@ -466,12 +465,12 @@ export function RecruitingInbox({
       candidates={candidates}
       applications={applications}
       isPending={pending}
-      onAssign={(ownerId) => runAction(() => updateMailboxThreadAction({ threadId: contextThread.id, ownerId }), ownerId ? "Thread assigned." : "Thread unassigned.")}
-      onCandidateChange={(candidateId) => runAction(() => linkMailboxThreadToCandidateAction({ threadId: contextThread.id, candidateId }), candidateId ? "Candidate linked." : "Candidate unlinked.")}
-      onApplicationChange={(applicationId) => runAction(() => linkMailboxThreadToApplicationAction({ threadId: contextThread.id, applicationId: applicationId ?? null }), applicationId ? "Application linked." : "Application unlinked.")}
-      onCreateCandidate={() => { startTransition(() => { void runAction(() => createCandidateFromMailboxThreadAction({ threadId: contextThread.id }), "Candidate created from this thread."); }); }}
-      onArchive={() => { startTransition(() => { void runAction(() => updateMailboxThreadAction({ threadId: contextThread.id, status: "archived" }), "Thread archived."); }); }}
-      onMarkSpam={() => { startTransition(() => { void runAction(() => updateMailboxThreadAction({ threadId: contextThread.id, status: "spam" }), "Thread marked as spam."); }); }}
+      onAssign={(ownerId) => runAction(() => updateMailboxThreadAction({ threadId: contextThread.id, ownerId }), ownerId ? "Тема назначена." : "Тема не назначена.")}
+      onCandidateChange={(candidateId) => runAction(() => linkMailboxThreadToCandidateAction({ threadId: contextThread.id, candidateId }), candidateId ? "Кандидат связан." : "Кандидат отключен.")}
+      onApplicationChange={(applicationId) => runAction(() => linkMailboxThreadToApplicationAction({ threadId: contextThread.id, applicationId: applicationId ?? null }), applicationId ? "Приложение связано." : "Приложение отключено.")}
+      onCreateCandidate={() => { startTransition(() => { void runAction(() => createCandidateFromMailboxThreadAction({ threadId: contextThread.id }), "Кандидат создан из этой темы."); }); }}
+      onArchive={() => { startTransition(() => { void runAction(() => updateMailboxThreadAction({ threadId: contextThread.id, status: "archived" }), "Тема заархивирована."); }); }}
+      onMarkSpam={() => { startTransition(() => { void runAction(() => updateMailboxThreadAction({ threadId: contextThread.id, status: "spam" }), "Тема отмечена как спам."); }); }}
       onSummarize={() => summarizeMailboxThreadAction({ threadId: contextThread.id })}
       onSuggestReply={() => suggestMailboxReplyAction({ threadId: contextThread.id }).then((result) => { if (result.ok && result.draft) setSuggestedReply({ threadId: contextThread.id, body: result.draft.body }); return result; })}
     />
@@ -512,7 +511,7 @@ export function RecruitingInbox({
                 suggestedReply={suggestedReply?.threadId === thread.id ? suggestedReply.body : null}
                 onBack={handleBackToThreads}
                 onMarkRead={handleMarkRead}
-                onSendReply={(payload) => replyMailboxThreadAction({ threadId: thread.id, body: payload.body, html: payload.html, subject: payload.subject, idempotencyKey: payload.idempotencyKey, attachments: payload.attachments.map((file) => ({ filename: file.filename, contentType: file.contentType, base64: file.base64 })) }).then((result) => { if (result.ok) { setAnnouncement(result.sentCopySaved === false ? "Reply sent, but the copy could not be saved in Sent." : "Reply sent."); router.refresh(); } return result; })}
+                onSendReply={(payload) => replyMailboxThreadAction({ threadId: thread.id, body: payload.body, html: payload.html, subject: payload.subject, idempotencyKey: payload.idempotencyKey, attachments: payload.attachments.map((file) => ({ filename: file.filename, contentType: file.contentType, base64: file.base64 })) }).then((result) => { if (result.ok) { setAnnouncement(result.sentCopySaved === false ? "Ответ отправлен, но копию не удалось сохранить в папке «Отправленные»." : "Ответ отправлен."); router.refresh(); } return result; })}
                 actionsSlot={actionsPanel}
               />
             ) : (
@@ -526,7 +525,7 @@ export function RecruitingInbox({
             )}
           </div>
 
-          <aside className="hidden min-h-0 shrink-0 border-l border-border/70 bg-muted/15 lg:block lg:w-[300px] xl:w-[320px]" aria-label="Candidate details and actions">
+          <aside className="hidden min-h-0 shrink-0 border-l border-border/70 bg-muted/15 lg:block lg:w-[300px] xl:w-[320px]" aria-label={"Подробности о кандидате и действия"}>
             {actionsPanel}
           </aside>
         </div>
@@ -539,8 +538,7 @@ export function RecruitingInbox({
             className="rounded-md border border-border bg-card px-4 py-1.5 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
             onClick={() => { const params = new URLSearchParams(window.location.search); params.set("page", String((page ?? 0) + 1)); params.delete("thread"); router.push(`/dashboard/inbox?${params.toString()}`); }}
           >
-            Load more conversations
-          </button>
+            {"Загрузить больше разговоров "}</button>
         </div>
       ) : null}
 

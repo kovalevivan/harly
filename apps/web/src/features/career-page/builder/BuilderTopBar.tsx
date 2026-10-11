@@ -18,10 +18,10 @@ const TEMPLATE_META: Record<
   CareerTemplate,
   { label: string; blurb: string; ready: boolean }
 > = {
-  minimal: { label: "Minimal", blurb: "Clean type, just the essentials", ready: true },
-  playful: { label: "Playful", blurb: "Colorful, friendly, high-energy", ready: true },
-  ashby: { label: "Ashby", blurb: "Structured, sidebar filters", ready: true },
-  join: { label: "Join", blurb: "Company profile tabs, job-board style", ready: true },
+  minimal: { label: "Минимальный", blurb: "Чистый тип, только самое необходимое", ready: true },
+  playful: { label: "Игривый", blurb: "Красочный, дружелюбный, энергичный", ready: true },
+  ashby: { label: "Эшби", blurb: "Структурированные фильтры боковой панели", ready: true },
+  join: { label: "Присоединяйтесь", blurb: "Вкладки профиля компании, стиль доски объявлений", ready: true },
 };
 
 export function BuilderTopBar({
@@ -68,7 +68,7 @@ export function BuilderTopBar({
           className="group inline-flex items-center gap-2 rounded-full border border-border bg-paper-raised/60 py-1.5 pl-2.5 pr-3.5 text-sm font-medium text-ink-soft shadow-sm transition-all duration-150 hover:border-pine/30 hover:bg-kraft hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pine/30 active:scale-[0.97]"
         >
           <ArrowLeftIcon className="size-4 transition-transform duration-150 group-hover:-translate-x-0.5" />
-          <span className="hidden sm:inline">Exit</span>
+          <span className="hidden sm:inline">{"Выход"}</span>
         </button>
       }
       center={
@@ -83,7 +83,7 @@ export function BuilderTopBar({
                 : "border-border bg-kraft/60 text-ink-soft hover:bg-kraft hover:text-foreground",
             )}
           >
-            <span className="text-ink-soft font-medium">Template</span>
+            <span className="text-ink-soft font-medium">{"Шаблон"}</span>
             <span className="text-foreground">{meta.label}</span>
             <ChevronDownIcon
               className={cn(
@@ -119,8 +119,7 @@ export function BuilderTopBar({
                     <span className="text-xs text-ink-soft">{tmpl.blurb}</span>
                     {!tmpl.ready && (
                       <span className="mt-1 inline-block w-fit rounded bg-clay/10 px-1.5 py-0.5 text-[10px] font-medium text-clay">
-                        Coming soon
-                      </span>
+                        {"Скоро "}</span>
                     )}
                   </button>
                 );
@@ -138,7 +137,7 @@ export function BuilderTopBar({
             className="inline-flex items-center gap-1.5 rounded-lg border border-transparent px-2.5 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:border-border hover:bg-kraft hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pine/30"
           >
             <EyeIcon className="size-4" />
-            <span className="hidden sm:inline">View live</span>
+            <span className="hidden sm:inline">{"Посмотреть в прямом эфире"}</span>
           </a>
           <button
             type="button"
@@ -157,7 +156,7 @@ export function BuilderTopBar({
             ) : justSaved ? (
               <CheckIcon className="size-4" />
             ) : null}
-            {saving ? "Saving…" : justSaved ? "Saved" : "Save changes"}
+            {saving ? "Сохранение…" : justSaved ? "Сохранено" : "Сохранить изменения"}
           </button>
         </>
       }

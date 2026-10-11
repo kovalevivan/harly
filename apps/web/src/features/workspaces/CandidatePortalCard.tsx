@@ -99,10 +99,10 @@ function OAuthProviderSection({
         clientSecret: clientSecret || undefined,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success(`${label} connected`);
+      toast.success(`${label} подключено`);
       setClientSecret("");
       setOpen(false);
       router.refresh();
@@ -113,10 +113,10 @@ function OAuthProviderSection({
     startDisconnect(async () => {
       const result = await disconnectPortalOAuthAction(provider);
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success(`${label} disconnected`);
+      toast.success(`${label} отключено`);
       setClientId("");
       setClientSecret("");
       setOpen(false);
@@ -138,10 +138,9 @@ function OAuthProviderSection({
       <div className="flex items-center gap-2">
         {configured ? (
           <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
-            <CheckIcon className="size-3" /> Connected
-          </span>
+            <CheckIcon className="size-3" /> {"Подключено "}</span>
         ) : (
-          <span className="text-xs text-muted-foreground">Not configured</span>
+          <span className="text-xs text-muted-foreground">{"Не настроено"}</span>
         )}
         {canEdit ? (
           <Sheet open={open} onOpenChange={handleOpenChange} mobilePresentation="bottom-on-mobile">
@@ -151,12 +150,12 @@ function OAuthProviderSection({
                 size="sm"
                 className={configured ? "text-muted-foreground" : undefined}
               >
-                {configured ? "Edit" : "Configure"}
+                {configured ? "Редактировать" : "Настроить"}
               </Button>
             </SheetTrigger>
             <DrawerLayout
-              title={`Configure ${label} sign-in`}
-              description={`Use ${label} OAuth so candidates can sign in to the portal with their existing account.`}
+              title={`Настроить вход ${label}`}
+              description={`Используйте ${label} OAuth, чтобы кандидаты могли войти на портал со своей существующей учетной записью.`}
               footer={
                 <>
                   {configured ? (
@@ -169,52 +168,46 @@ function OAuthProviderSection({
                       {disconnecting ? (
                         <SpinnerIcon className="size-4" />
                       ) : null}
-                      Disconnect
-                    </Button>
+                      {"Отключить "}</Button>
                   ) : null}
                   <SheetClose asChild>
                     <Button
                       variant="outline"
                       disabled={saving || disconnecting}
                     >
-                      Cancel
-                    </Button>
+                      {"Отмена "}</Button>
                   </SheetClose>
                   <Button
                     onClick={save}
                     disabled={saving || disconnecting || !clientId.trim()}
                   >
                     {saving ? <SpinnerIcon className="size-4" /> : null}
-                    Save
-                  </Button>
+                    {"Сохранить "}</Button>
                 </>
               }
             >
               <div className="space-y-5">
                 <div className="rounded-lg border bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
                   <p>
-                    Credentials are encrypted at rest and the secret is never
-                    shown again.
-                  </p>
+                    {"Неактивные учетные данные шифруются, и секрет больше никогда не отображается. "}</p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor={`${provider}-client-id`}>Client ID</Label>
+                  <Label htmlFor={`${provider}-client-id`}>{"Идентификатор клиента"}</Label>
                   <Input
                     id={`${provider}-client-id`}
                     value={clientId}
                     onChange={(e) => setClientId(e.target.value)}
-                    placeholder="Paste your Client ID"
+                    placeholder={"Вставьте свой идентификатор клиента"}
                     autoComplete="off"
                     className="font-mono text-sm"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor={`${provider}-client-secret`}>
-                    Client Secret{" "}
+                    {"Секрет клиента"}{" "}
                     {configured ? (
                       <span className="font-normal text-muted-foreground">
-                        (leave blank to keep existing)
-                      </span>
+                        {"(оставьте пустым, чтобы сохранить существующее) "}</span>
                     ) : null}
                   </Label>
                   <Input
@@ -223,14 +216,14 @@ function OAuthProviderSection({
                     value={clientSecret}
                     onChange={(e) => setClientSecret(e.target.value)}
                     placeholder={
-                      configured ? "••••••••" : "Paste your Client Secret"
+                      configured ? "••••••••" : "Вставьте свой секрет клиента"
                     }
                     autoComplete="new-password"
                     className="font-mono text-sm"
                   />
                 </div>
                 <div className="space-y-1.5 rounded-lg bg-muted/40 px-3 py-2.5 text-xs text-muted-foreground">
-                  <p>Authorized redirect URI</p>
+                  <p>{"Авторизованный URI перенаправления"}</p>
                   <p className="break-all font-mono text-foreground">
                     {redirectUri}
                   </p>
@@ -292,11 +285,11 @@ export function CandidatePortalCard({
       const result = await savePortalSettingsAction(next);
       if (!result.ok) {
         setOptimisticEnabled(!next);
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
       toast.success(
-        next ? "Candidate portal enabled" : "Candidate portal disabled",
+        next ? "Портал кандидатов включен" : "Портал кандидатов отключен",
       );
       router.refresh();
     });
@@ -311,7 +304,7 @@ export function CandidatePortalCard({
       if (!result.ok) {
         setOptimisticStatus(showApplicationStatus);
         setOptimisticHiringTeam(showHiringTeam);
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
       router.refresh();
@@ -341,13 +334,13 @@ export function CandidatePortalCard({
         <div className="p-6">
           <SectionHeader
             icon={IdentificationCardDuotoneIcon}
-            title="Candidate Portal"
+            title={"Кандидатский портал"}
             badge={
               <StatusPill tone={optimisticEnabled ? "on" : "off"}>
-                {optimisticEnabled ? "Active" : "Disabled"}
+                {optimisticEnabled ? "Активные" : "Отключено"}
               </StatusPill>
             }
-            description="A self-service portal where candidates can sign in, track their applications, and update their profile."
+            description={"Портал самообслуживания, на котором кандидаты могут войти в систему, отслеживать свои заявки и обновлять свой профиль."}
             action={
               canEdit ? (
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -355,10 +348,10 @@ export function CandidatePortalCard({
                     checked={optimisticEnabled}
                     disabled={toggling}
                     onCheckedChange={toggleEnabled}
-                    aria-label="Enable portal"
+                    aria-label={"Включить портал"}
                   />
                   <span className="text-muted-foreground">
-                    {optimisticEnabled ? "On" : "Off"}
+                    {optimisticEnabled ? "On" : "Выкл."}
                   </span>
                 </label>
               ) : null
@@ -368,7 +361,7 @@ export function CandidatePortalCard({
           {optimisticEnabled ? (
             <div className="mt-4 rounded-xl border bg-muted/30 px-4 py-3">
               <p className="text-xs text-muted-foreground">
-                Portal URL:{" "}
+                {"URL-адрес портала:"}{" "}
                 <Link
                   href={"/portal/login" as Route}
                   target="_blank"
@@ -385,31 +378,27 @@ export function CandidatePortalCard({
               <WarningCircleIcon className="mt-0.5 size-5 shrink-0 text-clay" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-foreground">
-                  Set up email before enabling the portal
-                </p>
+                  {"Настройте электронную почту перед включением портала "}</p>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Candidates use email magic links to sign in. Configure an
-                  email provider first so portal access works from day one.
-                </p>
+                  {"Кандидаты используют волшебные ссылки электронной почты для входа в систему. Сначала настройте поставщика электронной почты, чтобы доступ к порталу работал с первого дня. "}</p>
                 <Link
                   href="/settings/email"
                   className="mt-2 inline-flex text-xs font-semibold text-clay-strong underline-offset-2 hover:underline"
                 >
-                  Configure email
-                </Link>
+                  {"Настроить электронную почту "}</Link>
               </div>
             </div>
           ) : null}
         </div>
 
         <div className="grid grid-cols-1 divide-y border-t bg-muted/20 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-          <FeatureCell label="Authentication" value="Magic link · OAuth" />
+          <FeatureCell label={"Аутентификация"} value="Magic link · OAuth" />
           <FeatureCell
-            label="Candidate views"
+            label={"Мнения кандидата"}
             value="Applications · Jobs · Profile"
           />
           <FeatureCell
-            label="Sign-in methods"
+            label={"Методы входа"}
             value="Email · Google · GitHub · LinkedIn"
           />
         </div>
@@ -418,8 +407,7 @@ export function CandidatePortalCard({
       {/* OAuth providers */}
       <div>
         <h2 className="mb-3 text-sm font-semibold tracking-tight text-foreground/80">
-          Sign-in providers
-        </h2>
+          {"Поставщики входа в систему "}</h2>
         <div className="space-y-3">
           {/* Magic link , always available */}
           <div className="flex items-center justify-between rounded-xl border bg-card px-4 py-3.5">
@@ -440,27 +428,24 @@ export function CandidatePortalCard({
                 </svg>
               </span>
               <div>
-                <p className="text-sm font-medium">Magic link (email)</p>
+                <p className="text-sm font-medium">{"Волшебная ссылка (электронная почта)"}</p>
                 <p className="text-xs text-muted-foreground">
-                  Passwordless. Candidates enter their email and receive a
-                  sign-in link.
-                </p>
+                  {"Без пароля. Кандидаты вводят свой адрес электронной почты и получают ссылку для входа. "}</p>
               </div>
             </div>
             <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
-              <CheckIcon className="size-3" /> Always on
-            </span>
+              <CheckIcon className="size-3" /> {"Всегда включен "}</span>
           </div>
 
           <OAuthProviderSection
             key={`google-${googleClientId}`}
             provider="google"
-            label="Google"
+            label={"Гугл"}
             logo={GoogleLogo}
             configured={googleConfigured}
             savedClientId={googleClientId}
             canEdit={canEdit}
-            description="Candidates sign in with their Google account."
+            description={"Кандидаты входят в систему, используя свою учетную запись Google."}
             redirectUri={googleRedirect}
           />
 
@@ -472,7 +457,7 @@ export function CandidatePortalCard({
             configured={githubConfigured}
             savedClientId={githubClientId}
             canEdit={canEdit}
-            description="Candidates sign in with their GitHub account."
+            description={"Кандидаты входят в систему, используя свою учетную запись GitHub."}
             redirectUri={githubRedirect}
           />
 
@@ -484,7 +469,7 @@ export function CandidatePortalCard({
             configured={linkedinConfigured}
             savedClientId={linkedinClientId}
             canEdit={canEdit}
-            description="Candidates sign in with their LinkedIn account."
+            description={"Кандидаты входят в систему, используя свою учетную запись LinkedIn."}
             redirectUri={linkedinRedirect}
           />
         </div>
@@ -493,37 +478,32 @@ export function CandidatePortalCard({
       {/* UI options */}
       <div>
         <h2 className="mb-3 text-sm font-semibold tracking-tight text-foreground/80">
-          Portal options
-        </h2>
+          {"Опции портала "}</h2>
         <Card className="gap-0 divide-y p-0">
           <div className="flex items-center justify-between px-5 py-4">
             <div>
-              <p className="text-sm font-medium">Show application status</p>
+              <p className="text-sm font-medium">{"Показать статус заявки"}</p>
               <p className="text-xs text-muted-foreground">
-                Candidates can see which pipeline stage they are in (e.g.
-                &quot;Screening&quot;, &quot;Interview&quot;).
-              </p>
+                {"Кандидаты могут видеть, на каком этапе конвейера они находятся (например, «Отбор», «Интервью»). "}</p>
             </div>
             <Switch
               checked={optimisticStatus}
               onCheckedChange={toggleStatus}
               disabled={!canEdit || savingUi}
-              aria-label="Show application status"
+              aria-label={"Показать статус заявки"}
             />
           </div>
           <div className="flex items-center justify-between px-5 py-4">
             <div>
-              <p className="text-sm font-medium">Show hiring team</p>
+              <p className="text-sm font-medium">{"Показать команду по найму"}</p>
               <p className="text-xs text-muted-foreground">
-                Show candidate-facing names, roles, and profile photos of your
-                workspace members. Off by default for privacy.
-              </p>
+                {"Покажите имена, роли и фотографии профилей участников вашего рабочего пространства, обращенные к кандидатам. По умолчанию отключено для обеспечения конфиденциальности. "}</p>
             </div>
             <Switch
               checked={optimisticHiringTeam}
               onCheckedChange={toggleHiringTeam}
               disabled={!canEdit || savingUi}
-              aria-label="Show hiring team"
+              aria-label={"Показать команду по найму"}
             />
           </div>
         </Card>

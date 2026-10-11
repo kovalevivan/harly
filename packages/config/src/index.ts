@@ -44,6 +44,17 @@ const envSchema = z
     DATABASE_URL: optionalString,
     BETTER_AUTH_SECRET: optionalString,
     AI_ENCRYPTION_KEY: optionalString,
+    HARLY_AI_PROXY_URL: optionalString.pipe(
+      z.string().refine((value) => {
+        try {
+          const url = new URL(value);
+          return ["http:", "https:"].includes(url.protocol) &&
+            url.pathname === "/" && !url.search && !url.hash;
+        } catch {
+          return false;
+        }
+      }, { message: "must be an HTTP(S) proxy origin" }).optional(),
+    ),
     STORAGE_UPLOAD_SECRET: optionalString,
     CRON_SECRET: optionalString,
     HARLY_SETUP_SECRET: optionalString,

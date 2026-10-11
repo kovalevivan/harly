@@ -45,7 +45,7 @@ describe("Harly AI chat diagnosis and automations integration", () => {
       const catalogEntry = ACTION_CATALOG.find((entry) => entry.type === "ai_score");
       expect(catalogEntry).toBeDefined();
       expect(catalogEntry?.available).toBe(true);
-      expect(catalogEntry?.label).toBe("AI evaluation");
+      expect(catalogEntry?.label).toBe("Оценка ИИ");
     });
 
     it("declares ai_score in tool manifests for automation tooling", () => {
@@ -79,36 +79,36 @@ describe("Harly AI chat diagnosis and automations integration", () => {
     });
   });
 
-  describe("P2: Tool labels and progress consolidation in English", () => {
-    it("maps all automations tools to human-readable English labels", () => {
+  describe("P2: Tool labels and progress consolidation in Russian", () => {
+    it("maps all automations tools to human-readable Russian labels", () => {
       expect(TOOL_LABELS["tool-listAutomationTools"]).toBe(
-        "Checking automation tools",
+        "Проверка средств автоматизации",
       );
       expect(TOOL_LABELS["tool-searchAutomations"]).toBe(
-        "Searching automations",
+        "Поиск автоматизации",
       );
       expect(TOOL_LABELS["tool-getAutomationContext"]).toBe(
-        "Reading automation draft",
+        "Чтение проекта автоматизации",
       );
       expect(TOOL_LABELS["tool-prepareAutomationPatch"]).toBe(
-        "Preparing automation proposal",
+        "Подготовка предложения по автоматизации",
       );
       expect(TOOL_LABELS["tool-simulateAutomationProposal"]).toBe(
-        "Simulating automation",
+        "Моделирование автоматизации",
       );
       expect(TOOL_LABELS["tool-applyAutomationProposal"]).toBe(
-        "Applying automation changes",
+        "Применение изменений автоматизации",
       );
     });
 
-    it("provides a clean English formatted fallback for unknown tools instead of raw Working", () => {
+    it("provides a Russian fallback for unknown tools instead of raw Working", () => {
       expect(getToolLabel("tool-customValidationCheck")).toBe(
-        "Checking custom validation check",
+        "Выполняю действие",
       );
       expect(getToolLabel("tool-arbitraryThirdPartySync")).toBe(
-        "Checking arbitrary third party sync",
+        "Выполняю действие",
       );
-      expect(getToolLabel("")).toBe("Working");
+      expect(getToolLabel("")).toBe("Работаю");
     });
   });
 });

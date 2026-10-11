@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -42,9 +43,9 @@ function uniqueSorted(values: (string | null)[]) {
 
 const STATUS_OPTIONS = ["draft", "open", "closed"];
 const STATUS_LABELS: Record<string, string> = {
-  draft: "Draft",
-  open: "Open",
-  closed: "Closed",
+  draft: "Черновик",
+  open: "Открыта",
+  closed: "Закрыта",
 };
 
 const EMPLOYMENT_OPTIONS = ["full_time", "part_time", "contract", "internship"];
@@ -52,10 +53,10 @@ const WORKPLACE_OPTIONS = ["remote", "hybrid", "onsite"];
 
 const SORT_OPTIONS = ["recent", "oldest", "applicants", "title"];
 const SORT_LABELS: Record<string, string> = {
-  recent: "Most recent",
-  oldest: "Oldest",
-  applicants: "Most applicants",
-  title: "Title A–Z",
+  recent: "Сначала новые",
+  oldest: "Самый старый",
+  applicants: "Большинство заявителей",
+  title: "Название А–Я",
 };
 
 export function JobsTable({ jobs }: { jobs: JobRow[] }) {
@@ -123,7 +124,7 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search jobs by title, department or location…"
+          placeholder={"Поиск вакансий по названию, отделу или местоположению…"}
           className="h-11 rounded-full pl-11"
         />
       </div>
@@ -131,20 +132,20 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
       {/* Filter pills */}
       <div className="flex flex-wrap items-center gap-2">
         <FilterPill
-          label="Status"
+          label={"Статус"}
           value={status}
           onChange={setStatus}
           options={STATUS_OPTIONS}
           labelMap={STATUS_LABELS}
         />
         <FilterPill
-          label="Department"
+          label={"Отдел"}
           value={dept}
           onChange={setDept}
           options={departments}
         />
         <FilterPill
-          label="Type"
+          label={"Тип"}
           value={employment}
           onChange={setEmployment}
           options={EMPLOYMENT_OPTIONS}
@@ -153,7 +154,7 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
           )}
         />
         <FilterPill
-          label="Workplace"
+          label={"Рабочее место"}
           value={workplace}
           onChange={setWorkplace}
           options={WORKPLACE_OPTIONS}
@@ -162,7 +163,7 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
           )}
         />
         <FilterPill
-          label="Sort"
+          label={"Сортировать"}
           value={sortKey}
           onChange={(v) => setSortKey(v as SortKey)}
           options={SORT_OPTIONS}
@@ -176,14 +177,13 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
             onClick={clearFilters}
             className="rounded-full text-muted-foreground"
           >
-            Clear
-          </Button>
+            {"Очистить "}</Button>
         ) : null}
         <p className="ml-auto text-sm text-muted-foreground">
           <span className="font-semibold tabular-nums text-foreground">
             {filtered.length}
           </span>{" "}
-          {filtered.length === 1 ? "role" : "roles"}
+          {russianPlural(filtered.length, "вакансия", "вакансии", "вакансий")}
         </p>
       </div>
 
@@ -216,25 +216,24 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
                 in the pipeline (details in the tooltip, not a third text line). */}
             <div
               className="hidden min-w-0 sm:block"
-              title={`${job.applicants} ${job.applicants === 1 ? "candidate" : "candidates"}, ${job.activeApplicants} active`}
+              title={`${job.applicants} ${russianPlural(job.applicants, "кандидат", "кандидата", "кандидатов")}, ${job.activeApplicants} активны`}
             >
               <div className="flex items-baseline justify-between gap-2">
                 <span className="truncate text-xs text-muted-foreground">
                   <span className="text-sm font-semibold tabular-nums text-foreground">
                     {job.applicants}
                   </span>{" "}
-                  {job.applicants === 1 ? "candidate" : "candidates"}
+                  {russianPlural(job.applicants, "кандидат", "кандидата", "кандидатов")}
                 </span>
                 {job.newApplicants > 0 ? (
                   <span className="shrink-0 text-[0.65rem] font-medium text-primary">
-                    +{job.newApplicants} new
-                  </span>
+                    +{job.newApplicants} {"новых "}</span>
                 ) : null}
               </div>
               <div
                 className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted"
                 role="img"
-                aria-label={`${job.activeApplicants} of ${job.applicants} candidates active`}
+                aria-label={`${job.activeApplicants} из ${job.applicants} активных кандидатов`}
               >
                 <div
                   className="flex h-full overflow-hidden rounded-full bg-primary/25"
@@ -261,12 +260,10 @@ export function JobsTable({ jobs }: { jobs: JobRow[] }) {
           <div className="flex flex-col items-center gap-2 px-6 py-16 text-center">
             <Search className="size-5 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              No jobs match your filters.
-            </p>
+              {"Нет вакансий, соответствующих вашим фильтрам. "}</p>
             {filtersActive ? (
               <Button variant="outline" size="sm" onClick={clearFilters}>
-                Clear filters
-              </Button>
+                {"Очистить фильтры "}</Button>
             ) : null}
           </div>
         ) : null}

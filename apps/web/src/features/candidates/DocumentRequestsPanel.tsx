@@ -47,14 +47,14 @@ export function DocumentRequestsList({
     return (
       <EmptySection
         icon={FileText}
-        title="Nothing requested yet"
-        hint="Request an ID, signed NDA, or any file — the candidate uploads it from their portal."
+        title={"Пока ничего не запрошено"}
+        hint={"Запросите удостоверение личности, подписанное соглашение о неразглашении или любой файл — кандидат загружает его со своего портала."}
       />
     );
   }
   return (
     <div className="space-y-2">
-      <SectionHeading>Requested from candidate</SectionHeading>
+      <SectionHeading>{"Запрос от кандидата"}</SectionHeading>
       <div className="divide-y rounded-xl border">
         {requests.map((request) => (
           <RequestRow key={request.id} request={request} canManage={canManage} />
@@ -73,7 +73,7 @@ function RequestRow({ request, canManage }: { request: DocumentRequestItem; canM
     start(async () => {
       const result = await action();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update the request.");
+        toast.error(result.error ?? "Не удалось обновить запрос.");
         return;
       }
       toast.success(success);
@@ -94,12 +94,12 @@ function RequestRow({ request, canManage }: { request: DocumentRequestItem; canM
           <p className="mt-0.5 text-xs text-muted-foreground">{request.instructions}</p>
         ) : null}
         <p className="mt-1 text-[11px] text-muted-foreground">
-          {request.requestedByName ? `Requested by ${request.requestedByName}` : "Requested"}
+          {request.requestedByName ? `Запросил ${request.requestedByName}` : "Запрошено"}
           {request.dueAt
-            ? ` · due ${new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(request.dueAt))}`
+            ? ` · срок погашения ${new Intl.DateTimeFormat("ru-RU", { dateStyle: "medium" }).format(new Date(request.dueAt))}`
             : ""}
           {request.submittedAt
-            ? ` · submitted ${new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(request.submittedAt))}`
+            ? ` · отправлено ${new Intl.DateTimeFormat("ru-RU", { dateStyle: "medium" }).format(new Date(request.submittedAt))}`
             : ""}
         </p>
         {request.documentId ? (
@@ -108,7 +108,7 @@ function RequestRow({ request, canManage }: { request: DocumentRequestItem; canM
             className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
           >
             <FileText className="size-3.5" />
-            {request.documentName ?? "View uploaded file"}
+            {request.documentName ?? "Посмотреть загруженный файл"}
           </Link>
         ) : null}
       </div>
@@ -121,20 +121,18 @@ function RequestRow({ request, canManage }: { request: DocumentRequestItem; canM
                 size="sm"
                 variant="outline"
                 disabled={isPending}
-                onClick={() => run(() => reviewDocumentRequest({ requestId: request.id, decision: "accepted" }), "Document accepted")}
+                onClick={() => run(() => reviewDocumentRequest({ requestId: request.id, decision: "accepted" }), "Документ принят")}
               >
                 <ThumbsUp className="size-4" />
-                Accept
-              </Button>
+                {"Принять "}</Button>
               <Button
                 size="sm"
                 variant="outline"
                 disabled={isPending}
-                onClick={() => run(() => reviewDocumentRequest({ requestId: request.id, decision: "declined" }), "Document declined")}
+                onClick={() => run(() => reviewDocumentRequest({ requestId: request.id, decision: "declined" }), "Документ отклонен")}
               >
                 <ThumbsDown className="size-4" />
-                Decline
-              </Button>
+                {"Снижение "}</Button>
             </>
           ) : null}
           {request.status === "pending" ? (
@@ -143,17 +141,16 @@ function RequestRow({ request, canManage }: { request: DocumentRequestItem; canM
                 size="sm"
                 variant="ghost"
                 disabled={isPending}
-                onClick={() => run(() => waiveDocumentRequest({ requestId: request.id }), "Request waived")}
+                onClick={() => run(() => waiveDocumentRequest({ requestId: request.id }), "Запрос отклонен")}
               >
                 <Check className="size-4" />
-                Waive
-              </Button>
+                {"Отказаться "}</Button>
               <Button
                 size="sm"
                 variant="ghost"
                 className="text-destructive hover:text-destructive"
                 disabled={isPending}
-                onClick={() => run(() => cancelDocumentRequest({ requestId: request.id }), "Request removed")}
+                onClick={() => run(() => cancelDocumentRequest({ requestId: request.id }), "Запрос удален.")}
               >
                 <Trash2 className="size-4" />
               </Button>
@@ -193,11 +190,11 @@ export function RequestDialog({
       .map((item) => ({ title: item.title.trim(), instructions: item.instructions.trim() }))
       .filter((item) => item.title.length > 0);
     if (!applicationId) {
-      toast.error("Choose an application.");
+      toast.error("Выберите отклик.");
       return;
     }
     if (cleaned.length === 0) {
-      toast.error("Add at least one document title.");
+      toast.error("Добавьте хотя бы одно название документа.");
       return;
     }
     start(async () => {
@@ -207,10 +204,10 @@ export function RequestDialog({
         dueAt: dueAt ? new Date(dueAt).toISOString() : null,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not send the request.");
+        toast.error(result.error ?? "Не удалось отправить запрос.");
         return;
       }
-      toast.success(cleaned.length === 1 ? "Document requested" : `${cleaned.length} documents requested`);
+      toast.success(cleaned.length === 1 ? "Запрошенный документ" : `${cleaned.length} запрошенные документы`);
       reset();
       onOpenChange(false);
       router.refresh();
@@ -221,14 +218,13 @@ export function RequestDialog({
     <Dialog open={open} onOpenChange={(value) => { if (!value) reset(); onOpenChange(value); }}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Request documents</DialogTitle>
+          <DialogTitle>{"Запросить документы"}</DialogTitle>
           <DialogDescription>
-            The candidate is notified in their portal and uploads each file there. You review the uploads here.
-          </DialogDescription>
+            {"Кандидат уведомляется на своем портале и загружает туда каждый файл. Вы просматриваете загрузки здесь. "}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="request-application">Application</Label>
+            <Label htmlFor="request-application">{"Отклик"}</Label>
             <select
               id="request-application"
               value={applicationId}
@@ -244,7 +240,7 @@ export function RequestDialog({
           </div>
 
           <div className="space-y-3">
-            <Label>Documents</Label>
+            <Label>{"Документы"}</Label>
             {items.map((item, index) => (
               <div key={index} className="space-y-2 rounded-lg border p-3">
                 <div className="flex items-center gap-2">
@@ -253,7 +249,7 @@ export function RequestDialog({
                     onChange={(event) =>
                       setItems((current) => current.map((it, i) => (i === index ? { ...it, title: event.target.value } : it)))
                     }
-                    placeholder="e.g. Signed NDA, Passport, Tax form"
+                    placeholder={"например Подписанное соглашение о неразглашении, паспорт, налоговая форма"}
                   />
                   {items.length > 1 ? (
                     <Button
@@ -271,7 +267,7 @@ export function RequestDialog({
                   onChange={(event) =>
                     setItems((current) => current.map((it, i) => (i === index ? { ...it, instructions: event.target.value } : it)))
                   }
-                  placeholder="Instructions (optional)"
+                  placeholder={"Инструкции (необязательно)"}
                   className="text-xs"
                 />
               </div>
@@ -283,21 +279,19 @@ export function RequestDialog({
               onClick={() => setItems((current) => [...current, { title: "", instructions: "" }])}
             >
               <Plus className="size-4" />
-              Add another
-            </Button>
+              {"Добавить еще "}</Button>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="request-due">Due date (optional)</Label>
+            <Label htmlFor="request-due">{"Срок сдачи (необязательно)"}</Label>
             <Input id="request-due" type="date" value={dueAt} onChange={(event) => setDueAt(event.target.value)} />
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button onClick={submit} disabled={isPending}>
-            {isPending ? "Sending…" : "Send request"}
+            {isPending ? "Отправка…" : "Отправить запрос"}
           </Button>
         </DialogFooter>
       </DialogContent>

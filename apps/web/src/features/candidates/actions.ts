@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { and, desc, eq, inArray, isNull, ne, or, sql } from "drizzle-orm";
 import { z } from "zod";
+import { enqueueAttachedResumeReviews } from "@/features/applications/hiring-review/attached-resume";
 
 import { db } from "@harly/db";
 import {
@@ -1074,7 +1075,13 @@ export async function attachCandidateFile(input: {
       };
     });
 
-    if (result.success) {
+    if (result.success && result.file) {
+      // Persist the file first: an unavailable model must not lose an upload.
+      try {
+        await enqueueAttachedResumeReviews({ ...input, fileUrl: result.file.fileUrl });
+      } catch {
+        console.warn("Could not queue hiring review after candidate file upload");
+      }
       revalidatePath(`/dashboard/candidates/${input.candidateId}`);
     }
 

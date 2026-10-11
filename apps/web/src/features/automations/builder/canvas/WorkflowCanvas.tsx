@@ -244,7 +244,7 @@ function CanvasInner({
       panOnScroll
       zoomOnPinch
       zoomOnScroll={false}
-      zoomActivationKeyCode={["Control", "Meta"]}
+      zoomActivationKeyCode={["Контроль", "Мета"]}
       deleteKeyCode={null}
       panOnDrag={panTool ? true : [1, 2]}
       selectionOnDrag={!panTool}
@@ -269,7 +269,7 @@ function CanvasInner({
       ) : null}
     </ReactFlow>
   ) : (
-    <div className="h-full w-full bg-warm-paper" role="application" aria-label="Workflow canvas" />
+    <div className="h-full w-full bg-warm-paper" role="application" aria-label={"Холст рабочего процесса"} />
   );
 
   return (

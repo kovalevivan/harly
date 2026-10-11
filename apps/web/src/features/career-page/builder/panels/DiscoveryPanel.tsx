@@ -20,8 +20,8 @@ export function DiscoveryPanel({
   update: ConfigUpdater;
   workspace: WorkspaceBoardBranding;
 }) {
-  const title = config.seo.title || workspace.name || "Careers";
-  const description = config.seo.description || workspace.description || workspace.tagline || "Explore open roles and build your next chapter with us.";
+  const title = config.seo.title || workspace.name || "Карьера";
+  const description = config.seo.description || workspace.description || workspace.tagline || "Изучите открытые вакансии и постройте свою следующую главу вместе с нами.";
   const host = useSyncExternalStore(
     () => () => {},
     () => window.location.host,
@@ -31,42 +31,41 @@ export function DiscoveryPanel({
 
   return (
     <div className="space-y-6">
-      <PanelHeader title="Discovery" subtitle="Control how your careers site appears in search and shares." />
+      <PanelHeader title={"Открытие"} subtitle={"Управляйте тем, как ваш сайт вакансий будет отображаться в поиске и публикациях."} />
 
-      <Section title="Search engines" defaultOpen>
+      <Section title={"Поисковые системы"} defaultOpen>
         <ToggleRow
-          label="Allow search engines to index this careers site"
+          label={"Разрешить поисковым системам индексировать этот сайт вакансий"}
           checked={config.seo.indexable}
           onCheckedChange={(value) => update((draft) => (draft.seo.indexable = value))}
         />
         <p className="text-xs leading-5 text-ink-soft">
-          When off, the careers page and every job use noindex and are removed from Harly&apos;s sitemap.
-        </p>
-        <Field label="SEO title">
-          <Input value={config.seo.title} maxLength={70} onChange={(event) => update((draft) => (draft.seo.title = event.target.value))} placeholder={workspace.name || "Careers"} />
+          {"Когда этот параметр отключен, страница вакансий и каждая вакансия используют noindex и удаляются из карты сайта Харли. "}</p>
+        <Field label={"SEO-заголовок"}>
+          <Input value={config.seo.title} maxLength={70} onChange={(event) => update((draft) => (draft.seo.title = event.target.value))} placeholder={workspace.name || "Карьера"} />
         </Field>
-        <Field label="Meta description">
+        <Field label={"Мета-описание"}>
           <textarea
             value={config.seo.description}
             maxLength={180}
             rows={4}
             onChange={(event) => update((draft) => (draft.seo.description = event.target.value))}
-            placeholder={workspace.description ?? "Tell candidates why they should join."}
+            placeholder={workspace.description ?? "Расскажите кандидатам, почему им стоит присоединиться."}
             className="flex w-full resize-y rounded-lg border border-border bg-paper px-3 py-2 text-sm text-foreground outline-none placeholder:text-ink-soft focus-visible:ring-2 focus-visible:ring-pine/40"
           />
         </Field>
       </Section>
 
-      <Section title="Share assets">
-        <Field label="Favicon">
+      <Section title={"Поделиться активами"}>
+        <Field label={"Фавикон"}>
           <FileDropzone aspect="square" value={config.seo.faviconUrl} onChange={(url) => update((draft) => (draft.seo.faviconUrl = url))} />
         </Field>
-        <Field label="Social share image">
+        <Field label={"Изображение для публикации в социальных сетях"}>
           <FileDropzone aspect="banner" value={config.seo.socialImageUrl} onChange={(url) => update((draft) => (draft.seo.socialImageUrl = url))} />
         </Field>
       </Section>
 
-      <Section title="Search preview">
+      <Section title={"Предварительный просмотр поиска"}>
         <div className="space-y-1.5 rounded-lg border border-border bg-paper px-3 py-3">
           <p className="truncate text-xs text-success">{previewUrl}</p>
           <p className="line-clamp-2 text-sm font-medium text-pine">{title}</p>

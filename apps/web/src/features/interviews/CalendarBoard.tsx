@@ -51,7 +51,7 @@ const MODE_TONE: Record<InterviewMode, string> = {
 };
 
 const MAX_VISIBLE_PER_DAY = 3;
-const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_LABELS = ["Солнце", "Пн.", "Вт", "ср.", "Чт", "Пт", "Суббота"];
 
 type FilterOption = { value: string; label: string };
 
@@ -151,7 +151,7 @@ export function CalendarBoard({
   const selectedDayHeading = useMemo(() => {
     if (!selectedDay) return "";
     const [y, m, d] = selectedDay.split("-").map(Number);
-    return new Date(y, m, d).toLocaleDateString("en", {
+    return new Date(y, m, d).toLocaleDateString("ru-RU", {
       weekday: "long",
       month: "long",
       day: "numeric",
@@ -162,15 +162,14 @@ export function CalendarBoard({
     <div className="space-y-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          {filtered.length} interview{filtered.length === 1 ? "" : "s"} this
-          month{hasAnyFilter ? " (filtered)" : ""}.
+          {filtered.length} {"собеседований"} {"в этом месяце"}{hasAnyFilter ? " (с учётом фильтров)" : ""}.
         </p>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={() => goToMonth(-1)}
             className="inline-flex size-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:scale-[0.97]"
-            aria-label="Previous month"
+            aria-label={"Предыдущий месяц"}
           >
             <CaretLeftIcon className="size-4" />
           </button>
@@ -185,7 +184,7 @@ export function CalendarBoard({
             type="button"
             onClick={() => goToMonth(1)}
             className="inline-flex size-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:scale-[0.97]"
-            aria-label="Next month"
+            aria-label={"В следующем месяце"}
           >
             <CaretRightIcon className="size-4" />
           </button>
@@ -196,10 +195,10 @@ export function CalendarBoard({
         <FunnelIcon className="ml-1 size-4 text-muted-foreground" />
         <Select value={jobFilter} onValueChange={setJobFilter}>
           <SelectTrigger className="h-8 w-auto min-w-32 text-xs">
-            <SelectValue placeholder="All jobs" />
+            <SelectValue placeholder={"Все вакансии"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All jobs</SelectItem>
+            <SelectItem value="all">{"Все вакансии"}</SelectItem>
             {jobOptions.map((o) => (
               <SelectItem key={o.value} value={o.value}>
                 {o.label}
@@ -209,10 +208,10 @@ export function CalendarBoard({
         </Select>
         <Select value={interviewerFilter} onValueChange={setInterviewerFilter}>
           <SelectTrigger className="h-8 w-auto min-w-36 text-xs">
-            <SelectValue placeholder="All interviewers" />
+            <SelectValue placeholder={"Все интервьюеры"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All interviewers</SelectItem>
+            <SelectItem value="all">{"Все интервьюеры"}</SelectItem>
             {interviewerOptions.map((o) => (
               <SelectItem key={o.value} value={o.value}>
                 {o.label}
@@ -222,15 +221,15 @@ export function CalendarBoard({
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="h-8 w-auto min-w-28 text-xs">
-            <SelectValue placeholder="All types" />
+            <SelectValue placeholder={"Все типы"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            <SelectItem value="screening">Screening</SelectItem>
-            <SelectItem value="culture_fit">Culture fit</SelectItem>
-            <SelectItem value="technical">Technical</SelectItem>
-            <SelectItem value="onsite">Onsite</SelectItem>
-            <SelectItem value="final">Final round</SelectItem>
+            <SelectItem value="all">{"Все типы"}</SelectItem>
+            <SelectItem value="screening">{"Первичный отбор"}</SelectItem>
+            <SelectItem value="culture_fit">{"Культура соответствует"}</SelectItem>
+            <SelectItem value="technical">{"Технический"}</SelectItem>
+            <SelectItem value="onsite">{"На месте"}</SelectItem>
+            <SelectItem value="final">{"Финальный раунд"}</SelectItem>
           </SelectContent>
         </Select>
         {hasAnyFilter ? (
@@ -243,8 +242,7 @@ export function CalendarBoard({
             }}
             className="ml-auto text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            Clear filters
-          </button>
+            {"Очистить фильтры "}</button>
         ) : null}
       </div>
 
@@ -256,7 +254,7 @@ export function CalendarBoard({
               .sort(([a], [b]) => (a > b ? 1 : -1))
               .map(([key, dayInterviews]) => {
                 const [y, m, d] = key.split("-").map(Number);
-                const heading = new Date(y, m, d).toLocaleDateString("en", {
+                const heading = new Date(y, m, d).toLocaleDateString("ru-RU", {
                   weekday: "short",
                   month: "short",
                   day: "numeric",
@@ -334,7 +332,7 @@ export function CalendarBoard({
           <div
             className="grid grid-cols-7"
             role="grid"
-            aria-label={`Interview calendar for ${monthLabel}`}
+            aria-label={`Календарь интервью на ${monthLabel}`}
           >
             {grid.map((date) => {
               const key = dayKey(date);
@@ -343,7 +341,7 @@ export function CalendarBoard({
               const isToday = key === today;
               const visible = dayInterviews.slice(0, MAX_VISIBLE_PER_DAY);
               const overflow = dayInterviews.length - visible.length;
-              const dateLabel = date.toLocaleDateString("en", {
+              const dateLabel = date.toLocaleDateString("ru-RU", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
@@ -356,8 +354,8 @@ export function CalendarBoard({
                   role="gridcell"
                   aria-label={
                     dayInterviews.length > 0
-                      ? `${dateLabel}, ${dayInterviews.length} interview${dayInterviews.length === 1 ? "" : "s"}${isToday ? ", today" : ""}`
-                      : `${dateLabel}, no interviews${isToday ? ", today" : ""}`
+                      ? `${dateLabel}, ${dayInterviews.length} интервью${isToday ? ", сегодня" : ""}`
+                      : `${dateLabel}, интервью нет${isToday ? ", сегодня" : ""}`
                   }
                   aria-selected={selectedDay === key}
                   onClick={() =>
@@ -396,7 +394,7 @@ export function CalendarBoard({
                         >
                           <ModeIcon className="size-3 shrink-0" />
                           <span className="truncate">
-                            {new Date(iv.scheduledAt).toLocaleTimeString("en", {
+                            {new Date(iv.scheduledAt).toLocaleTimeString("ru-RU", {
                               hour: "numeric",
                               minute: "2-digit",
                             })}{" "}
@@ -407,8 +405,7 @@ export function CalendarBoard({
                     })}
                     {overflow > 0 ? (
                       <span className="px-1.5 text-[11px] font-medium text-muted-foreground">
-                        +{overflow} more
-                      </span>
+                        +{overflow} {"ещё "}</span>
                     ) : null}
                   </div>
                 </button>
@@ -438,8 +435,7 @@ export function CalendarBoard({
                     onClick={() => setSelectedDay(null)}
                     className="text-xs font-medium text-muted-foreground hover:text-foreground"
                   >
-                    Close
-                  </button>
+                    {"Закрыть "}</button>
                 </div>
                 <div className="space-y-1.5">
                   {selectedDayInterviews.map((iv) => {
@@ -497,13 +493,12 @@ export function CalendarBoard({
                               />
                             ) : null}
                             <Badge variant="neutral" className="shrink-0">
-                              {iv.durationMins}m
-                            </Badge>
+                              {iv.durationMins}{"м "}</Badge>
                           </button>
                           <Link
                             href={`/dashboard/candidates/${iv.candidateId}`}
                             className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
-                            title="Open candidate"
+                            title={"Открытый кандидат"}
                           >
                             <ArrowUpRightIcon className="size-4" />
                           </Link>
@@ -572,13 +567,12 @@ export function CalendarBoard({
                                       window.open(
                                         `https://calendar.google.com/calendar/r/search?q=${encodeURIComponent(iv.gcalEventId!)}`,
                                         "_blank",
-                                        "noopener,noreferrer",
+                                        "noopener, noreferrer",
                                       );
                                     }}
                                     className="inline-flex items-center gap-1 text-foreground/80 transition-colors hover:text-foreground"
                                   >
-                                    View in Google Calendar
-                                    <ArrowUpRightIcon className="size-3" />
+                                    {"Посмотреть в Календаре Google "}<ArrowUpRightIcon className="size-3" />
                                   </button>
                                 ) : null}
                               </div>
@@ -599,11 +593,11 @@ export function CalendarBoard({
         <Card>
           <CardContent className="flex flex-col items-center gap-2 py-12 text-center">
             <CalendarIcon className="size-10 text-muted-foreground" />
-            <p className="text-sm font-medium">No interviews this month</p>
+            <p className="text-sm font-medium">{"Никаких собеседований в этом месяце"}</p>
             <p className="max-w-sm text-sm text-muted-foreground">
               {hasAnyFilter
-                ? "Try clearing a filter, or schedule one from a candidate's profile."
-                : "Schedule an interview from a candidate's profile to see it here."}
+                ? "Попробуйте очистить фильтр или запланировать его из профиля кандидата."
+                : "Запланируйте собеседование из профиля кандидата, чтобы увидеть его здесь."}
             </p>
           </CardContent>
         </Card>

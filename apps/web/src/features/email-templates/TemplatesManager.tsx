@@ -54,12 +54,12 @@ import { cn } from "@/lib/utils";
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const TEMPLATE_TYPE_LABELS: Record<TemplateType, string> = {
-  general: "General",
-  interview_invite: "Interview",
-  rejection: "Rejection",
-  offer: "Offer",
-  screening: "Screening",
-  stage_change: "Stage change",
+  general: "Общий",
+  interview_invite: "Собеседование",
+  rejection: "Отказ",
+  offer: "Предложение",
+  screening: "Первичный отбор",
+  stage_change: "Смена сцены",
 };
 
 const TEMPLATE_TYPE_COLORS: Record<TemplateType, string> = {
@@ -82,7 +82,7 @@ function isAutomaticTemplateType(type: TemplateType) {
 function templateTypeDescription(type: TemplateType) {
   return isAutomaticTemplateType(type)
     ? "Automatic: review the preview, then activate it to replace Harly's default event email."
-    : "Manual only: use it when composing an email to a candidate.";
+    : "Только вручную: используйте его при составлении электронного письма кандидату.";
 }
 
 // Groups for the variable pill picker
@@ -102,52 +102,52 @@ const STARTER_TEMPLATES: Array<{
   body: string;
 }> = [
   {
-    name: "Interview invitation",
+    name: "Приглашение на собеседование",
     type: "interview_invite",
-    subject: "Interview invitation, {{job_title}} at {{company_name}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>We'd love to invite you to an interview for the <strong>{{job_title}}</strong> role at {{company_name}}.</p><p><strong>Date:</strong> {{interview_date}}<br><strong>Time:</strong> {{interview_time}}<br><strong>Location:</strong> {{interview_location}}</p><p>Please let us know if this works for you.</p><p>Best,<br>{{sender_name}}</p>",
+    subject: "Собеседование: {{job_title}} в {{company_name}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Приглашаем вас на собеседование на позицию <strong>{{job_title}}</strong> в компании {{company_name}}.</p><p><strong>Дата:</strong> {{interview_date}}<br><strong>Время:</strong> {{interview_time}}<br><strong>Место:</strong> {{interview_location}}</p><p>Пожалуйста, подтвердите, удобно ли вам это время.</p><p>С уважением,<br>{{sender_name}}</p>",
   },
   {
-    name: "Application rejection",
+    name: "Отказ по отклику",
     type: "rejection",
-    subject: "Your application for {{job_title}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>Thank you for your interest in the <strong>{{job_title}}</strong> position at {{company_name}} and for taking the time to apply.</p><p>After careful consideration, we've decided to move forward with other candidates whose experience more closely matches our current needs.</p><p>We'll keep your profile on file and encourage you to apply for future openings that may be a better fit.</p><p>Best of luck,<br>{{sender_name}}</p>",
+    subject: "Ваш отклик на позицию {{job_title}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Спасибо за интерес к позиции <strong>{{job_title}}</strong> в компании {{company_name}} и за ваш отклик.</p><p>После рассмотрения откликов мы решили продолжить общение с кандидатами, чей опыт ближе к текущим требованиям.</p><p>Мы сохраним ваш профиль для будущих вакансий.</p><p>Желаем успехов,<br>{{sender_name}}</p>",
   },
   {
-    name: "Offer extended",
+    name: "Предложение о работе",
     type: "offer",
-    subject: "Offer letter, {{job_title}} at {{company_name}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>We're thrilled to offer you the <strong>{{job_title}}</strong> position at {{company_name}}.</p><p><strong>Compensation:</strong> {{offer_salary}}<br><strong>Offer expires:</strong> {{offer_expiry}}</p><p>Please review the attached offer letter and let us know if you have any questions.</p><p>We're excited to have you on board,<br>{{sender_name}}</p>",
+    subject: "Предложение: {{job_title}} в {{company_name}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Рады предложить вам позицию <strong>{{job_title}}</strong> в компании {{company_name}}.</p><p><strong>Оплата:</strong> {{offer_salary}}<br><strong>Предложение действует до:</strong> {{offer_expiry}}</p><p>Изучите приложенное предложение и напишите нам, если возникнут вопросы.</p><p>Будем рады видеть вас в команде,<br>{{sender_name}}</p>",
   },
   {
-    name: "Screening call",
+    name: "Первичный звонок",
     type: "screening",
-    subject: "Quick intro call, {{job_title}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>We reviewed your application for <strong>{{job_title}}</strong> at {{company_name}} and we're impressed with your background.</p><p>We'd love to schedule a quick 30-minute call to learn more about you and share details about the role.</p><p>Looking forward to connecting,<br>{{sender_name}}</p>",
+    subject: "Знакомство: {{job_title}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Мы рассмотрели ваш отклик на позицию <strong>{{job_title}}</strong> в компании {{company_name}}.</p><p>Предлагаем созвониться на 30 минут, чтобы познакомиться и рассказать о вакансии.</p><p>До встречи,<br>{{sender_name}}</p>",
   },
   {
-    name: "Stage update",
+    name: "Изменение этапа",
     type: "stage_change",
-    subject: "You're moving to {{stage_name}}, {{job_title}}",
-    body: "<p>Hi {{candidate_first_name}},</p><p>Good news. Your application for <strong>{{job_title}}</strong> at {{company_name}} has moved to the <strong>{{stage_name}}</strong> stage.</p><p>Someone from the team will reach out shortly with next steps.</p><p>Best,<br>{{sender_name}}</p>",
+    subject: "Новый этап: {{stage_name}} · {{job_title}}",
+    body: "<p>Здравствуйте, {{candidate_first_name}}!</p><p>Ваш отклик на позицию <strong>{{job_title}}</strong> в компании {{company_name}} перешёл на этап <strong>{{stage_name}}</strong>.</p><p>Мы скоро свяжемся с вами и расскажем о следующих шагах.</p><p>С уважением,<br>{{sender_name}}</p>",
   },
 ];
 
 const PREVIEW_VALUES = {
-  candidate_first_name: "Ava",
-  candidate_last_name: "Thompson",
-  candidate_full_name: "Ava Thompson",
-  job_title: "Senior Frontend Engineer",
-  stage_name: "Technical Interview",
-  interview_date: "Tuesday, July 8",
+  candidate_first_name: "Ава",
+  candidate_last_name: "Томпсон",
+  candidate_full_name: "Ава Томпсон",
+  job_title: "Старший фронтенд-инженер",
+  stage_name: "Техническое интервью",
+  interview_date: "Вторник, 8 июля",
   interview_time: "10:00 AM PST",
   interview_location: "https://meet.google.com/abc-xyz",
-  offer_salary: "$140,000 / yr",
-  offer_expiry: "July 12, 2026",
+  offer_salary: "140 000 долларов в год",
+  offer_expiry: "12 июля 2026 г.",
   offer_url: "https://jobs.acme.com/portal/applications/offer-123",
-  company_name: "Acme Inc.",
+  company_name: "Акме Инк.",
   portal_link: "https://jobs.acme.com/portal",
-  sender_name: "You",
+  sender_name: "ты",
 };
 
 const EMPTY_DRAFT = {
@@ -225,24 +225,24 @@ export function TemplatesManager({
         : await createEmailTemplate(fields);
 
       if (!result.success) {
-        toast.error(result.error ?? "Could not save the template.");
+        toast.error(result.error ?? "Не удалось сохранить шаблон.");
         return;
       }
-      toast.success(editing ? "Template updated" : "Template created");
+      toast.success(editing ? "Шаблон обновлен" : "Шаблон создан");
       closeEditor();
       router.refresh();
     });
   }
 
   function remove(template: EmailTemplateItem) {
-    if (!window.confirm(`Delete the "${template.name}" template?`)) return;
+    if (!window.confirm(`Удалить шаблон «${template.name}»?`)) return;
     startTransition(async () => {
       const result = await deleteEmailTemplate({ templateId: template.id });
       if (!result.success) {
-        toast.error(result.error ?? "Could not delete the template.");
+        toast.error(result.error ?? "Не удалось удалить шаблон.");
         return;
       }
-      toast.success("Template deleted");
+      toast.success("Шаблон удален.");
       router.refresh();
     });
   }
@@ -254,13 +254,13 @@ export function TemplatesManager({
         active: !template.isActive,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not update the template.");
+        toast.error(result.error ?? "Не удалось обновить шаблон.");
         return;
       }
       toast.success(
         template.isActive
-          ? "Reverted to the default email"
-          : `Now used for every ${TEMPLATE_TYPE_LABELS[template.type].toLowerCase()} email`,
+          ? "Возврат к электронной почте по умолчанию"
+          : `Теперь используется для каждого электронного письма ${TEMPLATE_TYPE_LABELS[template.type].toLowerCase()}.`,
       );
       router.refresh();
     });
@@ -277,25 +277,23 @@ export function TemplatesManager({
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           {templates.length === 0
-            ? "No templates yet."
-            : `${templates.length} template${templates.length === 1 ? "" : "s"}.`}
+            ? "Шаблонов пока нет."
+            : `Шаблонов: ${templates.length}.`}
         </p>
         <div className="flex items-center gap-2">
           {templates.length > 0 ? (
             <Button size="sm" variant="outline" onClick={() => setShowStarters((visible) => !visible)}>
-              {showStarters ? "Hide starters" : "Use a starter"}
+              {showStarters ? "Скрыть стартеры" : "Используйте стартер"}
             </Button>
           ) : null}
           <Button size="sm" onClick={() => openNew()}>
             <PlusIcon className="size-4" />
-            New template
-          </Button>
+            {"Новый шаблон "}</Button>
         </div>
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Automatic templates can replace Harly&apos;s event emails when activated. Review the preview before activating; general and screening templates are for manual outreach.
-      </p>
+        {"Автоматические шаблоны могут заменить электронные письма о мероприятиях Harly при активации. Просмотрите предварительный просмотр перед активацией; общие шаблоны и шаблоны скрининга предназначены для ручного охвата. "}</p>
 
       {/* Search + type filter */}
       {templates.length > 0 && (
@@ -303,7 +301,7 @@ export function TemplatesManager({
           <div className="relative flex-1">
             <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search templates…"
+              placeholder={"Поиск шаблонов…"}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
@@ -311,10 +309,10 @@ export function TemplatesManager({
           </div>
           <Select value={filterType} onValueChange={(v) => setFilterType(v as TemplateType | "all")}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="All types" />
+              <SelectValue placeholder={"Все типы"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All types</SelectItem>
+              <SelectItem value="all">{"Все типы"}</SelectItem>
               {(Object.keys(TEMPLATE_TYPE_LABELS) as TemplateType[]).map((t) => (
                 <SelectItem key={t} value={t}>{TEMPLATE_TYPE_LABELS[t]}</SelectItem>
               ))}
@@ -326,8 +324,8 @@ export function TemplatesManager({
       {templates.length > 0 && showStarters ? (
         <div className="rounded-xl border border-dashed p-4">
           <div className="mb-3">
-            <p className="text-sm font-medium">Start from a template</p>
-            <p className="text-xs text-muted-foreground">Choose a starting point, then customize it for your workspace.</p>
+            <p className="text-sm font-medium">{"Начните с шаблона"}</p>
+            <p className="text-xs text-muted-foreground">{"Выберите отправную точку, а затем настройте ее для своего рабочего пространства."}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {STARTER_TEMPLATES.map((starter) => (
@@ -342,7 +340,7 @@ export function TemplatesManager({
                     {TEMPLATE_TYPE_LABELS[starter.type]}
                   </span>
                   <span className="text-[11px] text-muted-foreground">
-                    {isAutomaticTemplateType(starter.type) ? "Automatic" : "Manual only"}
+                    {isAutomaticTemplateType(starter.type) ? "Автоматический" : "Только вручную"}
                   </span>
                 </div>
                 <p className="text-sm font-medium group-hover:text-primary">{starter.name}</p>
@@ -360,9 +358,9 @@ export function TemplatesManager({
             <span className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
               <FileTextIcon className="size-5" />
             </span>
-            <p className="text-sm font-medium">Write once, send often</p>
+            <p className="text-sm font-medium">{"Пишите один раз, отправляйте часто"}</p>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Start from a starter template or create your own with variables like{" "}
+              {"Начните с начального шаблона или создайте свой собственный, используя такие переменные, как"}{" "}
               <code className="rounded bg-muted px-1 py-0.5 text-xs">{"{{candidate_first_name}}"}</code>.
             </p>
           </div>
@@ -380,7 +378,7 @@ export function TemplatesManager({
                     {TEMPLATE_TYPE_LABELS[t.type]}
                   </span>
                   <span className="text-[11px] text-muted-foreground">
-                    {isAutomaticTemplateType(t.type) ? "Automatic" : "Manual only"}
+                    {isAutomaticTemplateType(t.type) ? "Автоматический" : "Только вручную"}
                   </span>
                 </div>
                 <p className="text-sm font-medium group-hover:text-primary">{t.name}</p>
@@ -393,8 +391,8 @@ export function TemplatesManager({
         <EmptyState
           variant="filtered"
           icon={FileTextIcon}
-          title="No templates match these filters"
-          hint="Try another stage or category, or search by the template's name."
+          title={"Нет шаблонов, соответствующих этим фильтрам."}
+          hint={"Попробуйте другой этап или категорию или выполните поиск по названию шаблона."}
         />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
@@ -409,13 +407,12 @@ export function TemplatesManager({
                         {TEMPLATE_TYPE_LABELS[template.type]}
                       </span>
                       <span className="text-[11px] text-muted-foreground">
-                        {isAutomaticTemplateType(template.type) ? "Automatic" : "Manual only"}
+                        {isAutomaticTemplateType(template.type) ? "Автоматический" : "Только вручную"}
                       </span>
                       {template.isActive ? (
                         <span className="inline-flex w-fit items-center gap-1 rounded-md bg-success/10 px-2 py-0.5 text-[11px] font-semibold text-success">
                           <StarFillIcon className="size-2.5" />
-                          Active
-                        </span>
+                          {"Активные "}</span>
                       ) : null}
                     </div>
                   </div>
@@ -427,13 +424,13 @@ export function TemplatesManager({
                         className={cn("size-8", template.isActive ? "text-success" : "text-muted-foreground")}
                         aria-label={
                           template.isActive
-                            ? `Stop using "${template.name}" for auto-emails`
-                            : `Use "${template.name}" for every ${TEMPLATE_TYPE_LABELS[template.type].toLowerCase()} email`
+                            ? `Прекратите использовать «${template.name}» для автоматических писем.`
+                            : `Используйте «${template.name}» для каждого электронного письма ${TEMPLATE_TYPE_LABELS[template.type].toLowerCase()}.`
                         }
                         title={
                           template.isActive
-                            ? "Active. Used for this workspace's auto-emails"
-                            : "Use for this workspace's auto-emails"
+                            ? "Активный. Используется для автоматических писем этой рабочей области."
+                            : "Использовать для этой рабочей области автоматические электронные письма"
                         }
                         disabled={isPending}
                         onClick={() => toggleActive(template)}
@@ -451,13 +448,12 @@ export function TemplatesManager({
                       disabled={isPending}
                       onClick={() => openEdit(template)}
                     >
-                      Edit
-                    </Button>
+                      {"Редактировать "}</Button>
                     <Button
                       size="icon"
                       variant="ghost"
                       className="size-8 text-muted-foreground hover:text-destructive"
-                      aria-label={`Delete ${template.name}`}
+                      aria-label={`Удалить ${template.name}`}
                       disabled={isPending}
                       onClick={() => remove(template)}
                     >
@@ -468,7 +464,7 @@ export function TemplatesManager({
                 <p className="truncate text-sm font-medium text-foreground/80">{template.subject}</p>
                 <p className="line-clamp-2 text-sm text-muted-foreground">{stripHtml(template.body)}</p>
                 <p className="text-xs text-muted-foreground">
-                  Updated <RelativeTime value={template.updatedAt} />
+                  {"Обновлено "}<RelativeTime value={template.updatedAt} />
                 </p>
               </CardContent>
             </Card>
@@ -481,25 +477,25 @@ export function TemplatesManager({
         open={open}
         mobilePresentation="side"
         onOpenChange={(next) => {
-          if (!next && isDirty && !window.confirm("Discard unsaved changes?")) return;
+          if (!next && isDirty && !window.confirm("Отменить несохраненные изменения?")) return;
           if (!next) closeEditor();
           else setOpen(true);
         }}
       >
         <DrawerLayout
-          title={editing ? "Edit template" : "New template"}
-          description="Variables are replaced per candidate when the email is sent."
+          title={editing ? "Редактировать шаблон" : "Новый шаблон"}
+          description={"Переменные заменяются для каждого кандидата при отправке электронного письма."}
           className="inset-0 h-dvh max-h-none w-screen max-w-none rounded-none border-0 sm:max-w-none"
           footer={
             <>
               <SheetClose asChild>
-                <Button variant="outline" disabled={isPending}>Cancel</Button>
+                <Button variant="outline" disabled={isPending}>{"Отмена"}</Button>
               </SheetClose>
               <Button
                 onClick={save}
                 disabled={isPending || !name.trim() || !subject.trim() || !body.trim()}
               >
-                {isPending ? "Saving…" : "Save template"}
+                {isPending ? "Сохранение…" : "Сохранить шаблон"}
               </Button>
             </>
           }
@@ -508,30 +504,30 @@ export function TemplatesManager({
             {/* Name + type row */}
             <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_14rem]">
               <div className="flex-1 space-y-2">
-                <Label htmlFor="template-name">Name</Label>
+                <Label htmlFor="template-name">{"Имя"}</Label>
                 <Input
                   id="template-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Interview invitation"
+                  placeholder={"Приглашение на собеседование"}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Type</Label>
+                <Label>{"Тип"}</Label>
                 <Select value={type} onValueChange={(v) => setType(v as TemplateType)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Automatic emails</SelectLabel>
+                      <SelectLabel>{"Автоматические электронные письма"}</SelectLabel>
                       {SYSTEM_TEMPLATE_TYPES.map((t) => (
                         <SelectItem key={t} value={t}>{TEMPLATE_TYPE_LABELS[t]}</SelectItem>
                       ))}
                     </SelectGroup>
                     <SelectSeparator />
                     <SelectGroup>
-                      <SelectLabel>Manual outreach</SelectLabel>
+                      <SelectLabel>{"Ручной охват"}</SelectLabel>
                       {MANUAL_TEMPLATE_TYPES.map((t) => (
                         <SelectItem key={t} value={t}>{TEMPLATE_TYPE_LABELS[t]}</SelectItem>
                       ))}
@@ -544,7 +540,7 @@ export function TemplatesManager({
 
             {/* Subject */}
             <div className="space-y-2">
-              <Label htmlFor="template-subject">Subject</Label>
+              <Label htmlFor="template-subject">{"Тема"}</Label>
               <Input
                 id="template-subject"
                 value={subject}
@@ -556,7 +552,7 @@ export function TemplatesManager({
             {/* Body , edit / preview tabs */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Body</Label>
+                <Label>{"Тело"}</Label>
                 <div className="flex rounded-md border border-border/60 p-0.5">
                   <button
                     type="button"
@@ -566,8 +562,7 @@ export function TemplatesManager({
                       tab === "edit" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground",
                     )}
                   >
-                    Edit
-                  </button>
+                    {"Редактировать "}</button>
                   <button
                     type="button"
                     onClick={() => setTab("preview")}
@@ -576,8 +571,7 @@ export function TemplatesManager({
                       tab === "preview" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground",
                     )}
                   >
-                    Preview
-                  </button>
+                    {"Предварительный просмотр "}</button>
                 </div>
               </div>
 
@@ -616,9 +610,8 @@ export function TemplatesManager({
 
                   {unknownVariables.length > 0 && (
                     <p className="text-xs text-amber-600 dark:text-amber-400">
-                      Unknown variable{unknownVariables.length > 1 ? "s" : ""}:{" "}
-                      {unknownVariables.map((v) => `{{${v}}}`).join(", ")}, will be sent as-is.
-                    </p>
+                      {"Неизвестные переменные"}:{" "}
+                      {unknownVariables.map((v) => `{{${v}}}`).join(", ")}{", будет отправлено как есть. "}</p>
                   )}
                 </>
               ) : (
@@ -640,7 +633,7 @@ export function TemplatesManager({
                       }}
                     />
                   ) : (
-                    <p className="text-sm text-muted-foreground">Nothing to preview yet.</p>
+                    <p className="text-sm text-muted-foreground">{"Пока ничего для предварительного просмотра."}</p>
                   )}
                 </div>
               )}

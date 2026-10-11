@@ -42,10 +42,9 @@ export function SignatureRecipientsEditor({
     <div className="space-y-2 rounded-lg border border-border bg-pure-snow p-2.5">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-[11px] font-medium text-foreground">Optional explicit signers</p>
+          <p className="text-[11px] font-medium text-foreground">{"Необязательные явные подписывающие стороны"}</p>
           <p className="mt-0.5 text-[11px] leading-4 text-soft-ink">
-            Signers are contacted in this order. If you do not add one, the candidate signs alone.
-          </p>
+            {"С подписантами связываются в этом порядке. Если вы не добавите его, кандидат подпишется самостоятельно. "}</p>
         </div>
         <button
           type="button"
@@ -53,26 +52,24 @@ export function SignatureRecipientsEditor({
           disabled={recipients.length >= MAX_RECIPIENTS}
           className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-warm-paper px-2 py-1 text-[11px] font-medium text-foreground hover:bg-soft-kraft disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <PlusIcon className="size-3" /> Add signer
-        </button>
+          <PlusIcon className="size-3" /> {"Добавить подписывающую сторону "}</button>
       </div>
 
       {recipients.length === 0 ? (
         <div className="rounded-md border border-dashed border-border px-2.5 py-2 text-[11px] text-soft-ink">
-          Candidate from the workflow trigger will be the only signer.
-        </div>
+          {"Кандидат из триггера рабочего процесса будет единственным подписывающим лицом. "}</div>
       ) : null}
 
       {recipients.map((recipient, index) => (
         <div key={index} className="rounded-md border border-border/70 bg-warm-paper p-2">
           <div className="mb-1.5 flex items-center justify-between gap-2">
             <span className="font-chrome text-[11px] uppercase tracking-wide text-soft-ink">
-              Signer {index + 1}
+              {"подписывающая сторона "}{index + 1}
             </span>
             <button
               type="button"
               onClick={() => onChange(recipients.filter((_, recipientIndex) => recipientIndex !== index))}
-              aria-label={`Remove signer ${index + 1}`}
+              aria-label={`Удалить подписывающего ${index + 1}`}
               className="rounded p-1 text-soft-ink hover:bg-danger-rust/10 hover:text-danger-rust"
             >
               <TrashIcon className="size-3.5" />
@@ -80,15 +77,15 @@ export function SignatureRecipientsEditor({
           </div>
           <div className="grid gap-1.5 sm:grid-cols-2">
             <input
-              aria-label={`Signer ${index + 1} name`}
+              aria-label={`Имя подписывающего лица ${index + 1}`}
               value={recipient.name}
               onChange={(event) => update(index, { name: event.target.value })}
-              placeholder="Full name"
+              placeholder={"Полное имя"}
               maxLength={200}
               className={builderFieldClass({ compact: true })}
             />
             <input
-              aria-label={`Signer ${index + 1} email`}
+              aria-label={`Подписавший ${index + 1} адрес электронной почты`}
               type="email"
               value={recipient.email}
               onChange={(event) => update(index, { email: event.target.value })}
@@ -99,12 +96,10 @@ export function SignatureRecipientsEditor({
           </div>
           {(!recipient.name.trim() || !/^\S+@\S+\.\S+$/.test(recipient.email.trim())) ? (
             <p className="mt-1.5 text-[10px] text-danger-rust">
-              Enter a full name and a valid email before publishing.
-            </p>
+              {"Перед публикацией введите полное имя и действительный адрес электронной почты. "}</p>
           ) : emailCounts.get(recipient.email.trim().toLowerCase()) !== 1 ? (
             <p className="mt-1.5 text-[10px] text-danger-rust">
-              Each signer must have a different email address.
-            </p>
+              {"У каждого подписывающего лица должен быть свой адрес электронной почты. "}</p>
           ) : null}
         </div>
       ))}

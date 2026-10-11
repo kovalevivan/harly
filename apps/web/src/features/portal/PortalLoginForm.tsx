@@ -11,11 +11,11 @@ import {
 import { cn } from "@/lib/utils";
 
 const ERROR_MESSAGES: Record<string, string> = {
-  oauth_denied: "Sign-in was cancelled.",
-  oauth_failed: "Sign-in failed. Try again.",
-  invalid_token: "The link has expired or already been used.",
-  missing_token: "Invalid sign-in link.",
-  no_workspace: "Workspace not found.",
+  oauth_denied: "Вход в систему отменен.",
+  oauth_failed: "Не удалось войти в систему. Попробуйте еще раз.",
+  invalid_token: "Срок действия ссылки истек или уже использовался.",
+  missing_token: "Неверная ссылка для входа.",
+  no_workspace: "Рабочее пространство не найдено.",
 };
 
 export function PortalLoginForm({
@@ -65,21 +65,19 @@ export function PortalLoginForm({
           </svg>
         </div>
         <div>
-          <p className="text-base font-semibold text-foreground">Check your inbox</p>
+          <p className="text-base font-semibold text-foreground">{"Проверьте свой почтовый ящик"}</p>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            We sent a sign-in link to{" "}
+            {"Мы отправили ссылку для входа на"}{" "}
             <span className="font-medium text-foreground">{email}</span>.
             <br />
-            It expires in 15 minutes.
-          </p>
+            {"Срок действия истекает через 15 минут. "}</p>
         </div>
         <button
           type="button"
           onClick={() => setSent(false)}
           className="text-sm text-muted-foreground underline-offset-2 hover:underline hover:text-foreground transition-colors"
         >
-          Use a different email
-        </button>
+          {"Используйте другой адрес электронной почты "}</button>
       </div>
     );
   }
@@ -91,7 +89,7 @@ export function PortalLoginForm({
           role="alert"
           className="rounded-xl border border-destructive/30 bg-destructive/5 px-3.5 py-2.5 text-sm text-destructive"
         >
-          {ERROR_MESSAGES[error] ?? "Something went wrong."}
+          {ERROR_MESSAGES[error] ?? "Что-то пошло не так."}
         </p>
       ) : null}
 
@@ -109,11 +107,10 @@ export function PortalLoginForm({
               {/* eslint-disable-next-line @next/next/no-img-element -- static CDN icon */}
               <img
                 src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/google/default.svg"
-                alt="Google"
+                alt={"Гугл"}
                 className="size-4 shrink-0"
               />
-              Continue with Google
-            </a>
+              {"Продолжить с Google "}</a>
           )}
           {hasGitHub && (
             <a
@@ -130,8 +127,7 @@ export function PortalLoginForm({
                 alt="GitHub"
                 className="size-4 shrink-0"
               />
-              Continue with GitHub
-            </a>
+              {"Продолжить с GitHub "}</a>
           )}
           {hasLinkedIn && (
             <a
@@ -145,8 +141,7 @@ export function PortalLoginForm({
               <svg className="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z" />
               </svg>
-              Continue with LinkedIn
-            </a>
+              {"Продолжить с LinkedIn "}</a>
           )}
         </div>
       )}
@@ -154,7 +149,7 @@ export function PortalLoginForm({
       {(hasGoogle || hasGitHub || hasLinkedIn) && (
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-border" />
-          <span className="text-xs font-medium text-muted-foreground">or</span>
+          <span className="text-xs font-medium text-muted-foreground">{"или"}</span>
           <div className="h-px flex-1 bg-border" />
         </div>
       )}
@@ -189,13 +184,12 @@ export function PortalLoginForm({
             "disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 shadow-sm",
           )}
         >
-          {isPending ? "Sending…" : "Continue with email"}
+          {isPending ? "Отправка…" : "Продолжить по электронной почте"}
         </button>
       </form>
 
       <p className="text-center text-xs text-muted-foreground">
-        We&apos;ll send a magic link. No password needed.
-      </p>
+        {"Мы отправим волшебную ссылку. Пароль не требуется. "}</p>
     </div>
   );
 }

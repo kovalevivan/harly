@@ -36,14 +36,14 @@ export function PortalInterviewCard({
   applicationId,
   compact = false,
 }: InterviewCardProps) {
-  const timeStr = new Intl.DateTimeFormat("en-US", {
+  const timeStr = new Intl.DateTimeFormat("ru-RU", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
   }).format(scheduledAt);
 
   const endTime = new Date(scheduledAt.getTime() + durationMins * 60_000);
-  const endTimeStr = new Intl.DateTimeFormat("en-US", {
+  const endTimeStr = new Intl.DateTimeFormat("ru-RU", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -60,8 +60,7 @@ export function PortalInterviewCard({
             {title}
           </h4>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            {timeRange} · {durationMins} min
-          </p>
+            {timeRange} · {durationMins} {"мин "}</p>
           {location && (
             <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
               <MapPinIcon className="size-3" />
@@ -93,8 +92,7 @@ export function PortalInterviewCard({
           {title}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {timeRange} · {durationMins} min
-        </p>
+          {timeRange} · {durationMins} {"мин "}</p>
         {location && (
           <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
             <MapPinIcon className="size-3.5" />
@@ -127,8 +125,7 @@ export function PortalInterviewCard({
             )}
           >
             <VideoCameraIcon className="size-4" />
-            Join
-          </a>
+            {"Присоединяйтесь "}</a>
         ) : interviewers.length > 0 ? (
           <div className="flex -space-x-2">
             {interviewers.slice(0, 3).map((interviewer, idx) =>
@@ -137,7 +134,7 @@ export function PortalInterviewCard({
                 <img
                   key={idx}
                   src={interviewer.image}
-                  alt={interviewer.name ?? "Interviewer"}
+                  alt={interviewer.name ?? "Интервьюер"}
                   className="size-8 rounded-full border-2 border-background object-cover"
                 />
               ) : (

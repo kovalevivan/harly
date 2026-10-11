@@ -24,11 +24,11 @@ export default async function SetupPage() {
     <div className="flex min-h-[100dvh] flex-col md:min-h-0 md:h-full">
       <header className="flex items-center px-6 py-6 sm:px-8">
         {/* Wordmark , mobile only; the brand panel carries it on desktop. */}
-        <a href="https://harly.dev" aria-label="Harly , visit harly.dev">
+        <a href="https://harly.dev" aria-label={"Харли, посетите harly.dev"}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/harly-full-black.svg"
-            alt="Harly"
+            alt={"Харли"}
             className="h-8 w-auto md:hidden"
           />
         </a>
@@ -38,20 +38,15 @@ export default async function SetupPage() {
         <div className="auth-card-enter w-full max-w-sm">
           <span className="inline-flex items-center gap-2 rounded-full bg-sage/60 px-3 py-1 text-xs font-semibold text-sage-ink">
             <span className="size-1.5 rounded-full bg-pine" />
-            First-run setup
-          </span>
+            {"Настройка при первом запуске "}</span>
 
           <h1 className="mt-5 font-display text-3xl tracking-tight text-foreground">
-            Set up your Harly
-          </h1>
+            {"Настрой свой Харли "}</h1>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            When you ran{" "}
+            {"Когда ты побежал"}{" "}
             <code className="rounded bg-kraft px-1.5 py-0.5 font-mono text-[0.8em] text-foreground">
-              harly init
-            </code>
-            , it printed a one-time setup token. Paste it below to claim this
-            deployment. It stays valid for 15 minutes.
-          </p>
+              {"Харли инициализирует "}</code>
+            {", он напечатал одноразовый токен установки. Вставьте его ниже, чтобы заявить права на это развертывание. Он остается действительным в течение 15 минут. "}</p>
 
           <SetupClaimForm />
         </div>

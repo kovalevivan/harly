@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { localizeStageName } from "@/lib/localize-system-text";
 
 /**
  * The pipeline spine , Harly's signature stage indicator.
@@ -42,7 +43,7 @@ export function PipelineSpine({
   const position = activeIndex >= 0 ? activeIndex + 1 : 0;
 
   const label = isRejected
-    ? "Rejected"
+    ? "Отказ"
     : activeIndex >= 0
       ? stages[activeIndex]
       : current;
@@ -54,10 +55,10 @@ export function PipelineSpine({
         role="img"
         aria-label={
           isRejected
-            ? "Rejected"
+            ? "Отказ"
             : position > 0
-              ? `Stage: ${label} (${position} of ${total})`
-              : `Stage: ${label}`
+              ? `Этап: ${localizeStageName(label)} (${position} из ${total})`
+              : `Этап: ${localizeStageName(label)}`
         }
       >
         {stages.map((stage, i) => {
@@ -92,7 +93,7 @@ export function PipelineSpine({
             isRejected ? "text-destructive" : "text-muted-foreground",
           )}
         >
-          {label}
+          {localizeStageName(label)}
         </span>
       ) : null}
     </div>

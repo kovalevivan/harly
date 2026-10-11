@@ -62,12 +62,12 @@ export function IconRail({
 
   return (
     <nav
-      aria-label="Main"
+      aria-label={"Главная"}
       className="hidden w-[var(--spacing-rail)] shrink-0 flex-col items-center gap-1 bg-warm-paper py-3 md:flex"
     >
       <Link
         href="/dashboard"
-        aria-label={`${workspace.name}, go to home`}
+        aria-label={`${workspace.name}, иди домой`}
         className="mb-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
       >
         <BrandMark workspace={workspace} sidebarLogo={sidebarLogo} />
@@ -215,7 +215,7 @@ function MoreMenu({
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger
-            aria-label="More"
+            aria-label={"Подробнее"}
             className={cn(
               "relative flex size-10 items-center justify-center rounded-[12px] transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink",
@@ -227,7 +227,7 @@ function MoreMenu({
             <MoreHorizontal className="size-[19px]" strokeWidth={1.8} />
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent side="right">More</TooltipContent>
+        <TooltipContent side="right">{"Подробнее"}</TooltipContent>
       </Tooltip>
       <PopoverContent
         side="right"
@@ -306,13 +306,13 @@ function InviteButton({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            aria-label="Invite team"
+            aria-label={"Пригласить команду"}
             className="flex size-10 items-center justify-center rounded-[12px] text-soft-ink transition-colors hover:bg-row-wash/70 hover:text-near-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
           >
             <UserPlus className="size-[19px]" strokeWidth={1.8} />
           </button>
         </TooltipTrigger>
-        <TooltipContent side="right">Invite team</TooltipContent>
+        <TooltipContent side="right">{"Пригласить команду"}</TooltipContent>
       </Tooltip>
     </>
   );
@@ -359,7 +359,7 @@ export function MobileNav({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[280px] p-0">
-        <SheetTitle className="sr-only">Navigation</SheetTitle>
+        <SheetTitle className="sr-only">{"Навигация"}</SheetTitle>
         <div className="flex items-center gap-2.5 px-4 py-4">
           <WorkspaceMark
             name={workspace.name}

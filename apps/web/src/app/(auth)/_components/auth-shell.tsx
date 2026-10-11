@@ -61,7 +61,7 @@ export function AuthBrandLockup({ branding }: { branding: AuthBranding }) {
       ) : (
         <Image
           src="/harly-full-black.svg"
-          alt="Harly"
+          alt={"Харли"}
           width={120}
           height={30}
           className="h-[30px] w-auto"

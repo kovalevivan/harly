@@ -128,122 +128,122 @@ export type PermissionGroup = {
 /** Grouped for the role-editor matrix. */
 export const PERMISSION_GROUPS: PermissionGroup[] = [
   {
-    label: "Jobs",
+    label: "Вакансии",
     permissions: [
-      { key: "jobs:create", label: "Create jobs" },
-      { key: "jobs:view", label: "View jobs" },
-      { key: "jobs:edit", label: "Edit jobs" },
-      { key: "jobs:delete", label: "Delete jobs", hint: "Move jobs to trash" },
-      { key: "jobs:publish", label: "Publish jobs" },
+      { key: "jobs:create", label: "Создавать вакансии" },
+      { key: "jobs:view", label: "Просматривать вакансии" },
+      { key: "jobs:edit", label: "Редактировать вакансии" },
+      { key: "jobs:delete", label: "Удалять вакансии", hint: "Перемещать вакансии в корзину" },
+      { key: "jobs:publish", label: "Публиковать вакансии" },
       {
         key: "jobs:approve",
-        label: "Approve jobs",
-        hint: "Approve jobs before recruiting starts",
+        label: "Утверждать вакансии",
+        hint: "Утверждать вакансии перед началом найма",
       },
-      { key: "hiring_team:manage", label: "Manage hiring teams" },
+      { key: "hiring_team:manage", label: "Управлять командами найма" },
     ],
   },
   {
-    label: "Candidates",
+    label: "Кандидаты",
     permissions: [
-      { key: "candidates:edit", label: "Edit candidates" },
-      { key: "candidates:view", label: "View candidates" },
-      { key: "candidates:delete", label: "Delete / reject candidates" },
-      { key: "candidates:move", label: "Move in pipeline" },
+      { key: "candidates:edit", label: "Редактировать кандидатов" },
+      { key: "candidates:view", label: "Просматривать кандидатов" },
+      { key: "candidates:delete", label: "Удалять кандидатов и отклонять отклики" },
+      { key: "candidates:move", label: "Перемещать по этапам найма" },
     ],
   },
   {
-    label: "Privacy",
+    label: "Конфиденциальность",
     permissions: [
       {
         key: "dsar:manage",
-        label: "Review privacy requests",
-        hint: "Approve or deny candidate data export and erasure requests",
+        label: "Рассматривать запросы на обработку данных",
+        hint: "Разрешать или отклонять экспорт и удаление данных кандидатов",
       },
     ],
   },
   {
-    label: "Collaboration",
+    label: "Совместная работа",
     permissions: [
       {
         key: "collab:write",
-        label: "Notes, evaluations & scheduling",
-        hint: "Write notes, add scorecards, schedule interviews, email candidates",
+        label: "Заметки, оценки и планирование",
+        hint: "Добавлять заметки и оценки, назначать собеседования, писать кандидатам",
       },
-      { key: "interviews:manage", label: "Manage interviews" },
-      { key: "interviews:feedback", label: "Submit interview feedback" },
+      { key: "interviews:manage", label: "Управлять собеседованиями" },
+      { key: "interviews:feedback", label: "Оставлять отзывы о собеседованиях" },
       {
         key: "tasks:read",
-        label: "View tasks",
+        label: "Просматривать задачи",
       },
       {
         key: "tasks:write",
-        label: "Create and manage tasks",
-        hint: "Create, edit, assign, complete, and archive tasks",
+        label: "Создавать задачи и управлять ими",
+        hint: "Создавать, редактировать, назначать, завершать и архивировать задачи",
       },
       {
         key: "offers:manage",
-        label: "Manage offers",
-        hint: "Create, send and decide job offers",
+        label: "Управлять предложениями о работе",
+        hint: "Создавать, отправлять и рассматривать предложения о работе",
       },
-      { key: "offers:approve", label: "Approve offers" },
+      { key: "offers:approve", label: "Утверждать предложения" },
       {
         key: "templates:manage",
-        label: "Manage email templates",
+        label: "Управлять шаблонами писем",
       },
     ],
   },
   {
-    label: "Documents",
+    label: "Документы",
     permissions: [
-      { key: "documents:read", label: "View documents" },
-      { key: "documents:manage", label: "Upload and manage documents" },
+      { key: "documents:read", label: "Просматривать документы" },
+      { key: "documents:manage", label: "Загружать документы и управлять ими" },
       {
         key: "documents:share",
-        label: "Share documents",
-        hint: "Change document access and member restrictions",
+        label: "Предоставлять доступ к документам",
+        hint: "Настраивать доступ к документам и ограничения для участников",
       },
     ],
   },
   {
-    label: "Analytics",
+    label: "Аналитика",
     permissions: [
       {
         key: "reports:read",
-        label: "View reports",
-        hint: "View recruiting metrics, funnels, sources, and hiring trends",
+        label: "Просматривать отчёты",
+        hint: "Просматривать показатели найма, воронки, источники и динамику",
       },
     ],
   },
   {
-    label: "Automations",
+    label: "Автоматизация",
     permissions: [
       {
         key: "automations:manage",
-        label: "Manage automations",
-        hint: "Create, edit, toggle, and delete recruiting workflows",
+        label: "Управлять автоматизацией",
+        hint: "Создавать, редактировать, включать и удалять процессы найма",
       },
     ],
   },
   {
-    label: "Administration",
+    label: "Администрирование",
     permissions: [
-      { key: "members:read", label: "View members & invitations" },
+      { key: "members:read", label: "Просматривать участников и приглашения" },
       {
         key: "members:invite",
-        label: "Invite members",
-        hint: "Send invites, cancel invites, and add existing users",
+        label: "Приглашать участников",
+        hint: "Отправлять и отменять приглашения, добавлять существующих пользователей",
       },
-      { key: "members:edit", label: "Change member roles" },
-      { key: "members:remove", label: "Remove members" },
-      { key: "invite_links:manage", label: "Manage invite links" },
-      { key: "settings:edit", label: "Edit workspace settings" },
-      { key: "integrations:manage", label: "Manage integrations" },
-      { key: "roles:manage", label: "Manage roles & permissions" },
+      { key: "members:edit", label: "Изменять роли участников" },
+      { key: "members:remove", label: "Удалять участников" },
+      { key: "invite_links:manage", label: "Управлять ссылками приглашения" },
+      { key: "settings:edit", label: "Настраивать рабочее пространство" },
+      { key: "integrations:manage", label: "Управлять интеграциями" },
+      { key: "roles:manage", label: "Управлять ролями и правами" },
       {
         key: "security:manage",
-        label: "Manage workspace security",
-        hint: "2FA enforcement, SSO, and security settings",
+        label: "Управлять безопасностью",
+        hint: "Обязательная двухфакторная аутентификация, единый вход и настройки безопасности",
       },
     ],
   },
@@ -340,7 +340,13 @@ export function exceedsPrivilege(
   return granted.some((p) => !held.has(p));
 }
 
+const builtinRoleLabels: Record<string, string> = {
+  owner: "Владелец", admin: "Администратор", recruiter: "Рекрутер",
+  hiring_manager: "Руководитель найма",
+};
+
 export function roleLabel(role: string): string {
+  if (Object.hasOwn(builtinRoleLabels, role)) return builtinRoleLabels[role];
   return role.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 

@@ -42,7 +42,7 @@ export function CandidateReferrals({
     startTransition(async () => {
       const result = await toggleReferralFeatured({ referralId, featured: next });
       if (!result.success) {
-        toast.error(result.error ?? "Unable to update referral.");
+        toast.error(result.error ?? "Невозможно обновить реферал.");
         return;
       }
       router.refresh();
@@ -53,10 +53,10 @@ export function CandidateReferrals({
     startTransition(async () => {
       const result = await deleteReferral({ referralId });
       if (!result.success) {
-        toast.error(result.error ?? "Unable to delete referral.");
+        toast.error(result.error ?? "Невозможно удалить реферал.");
         return;
       }
-      toast.success("Referral removed");
+      toast.success("Реферал удален.");
       router.refresh();
     });
   }
@@ -78,7 +78,7 @@ export function CandidateReferrals({
           >
             <div className="min-w-0">
               <p className="font-medium">
-                Referred by {referral.referredByName}
+                {"По рекомендации "}{referral.referredByName}
                 {referral.jobTitle ? ` · ${referral.jobTitle}` : ""}
               </p>
               {referral.note ? (
@@ -88,7 +88,7 @@ export function CandidateReferrals({
               ) : null}
               {referral.createdById !== referral.referredById ? (
                 <p className="mt-0.5 text-[11px] text-muted-foreground">
-                  Logged by {referral.createdByName}
+                  {"Авторизован "}{referral.createdByName}
                 </p>
               ) : null}
             </div>
@@ -98,7 +98,7 @@ export function CandidateReferrals({
                 type="button"
                 disabled={isPending}
                 onClick={() => toggleFeatured(referral.id, !referral.featured)}
-                title={referral.featured ? "Unfeature" : "Feature this referral"}
+                title={referral.featured ? "Невозможность" : "Добавьте этот реферал"}
                 className="text-current opacity-70 hover:opacity-100"
               >
                 <Star className={cn("size-3", referral.featured && "fill-current")} />
@@ -109,7 +109,7 @@ export function CandidateReferrals({
                 type="button"
                 disabled={isPending}
                 onClick={() => remove(referral.id)}
-                title="Remove referral"
+                title={"Удалить реферал"}
                 className="text-current opacity-70 hover:opacity-100"
               >
                 <X className="size-3" />

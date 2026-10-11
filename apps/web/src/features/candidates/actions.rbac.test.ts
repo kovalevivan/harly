@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
+vi.mock("@/features/applications/hiring-review/attached-resume", () => ({enqueueAttachedResumeReviews: vi.fn()}));
 const mocks = vi.hoisted(() => ({
   requireCandidatePermission: vi.fn(),
   requirePermission: vi.fn(),

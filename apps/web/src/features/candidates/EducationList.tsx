@@ -12,7 +12,7 @@ function formatMonth(value: string | null | undefined) {
   if (!year || !month) return value;
   const date = new Date(Number(year), Number(month) - 1, 1);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     year: "numeric",
   }).format(date);
@@ -22,9 +22,9 @@ function formatDateRange(item: CandidateEducationEntry) {
   const start = formatMonth(item.startDate);
   const end = formatMonth(item.endDate);
   if (start && end) return `${start} - ${end}`;
-  if (start) return `${start} - Not set`;
+  if (start) return `${start} — Не установлено`;
   if (end) return end;
-  return "Not set";
+  return "Не установлено";
 }
 
 /**
@@ -50,11 +50,11 @@ export function EducationList({
             className="grid gap-2 sm:grid-cols-[8rem_minmax(0,1fr)]"
           >
             <div className="text-sm text-muted-foreground">
-              {isStructuredEntry(item) ? formatDateRange(item) : item.dateRange ?? "Not set"}
+              {isStructuredEntry(item) ? formatDateRange(item) : item.dateRange ?? "Не установлено"}
             </div>
             <div>
               <p className="font-medium">
-                {[item.degree, item.field].filter(Boolean).join(" · ") || "Education"}
+                {[item.degree, item.field].filter(Boolean).join(" · ") || "Образование"}
               </p>
               <p className="mt-0.5 text-sm text-muted-foreground">{item.school}</p>
               {isStructuredEntry(item) && item.description ? (

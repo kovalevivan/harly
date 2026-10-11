@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -29,8 +30,8 @@ import {
 } from "./OnboardingShell";
 
 const STEPS: OnboardingStepMeta[] = [
-  { key: "profile", label: "Your profile", desc: "How teammates see you", icon: UserPlusIcon },
-  { key: "security", label: "Security", desc: "Protect your account", icon: ShieldCheckDuotoneIcon },
+  { key: "profile", label: "Ваш профиль", desc: "Как вас видят товарищи по команде", icon: UserPlusIcon },
+  { key: "security", label: "Безопасность", desc: "Защитите свой аккаунт", icon: ShieldCheckDuotoneIcon },
 ];
 
 export function RecruiterOnboarding({
@@ -69,11 +70,11 @@ export function RecruiterOnboarding({
         const trimmed = jobTitle.trim();
         if (trimmed) {
           const res = await saveUserRoleAction(trimmed);
-          if (!res.ok) return setError(res.error ?? "Couldn't save your role.");
+          if (!res.ok) return setError(res.error ?? "Не удалось сохранить вашу роль.");
         }
         const avatarRes = await saveOnboardingAvatarAction(avatar || null);
         if (!avatarRes.ok) {
-          return setError(avatarRes.error ?? "Couldn't save your photo.");
+          return setError(avatarRes.error ?? "Не удалось сохранить фотографию.");
         }
         setStep(1);
       });
@@ -87,7 +88,7 @@ export function RecruiterOnboarding({
   function finish() {
     startTransition(async () => {
       const res = await completeRecruiterOnboardingAction();
-      if (!res.ok) return setError(res.error ?? "Couldn't finish.");
+      if (!res.ok) return setError(res.error ?? "Не удалось закончить.");
       setDone(true);
     });
   }
@@ -104,18 +105,16 @@ export function RecruiterOnboarding({
           <SealCheckDuotoneIcon className="size-8" />
         </motion.span>
         <h2 className="mt-5 font-display text-2xl font-semibold tracking-tight text-foreground">
-          You&apos;re in
-        </h2>
+          {"Ты в "}</h2>
         <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-          Welcome to {workspaceName}. Your pipeline, candidates and tasks are ready.
+          {"Добро пожаловать в "}{workspaceName}. Воронка найма, кандидаты и задачи готовы к работе.
         </p>
         <Button
           className="mt-7 w-full"
           size="lg"
           onClick={() => { router.replace("/dashboard"); router.refresh(); }}
         >
-          Go to dashboard
-        </Button>
+          {"Перейти на панель управления "}</Button>
       </div>
     );
   }
@@ -127,22 +126,22 @@ export function RecruiterOnboarding({
 
   return (
     <OnboardingShell
-      railTitle="Welcome"
+      railTitle={"Добро пожаловать"}
       railFootnote="Less than a minute. You can update these in your account anytime."
       steps={STEPS}
       current={step}
       onJump={(i) => { if (i < step && !blockedOnMandatory2fa) { setStep(i); setError(null); } }}
-      error={error}
+      error={localizeSystemText(error)}
       pending={pending}
       isLast={isLast}
       onBack={() => { setStep((s) => s - 1); setError(null); }}
       onNext={next}
       onSkip={canSkipSecurity ? finish : undefined}
-      nextLabel={isLast ? "Enter workspace" : "Continue"}
+      nextLabel={isLast ? "Войти в рабочую область" : "Продолжить"}
       minHeight="min-h-[30rem]"
       navHint={
         blockedOnMandatory2fa
-          ? "Finish setting up two-factor authentication above to continue."
+          ? "Завершите настройку двухфакторной аутентификации выше, чтобы продолжить."
           : undefined
       }
     >
@@ -150,9 +149,9 @@ export function RecruiterOnboarding({
         <StepStagger>
           <StepField>
             <StepHeading
-              eyebrow={`Hi ${userName}`}
-              title={`Welcome to ${workspaceName}`}
-              subtitle="A couple of quick things and you're hiring. First, what should teammates know you as?"
+              eyebrow={`Здравствуйте, ${userName}`}
+              title={`Добро пожаловать в ${workspaceName}`}
+              subtitle={"Пара быстрых действий, и вы нанимаете. Во-первых, как товарищи по команде должны вас знать?"}
             />
           </StepField>
           <StepField className="mt-7 flex items-center gap-5">
@@ -160,27 +159,26 @@ export function RecruiterOnboarding({
               value={avatar || null}
               onChange={(url) => { setAvatar(url ?? ""); setError(null); }}
               variant="avatar"
-              hint="Profile photo · PNG, JPG or WEBP"
+              hint={"Фотография профиля · PNG, JPG или WEBP"}
             />
             <div className="flex-1 space-y-1">
-              <Label>Profile photo</Label>
+              <Label>{"Фото профиля"}</Label>
               <p className="text-xs text-muted-foreground">
-                Shown on your profile and next to your activity. Optional.
-              </p>
+                {"Отображается в вашем профиле и рядом с вашими действиями. Необязательный. "}</p>
             </div>
           </StepField>
           <StepField className="mt-6 max-w-md space-y-2">
-            <Label htmlFor="rec-role">Your role</Label>
+            <Label htmlFor="rec-role">{"Ваша роль"}</Label>
             <Input
               id="rec-role"
               autoFocus
               value={jobTitle}
               onChange={(e) => { setJobTitle(e.target.value); setError(null); }}
-              placeholder="Technical Recruiter"
+              placeholder={"Технический рекрутер"}
               maxLength={80}
               onKeyDown={(e) => { if (e.key === "Enter") next(); }}
             />
-            <p className="text-xs text-muted-foreground">Shown on your profile and to the hiring team. Optional.</p>
+            <p className="text-xs text-muted-foreground">{"Отображается в вашем профиле и команде по найму. Необязательный."}</p>
           </StepField>
         </StepStagger>
       )}
@@ -189,11 +187,11 @@ export function RecruiterOnboarding({
         <StepStagger>
           <StepField>
             <StepHeading
-              title="Secure your account"
+              title={"Защитите свой аккаунт"}
               subtitle={
                 require2fa
-                  ? "This workspace requires two-factor authentication. Set it up to finish."
-                  : "Add two-factor authentication for an extra layer of protection. Optional."
+                  ? "Для этой рабочей области требуется двухфакторная аутентификация. Настройте его на завершение."
+                  : "Добавьте двухфакторную аутентификацию для дополнительного уровня защиты. Необязательный."
               }
             />
           </StepField>
@@ -201,7 +199,7 @@ export function RecruiterOnboarding({
             {twoFactorEnabled ? (
               <div className="flex items-center gap-3 rounded-xl border border-pine/20 bg-sage/30 px-4 py-3.5">
                 <ShieldCheckDuotoneIcon className="size-5 text-pine" />
-                <p className="text-sm font-medium text-foreground">Two-factor authentication is active.</p>
+                <p className="text-sm font-medium text-foreground">{"Двухфакторная аутентификация активна."}</p>
               </div>
             ) : (
               <TwoFactorCard enabled={false} />
@@ -212,8 +210,7 @@ export function RecruiterOnboarding({
               <div className="flex items-center gap-3 py-1">
                 <span className="h-px flex-1 bg-border" />
                 <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  or
-                </span>
+                  {"или "}</span>
                 <span className="h-px flex-1 bg-border" />
               </div>
               <div className="mt-4">

@@ -12,7 +12,7 @@ function formatMonth(value: string | null | undefined) {
   if (!year || !month) return value;
   const date = new Date(Number(year), Number(month) - 1, 1);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     year: "numeric",
   }).format(date);
@@ -20,11 +20,11 @@ function formatMonth(value: string | null | undefined) {
 
 function formatDateRange(item: CandidateExperienceEntry) {
   const start = formatMonth(item.startDate);
-  const end = item.current ? "Present" : formatMonth(item.endDate);
+  const end = item.current ? "Настоящее время" : formatMonth(item.endDate);
   if (start && end) return `${start} - ${end}`;
-  if (start) return `${start} - ${item.current ? "Present" : "Not set"}`;
+  if (start) return `${start} - ${item.current ? "Настоящее время" : "Не установлено"}`;
   if (end) return end;
-  return "Not set";
+  return "Не установлено";
 }
 
 function descriptionBullets(value: string | null | undefined) {
@@ -55,11 +55,11 @@ export function ExperienceTimeline({
           className="grid gap-3 sm:grid-cols-[8rem_minmax(0,1fr)]"
         >
           <div className="text-sm text-muted-foreground">
-            {isStructuredEntry(item) ? formatDateRange(item) : item.dateRange ?? "Not set"}
+            {isStructuredEntry(item) ? formatDateRange(item) : item.dateRange ?? "Не установлено"}
           </div>
           <div className="min-w-0">
             <p className="font-medium leading-snug">
-              {item.title} <span className="text-muted-foreground">at</span> {item.company}
+              {item.title} <span className="text-muted-foreground">{"в"}</span> {item.company}
             </p>
             {isStructuredEntry(item) && item.location ? (
               <p className="mt-1 text-sm text-muted-foreground">{item.location}</p>

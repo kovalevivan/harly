@@ -98,14 +98,14 @@ export function ApplicationsBoardTable({
     <section className="mt-6">
       <div className="flex flex-wrap items-center gap-2">
         <FilterPill
-          label="Job"
+          label={"Вакансия"}
           value={jobValue}
           onChange={(value) => setFilter("job", value)}
           options={board.jobOptions.map((option) => option.value)}
           labelMap={jobLabels}
         />
         <FilterPill
-          label="Stage"
+          label={"Этап"}
           value={stageValue}
           onChange={(value) => setFilter("stage", value)}
           options={board.stageOptions.map((option) => option.value)}
@@ -121,15 +121,15 @@ export function ApplicationsBoardTable({
           {board.totalActive === 0 ? (
             <EmptyState
               icon={Users}
-              title="No one is waiting on you"
-              description="When candidates apply, they land here for a decision."
-              action={{ href: "/dashboard/jobs/new", label: "Publish a job" }}
+              title={"Никто тебя не ждет"}
+              description={"Когда кандидаты подают заявку, они попадают сюда для принятия решения."}
+              action={{ href: "/dashboard/jobs/new", label: "Опубликовать вакансию" }}
             />
           ) : (
             <EmptyState
               icon={Filter}
-              title="Nothing matches these filters"
-              description="Clear the job or stage filter to see the rest of the pipeline."
+              title={"Ничего не соответствует этим фильтрам"}
+              description={"Очистите фильтр задания или этапа, чтобы увидеть остальную часть конвейера."}
             />
           )}
         </div>
@@ -141,17 +141,16 @@ export function ApplicationsBoardTable({
                 <RowCheckbox
                   checked={allSelected}
                   onChange={toggleAll}
-                  label="Select all applications"
+                  label={"Выбрать все отклики"}
                 />
               </Th>
-              <Th>Candidate</Th>
-              <Th>Role</Th>
-              <Th>Stage</Th>
-              <Th>Waiting</Th>
-              <Th>Team</Th>
+              <Th>{"Кандидат"}</Th>
+              <Th>{"Роль"}</Th>
+              <Th>{"Этап"}</Th>
+              <Th>{"Ожидание"}</Th>
+              <Th>{"Команда"}</Th>
               <Th className="w-14" srOnly>
-                Actions
-              </Th>
+                {"Действия "}</Th>
             </HumanTableHead>
             <tbody>
               {rows.map((row) => {
@@ -164,7 +163,7 @@ export function ApplicationsBoardTable({
                         onChange={(checked) =>
                           toggleOne(row.applicationId, checked)
                         }
-                        label={`Select ${row.name}`}
+                        label={`Выберите ${row.name}`}
                       />
                     </Td>
                     <Td>
@@ -187,7 +186,7 @@ export function ApplicationsBoardTable({
                       </span>
                     </Td>
                     <Td>
-                      <StatusPill>{row.stageName ?? "Applied"}</StatusPill>
+                      <StatusPill>{row.stageName ?? "Отклик"}</StatusPill>
                     </Td>
                     <Td>
                       <WaitingCell days={row.daysWaiting} />
@@ -219,7 +218,7 @@ export function ApplicationsBoardTable({
  */
 function WaitingCell({ days }: { days: number }) {
   const label =
-    days === 0 ? "Today" : days === 1 ? "1 day" : `${days} days`;
+    days === 0 ? "Сегодня" : days === 1 ? "1 день" : `${days} дней`;
   return (
     <span
       className={cn(
@@ -246,27 +245,24 @@ function BulkBar({
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2 rounded-[var(--radius-md)] bg-soft-kraft px-3 py-2">
       <span className="font-chrome text-[12px] text-soft-ink">
-        {count} selected
-      </span>
+        {count} {"выбрано "}</span>
       <div className="ml-auto flex items-center gap-1.5">
         <button
           type="button"
           className="flex items-center gap-1.5 rounded-full bg-near-ink px-3.5 py-1.5 text-[13px] font-medium text-pure-snow transition-colors hover:bg-[var(--pine-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink focus-visible:ring-offset-2"
         >
           <ArrowRight className="size-3.5" strokeWidth={2} />
-          Advance
-        </button>
+          {"заранее "}</button>
         <button
           type="button"
           className="flex items-center gap-1.5 rounded-full border border-mist-border bg-pure-snow px-3.5 py-1.5 text-[13px] font-medium text-near-ink transition-colors hover:bg-row-wash focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
         >
           <Mail className="size-3.5" strokeWidth={2} />
-          Email
-        </button>
+          {"Электронная почта "}</button>
         <button
           type="button"
           onClick={onClear}
-          aria-label="Clear selection"
+          aria-label={"Очистить выбор"}
           className="flex size-8 items-center justify-center rounded-full text-soft-ink transition-colors hover:bg-row-wash hover:text-near-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink"
         >
           <X className="size-4" strokeWidth={2} />
@@ -287,19 +283,18 @@ function RowMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={`Actions for ${name}`}
+        aria-label={`Действия для ${name}`}
         className="ml-auto flex size-8 items-center justify-center rounded-full text-soft-ink opacity-0 transition-opacity hover:bg-pure-snow hover:text-near-ink focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-near-ink group-hover/row:opacity-100 data-[state=open]:opacity-100"
       >
         <MoreHorizontal className="size-4" strokeWidth={2} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-44">
         <DropdownMenuItem asChild>
-          <a href={`/dashboard/candidates/${candidateId}`}>Open candidate</a>
+          <a href={`/dashboard/candidates/${candidateId}`}>{"Открытый кандидат"}</a>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`/dashboard/candidates/${candidateId}#process`}>
-            Move stage
-          </a>
+            {"Переместить этап "}</a>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

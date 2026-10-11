@@ -1,14 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition } from "react";
 import { Download, ExternalLink, FileText, Upload } from "lucide-react";
 import { toast } from "@/lib/notification-island/toast";
 
-import type {
-  ResumeEducationItem,
-  ResumeExperienceItem,
-} from "@harly/db";
+import type { ResumeEducationItem, ResumeExperienceItem } from "@harly/db";
 
+import { reviewAttachedCandidateFileAction } from "@/features/applications/hiring-review/actions";
 import { attachCandidateFile } from "@/features/candidates/actions";
 import { getResumeFileValidationError } from "@/lib/storage-validation";
 import { formatFileSize } from "@/lib/utils";
@@ -105,7 +104,7 @@ async function uploadFile(file: File) {
   const payload: unknown = await presignResponse.json();
 
   if (!presignResponse.ok || !isPresignResponse(payload)) {
-    throw new Error("Unable to prepare file upload.");
+    throw new Error("Не удалось подготовить загрузку файла.");
   }
 
   const uploadResponse = await fetch(payload.uploadUrl, {
@@ -115,7 +114,7 @@ async function uploadFile(file: File) {
   });
 
   if (!uploadResponse.ok) {
-    throw new Error("Unable to upload file.");
+    throw new Error("Невозможно загрузить файл.");
   }
 
   return payload;
@@ -130,26 +129,35 @@ function groupFiles(files: CandidateFileItem[]): GroupedFile[] {
   const groups = new Map<string, CandidateFileItem[]>();
 
   for (const file of files) {
-    const key = file.contentHash ?? `${file.fileName.toLowerCase()}-${file.fileSize ?? "unknown"}`;
+    const key =
+      file.contentHash ??
+      `${file.fileName.toLowerCase()}-${file.fileSize ?? "unknown"}`;
     groups.set(key, [...(groups.get(key) ?? []), file]);
   }
 
   return Array.from(groups.values()).map((items) => {
     const sorted = [...items].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
     return { latest: sorted[0]!, duplicates: sorted.slice(1) };
   });
 }
 
-function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateCount: number }) {
+function FileRow({
+  file,
+  duplicateCount,
+}: {
+  file: CandidateFileItem;
+  duplicateCount: number;
+}) {
   const meta = (
     <div className="min-w-0 flex-1">
       <div className="flex min-w-0 items-center gap-2">
         <p className="truncate text-sm font-medium">{file.fileName}</p>
         {duplicateCount > 0 ? (
           <Badge variant="secondary" className="shrink-0 px-1.5 text-[10px]">
-            {duplicateCount + 1} copies
+            {duplicateCount + 1} {"копий "}
           </Badge>
         ) : null}
         {file.contentHash ? (
@@ -159,7 +167,7 @@ function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateC
         ) : null}
       </div>
       <p className="text-xs text-muted-foreground">
-        {file.fileSize ? formatFileSize(file.fileSize) : "Unknown size"}
+        {file.fileSize ? formatFileSize(file.fileSize) : "Неизвестный размер"}
         {file.uploadedByName ? ` · ${file.uploadedByName}` : ""}
       </p>
     </div>
@@ -189,12 +197,13 @@ function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateC
               <Button asChild size="sm" variant="outline">
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">
                   <Download className="size-4" />
-                  Download
+                  {"Скачать "}
                 </a>
               </Button>
             </DialogTitle>
             <DialogDescription className="sr-only">
-              Preview for {file.fileName}
+              {"Предварительный просмотр для "}
+              {file.fileName}
             </DialogDescription>
           </DialogHeader>
           <PdfViewer
@@ -226,16 +235,20 @@ function FileRow({ file, duplicateCount }: { file: CandidateFileItem; duplicateC
               <Button asChild size="sm" variant="outline">
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">
                   <Download className="size-4" />
-                  Download
+                  {"Скачать "}
                 </a>
               </Button>
             </DialogTitle>
             <DialogDescription className="sr-only">
-              Preview for {file.fileName}
+              {"Предварительный просмотр для "}
+              {file.fileName}
             </DialogDescription>
           </DialogHeader>
           <div className="h-[82vh] overflow-hidden rounded-lg border">
-            <DocxViewer fileUrl={file.fileUrl} className="h-full rounded-none border-0" />
+            <DocxViewer
+              fileUrl={file.fileUrl}
+              className="h-full rounded-none border-0"
+            />
           </div>
         </DialogContent>
       </Dialog>
@@ -261,6 +274,7 @@ export function CandidateFileUpload({
   workspaceId,
   initialFiles,
 }: CandidateFileUploadProps) {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState(initialFiles);
   const [isPending, startTransition] = useTransition();
@@ -279,10 +293,23 @@ export function CandidateFileUpload({
     startTransition(async () => {
       try {
         const contentHash = await sha256(file);
-        const existing = files.find((current) => current.contentHash === contentHash);
+        const existing = files.find(
+          (current) => current.contentHash === contentHash,
+        );
 
         if (existing) {
-          toast.info("This file already exists on the candidate profile.");
+          const review = await reviewAttachedCandidateFileAction(
+            candidateId,
+            existing.id,
+          );
+          if (!review.ok) {
+            toast.error(review.error);
+            return;
+          }
+          toast.info(
+            "Файл уже сохранён. Разборы по утверждённым профилям обновляются автоматически.",
+          );
+          router.refresh();
           return;
         }
 
@@ -298,12 +325,15 @@ export function CandidateFileUpload({
         });
 
         if (!result.success || !result.file) {
-          toast.error(result.error ?? "Unable to save file.");
+          toast.error(result.error ?? "Невозможно сохранить файл.");
           return;
         }
 
         setFiles((current) => {
-          if (result.file!.contentHash && current.some((f) => f.contentHash === result.file!.contentHash)) {
+          if (
+            result.file!.contentHash &&
+            current.some((f) => f.contentHash === result.file!.contentHash)
+          ) {
             return current;
           }
           const next: CandidateFileItem = {
@@ -326,12 +356,15 @@ export function CandidateFileUpload({
           };
           return [next, ...current];
         });
-        toast.success("File uploaded.");
+        toast.success(
+          "Файл загружен. Разбор по утверждённым профилям запускается автоматически.",
+        );
+        router.refresh();
       } catch (uploadError) {
         toast.error(
           uploadError instanceof Error
             ? uploadError.message
-            : "Unable to upload file.",
+            : "Невозможно загрузить файл.",
         );
       } finally {
         if (inputRef.current) inputRef.current.value = "";
@@ -370,10 +403,10 @@ export function CandidateFileUpload({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs text-muted-foreground">
           {files.length > 1
-            ? `Latest resume: ${latestFile?.fileName ?? ""}`
+            ? `Последнее резюме: ${latestFile?.fileName ?? ""}`
             : files.length === 1
-              ? "PDF, DOC, or DOCX · max 10MB"
-              : "PDF, DOC, or DOCX · max 10MB"}
+              ? "PDF, DOC или DOCX · максимум 10 МБ"
+              : "PDF, DOC или DOCX · максимум 10 МБ"}
         </p>
         <Button
           type="button"
@@ -383,7 +416,11 @@ export function CandidateFileUpload({
           onClick={() => inputRef.current?.click()}
         >
           <Upload className="size-4" />
-          {isPending ? "Uploading…" : files.length === 0 ? "Upload file" : "Add file"}
+          {isPending
+            ? "Загрузка…"
+            : files.length === 0
+              ? "Загрузить файл"
+              : "Добавить файл"}
         </Button>
       </div>
 
@@ -393,7 +430,7 @@ export function CandidateFileUpload({
           onClick={() => inputRef.current?.click()}
           className="w-full rounded-lg border border-dashed bg-muted/40 p-6 text-center text-sm text-muted-foreground transition hover:border-ring/40 hover:bg-accent/40"
         >
-          Drop in a resume or supporting file.
+          {"Пришлите резюме или подтверждающий файл. "}
         </button>
       ) : (
         <div className="rounded-md border border-border/70 bg-background px-3 divide-y divide-border/60">

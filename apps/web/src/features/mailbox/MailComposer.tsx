@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useRef, useState } from "react";
 import { Paperclip, X } from "lucide-react";
 
@@ -83,13 +84,13 @@ export function MailComposer({
   showSubject = true,
   lockSubject = false,
   defaultBody = "",
-  placeholder = "Write your message…",
+  placeholder = "Напишите свое сообщение…",
   templates = [],
   aiConfigured = false,
-  aiDraftLabel = "Draft with AI",
+  aiDraftLabel = "Драфт с ИИ",
   onDraftAI,
   onSend,
-  sendLabel = "Send",
+  sendLabel = "Отправить",
   disabled = false,
   footerNote,
   onCancel,
@@ -142,13 +143,13 @@ export function MailComposer({
     try {
       const result = await onDraftAI();
       if (!result) {
-        setError("AI could not draft this. Try again.");
+        setError("ИИ не смог это составить. Попробуйте еще раз.");
         return;
       }
       if (result.subject) setSubject(result.subject);
       loadBody(result.body.includes("<") ? result.body : `<p>${result.body.replace(/\n/g, "<br>")}</p>`);
     } catch {
-      setError("AI could not draft this. Try again.");
+      setError("ИИ не смог это составить. Попробуйте еще раз.");
     } finally {
       setDrafting(false);
     }
@@ -169,7 +170,7 @@ export function MailComposer({
           base64,
         });
       } catch {
-        setError(`Could not read ${file.name}.`);
+        setError(`Не удалось прочитать ${file.name}.`);
       }
     }
     setAttachments((current) => {
@@ -177,7 +178,7 @@ export function MailComposer({
       for (const file of next) if (!merged.some((item) => item.id === file.id)) merged.push(file);
       const total = merged.reduce((sum, item) => sum + item.size, 0);
       if (total > MAX_TOTAL_BYTES) {
-        setError("Attachments exceed the 20 MB total limit.");
+        setError("Общий размер вложений превышает общий лимит в 20 МБ.");
         return current;
       }
       return merged;
@@ -202,7 +203,7 @@ export function MailComposer({
         idempotencyKeyRef.current = crypto.randomUUID();
         setNote(result.note ?? null);
       } else {
-        setError(result.error ?? "Could not send.");
+        setError(result.error ?? "Не удалось отправить.");
       }
     } finally {
       setSending(false);
@@ -212,11 +213,11 @@ export function MailComposer({
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-1.5 text-[13px]">
-        <span className="w-8 shrink-0 text-muted-foreground">To</span>
+        <span className="w-8 shrink-0 text-muted-foreground">{"Кому"}</span>
         <span className="min-w-0 flex-1 truncate font-medium text-foreground">{to}</span>
         {templates.length ? (
           <Select onValueChange={applyTemplate}>
-            <SelectTrigger size="sm" className="w-40 shrink-0"><SelectValue placeholder="Template" /></SelectTrigger>
+            <SelectTrigger size="sm" className="w-40 shrink-0"><SelectValue placeholder={"Шаблон"} /></SelectTrigger>
             <SelectContent>
               {templates.map((template) => <SelectItem key={template.id} value={template.id}>{template.name}</SelectItem>)}
             </SelectContent>
@@ -226,14 +227,14 @@ export function MailComposer({
 
       {showSubject ? (
         <div className="flex items-center gap-1.5">
-          <span className="w-14 shrink-0 text-[13px] text-muted-foreground">Subject</span>
+          <span className="w-14 shrink-0 text-[13px] text-muted-foreground">{"Тема"}</span>
           <Input
             value={subject}
             onChange={(event) => setSubject(event.target.value)}
             readOnly={lockSubject}
-            placeholder="Subject"
+            placeholder={"Тема"}
             className={cn("h-9 flex-1", lockSubject && "bg-muted/50")}
-            aria-label="Subject"
+            aria-label={"Тема"}
           />
         </div>
       ) : null}
@@ -251,7 +252,7 @@ export function MailComposer({
                 type="button"
                 onClick={() => setAttachments((current) => current.filter((item) => item.id !== file.id))}
                 className="flex size-5 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                aria-label={`Remove ${file.filename}`}
+                aria-label={`Удалить ${file.filename}`}
               >
                 <X className="size-3.5" />
               </button>
@@ -260,28 +261,28 @@ export function MailComposer({
         </ul>
       ) : null}
 
-      {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="text-sm text-destructive">{localizeSystemText(error)}</p> : null}
       {note ? <p role="status" className="text-sm text-muted-foreground">{note}</p> : null}
 
       <div className="flex items-center gap-2">
         <input ref={fileRef} type="file" multiple hidden onChange={(event) => void addFiles(event.target.files)} />
-        <Button type="button" variant="ghost" size="icon-sm" onClick={() => fileRef.current?.click()} disabled={sending} aria-label="Attach files">
+        <Button type="button" variant="ghost" size="icon-sm" onClick={() => fileRef.current?.click()} disabled={sending} aria-label={"Прикрепить файлы"}>
           <Paperclip className="size-4" />
         </Button>
         {aiConfigured && onDraftAI ? (
           <Button type="button" variant="outline" size="sm" onClick={draftWithAI} disabled={drafting || sending}>
             <SparkleFillIcon className="size-4 text-primary" />
-            {drafting ? "Drafting…" : aiDraftLabel}
+            {drafting ? "Составление…" : aiDraftLabel}
           </Button>
         ) : null}
         <div className="ml-auto flex items-center gap-2">
           {footerNote ? <span className="text-[11px] text-muted-foreground">{footerNote}</span> : null}
           {onCancel ? (
-            <Button type="button" variant="ghost" size="sm" onClick={onCancel} disabled={sending}>Cancel</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={onCancel} disabled={sending}>{"Отмена"}</Button>
           ) : null}
           <Button type="button" onClick={handleSend} disabled={!canSend} className="active:scale-[0.97] motion-reduce:active:scale-100">
             <PaperPlaneDuotoneIcon className="size-4" />
-            {sending ? "Sending…" : sendLabel}
+            {sending ? "Отправка…" : sendLabel}
           </Button>
         </div>
       </div>

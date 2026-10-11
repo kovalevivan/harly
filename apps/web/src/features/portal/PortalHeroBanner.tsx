@@ -23,7 +23,7 @@ export function PortalHeroBanner({
         // eslint-disable-next-line @next/next/no-img-element -- workspace-managed public asset
         <img
           src={heroImageUrl}
-          alt={`${orgName} banner`}
+          alt={`${orgName} баннер`}
           className="absolute inset-0 size-full object-cover"
         />
       ) : (

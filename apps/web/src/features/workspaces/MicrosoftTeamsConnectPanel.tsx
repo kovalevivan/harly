@@ -57,9 +57,9 @@ export function MicrosoftTeamsConnectPanel({
   const statusTone = isConnected ? (status.enabled ? "on" : "off") : "neutral";
   const statusLabel = isConnected
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   const installUrl = `/api/integrations/outlook/install?ws=${workspaceId}`;
 
@@ -67,10 +67,10 @@ export function MicrosoftTeamsConnectPanel({
     startDisconnect(async () => {
       const result = await disconnectOutlookAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Microsoft Teams disconnected");
+      toast.success("Microsoft Teams отключены");
       router.refresh();
     });
   }
@@ -79,9 +79,9 @@ export function MicrosoftTeamsConnectPanel({
     startTest(async () => {
       const result = await testOutlookAction();
       if (result.ok) {
-        toast.success("Connection is working!");
+        toast.success("Соединение работает!");
       } else {
-        toast.error(result.error ?? "Connection test failed.");
+        toast.error(result.error ?? "Проверка соединения не удалась.");
       }
     });
   }
@@ -104,20 +104,18 @@ export function MicrosoftTeamsConnectPanel({
                 aria-expanded={open}
               >
                 <GearSixIcon className="size-4" />
-                {open ? "Hide settings" : "Manage"}
+                {open ? "Скрыть настройки" : "Управление"}
               </Button>
             ) : status.hasCredentials ? (
               <Button asChild>
                 <a href={installUrl}>
                   <MicrosoftOutlookLogo className="size-4" />
-                  Connect Microsoft
-                </a>
+                  {"Подключите Майкрософт "}</a>
               </Button>
             ) : (
               <Button disabled>
                 <MicrosoftOutlookLogo className="size-4" />
-                Credentials not set
-              </Button>
+                {"Учетные данные не установлены "}</Button>
             )
           ) : null
         }
@@ -127,31 +125,28 @@ export function MicrosoftTeamsConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">MICROSOFT_CLIENT_ID</code> and{" "}
-            <code className="font-mono text-xs">MICROSOFT_CLIENT_SECRET</code> on
-            the server to enable Microsoft Teams.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">MICROSOFT_CLIENT_ID</code> {"и"}{" "}
+            <code className="font-mono text-xs">MICROSOFT_CLIENT_SECRET</code> {"на сервере, чтобы включить Microsoft Teams. "}</p>
         </div>
       ) : null}
 
       {isConnected ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <StatCell label="Account">
+            <StatCell label={"Аккаунт"}>
               <MicrosoftOutlookLogo className="size-4" />
-              {status.accountEmail ?? "Not connected"}
+              {status.accountEmail ?? "Не подключено"}
             </StatCell>
-            <StatCell label="Teams">
+            <StatCell label={"Команды"}>
               {status.enabled ? (
                 <>
                   <SealCheckDuotoneIcon className="size-3.5 text-pine" />
-                  Ready
-                </>
+                  {"Готово "}</>
               ) : (
-                "Not enabled"
+                "Не включено"
               )}
             </StatCell>
-            <StatCell label="Status">
+            <StatCell label={"Статус"}>
               <button
                 type="button"
                 onClick={testConnection}
@@ -163,7 +158,7 @@ export function MicrosoftTeamsConnectPanel({
                 ) : (
                   <SealCheckDuotoneIcon className="size-3.5" />
                 )}
-                {testing ? "Testing…" : "Test connection"}
+                {testing ? "Тестирование…" : "Тестовое соединение"}
               </button>
             </StatCell>
           </div>
@@ -175,12 +170,9 @@ export function MicrosoftTeamsConnectPanel({
           <Card className="p-6">
             <div className="mb-5 space-y-0.5">
               <h2 className="font-display text-base font-semibold tracking-tight">
-                Microsoft Teams
-              </h2>
+                {"Команды Майкрософт "}</h2>
               <p className="text-sm text-muted-foreground">
-                Teams creates a meeting link for every video interview scheduled
-                through Outlook. Calendar selection lives on the Outlook card.
-              </p>
+                {"Teams создает ссылку на собрание для каждого видеоинтервью, запланированного через Outlook. Выбор календаря хранится на карточке Outlook. "}</p>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
@@ -193,12 +185,10 @@ export function MicrosoftTeamsConnectPanel({
                 disabled={disconnecting}
               >
                 {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-                Disconnect
-              </Button>
+                {"Отключить "}</Button>
               <Button asChild size="sm" variant="outline">
                 <Link href="/settings/integrations/outlook">
-                  Manage calendar
-                  <ArrowUpRightIcon className="size-3.5" />
+                  {"Управление календарем "}<ArrowUpRightIcon className="size-3.5" />
                 </Link>
               </Button>
             </div>

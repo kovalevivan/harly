@@ -53,7 +53,7 @@ export function JobOverviewBody({ job }: { job: JobLike }) {
   return (
     <article className="space-y-10 text-base leading-7 text-zinc-600 dark:text-zinc-300">
       <section>
-        <Heading>About this role</Heading>
+        <Heading>{"Об этой роли"}</Heading>
         <JobContent content={job.description} />
       </section>
 
@@ -68,13 +68,13 @@ export function JobOverviewBody({ job }: { job: JobLike }) {
         <>
           {job.requirements ? (
             <section>
-              <Heading>Requirements</Heading>
+              <Heading>{"Требования"}</Heading>
               <JobContent content={job.requirements} />
             </section>
           ) : null}
           {job.benefits ? (
             <section>
-              <Heading>Benefits</Heading>
+              <Heading>{"Преимущества"}</Heading>
               <JobContent content={job.benefits} />
             </section>
           ) : null}
@@ -83,14 +83,14 @@ export function JobOverviewBody({ job }: { job: JobLike }) {
 
       {mapSrc || officePhotos.length > 0 ? (
         <section>
-          <Heading>Office</Heading>
+          <Heading>{"Офис"}</Heading>
           {job.officeAddress ? (
             <p className="mt-2 text-zinc-600 dark:text-zinc-400">{job.officeAddress}</p>
           ) : null}
           {mapSrc ? (
             <ThirdPartyEmbed
               src={mapSrc}
-              title="Office location"
+              title={"Расположение офиса"}
               className="mt-3 h-64 w-full rounded-lg border border-zinc-200 dark:border-zinc-800"
             />
           ) : null}
@@ -101,7 +101,7 @@ export function JobOverviewBody({ job }: { job: JobLike }) {
                 <img
                   key={url}
                   src={url}
-                  alt="Office"
+                  alt={"Офис"}
                   className="aspect-video w-full rounded-lg border border-zinc-200 object-cover dark:border-zinc-800"
                 />
               ))}

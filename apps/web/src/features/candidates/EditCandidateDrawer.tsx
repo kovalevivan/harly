@@ -50,15 +50,14 @@ export function EditCandidateDrawer({
       open={open}
       onOpenChange={setOpen}
       trigger={trigger}
-      title="Edit candidate"
-      description="Name, email, phone, and social links."
+      title={"Изменить кандидата"}
+      description={"Имя, адрес электронной почты, телефон и ссылки на социальные сети."}
       footer={
         <>
           <Button variant="outline" disabled={isPending} onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
+            {"Отмена "}</Button>
           <Button type="submit" form="edit-candidate-form" disabled={isPending}>
-            {isPending ? "Saving…" : "Save"}
+            {isPending ? "Сохранение…" : "Сохранить"}
           </Button>
         </>
       }
@@ -86,10 +85,10 @@ export function EditCandidateDrawer({
                 }),
               );
               if (!result.success) {
-                toast.error(result.error ?? "Unable to update candidate.");
+                toast.error(result.error ?? "Невозможно обновить кандидата.");
                 return;
               }
-              toast.success("Candidate updated");
+              toast.success("Кандидат обновлен");
               setOpen(false);
               router.refresh();
             });
@@ -101,21 +100,21 @@ export function EditCandidateDrawer({
               value={avatarUrl || null}
               onChange={(url) => setAvatarUrl(url ?? "")}
               variant="avatar"
-              hint="Photo · optional"
+              hint={"Фото · по желанию"}
             />
             <div className="grid flex-1 grid-cols-2 gap-3">
-              <Field name="firstName" label="First name" defaultValue={candidate.firstName} />
-              <Field name="lastName" label="Last name" defaultValue={candidate.lastName} />
+              <Field name="firstName" label={"Имя"} defaultValue={candidate.firstName} />
+              <Field name="lastName" label={"Фамилия"} defaultValue={candidate.lastName} />
             </div>
           </div>
-          <Field name="email" label="Email" type="email" defaultValue={candidate.email} />
-          <Field name="headline" label="Headline" defaultValue={candidate.headline ?? ""} />
+          <Field name="email" label={"Электронная почта"} type="email" defaultValue={candidate.email} />
+          <Field name="headline" label={"Заголовок"} defaultValue={candidate.headline ?? ""} />
           <div className="grid grid-cols-2 gap-3">
-            <Field name="phone" label="Phone" defaultValue={candidate.phone ?? ""} />
-            <Field name="address" label="Address" defaultValue={candidate.address ?? candidate.location ?? ""} />
+            <Field name="phone" label={"Телефон"} defaultValue={candidate.phone ?? ""} />
+            <Field name="address" label={"Адрес"} defaultValue={candidate.address ?? candidate.location ?? ""} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="edit-summary">Profile summary</Label>
+            <Label htmlFor="edit-summary">{"Сводка профиля"}</Label>
             <Textarea
               id="edit-summary"
               name="summary"
@@ -125,7 +124,7 @@ export function EditCandidateDrawer({
           </div>
           <Field name="linkedinUrl" label="LinkedIn" type="url" defaultValue={candidate.linkedinUrl ?? ""} placeholder="https://linkedin.com/in/…" icon={<LinkedinLogo className="size-3.5" />} />
           <Field name="githubUrl" label="GitHub" type="url" defaultValue={candidate.githubUrl ?? ""} placeholder="https://github.com/…" icon={<GithubIcon className="size-3.5" />} />
-          <Field name="websiteUrl" label="Website" type="url" defaultValue={candidate.websiteUrl ?? ""} placeholder="https://yoursite.com" icon={<Globe className="size-3.5" />} />
+          <Field name="websiteUrl" label={"Веб-сайт"} type="url" defaultValue={candidate.websiteUrl ?? ""} placeholder="https://yoursite.com" icon={<Globe className="size-3.5" />} />
       </form>
     </SidePanel>
   );

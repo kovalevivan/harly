@@ -6,14 +6,12 @@ export function ReferralBadge({ featured }: { featured: boolean }) {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700">
         <Star className="size-3 fill-current" />
-        Featured referral
-      </span>
+        {"Рекомендуемый реферал "}</span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-accent px-1.5 py-0.5 text-[11px] font-semibold text-accent-foreground">
       <Users className="size-3" />
-      Referred
-    </span>
+      {"Направленный "}</span>
   );
 }

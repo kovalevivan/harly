@@ -38,13 +38,13 @@ export function CandidatePager({
         className="size-8 p-0 disabled:opacity-30"
         disabled={!prevId}
         onClick={() => go(prevId)}
-        title="Previous candidate"
+        title={"Предыдущий кандидат"}
       >
         <ChevronLeft className="size-4" />
-        <span className="sr-only">Previous candidate</span>
+        <span className="sr-only">{"Предыдущий кандидат"}</span>
       </Button>
       <span className="tabular-nums">
-        Candidate {position} of {total}
+        {"Кандидат "}{position} {"из "}{total}
       </span>
       <Button
         size="sm"
@@ -52,10 +52,10 @@ export function CandidatePager({
         className="size-8 p-0 disabled:opacity-30"
         disabled={!nextId}
         onClick={() => go(nextId)}
-        title="Next candidate"
+        title={"Следующий кандидат"}
       >
         <ChevronRight className="size-4" />
-        <span className="sr-only">Next candidate</span>
+        <span className="sr-only">{"Следующий кандидат"}</span>
       </Button>
     </div>
   );

@@ -98,7 +98,7 @@ export function UserMenu({
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center rounded-full ring-offset-background transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        aria-label="Account menu"
+        aria-label={"Меню учётной записи"}
         aria-expanded={open}
       >
         <UserAvatar name={user.name} src={user.image} size="md" priority />
@@ -148,8 +148,7 @@ export function UserMenu({
 
                   <div className="px-3 py-3">
                     <p className="mb-2 px-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-                      Workspace
-                    </p>
+                      {"Рабочая область "}</p>
                     <div className="space-y-0.5">
                       {workspaceOptions.map((ws) => (
                     <button
@@ -196,8 +195,7 @@ export function UserMenu({
                       className="size-4 text-muted-foreground"
                       strokeWidth={1.5}
                     />
-                    View profile
-                  </Link>
+                    {"Посмотреть профиль "}</Link>
                 )}
                 <Link
                   href={"/account" as Route}
@@ -208,8 +206,7 @@ export function UserMenu({
                     className="size-4 text-muted-foreground"
                     strokeWidth={1.5}
                   />
-                  Account settings
-                </Link>
+                  {"Настройки аккаунта "}</Link>
                 <Link
                   href="/settings"
                   onClick={() => setOpen(false)}
@@ -219,8 +216,7 @@ export function UserMenu({
                     className="size-4 text-muted-foreground"
                     strokeWidth={1.5}
                   />
-                  Organization settings
-                </Link>
+                  {"Настройки организации "}</Link>
               </div>
 
               <div className="h-px bg-border" />
@@ -235,7 +231,7 @@ export function UserMenu({
                   className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-foreground"
                 >
                   <GithubIcon className="size-4 text-muted-foreground" />
-                  <span className="flex-1">Star on GitHub</span>
+                  <span className="flex-1">{"Звезда на GitHub"}</span>
                   {VERSION ? (
                     <Badge
                       variant="secondary"
@@ -259,7 +255,7 @@ export function UserMenu({
                   className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
                 >
                   <LogOut className="size-4" strokeWidth={1.5} />
-                  {isPending ? "Signing out…" : "Sign out"}
+                  {isPending ? "Выход из системы…" : "Выйти"}
                 </button>
               </div>
             </div>

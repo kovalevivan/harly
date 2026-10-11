@@ -34,9 +34,9 @@ export function GreetingHeader({
 }
 
 function greeting(hour: number) {
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return "Доброе утро";
+  if (hour < 18) return "Добрый день";
+  return "Добрый вечер";
 }
 
 /**
@@ -56,18 +56,18 @@ export function buildSubline({
 
   if (waiting > 0) {
     parts.push(
-      `${waiting} ${waiting === 1 ? "candidate" : "candidates"} in play`,
+      `Кандидатов в работе: ${waiting}`,
     );
   }
   if (overdue > 0) {
-    parts.push(`${overdue} waiting over a week`);
+    parts.push(`Ожидают больше недели: ${overdue}`);
   }
   if (interviewsToday > 0) {
     parts.push(
-      `${interviewsToday} ${interviewsToday === 1 ? "interview" : "interviews"} today`,
+      `Собеседований сегодня: ${interviewsToday}`,
     );
   }
 
-  if (parts.length === 0) return "Nothing needs a decision right now.";
+  if (parts.length === 0) return "Сейчас нет задач, требующих решения.";
   return `${parts.join(" · ")}.`;
 }

@@ -34,14 +34,14 @@ export function JobIdentity({
         </span>
         <span className="mt-0.5 flex items-center gap-1 truncate text-xs text-muted-foreground">
           {deletedAt ? (
-            <>Deleted {formatRelative(deletedAt)}</>
+            <>{"Удалено "}{formatRelative(deletedAt)}</>
           ) : location ? (
             <>
               <MapPin className="size-3 shrink-0" />
               {[department, location].filter(Boolean).join(" · ")}
             </>
           ) : (
-            (department ?? "No location set")
+            (department ?? "Местоположение не установлено")
           )}
         </span>
       </span>

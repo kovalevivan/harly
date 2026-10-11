@@ -31,7 +31,7 @@ export function InterviewerSelect({
   onChange,
   members,
   currentUserId,
-  label = "Interviewer",
+  label = "Интервьюер",
 }: {
   value: string;
   onChange: (userId: string) => void;
@@ -79,16 +79,16 @@ export function InterviewerSelect({
                 </span>
               </span>
             ) : (
-              <span className="text-muted-foreground">Unassigned</span>
+              <span className="text-muted-foreground">{"Неназначенный"}</span>
             )}
             <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
           <Command>
-            <CommandInput placeholder="Search people..." />
+            <CommandInput placeholder={"Поиск людей..."} />
             <CommandList>
-              <CommandEmpty>No results.</CommandEmpty>
+              <CommandEmpty>{"Никаких результатов."}</CommandEmpty>
               <CommandGroup>
                 <CommandItem
                   value="unassigned"
@@ -99,7 +99,7 @@ export function InterviewerSelect({
                   className="flex items-center gap-2"
                 >
                   <User className="size-5 text-muted-foreground" />
-                  <span className="flex-1">Unassigned</span>
+                  <span className="flex-1">{"Неназначенный"}</span>
                   <Check
                     className={cn(
                       "size-4",

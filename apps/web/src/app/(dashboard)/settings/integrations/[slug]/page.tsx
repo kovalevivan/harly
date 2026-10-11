@@ -81,7 +81,7 @@ const DETAIL_LOGOS: Record<IntegrationSlug, Logo> = {
   gmail: svgBrand("gmail", "Gmail"),
   linkedin: svgBrand("linkedin", "LinkedIn"),
   zapier: svgBrand("zapier", "Zapier"),
-  webhooks: svgBrand("zapier", "Webhooks"),
+  webhooks: svgBrand("zapier", "Вебхуки"),
   "harly-sign": SealCheckDuotoneIcon,
   docuseal: DocuSealLogo,
   turnstile: CloudflareLogo,
@@ -99,7 +99,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const integration = getIntegration(slug);
   if (!integration) return {};
-  return { title: `${integration.name} · Integrations` };
+  return { title: `${integration.name} · Интеграции` };
 }
 
 export default async function IntegrationDetailPage({
@@ -142,13 +142,11 @@ export default async function IntegrationDetailPage({
         className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
         <CaretLeftIcon className="size-4" />
-        Integrations
-      </Link>
+        {"Интеграции "}</Link>
 
       {demoLocked ? (
         <DemoLockedNotice>
-          Integration credentials and outbound chat webhooks are locked in the demo.
-        </DemoLockedNotice>
+          {"Учетные данные интеграции и веб-перехватчики исходящего чата заблокированы в демо-версии. "}</DemoLockedNotice>
       ) : null}
 
       {panel ?? <ComingSoon integration={integration} />}
@@ -179,10 +177,9 @@ function ComingSoon({ integration }: { integration: IntegrationDefinition }) {
         </div>
       </div>
       <div className="rounded-2xl border border-dashed border-border/70 bg-muted/20 px-6 py-10 text-center">
-        <p className="text-sm font-medium text-foreground">Coming soon</p>
+        <p className="text-sm font-medium text-foreground">{"Скоро"}</p>
         <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
-          This integration is on the way. Check back shortly.
-        </p>
+          {"Эта интеграция уже в пути. Повторите попытку позже. "}</p>
       </div>
     </>
   );

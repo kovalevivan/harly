@@ -24,16 +24,14 @@ export function UnsavedChangesDialog({
     <AlertDialog open={open} onOpenChange={(next) => !next && onCancel()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Unsaved changes</AlertDialogTitle>
+          <AlertDialogTitle>{"Несохраненные изменения"}</AlertDialogTitle>
           <AlertDialogDescription>
-            You have unsaved changes. Leave without saving?
-          </AlertDialogDescription>
+            {"У вас есть несохраненные изменения. Уйти без сохранения? "}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Keep editing</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel}>{"Продолжайте редактировать"}</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={onConfirm}>
-            Leave without saving
-          </AlertDialogAction>
+            {"Уйти без сохранения "}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

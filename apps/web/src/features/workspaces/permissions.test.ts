@@ -180,7 +180,7 @@ describe("workspace roles", () => {
   });
 
   it("formats raw role keys for display", () => {
-    expect(roleLabel("hiring_manager")).toBe("Hiring Manager");
+    expect(roleLabel("hiring_manager")).toBe("Руководитель найма");
     expect(roleLabel("custom-sourcer")).toBe("Custom Sourcer");
   });
 });

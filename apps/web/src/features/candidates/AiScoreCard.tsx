@@ -36,10 +36,16 @@ const PROVIDER_LOGO: Record<
 };
 
 const RECOMMENDATION_META = {
-  strong_yes: { label: "Strong yes", className: "bg-primary/10 text-primary" },
-  yes: { label: "Yes", className: "bg-primary/10 text-primary" },
-  maybe: { label: "Maybe", className: "bg-clay/15 text-clay" },
-  no: { label: "No", className: "bg-destructive/10 text-destructive" },
+  strong_yes: {
+    label: "Выраженное соответствие",
+    className: "bg-primary/10 text-primary",
+  },
+  yes: { label: "Соответствует", className: "bg-primary/10 text-primary" },
+  maybe: { label: "Требует уточнения", className: "bg-clay/15 text-clay" },
+  no: {
+    label: "Есть несоответствия",
+    className: "bg-destructive/10 text-destructive",
+  },
 } as const;
 
 function scoreTone(score: number | null | undefined) {
@@ -56,20 +62,38 @@ function formatCriterionScore(score: number | null | undefined): string {
 }
 
 const CRITERION_STATUS_META = {
-  met: { label: "Met", className: "bg-primary/10 text-primary" },
-  partially_met: { label: "Partially met", className: "bg-clay/15 text-clay" },
-  not_met: { label: "Not met", className: "bg-destructive/10 text-destructive" },
-  not_demonstrated: { label: "Not demonstrated", className: "bg-muted text-muted-foreground" },
-  unknown: { label: "Unknown", className: "bg-muted text-muted-foreground" },
+  met: { label: "Соответствует", className: "bg-primary/10 text-primary" },
+  partially_met: {
+    label: "Частично соответствует",
+    className: "bg-clay/15 text-clay",
+  },
+  not_met: {
+    label: "Не соответствует",
+    className: "bg-destructive/10 text-destructive",
+  },
+  not_demonstrated: {
+    label: "Не продемонстрировано",
+    className: "bg-muted text-muted-foreground",
+  },
+  unknown: { label: "Неизвестно", className: "bg-muted text-muted-foreground" },
 } as const;
 
-function ScoreRing({ score, compact = false }: { score: number; compact?: boolean }) {
+function ScoreRing({
+  score,
+  compact = false,
+}: {
+  score: number;
+  compact?: boolean;
+}) {
   const radius = compact ? 19 : 26;
   const circumference = 2 * Math.PI * radius;
   const box = compact ? 48 : 64;
   return (
     <div className={cn("relative shrink-0", compact ? "size-12" : "size-16")}>
-      <svg viewBox={`0 0 ${box} ${box}`} className={cn("-rotate-90", compact ? "size-12" : "size-16")}>
+      <svg
+        viewBox={`0 0 ${box} ${box}`}
+        className={cn("-rotate-90", compact ? "size-12" : "size-16")}
+      >
         <circle
           cx={box / 2}
           cy={box / 2}
@@ -87,7 +111,11 @@ function ScoreRing({ score, compact = false }: { score: number; compact?: boolea
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={circumference * (1 - score / 100)}
-          className={cn("transition-[stroke-dashoffset] duration-700", scoreTone(score), "stroke-current")}
+          className={cn(
+            "transition-[stroke-dashoffset] duration-700",
+            scoreTone(score),
+            "stroke-current",
+          )}
         />
       </svg>
       <span
@@ -124,7 +152,9 @@ function GenerateButton({
         toast.error(result.error);
         return;
       }
-      toast.success(aiConfigured ? "AI evaluation ready" : "Automatic evaluation ready");
+      toast.success(
+        aiConfigured ? "Оценка ИИ готова" : "Автоматическая оценка готова",
+      );
       (router as { refresh?: () => void }).refresh?.();
     });
   }
@@ -135,9 +165,13 @@ function GenerateButton({
       variant={hasEvaluation ? "ghost" : "default"}
       onClick={run}
       loading={isPending}
-      loadingText="Scoring"
+      loadingText={"Рассчитываем оценку…"}
     >
-      {hasEvaluation ? "Regenerate" : aiConfigured ? "Score with AI" : "Evaluate automatically"}
+      {hasEvaluation
+        ? "Повторить оценку"
+        : aiConfigured
+          ? "Оценить с помощью ИИ"
+          : "Рассчитать оценку"}
     </AiButton>
   );
 }
@@ -185,10 +219,15 @@ export function AiScoreCard({
                       <HarlyAILogoMark className="size-4" />
                     </span>
                     <p className="truncate text-sm text-muted-foreground">
-                      No automatic evaluation yet for {application.jobTitle}.
+                      По вакансии «{application.jobTitle}» оценка ещё не
+                      выполнена.
                     </p>
                   </div>
-                  <GenerateButton applicationId={application.id} hasEvaluation={false} aiConfigured={aiConfigured} />
+                  <GenerateButton
+                    applicationId={application.id}
+                    hasEvaluation={false}
+                    aiConfigured={aiConfigured}
+                  />
                 </CardContent>
               </Card>
             );
@@ -203,15 +242,25 @@ export function AiScoreCard({
                 <ScoreRing score={evaluation.score} compact />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate text-sm font-semibold">{application.jobTitle}</p>
-                    <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", meta.className)}>
+                    <p className="truncate text-sm font-semibold">
+                      {application.jobTitle}
+                    </p>
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-xs font-semibold",
+                        meta.className,
+                      )}
+                    >
                       {meta.label}
                     </span>
                   </div>
                   {highlights.length > 0 ? (
                     <ul className="mt-1 space-y-0.5">
                       {highlights.map((item) => (
-                        <li key={item} className="flex gap-1.5 text-xs text-muted-foreground">
+                        <li
+                          key={item}
+                          className="flex gap-1.5 text-xs text-muted-foreground"
+                        >
                           <span className="mt-1.5 size-1 shrink-0 rounded-full bg-current opacity-60" />
                           <span className="line-clamp-1">{item}</span>
                         </li>
@@ -226,7 +275,7 @@ export function AiScoreCard({
                     className="shrink-0 text-muted-foreground"
                     onClick={onViewDetailsAction}
                   >
-                    View details
+                    {"Посмотреть детали "}
                   </Button>
                 ) : null}
               </CardContent>
@@ -251,9 +300,11 @@ export function AiScoreCard({
                     <HarlyAILogoMark className="size-4.5" />
                   </span>
                   <div>
-                    <p className="text-sm font-medium">{application.jobTitle}</p>
+                    <p className="text-sm font-medium">
+                      {application.jobTitle}
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      No automatic evaluation yet for this application.
+                      {"Для этого отклика пока нет автоматической оценки. "}
                     </p>
                   </div>
                 </div>
@@ -292,7 +343,11 @@ export function AiScoreCard({
                     </p>
                   </div>
                 </div>
-                    <GenerateButton applicationId={application.id} hasEvaluation aiConfigured={aiConfigured} />
+                <GenerateButton
+                  applicationId={application.id}
+                  hasEvaluation
+                  aiConfigured={aiConfigured}
+                />
               </div>
 
               {evaluation.criteria.length > 0 ? (
@@ -300,16 +355,26 @@ export function AiScoreCard({
                   {evaluation.criteria.map((criterion) => (
                     <div key={criterion.label}>
                       <div className="flex items-baseline justify-between gap-2">
-                        <p className="text-[13px] font-medium">{criterion.label}</p>
+                        <p className="text-[13px] font-medium">
+                          {criterion.label}
+                        </p>
                         <span className="flex items-center gap-2">
                           {criterion.status ? (
-                            <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold", CRITERION_STATUS_META[criterion.status].className)}>
+                            <span
+                              className={cn(
+                                "rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                                CRITERION_STATUS_META[criterion.status]
+                                  .className,
+                              )}
+                            >
                               {CRITERION_STATUS_META[criterion.status].label}
                             </span>
                           ) : null}
                           {criterion.matchMethod === "semantic_assist" ? (
                             <span className="rounded-full bg-clay/15 px-2 py-0.5 text-[11px] font-semibold text-clay">
-                              Semantically related · Review recommended
+                              {
+                                "Семантически связан · Рекомендуется просмотреть "
+                              }
                             </span>
                           ) : null}
                           <span
@@ -329,7 +394,9 @@ export function AiScoreCard({
                             scoreTone(criterion.score),
                             criterion.score == null && "opacity-40",
                           )}
-                          style={{ width: `${criterion.score == null ? 0 : criterion.score}%` }}
+                          style={{
+                            width: `${criterion.score == null ? 0 : criterion.score}%`,
+                          }}
                         />
                       </div>
                       {criterion.evidence ? (
@@ -345,7 +412,7 @@ export function AiScoreCard({
               {evaluation.impactHighlights.length > 0 ? (
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Quantified evidence
+                    {"Количественные доказательства "}
                   </p>
                   <ul className="mt-2 space-y-1.5">
                     {evaluation.impactHighlights.map((item) => (
@@ -354,7 +421,9 @@ export function AiScoreCard({
                         <span>
                           {item.text}{" "}
                           <span className="text-xs tabular-nums text-muted-foreground">
-                            {item.metrics.map((metric) => metric.rawText).join(" · ")}
+                            {item.metrics
+                              .map((metric) => metric.rawText)
+                              .join(" · ")}
                           </span>
                         </span>
                       </li>
@@ -363,11 +432,12 @@ export function AiScoreCard({
                 </div>
               ) : null}
 
-              {evaluation.strengths.length > 0 || evaluation.gaps.length > 0 ? (                <div className="grid gap-4 sm:grid-cols-2">
+              {evaluation.strengths.length > 0 || evaluation.gaps.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
                   {evaluation.strengths.length > 0 ? (
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                        Strengths
+                        {"Сильные стороны "}
                       </p>
                       <ul className="mt-2 space-y-1.5">
                         {evaluation.strengths.map((item) => (
@@ -382,7 +452,7 @@ export function AiScoreCard({
                   {evaluation.gaps.length > 0 ? (
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-clay">
-                        Gaps
+                        {"Пробелы "}
                       </p>
                       <ul className="mt-2 space-y-1.5">
                         {evaluation.gaps.map((item) => (
@@ -400,35 +470,40 @@ export function AiScoreCard({
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-3 text-xs text-muted-foreground">
                 <Badge variant="outline" className="gap-1.5 font-normal">
                   {(() => {
-                    const Logo = PROVIDER_LOGO[evaluation.provider as AiProviderId];
+                    const Logo =
+                      PROVIDER_LOGO[evaluation.provider as AiProviderId];
                     return Logo ? <Logo className="size-3.5" /> : null;
                   })()}
                   {evaluation.source === "rules"
-                    ? `Harly Algorithm · ${evaluation.modelId || "rules-v4"}`
+                    ? `Алгоритм Харли · ${evaluation.modelId || "rules-v4"}`
                     : formatModelLabel(evaluation.modelId)}
                 </Badge>
                 <span className="inline-flex items-center gap-1">
                   <FileText className="size-3.5" />
                   {evaluation.usedResume
-                    ? "Based on resume + profile"
-                    : "Profile only. No readable resume"}
+                    ? "На основании резюме + профиля"
+                    : "Только профиль. Нет читабельного резюме"}
                 </span>
                 <span>
-                  Updated <RelativeTime value={evaluation.updatedAt} />
+                  {"Обновлено "}
+                  <RelativeTime value={evaluation.updatedAt} />
                 </span>
                 {evaluation.evidenceCoverage != null ? (
-                  <span>Evidence {evaluation.evidenceCoverage}%</span>
+                  <span>
+                    {"Доказательства "}
+                    {evaluation.evidenceCoverage}%
+                  </span>
                 ) : null}
                 {evaluation.requiresHumanReview ? (
                   <Badge variant="outline" className="font-normal text-clay">
-                    Human review required
+                    {"Требуется человеческая проверка "}
                   </Badge>
                 ) : null}
               </div>
               <p className="text-xs leading-5 text-muted-foreground">
                 {evaluation.source === "rules"
-                  ? "Deterministic evaluation based on structured resume parsing, rule criteria, and verified evidence. Review missing information and apply human discretion."
-                  : "AI guidance only — review the evidence and make the hiring decision yourself. Do not use this score as the sole basis for a decision."}
+                  ? "Детерминированная оценка, основанная на структурированном анализе резюме, критериях правил и проверенных доказательствах. Просмотрите недостающую информацию и примените человеческое усмотрение."
+                  : "Только рекомендации ИИ — просмотрите доказательства и примите решение о найме самостоятельно. Не используйте этот балл как единственное основание для принятия решения."}
               </p>
             </CardContent>
           </Card>

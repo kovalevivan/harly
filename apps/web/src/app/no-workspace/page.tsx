@@ -32,8 +32,7 @@ export default async function NoWorkspacePage() {
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-8 py-6">
         <Link href="/" className="font-display text-lg tracking-tight text-pine">
-          Harly
-        </Link>
+          {"Харли "}</Link>
         <OnboardingSignOut />
       </header>
 
@@ -44,19 +43,17 @@ export default async function NoWorkspacePage() {
           </div>
 
           <h1 className="font-display text-3xl tracking-tight text-foreground">
-            You need an invitation
-          </h1>
+            {"Вам нужно приглашение "}</h1>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            This Harly workspace is already set up. Ask an admin to invite{" "}
+            {"Это рабочее пространство Harly уже настроено. Попросите администратора пригласить"}{" "}
             <span className="font-medium text-foreground">
               {session.user.email}
             </span>{" "}
-            , your invite link drops you straight into the right role.
-          </p>
+            {", ваша ссылка-приглашение приведет вас прямо к нужной роли. "}</p>
 
           <div className="mt-10 rounded-lg bg-muted px-4 py-3">
             <p className="text-xs text-muted-foreground">
-              Signed in as{" "}
+              {"Вошёл как"}{" "}
               <span className="font-medium text-foreground">
                 {session.user.email}
               </span>

@@ -57,16 +57,14 @@ export function LegalPageView({
             href={careersHref as Route}
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            ← Careers
-          </a>
+            {"← Карьера "}</a>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-12">
         <div className="mb-10">
           <span className="inline-block rounded-full bg-sage/40 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-pine">
-            Legal
-          </span>
+            {"Юридический "}</span>
           <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             {data.pageTitle}
           </h1>
@@ -93,8 +91,7 @@ export function LegalPageView({
         {otherPages.length > 0 && (
           <div className="mt-10 border-t border-hairline pt-8">
             <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Other legal pages
-            </p>
+              {"Другие юридические страницы "}</p>
             <div className="flex flex-wrap gap-2">
               {otherPages.map((slug) => (
                 <a
@@ -122,8 +119,7 @@ export function LegalPageView({
               href={careersHref as Route}
               className="transition hover:text-foreground"
             >
-              Careers
-            </a>
+              {"Карьера "}</a>
             <CookiePreferencesButton className="hover:text-foreground" />
             {data.websiteUrl && (
               <a
@@ -132,20 +128,18 @@ export function LegalPageView({
                 rel="noopener noreferrer"
                 className="transition hover:text-foreground"
               >
-                Website
-              </a>
+                {"Веб-сайт "}</a>
             )}
             <span className="text-hairline">·</span>
             <span>
-              Powered by{" "}
+              {"При поддержке"}{" "}
               <a
                 href="https://github.com/Vytral/harly"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-foreground transition hover:text-pine"
               >
-                Harly
-              </a>
+                {"Харли "}</a>
             </span>
           </div>
         </div>

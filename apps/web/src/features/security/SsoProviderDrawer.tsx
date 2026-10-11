@@ -82,27 +82,27 @@ export function SsoProviderDrawer({
     startSave(async () => {
       // Validate common fields
       if (!providerId.trim()) {
-        toast.error("Provider ID is required.");
+        toast.error("Требуется идентификатор поставщика.");
         return;
       }
       if (providerType === "oidc" && !issuer.trim()) {
-        toast.error("Issuer URL is required.");
+        toast.error("Укажите URL-адрес эмитента.");
         return;
       }
       if (!domain.trim()) {
-        toast.error("Domain is required.");
+        toast.error("Требуется домен.");
         return;
       }
 
       // Validate based on type
       if (providerType === "oidc") {
         if (!isEditing && (!oidcClientId.trim() || !oidcClientSecret.trim())) {
-          toast.error("Client ID and Client Secret are required for OIDC.");
+          toast.error("Идентификатор клиента и секрет клиента необходимы для OIDC.");
           return;
         }
       } else {
         if (!isEditing && !samlMetadata.trim() && (!samlEntryPoint.trim() || !samlCert.trim())) {
-          toast.error("Provide IdP metadata XML, or both Entry Point and Certificate.");
+          toast.error("Предоставьте XML метаданных IdP или точку входа и сертификат.");
           return;
         }
       }
@@ -137,11 +137,11 @@ export function SsoProviderDrawer({
         : await registerSSOProviderAction(input);
 
       if (!result.ok) {
-        toast.error(result.error ?? "Failed to register SSO provider.");
+        toast.error(result.error ?? "Не удалось зарегистрировать поставщика единого входа.");
         return;
       }
 
-      toast.success(isEditing ? "SSO provider updated successfully." : "SSO provider registered successfully.");
+      toast.success(isEditing ? "Поставщик единого входа успешно обновлен." : "Поставщик единого входа успешно зарегистрирован.");
       handleOpenChange(false);
       router.refresh();
     });
@@ -152,11 +152,11 @@ export function SsoProviderDrawer({
     startRequestVerification(async () => {
       const result = await requestSSODomainVerificationAction(existingProvider.providerId);
       if (!result.ok) {
-        toast.error(result.error ?? "Failed to request domain verification.");
+        toast.error(result.error ?? "Не удалось запросить подтверждение домена.");
         return;
       }
       setVerificationToken(result.token ?? "");
-      toast.success("DNS verification record generated.");
+      toast.success("Создана проверочная запись DNS.");
     });
   }
 
@@ -165,10 +165,10 @@ export function SsoProviderDrawer({
     startVerify(async () => {
       const result = await verifySSODomainAction(existingProvider.providerId);
       if (!result.ok) {
-        toast.error(result.error ?? "Domain verification failed.");
+        toast.error(result.error ?? "Проверка домена не удалась.");
         return;
       }
-      toast.success("SSO domain verified.");
+      toast.success("Домен SSO подтвержден.");
       handleOpenChange(false);
       router.refresh();
     });
@@ -179,10 +179,10 @@ export function SsoProviderDrawer({
     startDelete(async () => {
       const result = await deleteSSOProviderAction(existingProvider.providerId);
       if (!result.ok) {
-        toast.error(result.error ?? "Failed to delete.");
+        toast.error(result.error ?? "Не удалось удалить.");
         return;
       }
-      toast.success("SSO provider removed.");
+      toast.success("Поставщик системы единого входа удален.");
       handleOpenChange(false);
       router.refresh();
     });
@@ -193,18 +193,16 @@ export function SsoProviderDrawer({
       <SheetTrigger asChild>
         {isEditing ? (
           <Button variant="outline" size="sm">
-            Configure
-          </Button>
+            {"Настроить "}</Button>
         ) : (
           <Button variant="outline" size="sm">
             <Plus className="size-4 mr-1" />
-            Add Provider
-          </Button>
+            {"Добавить поставщика "}</Button>
         )}
       </SheetTrigger>
       <DrawerLayout
-        title={isEditing ? "Configure SSO Provider" : "Add Enterprise SSO Provider"}
-        description="Set up SAML 2.0 or OpenID Connect (OIDC) for enterprise single sign-on."
+        title={isEditing ? "Настройка поставщика единого входа" : "Добавить поставщика корпоративного единого входа"}
+        description={"Настройте SAML 2.0 или OpenID Connect (OIDC) для корпоративного единого входа."}
         className="sm:max-w-2xl"
         footer={
           isEditing ? (
@@ -216,21 +214,17 @@ export function SsoProviderDrawer({
                 onClick={remove}
               >
                 {deleting ? <SpinnerIcon className="size-4" /> : <Trash2 className="size-4" />}
-                Remove
-              </Button>
+                {"Удалить "}</Button>
               <Button variant="outline" disabled={saving} onClick={() => handleOpenChange(false)}>
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
               <Button onClick={save} disabled={saving || !providerId.trim() || !domain.trim()}>
                 {saving ? <SpinnerIcon className="size-4" /> : null}
-                Save
-              </Button>
+                {"Сохранить "}</Button>
             </>
           ) : (
             <>
               <Button variant="outline" disabled={saving} onClick={() => handleOpenChange(false)}>
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
               <Button
                 onClick={save}
                 disabled={
@@ -243,8 +237,7 @@ export function SsoProviderDrawer({
                 }
               >
                 {saving ? <SpinnerIcon className="size-4" /> : null}
-                Register Provider
-              </Button>
+                {"Регистрация провайдера "}</Button>
             </>
           )
         }
@@ -260,77 +253,73 @@ export function SsoProviderDrawer({
 
           {/* Provider ID */}
           <div className="space-y-2">
-            <Label htmlFor="sso-provider-id">Provider ID</Label>
+            <Label htmlFor="sso-provider-id">{"Идентификатор поставщика"}</Label>
             <Input
               id="sso-provider-id"
               value={providerId}
               onChange={(e) => setProviderId(e.target.value)}
-              placeholder="e.g. okta-prod, azure-ad"
+              placeholder={"например окта-прод, лазурь-объявление"}
               autoComplete="off"
             />
             <p className="text-xs text-muted-foreground">
-              Unique identifier for this provider (e.g., &quot;okta&quot;, &quot;azure-ad&quot;)
-            </p>
+              {"Уникальный идентификатор этого поставщика (например, «okta», «azure-ad»). "}</p>
           </div>
 
           {/* Issuer URL */}
           <div className="space-y-2">
-            <Label htmlFor="sso-issuer">Issuer URL</Label>
+            <Label htmlFor="sso-issuer">{"URL-адрес эмитента"}</Label>
             <Input
               id="sso-issuer"
               value={issuer}
               onChange={(e) => setIssuer(e.target.value)}
-              placeholder="e.g. https://your-org.okta.com"
+              placeholder={"например https://ваш-орг.okta.com"}
               autoComplete="off"
             />
             <p className="text-xs text-muted-foreground">
-              The issuer URL of your identity provider
-            </p>
+              {"URL-адрес эмитента вашего поставщика удостоверений. "}</p>
           </div>
 
           {/* Domain */}
           <div className="space-y-2">
-            <Label htmlFor="sso-domain">Email Domain</Label>
+            <Label htmlFor="sso-domain">{"Электронный домен"}</Label>
             <Input
               id="sso-domain"
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
-              placeholder="e.g. yourcompany.com"
+              placeholder={"например yourcompany.com"}
               autoComplete="off"
             />
             <p className="text-xs text-muted-foreground">
-              Users with this email domain will be redirected to this provider
-            </p>
+              {"Пользователи с этим доменом электронной почты будут перенаправлены к этому провайдеру. "}</p>
           </div>
 
           {/* OIDC Configuration */}
           {providerType === "oidc" && (
             <div className="space-y-4 rounded-lg border p-4">
-              <p className="text-sm font-medium">OIDC Configuration</p>
+              <p className="text-sm font-medium">{"Конфигурация ОИДК"}</p>
               <p className="text-xs text-muted-foreground">
-                Most fields are auto-discovered from the issuer&apos;s discovery document.
-              </p>
+                {"Большинство полей автоматически обнаруживаются из документа обнаружения эмитента. "}</p>
 
               <div className="space-y-2">
-                <Label htmlFor="oidc-client-id">Client ID</Label>
+                <Label htmlFor="oidc-client-id">{"Идентификатор клиента"}</Label>
                 <Input
                   id="oidc-client-id"
                   value={oidcClientId}
                   onChange={(e) => setOidcClientId(e.target.value)}
-                  placeholder="OAuth client ID from your IdP"
+                  placeholder={"Идентификатор клиента OAuth от вашего поставщика удостоверений"}
                   autoComplete="off"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="oidc-client-secret">Client Secret</Label>
+                <Label htmlFor="oidc-client-secret">{"Секрет клиента"}</Label>
                 <div className="relative">
                   <Input
                     id="oidc-client-secret"
                     type={showOidcSecret ? "text" : "password"}
                     value={oidcClientSecret}
                     onChange={(e) => setOidcClientSecret(e.target.value)}
-                    placeholder="OAuth client secret from your IdP"
+                    placeholder={"Секрет клиента OAuth от вашего IdP"}
                     autoComplete="off"
                   />
                   <button
@@ -348,28 +337,26 @@ export function SsoProviderDrawer({
           {/* SAML Configuration */}
           {providerType === "saml" && (
             <div className="space-y-4 rounded-lg border p-4">
-              <p className="text-sm font-medium">SAML 2.0 Configuration</p>
+              <p className="text-sm font-medium">{"Конфигурация SAML 2.0"}</p>
               <p className="text-xs text-muted-foreground">
-                Configure your Identity Provider (IdP) settings for SAML SSO.
-              </p>
+                {"Настройте параметры поставщика удостоверений (IdP) для единого входа SAML. "}</p>
 
               <div className="space-y-2">
-                <Label htmlFor="saml-metadata">IdP Metadata XML (Recommended)</Label>
+                <Label htmlFor="saml-metadata">{"XML метаданных IdP (рекомендуется)"}</Label>
                 <textarea
                   id="saml-metadata"
                   value={samlMetadata}
                   onChange={(e) => setSamlMetadata(e.target.value)}
-                  placeholder="Paste the EntityDescriptor XML from your identity provider"
+                  placeholder={"Вставьте XML-код EntityDescriptor из вашего поставщика удостоверений."}
                   className="w-full rounded-md border bg-transparent px-3 py-2 text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                   rows={7}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Harly derives the issuer, SSO URL, and signing certificate from this document.
-                </p>
+                  {"Harly извлекает из этого документа эмитента, URL-адрес единого входа и сертификат подписи. "}</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="saml-entry-point">Entry Point (SSO URL)</Label>
+                <Label htmlFor="saml-entry-point">{"Точка входа (URL единого входа)"}</Label>
                 <Input
                   id="saml-entry-point"
                   value={samlEntryPoint}
@@ -380,7 +367,7 @@ export function SsoProviderDrawer({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="saml-private-key">SP Private Key (Only if required by IdP)</Label>
+                <Label htmlFor="saml-private-key">{"Закрытый ключ SP (только если этого требует IdP)"}</Label>
                 <textarea
                   id="saml-private-key"
                   value={samlPrivateKey}
@@ -391,12 +378,11 @@ export function SsoProviderDrawer({
                   spellCheck={false}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Stored only in the SSO provider configuration. Required when metadata sets WantAuthnRequestsSigned.
-                </p>
+                  {"Хранится только в конфигурации поставщика единого входа. Требуется, если метаданные устанавливают WantAuthnRequestsSigned. "}</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="saml-cert">X.509 Certificate</Label>
+                <Label htmlFor="saml-cert">{"Сертификат Х.509"}</Label>
                 <div className="relative">
                   <textarea
                     id="saml-cert"
@@ -408,12 +394,11 @@ export function SsoProviderDrawer({
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  The public certificate from your IdP to verify SAML responses
-                </p>
+                  {"Публичный сертификат вашего поставщика удостоверений для проверки ответов SAML. "}</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="saml-audience">Audience (Optional)</Label>
+                <Label htmlFor="saml-audience">{"Аудитория (необязательно)"}</Label>
                 <Input
                   id="saml-audience"
                   value={samlAudience}
@@ -422,8 +407,7 @@ export function SsoProviderDrawer({
                   autoComplete="off"
                 />
                 <p className="text-xs text-muted-foreground">
-                  The SP Entity ID / Audience URI (defaults to your app URL)
-                </p>
+                  {"Идентификатор объекта SP/URI аудитории (по умолчанию URL-адрес вашего приложения) "}</p>
               </div>
             </div>
           )}
@@ -431,8 +415,7 @@ export function SsoProviderDrawer({
           {/* Callback URL hint */}
           <div className="rounded-lg bg-muted/50 px-3 py-2.5">
             <p className="text-xs font-medium text-muted-foreground">
-              ACS Callback URL (set this in your Identity Provider):
-            </p>
+              {"URL-адрес обратного вызова ACS (установите его в своем поставщике удостоверений): "}</p>
             <code className="mt-1 block break-all text-xs font-mono text-foreground">
               {typeof window !== "undefined" ? window.location.origin : ""}/api/auth/sso/saml2/sp/acs/{providerId || "<provider-id>"}
             </code>
@@ -441,26 +424,23 @@ export function SsoProviderDrawer({
           {isEditing && (
             <div className="space-y-3 rounded-lg border p-4">
               <div>
-                <p className="text-sm font-medium">Domain verification</p>
+                <p className="text-sm font-medium">{"Проверка домена"}</p>
                 <p className="text-xs text-muted-foreground">
-                  Publish the generated TXT record before allowing sign-in for this email domain.
-                </p>
+                  {"Опубликуйте созданную запись TXT, прежде чем разрешить вход в этот домен электронной почты. "}</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button variant="outline" size="sm" disabled={requestingVerification} onClick={requestDomainVerification}>
                   {requestingVerification ? <SpinnerIcon className="size-4" /> : null}
-                  Get DNS record
-                </Button>
+                  {"Получить DNS-запись "}</Button>
                 <Button size="sm" disabled={verifying} onClick={verifyDomain}>
                   {verifying ? <SpinnerIcon className="size-4" /> : null}
-                  Verify DNS
-                </Button>
+                  {"Проверьте DNS "}</Button>
               </div>
               {verificationToken && (
                 <div className="rounded-md bg-muted/50 p-3 text-xs">
-                  <p className="font-medium">TXT host</p>
+                  <p className="font-medium">{"ТХТ-хост"}</p>
                   <code className="break-all">_better-auth-token-{existingProvider?.providerId}</code>
-                  <p className="mt-2 font-medium">TXT value</p>
+                  <p className="mt-2 font-medium">{"Значение ТХТ"}</p>
                   <code className="break-all">{verificationToken}</code>
                 </div>
               )}
@@ -475,8 +455,7 @@ export function SsoProviderDrawer({
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <ExternalLink className="size-3" />
-            Read the SSO documentation
-          </a>
+            {"Прочтите документацию по системе единого входа. "}</a>
         </div>
       </DrawerLayout>
     </Sheet>

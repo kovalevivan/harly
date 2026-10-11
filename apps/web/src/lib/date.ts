@@ -1,15 +1,15 @@
-const shortFormatter = new Intl.DateTimeFormat("en", {
+const shortFormatter = new Intl.DateTimeFormat("ru-RU", {
   month: "short",
   day: "numeric",
 });
 
-const shortWithYearFormatter = new Intl.DateTimeFormat("en", {
+const shortWithYearFormatter = new Intl.DateTimeFormat("ru-RU", {
   month: "short",
   day: "numeric",
   year: "numeric",
 });
 
-const relativeFormatter = new Intl.RelativeTimeFormat("en", {
+const relativeFormatter = new Intl.RelativeTimeFormat("ru-RU", {
   numeric: "auto",
 });
 
@@ -75,7 +75,7 @@ export function daysSince(value: Date | string): number {
   return Math.max(0, Math.floor(diff / 86_400_000));
 }
 
-const timeFormatter = new Intl.DateTimeFormat("en", {
+const timeFormatter = new Intl.DateTimeFormat("ru-RU", {
   hour: "numeric",
   minute: "2-digit",
 });

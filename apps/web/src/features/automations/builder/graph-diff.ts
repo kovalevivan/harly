@@ -30,25 +30,25 @@ export function diffGraphSummaries(
   for (const item of local) {
     const other = serverById.get(item.id);
     if (!other) {
-      lines.push({ id: item.id, message: `Your copy has “${item.title}”; the server copy does not.` });
+      lines.push({ id: item.id, message: `В вашей копии есть «${item.title}»; серверная копия этого не делает.` });
       continue;
     }
     if (other.title !== item.title || other.type !== item.type) {
       lines.push({
         id: item.id,
-        message: `“${item.title}” on your copy is “${other.title}” on the server.`,
+        message: `«${item.title}» в вашей копии — это «${other.title}» на сервере.`,
       });
     }
   }
   for (const item of server) {
     if (!localById.has(item.id)) {
-      lines.push({ id: item.id, message: `The server copy has “${item.title}”; yours does not.` });
+      lines.push({ id: item.id, message: `Серверная копия имеет «${item.title}»; твой нет.` });
     }
   }
   if (lines.length === 0) {
     lines.push({
       id: "same",
-      message: "The steps look the same. Someone else may have saved layout or a field we do not list here.",
+      message: "Шаги выглядят одинаково. Возможно, кто-то другой сохранил макет или поле, которое мы здесь не указываем.",
     });
   }
   return lines;

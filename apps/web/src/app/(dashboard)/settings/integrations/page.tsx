@@ -67,7 +67,7 @@ const INTEGRATION_LOGOS: Record<IntegrationSlug, Logo> = {
   gmail: svgBrand("gmail", "Gmail"),
   linkedin: svgBrand("linkedin", "LinkedIn"),
   zapier: svgBrand("zapier", "Zapier"),
-  webhooks: svgBrand("zapier", "Webhooks"),
+  webhooks: svgBrand("zapier", "Вебхуки"),
   "harly-sign": PencilIcon,
   docuseal: DocuSealLogo,
   turnstile: CloudflareLogo,
@@ -91,7 +91,7 @@ const IMPORTERS: Importer[] = [
   {
     id: "csv",
     name: "CSV import",
-    description: "Bring in a spreadsheet of candidates.",
+    description: "Принесите таблицу кандидатов.",
     logo: FileSpreadsheet,
     tileClassName:
       "bg-gradient-to-br from-lime-500 via-lime-300 to-emerald-300 text-white",
@@ -100,7 +100,7 @@ const IMPORTERS: Importer[] = [
   {
     id: "greenhouse",
     name: "Greenhouse",
-    description: "Move eligible candidates into a Harly pipeline.",
+    description: "Переместите подходящих кандидатов в конвейер Harly.",
     logo: GreenhouseImportLogo,
     tileClassName:
       "bg-gradient-to-br from-lime-300 via-yellow-300 to-emerald-200",
@@ -109,7 +109,7 @@ const IMPORTERS: Importer[] = [
   {
     id: "workable",
     name: "Workable",
-    description: "Migrate candidate profiles with a read-only token.",
+    description: "Перенесите профили кандидатов с помощью токена, доступного только для чтения.",
     logo: WorkableLogo,
     logoClassName: "size-6",
     tileClassName:
@@ -119,7 +119,7 @@ const IMPORTERS: Importer[] = [
   {
     id: "ashby",
     name: "Ashby",
-    description: "Import complete candidate profiles securely.",
+    description: "Безопасно импортируйте полные профили кандидатов.",
     logo: AshbyLogo,
     logoClassName: "size-6",
     tileClassName:
@@ -129,7 +129,7 @@ const IMPORTERS: Importer[] = [
   {
     id: "lever",
     name: "Lever",
-    description: "Bring opportunities and candidate details across.",
+    description: "Расскажите о возможностях и подробностях о кандидатах.",
     logo: LeverLogo,
     logoClassName: "size-6",
     tileClassName:
@@ -139,7 +139,7 @@ const IMPORTERS: Importer[] = [
   {
     id: "join",
     name: "JOIN.com",
-    description: "Migrate candidate profiles with a read-only token.",
+    description: "Перенесите профили кандидатов с помощью токена, доступного только для чтения.",
     logo: JoinLogo,
     logoClassName: "size-6",
     tileClassName: "bg-gradient-to-br from-zinc-100 via-stone-200 to-neutral-300",
@@ -150,13 +150,13 @@ const IMPORTERS: Importer[] = [
 const JOIN_MARKETPLACE_INTEGRATION: MarketplaceIntegration = {
   id: "join-import",
   name: "JOIN.com",
-  description: "Import candidate profiles with a read-only token.",
+  description: "Импортируйте профили кандидатов с токеном, доступным только для чтения.",
   logo: JoinLogo,
   logoClassName: "size-6",
   tileClassName:
     "bg-gradient-to-br from-zinc-100 via-stone-200 to-neutral-300",
   href: "/dashboard/candidates?import=join",
-  actionLabel: "Import",
+  actionLabel: "Импорт",
   status: "available",
 };
 
@@ -196,7 +196,7 @@ export default async function IntegrationsSettingsPage() {
 
   const importerGroups: MarketplaceGroup[] = [
     {
-      label: "Sources",
+      label: "Источники",
       integrations: IMPORTERS.map<MarketplaceIntegration>((i) => ({
         id: i.id,
         name: i.name,
@@ -205,7 +205,7 @@ export default async function IntegrationsSettingsPage() {
         logoClassName: i.logoClassName,
         tileClassName: i.tileClassName,
         href: i.href,
-        actionLabel: "Import",
+        actionLabel: "Импорт",
         status: "available",
       })),
     },
@@ -214,7 +214,7 @@ export default async function IntegrationsSettingsPage() {
   const marketplaceGroupsWithSources: MarketplaceGroup[] = [
     ...marketplaceGroups,
     {
-      label: "Candidate sources",
+      label: "Источники кандидатов",
       integrations: [JOIN_MARKETPLACE_INTEGRATION],
     },
   ];
@@ -226,13 +226,13 @@ export default async function IntegrationsSettingsPage() {
       <div className="border-b border-border/70 pb-5">
         <SectionHeader
           icon={PlugIcon}
-          title="Integrations"
+          title={"Интеграции"}
           badge={
             <StatusPill tone={integrationsConfigured ? "on" : "neutral"}>
-              {integrationsConfigured ? "Configured" : "Not configured"}
+              {integrationsConfigured ? "Настроен" : "Не настроено"}
             </StatusPill>
           }
-          description="Connect calendars, communication tools, and automation to your workspace. Select an integration to set it up."
+          description={"Подключите календари, средства связи и автоматизацию к своему рабочему пространству. Выберите интеграцию, чтобы настроить ее."}
         />
       </div>
 
@@ -241,15 +241,11 @@ export default async function IntegrationsSettingsPage() {
       <section className="space-y-4 border-t border-border/70 pt-8">
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Data migration
-          </p>
+            {"Миграция данных "}</p>
           <h2 className="font-display text-xl font-semibold tracking-tight">
-            Import candidates
-          </h2>
+            {"Импортировать кандидатов "}</h2>
           <p className="text-sm text-muted-foreground">
-            One-time migrations from a spreadsheet or another ATS. These run an
-            import, not a live connection.
-          </p>
+            {"Одноразовые миграции из электронной таблицы или другой АТС. Они запускают импорт, а не живое соединение. "}</p>
         </div>
 
         <IntegrationMarketplace groups={importerGroups} />

@@ -85,7 +85,7 @@ export function JobApplyForm({
       return { url: `/uploads/${key}`, key };
     } catch (err) {
       console.error("Resume upload error:", err);
-      toast.error("Failed to upload resume. Please try again.");
+      toast.error("Не удалось загрузить резюме. Пожалуйста, попробуйте еще раз.");
       return null;
     } finally {
       setUploading(false);
@@ -99,10 +99,10 @@ export function JobApplyForm({
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
     if (!allowedTypes.includes(file.type)) {
-      return "Upload a PDF, DOC, or DOCX resume.";
+      return "Загрузите резюме в формате PDF, DOC или DOCX.";
     }
     if (file.size > 10 * 1024 * 1024) {
-      return "Resume must be 10MB or smaller.";
+      return "Размер резюме должен составлять 10 МБ или меньше.";
     }
     return null;
   }
@@ -134,7 +134,7 @@ export function JobApplyForm({
         toast.error(result.error);
         return;
       }
-      toast.success("Application submitted!");
+      toast.success("Заявка отправлена!");
       router.push(`/portal/applications/${result.applicationId}`);
     });
   }
@@ -143,10 +143,9 @@ export function JobApplyForm({
     <form onSubmit={submit} className="space-y-6">
       {/* Resume upload */}
       <div className="rounded-xl border border-border bg-card p-5">
-        <h2 className="mb-2 text-sm font-semibold text-foreground">Resume</h2>
+        <h2 className="mb-2 text-sm font-semibold text-foreground">{"Резюме"}</h2>
         <p className="mb-4 text-xs text-muted-foreground">
-          Upload your resume (PDF, DOC, or DOCX, max 10MB)
-        </p>
+          {"Загрузите свое резюме (PDF, DOC или DOCX, максимум 10 МБ) "}</p>
 
         <input
           ref={fileInputRef}
@@ -164,8 +163,7 @@ export function JobApplyForm({
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-foreground">{resumeFile.name}</p>
               <p className="text-xs text-muted-foreground">
-                {(resumeFile.size / 1024 / 1024).toFixed(1)} MB
-              </p>
+                {(resumeFile.size / 1024 / 1024).toFixed(1)} {"МБ "}</p>
             </div>
             {uploading && (
               <div className="size-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
@@ -185,8 +183,7 @@ export function JobApplyForm({
               }}
               className="text-xs text-muted-foreground hover:text-foreground"
             >
-              Remove
-            </button>
+              {"Удалить "}</button>
           </div>
         ) : (
           <button
@@ -201,15 +198,14 @@ export function JobApplyForm({
             <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
             </svg>
-            Click to upload resume
-          </button>
+            {"Нажмите, чтобы загрузить резюме "}</button>
         )}
       </div>
 
       {/* Questions */}
       {questions.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-5">
-          <h2 className="mb-4 text-sm font-semibold text-foreground">Application questions</h2>
+          <h2 className="mb-4 text-sm font-semibold text-foreground">{"Вопросы по применению"}</h2>
           <div className="space-y-4">
             {questions.map((q) => q.type === "info" ? (
               <aside key={q.id} className="rounded-lg border border-border bg-muted/30 p-4">
@@ -261,8 +257,8 @@ export function JobApplyForm({
                           className="accent-primary"
                         />
                         {value === "agree"
-                          ? q.agreeLabel ?? "I agree"
-                          : q.disagreeLabel ?? "I do not agree"}
+                          ? q.agreeLabel ?? "Я согласен"
+                          : q.disagreeLabel ?? "Я не согласен"}
                       </label>
                     ))}
                   </fieldset>
@@ -297,7 +293,7 @@ export function JobApplyForm({
                     required={q.required}
                     className={cn("h-10 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-foreground", "outline-none focus:ring-2 focus:ring-ring focus:border-transparent")}
                   >
-                    <option value="">Select an option</option>
+                    <option value="">{"Выберите вариант"}</option>
                     {(Array.isArray(q.options) ? q.options : []).filter((option): option is string => typeof option === "string").map((option) => (
                       <option key={option} value={option}>{option}</option>
                     ))}
@@ -332,7 +328,7 @@ export function JobApplyForm({
           onChange={(event) => setConsentGiven(event.target.checked)}
           className="mt-0.5"
         />
-        <span>I agree to the processing of my personal data for this application.</span>
+        <span>{"Я согласен на обработку моих персональных данных для этого приложения."}</span>
       </label>
 
       <div className="flex justify-end">
@@ -346,7 +342,7 @@ export function JobApplyForm({
             "disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100",
           )}
         >
-          {isPending ? "Submitting…" : "Submit application"}
+          {isPending ? "Отправка…" : "Подать заявку"}
         </button>
       </div>
     </form>

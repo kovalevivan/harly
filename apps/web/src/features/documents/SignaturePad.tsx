@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { toast } from "@/lib/notification-island/toast";
@@ -33,9 +34,9 @@ type Props = {
 };
 
 const TABS = [
-  { key: "draw", label: "Draw" },
-  { key: "type", label: "Type" },
-  { key: "upload", label: "Upload" },
+  { key: "draw", label: "Ничья" },
+  { key: "type", label: "Тип" },
+  { key: "upload", label: "Загрузить" },
 ] as const;
 
 const SIGNATURE_FONT = {
@@ -145,7 +146,7 @@ export function SignaturePad({
       if (!mark || token !== generationRef.current) return;
       emitVector({ ...next, outlinePath: mark.outlinePath, areContours: mark.areContours, viewBox: mark.viewBox, strokeWidth: mark.strokeWidth }, token);
     } catch {
-      if (token === generationRef.current) toast.error("That signature could not be read. Draw it again.");
+      if (token === generationRef.current) toast.error("Эту подпись невозможно было прочитать. Нарисуйте это еще раз.");
     }
   }
 
@@ -284,7 +285,7 @@ export function SignaturePad({
         return null;
       })
       .catch(() => {
-        if (token === generationRef.current) toast.error("That name could not be turned into a signature.");
+        if (token === generationRef.current) toast.error("Это имя нельзя было превратить в подпись.");
       });
   }
 
@@ -293,18 +294,18 @@ export function SignaturePad({
     if (!file) return;
     const supported = ["image/png", "image/jpeg", "image/gif", "image/bmp"];
     if (!supported.includes(file.type)) {
-      setUploadError("Use a PNG, JPG, GIF, or BMP image.");
+      setUploadError("Используйте изображение PNG, JPG, GIF или BMP.");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Signature images must be smaller than 5 MB.");
+      setUploadError("Изображения для подписи должны быть меньше 5 МБ.");
       return;
     }
     invalidateSaved();
     const token = bumpGeneration();
     onVectorChange?.(null);
     if (typeof createImageBitmap !== "function") {
-      setUploadError("This browser cannot read that image.");
+      setUploadError("Этот браузер не может прочитать это изображение.");
       return;
     }
     void createImageBitmap(file)
@@ -317,7 +318,7 @@ export function SignaturePad({
         emitPreview(vectorMarkDataUrl(mark), token);
       })
       .catch(() => {
-        if (token === generationRef.current) setUploadError("No signature ink was found in that image.");
+        if (token === generationRef.current) setUploadError("На этом изображении не обнаружено никаких чернил для подписи.");
       });
   }
 
@@ -330,7 +331,7 @@ export function SignaturePad({
       void rebuildVectorMark(signature.vectorData)
         .then((mark) => {
           if (!mark || token !== generationRef.current) {
-            toast.error("That saved signature could not be loaded.");
+            toast.error("Не удалось загрузить сохраненную подпись.");
             return;
           }
           emitVector({
@@ -346,7 +347,7 @@ export function SignaturePad({
           }, token);
           emitPreview(vectorMarkDataUrl(mark), token);
         })
-        .catch(() => toast.error("That saved signature could not be loaded."));
+        .catch(() => toast.error("Не удалось загрузить сохраненную подпись."));
       return;
     }
     emitVector(null, token);
@@ -357,7 +358,7 @@ export function SignaturePad({
   function deleteSaved(id: string) {
     void deleteSavedSignature({ id }).then((result) => {
       if (!result.ok) {
-        toast.error(result.error ?? "Could not delete the signature.");
+        toast.error(result.error ?? "Не удалось удалить подпись.");
         return;
       }
       setSaved((current) => current.filter((item) => item.id !== id));
@@ -370,24 +371,24 @@ export function SignaturePad({
 
   function saveCurrent() {
     if (!vector?.compressed) {
-      toast.error("Draw, type, or upload a signature before saving it.");
+      toast.error("Нарисуйте, введите или загрузите подпись перед ее сохранением.");
       return;
     }
     setSavingCurrent(true);
     void saveVectorSignature({ vectorData: vector.compressed })
       .then(async (result) => {
         if (!result.ok) {
-          toast.error(result.error ?? "Could not save the signature.");
+          toast.error(result.error ?? "Не удалось сохранить подпись.");
           return;
         }
-        toast.success("Signature saved for reuse");
+        toast.success("Подпись сохранена для повторного использования");
         setSaved(await listSavedSignatures());
       })
-      .catch(() => toast.error("Could not save the signature."))
+      .catch(() => toast.error("Не удалось сохранить подпись."))
       .finally(() => setSavingCurrent(false));
   }
 
-  const tabs = allowSaved ? [...TABS, { key: "saved" as const, label: "Saved" }] : TABS;
+  const tabs = allowSaved ? [...TABS, { key: "saved" as const, label: "Сохранено" }] : TABS;
 
   return (
     <div className="space-y-3">
@@ -410,8 +411,7 @@ export function SignaturePad({
         </div>
         {mode !== "saved" ? (
           <Button type="button" size="sm" variant="ghost" onClick={clear}>
-            Clear
-          </Button>
+            {"Очистить "}</Button>
         ) : null}
       </div>
 
@@ -425,8 +425,7 @@ export function SignaturePad({
             </div>
           ) : saved.length === 0 ? (
             <div className="rounded-lg border border-dashed px-3 py-6 text-center text-xs leading-5 text-muted-foreground">
-              No saved signatures yet. Draw or type one, then save it here for next time.
-            </div>
+              {"Сохраненных подписей пока нет. Нарисуйте или напечатайте его, а затем сохраните здесь для следующего раза. "}</div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
               {saved.map((signature) => (
@@ -443,12 +442,12 @@ export function SignaturePad({
                     {signature.kind === "vector" ? (
                       <SavedVectorThumb vectorData={signature.vectorData} />
                     ) : (
-                      <img src={signature.dataUrl} alt="Saved signature" className="max-h-full max-w-full object-contain" />
+                      <img src={signature.dataUrl} alt={"Сохраненная подпись"} className="max-h-full max-w-full object-contain" />
                     )}
                   </button>
                   <button
                     type="button"
-                    aria-label="Delete saved signature"
+                    aria-label={"Удалить сохраненную подпись"}
                     onClick={() => deleteSaved(signature.id)}
                     className="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full border bg-card text-muted-foreground opacity-0 shadow-xs transition-opacity hover:text-destructive group-hover:opacity-100"
                   >
@@ -463,13 +462,13 @@ export function SignaturePad({
         <>
           {mode === "type" ? (
             <div className="space-y-1">
-              <Label htmlFor="signature-name">Name</Label>
+              <Label htmlFor="signature-name">{"Имя"}</Label>
               <Input
                 ref={typeInputRef}
                 id="signature-name"
                 value={typed}
                 onChange={(event) => renderTyped(event.target.value)}
-                placeholder="Your name"
+                placeholder={"Ваше имя"}
                 style={SIGNATURE_FONT}
               />
             </div>
@@ -484,8 +483,7 @@ export function SignaturePad({
                 onChange={(event) => uploadImage(event.target.files?.[0])}
               />
               <Button type="button" size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>
-                Choose image
-              </Button>
+                {"Выбрать изображение "}</Button>
             </div>
           ) : null}
           <canvas
@@ -497,22 +495,22 @@ export function SignaturePad({
             onPointerMove={move}
             onPointerUp={finishDrawing}
             onPointerCancel={finishDrawing}
-            aria-label="Signature pad"
+            aria-label={"Блокнот для подписи"}
           />
           {mode === "draw" ? (
             <p className="text-xs leading-5 text-muted-foreground">
               {captureMode
-                ? "Capture active. Move across the pad without holding the trackpad. Press Space twice or Escape when you are done."
-                : "Press Space twice to capture movement without holding the trackpad."}
+                ? "Захват активный. Перемещайтесь по панели, не удерживая ее. Когда закончите, дважды нажмите пробел или Escape."
+                : "Дважды нажмите пробел, чтобы запечатлеть движение, не удерживая трекпад."}
             </p>
           ) : null}
-          {uploadError ? <p className="text-xs text-destructive" role="alert">{uploadError}</p> : null}
+          {uploadError ? <p className="text-xs text-destructive" role="alert">{localizeSystemText(uploadError)}</p> : null}
           {mode !== "draw" && vector?.outlinePath ? (
             <VectorSignaturePreview d={vector.outlinePath} areContours={vector.areContours} viewBox={vector.viewBox} strokeWidth={vector.strokeWidth} />
           ) : null}
           {allowSaved && vector?.compressed ? (
             <Button type="button" size="sm" variant="outline" disabled={savingCurrent} onClick={saveCurrent}>
-              {savingCurrent ? "Saving…" : "Save for reuse"}
+              {savingCurrent ? "Сохранение…" : "Сохранить для повторного использования"}
             </Button>
           ) : null}
         </>

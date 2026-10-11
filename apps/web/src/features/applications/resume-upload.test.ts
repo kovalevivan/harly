@@ -29,6 +29,7 @@ describe("verifyResumeUpload", () => {
         fileSize: bytes.byteLength,
       }),
     ).resolves.toEqual({
+      bytes,
       key: "workspaces/workspace_1/resumes/upload/cv.pdf",
       fileUrl: privateResumeFileUrl(
         "workspaces/workspace_1/resumes/upload/cv.pdf",

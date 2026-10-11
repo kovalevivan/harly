@@ -35,7 +35,7 @@ export function DocxViewer({ fileUrl, className }: DocxViewerProps) {
     } catch (err) {
       setState({
         status: "error",
-        message: err instanceof Error ? err.message : "Unable to preview document",
+        message: err instanceof Error ? err.message : "Невозможно просмотреть документ",
       });
     }
   }, [fileUrl]);
@@ -48,7 +48,7 @@ export function DocxViewer({ fileUrl, className }: DocxViewerProps) {
     return (
       <div className={`flex items-center justify-center gap-2 rounded-lg border bg-muted/30 p-8 ${className ?? ""}`}>
         <Loader2 className="size-4 animate-spin text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Loading document…</span>
+        <span className="text-sm text-muted-foreground">{"Загрузка документа…"}</span>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function DocxViewer({ fileUrl, className }: DocxViewerProps) {
     return (
       <div className={`flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed bg-muted/30 p-8 ${className ?? ""}`}>
         <p className="text-sm text-muted-foreground">{state.message}</p>
-        <p className="text-xs text-muted-foreground">Try downloading the file instead.</p>
+        <p className="text-xs text-muted-foreground">{"Вместо этого попробуйте загрузить файл."}</p>
       </div>
     );
   }

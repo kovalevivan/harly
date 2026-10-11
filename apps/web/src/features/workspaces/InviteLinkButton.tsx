@@ -87,10 +87,10 @@ export function InviteLinkButton({
       fd.set("role", role);
       const result = await enableInviteLinkAction({ success: false }, fd);
       if (result.success) {
-        toast.success("Invite link enabled");
+        toast.success("Ссылка для приглашения включена");
         router.refresh();
       } else {
-        toast.error(result.error ?? "Unable to enable link.");
+        toast.error(result.error ?? "Невозможно включить ссылку.");
       }
     });
   }
@@ -99,10 +99,10 @@ export function InviteLinkButton({
     start(async () => {
       const result = await disableInviteLinkAction();
       if (result.success) {
-        toast.success("Invite link disabled");
+        toast.success("Ссылка для приглашения отключена");
         router.refresh();
       } else {
-        toast.error(result.error ?? "Unable to disable link.");
+        toast.error(result.error ?? "Невозможно отключить ссылку.");
       }
     });
   }
@@ -111,10 +111,10 @@ export function InviteLinkButton({
     start(async () => {
       const result = await rotateInviteLinkAction();
       if (result.success) {
-        toast.success("New link generated. Old one disabled");
+        toast.success("Создана новая ссылка. Старый отключен");
         router.refresh();
       } else {
-        toast.error(result.error ?? "Unable to rotate link.");
+        toast.error(result.error ?? "Невозможно повернуть ссылку.");
       }
     });
   }
@@ -132,8 +132,8 @@ export function InviteLinkButton({
         <Button
           variant="outline"
           size="icon"
-          aria-label="Invite link"
-          title="Invite link"
+          aria-label={"Ссылка для приглашения"}
+          title={"Ссылка для приглашения"}
           className={inviteLink.enabled ? "text-pine" : "text-muted-foreground"}
         >
           <ShareLinkIcon className="size-4" />
@@ -142,10 +142,9 @@ export function InviteLinkButton({
       <PopoverContent align="end" className="w-80 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold">Invite link</p>
+            <p className="text-sm font-semibold">{"Ссылка для приглашения"}</p>
             <p className="text-xs text-muted-foreground">
-              Share one link instead of emailing each person.
-            </p>
+              {"Поделитесь одной ссылкой вместо того, чтобы отправлять электронное письмо каждому человеку. "}</p>
           </div>
           <Switch
             checked={inviteLink.enabled}
@@ -168,7 +167,7 @@ export function InviteLinkButton({
                 size="icon"
                 className="shrink-0"
                 onClick={copy}
-                aria-label="Copy link"
+                aria-label={"Копировать ссылку"}
               >
                 {copied ? (
                   <CheckIcon className="size-4 text-pine" />
@@ -179,7 +178,7 @@ export function InviteLinkButton({
             </div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-[11px] text-muted-foreground">
-                Joins as{" "}
+                {"Присоединяется как"}{" "}
                 <span className="font-medium capitalize text-foreground">
                   {inviteLink.role.replace("_", " ")}
                 </span>
@@ -193,15 +192,13 @@ export function InviteLinkButton({
                 disabled={pending}
                 className="shrink-0 text-xs text-muted-foreground"
               >
-                Rotate
-              </Button>
+                {"Поворот "}</Button>
             </div>
           </>
         ) : (
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">
-              Role new joiners get
-            </Label>
+              {"Роль, которую получают новые участники "}</Label>
             <Select value={role} onValueChange={setRole}>
               <SelectTrigger className="h-9 w-full">
                 <SelectValue />
@@ -215,8 +212,7 @@ export function InviteLinkButton({
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground">
-              Enable the toggle above to generate the link.
-            </p>
+              {"Включите переключатель выше, чтобы создать ссылку. "}</p>
           </div>
         )}
       </PopoverContent>

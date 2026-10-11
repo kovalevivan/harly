@@ -47,7 +47,7 @@ export function InterviewBriefSheet({
     <Sheet open={open} onOpenChange={setOpen} mobilePresentation="bottom-on-mobile">
       <SheetTrigger asChild>{trigger}</SheetTrigger>
       <DrawerLayout
-        title="Interview Brief"
+        title={"Краткое интервью"}
         description={`${interview.title ?? interviewTypeLabel(interview.type)} · ${interview.jobTitle}`}
         footer={
           <AiButton
@@ -55,9 +55,9 @@ export function InterviewBriefSheet({
             variant={brief ? "outline" : "default"}
             onClick={generate}
             loading={isPending}
-            loadingText="Generating"
+            loadingText={"Создание"}
           >
-            {brief ? "Regenerate" : "Generate Brief"}
+            {brief ? "Регенерировать" : "Создать бриф"}
           </AiButton>
         }
       >
@@ -65,8 +65,7 @@ export function InterviewBriefSheet({
           <div className="space-y-5 text-sm">
             <div>
               <p className="mb-1.5 font-medium text-foreground">
-                Candidate summary
-              </p>
+                {"Краткое описание кандидата "}</p>
               <p className="leading-relaxed text-muted-foreground">
                 {brief.candidateSummary}
               </p>
@@ -75,8 +74,7 @@ export function InterviewBriefSheet({
             {brief.keyAreasToProbe.length > 0 ? (
               <div>
                 <p className="mb-1.5 font-medium text-foreground">
-                  Key areas to probe
-                </p>
+                  {"Ключевые области для исследования "}</p>
                 <ul className="space-y-1 text-muted-foreground">
                   {brief.keyAreasToProbe.map((area, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -91,8 +89,7 @@ export function InterviewBriefSheet({
             {brief.suggestedQuestions.length > 0 ? (
               <div>
                 <p className="mb-1.5 font-medium text-foreground">
-                  Suggested questions
-                </p>
+                  {"Предлагаемые вопросы "}</p>
                 <ol className="space-y-2 text-muted-foreground">
                   {brief.suggestedQuestions.map((q, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -110,8 +107,7 @@ export function InterviewBriefSheet({
               <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 dark:border-amber-900/50 dark:bg-amber-950/30">
                 <div className="mb-1.5 flex items-center gap-1.5 font-medium text-amber-700 dark:text-amber-400">
                   <AlertTriangle className="size-3.5 shrink-0" strokeWidth={2} />
-                  Watch for
-                </div>
+                  {"Следите за "}</div>
                 <ul className="space-y-1 text-amber-700/90 dark:text-amber-400/80">
                   {brief.redFlags.map((flag, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -129,10 +125,7 @@ export function InterviewBriefSheet({
               <BrainCircuit className="size-5" strokeWidth={1.8} />
             </span>
             <p className="max-w-[240px] text-sm text-muted-foreground">
-              A brief pulls this candidate&apos;s resume and answers into
-              context, suggested questions, and areas to probe. Nothing is sent
-              to the candidate.
-            </p>
+              {"Краткое описание связывает резюме и ответы этого кандидата с контекстом, предлагаемыми вопросами и областями для исследования. Кандидату ничего не отправляется. "}</p>
           </div>
         )}
       </DrawerLayout>

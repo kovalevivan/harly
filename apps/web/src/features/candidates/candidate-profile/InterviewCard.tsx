@@ -54,23 +54,23 @@ const INTERVIEW_MODE_ICON = {
 
 const INTERVIEW_STATUS_META = {
   scheduled: {
-    label: "Scheduled",
+    label: "Запланировано",
     variant: "neutral" as const,
     accent: "bg-slate-info",
   },
   completed: {
-    label: "Completed",
+    label: "Завершено",
     variant: "secondary" as const,
     accent: "bg-lime",
   },
   canceled: {
-    label: "Canceled",
+    label: "Отменено",
     variant: "danger" as const,
     accent: "bg-destructive",
   },
 };
 
-const interviewDateFmt = new Intl.DateTimeFormat("en", {
+const interviewDateFmt = new Intl.DateTimeFormat("ru-RU", {
   weekday: "short",
   month: "short",
   day: "numeric",
@@ -79,16 +79,16 @@ const interviewDateFmt = new Intl.DateTimeFormat("en", {
 });
 
 function providerLabelFor(provider: string) {
-  if (provider === "google_calendar") return "Google Calendar";
-  if (provider === "microsoft_teams") return "Microsoft Teams";
-  if (provider === "jitsi") return "Jitsi";
+  if (provider === "google_calendar") return "Google Календарь";
+  if (provider === "microsoft_teams") return "Команды Майкрософт";
+  if (provider === "jitsi") return "Джитси";
   return "Zoom";
 }
 
 function meetLabelFor(interview: CandidateInterviewItem) {
-  if (interview.teamsMeetingId) return "Join Teams Meeting";
-  if (interview.zoomMeetingId) return "Join Zoom Meeting";
-  return "Join Google Meet";
+  if (interview.teamsMeetingId) return "Присоединиться к собранию команд";
+  if (interview.zoomMeetingId) return "Присоединяйтесь к конференции Zoom";
+  return "Присоединяйтесь к Google Meet";
 }
 
 export function InterviewCard({
@@ -120,11 +120,11 @@ export function InterviewCard({
         status,
       });
       if (!result.success) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
       toast.success(
-        status === "completed" ? "Marked complete" : "Interview canceled",
+        status === "completed" ? "Помечено как завершенное" : "Интервью отменено",
       );
       if (result.warning) toast.warning(result.warning);
       (router as { refresh?: () => void }).refresh?.();
@@ -135,10 +135,10 @@ export function InterviewCard({
     startTransition(async () => {
       const result = await retryInterviewSyncAction({ syncId });
       if (!result.success) {
-        toast.error(result.error ?? "Could not retry synchronization.");
+        toast.error(result.error ?? "Не удалось повторить синхронизацию.");
         return;
       }
-      toast.success("Synchronization retried");
+      toast.success("Синхронизация повторена.");
       router.refresh();
     });
   }
@@ -163,8 +163,7 @@ export function InterviewCard({
             </p>
             <p className="mt-0.5 text-sm text-muted-foreground">
               {interviewDateFmt.format(new Date(interview.scheduledAt))} ·{" "}
-              {interview.durationMins} min
-            </p>
+              {interview.durationMins} {"мин "}</p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {interview.status === "scheduled" ? (
@@ -177,7 +176,7 @@ export function InterviewCard({
                   <Button
                     size="sm"
                     variant="ghost"
-                    aria-label="Edit interview"
+                    aria-label={"Редактировать интервью"}
                     className="size-8 p-0 text-muted-foreground hover:text-foreground"
                   >
                     <Pencil className="size-4" />
@@ -229,8 +228,8 @@ export function InterviewCard({
               <AlertTriangle className="size-4 shrink-0 text-amber-600" />
               <span className="min-w-0 flex-1 text-amber-900 dark:text-amber-200">
                 {pending
-                  ? `${providerLabel} sync is pending.`
-                  : `${providerLabel} sync failed${sync.lastError ? `: ${sync.lastError}` : "."}`}
+                  ? `${providerLabel} ожидается синхронизация.`
+                  : `${providerLabel} не удалось синхронизировать${sync.lastError ? `: ${sync.lastError}` : "."}`}
               </span>
               {!pending ? (
                 <Button
@@ -240,8 +239,7 @@ export function InterviewCard({
                   onClick={() => retrySync(sync.id)}
                 >
                   <RotateCcw className="size-3.5" />
-                  Retry
-                </Button>
+                  {"Повторить попытку "}</Button>
               ) : null}
             </div>
           );
@@ -279,30 +277,26 @@ export function InterviewCard({
                   <DialogTrigger asChild>
                     <Button size="sm" variant="outline" disabled={isPending}>
                       <Check className="size-4" />
-                      Mark complete
-                    </Button>
+                      {"Отметить как завершенное "}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Mark interview as complete?</DialogTitle>
+                      <DialogTitle>{"Отметить собеседование как завершенное?"}</DialogTitle>
                       <DialogDescription>
-                        This will mark the interview with{" "}
-                        {interview.interviewerName ?? "the interviewer"} as
-                        completed.
-                      </DialogDescription>
+                        {"Это ознаменует интервью с"}{" "}
+                        {interview.interviewerName ?? "интервьюер"} {"как завершено. "}</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                       <DialogClose asChild>
                         <Button variant="outline" disabled={isPending}>
-                          Cancel
-                        </Button>
+                          {"Отмена "}</Button>
                       </DialogClose>
                       <DialogClose asChild>
                         <Button
                           disabled={isPending}
                           onClick={() => update("completed")}
                         >
-                          {isPending ? "Saving…" : "Confirm"}
+                          {isPending ? "Сохранение…" : "Подтвердить"}
                         </Button>
                       </DialogClose>
                     </DialogFooter>
@@ -318,22 +312,18 @@ export function InterviewCard({
                       disabled={isPending}
                     >
                       <X className="size-4" />
-                      Cancel
-                    </Button>
+                      {"Отмена "}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Cancel this interview?</DialogTitle>
+                      <DialogTitle>{"Отменить это интервью?"}</DialogTitle>
                       <DialogDescription>
-                        The candidate will be notified. This action cannot be
-                        undone.
-                      </DialogDescription>
+                        {"Кандидат будет уведомлен. Это действие невозможно отменить. "}</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                       <DialogClose asChild>
                         <Button variant="outline" disabled={isPending}>
-                          Go back
-                        </Button>
+                          {"Вернуться назад "}</Button>
                       </DialogClose>
                       <DialogClose asChild>
                         <Button
@@ -341,7 +331,7 @@ export function InterviewCard({
                           disabled={isPending}
                           onClick={() => update("canceled")}
                         >
-                          {isPending ? "Canceling…" : "Yes, cancel interview"}
+                          {isPending ? "Отмена…" : "Да, отменить собеседование"}
                         </Button>
                       </DialogClose>
                     </DialogFooter>
@@ -363,14 +353,12 @@ export function InterviewCard({
                   rel="noopener noreferrer"
                 >
                   <ExternalLink className="size-4" />
-                  Google Calendar
-                </a>
+                  {"Google Календарь "}</a>
               </Button>
             ) : interview.status === "scheduled" ? (
               <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-amber-400" />
-                Not synced to GCal
-              </span>
+                {"Не синхронизировано с GCal "}</span>
             ) : null}
 
             <div className="ml-auto flex items-center gap-2">
@@ -380,8 +368,7 @@ export function InterviewCard({
                     interview={interview}
                     trigger={
                       <AiButton size="sm" variant="outline">
-                        Interview Brief
-                      </AiButton>
+                        {"Краткое интервью "}</AiButton>
                     }
                   />
                   {interview.status === "completed" ? (
@@ -391,8 +378,7 @@ export function InterviewCard({
                       workspaceId={workspaceId}
                       trigger={
                         <AiButton size="sm" variant="outline">
-                          Summarize notes
-                        </AiButton>
+                          {"Обобщение заметок "}</AiButton>
                       }
                     />
                   ) : null}
@@ -406,8 +392,7 @@ export function InterviewCard({
                 trigger={
                   <Button size="sm" variant="outline">
                     <ClipboardCheck className="size-4" />
-                    Evaluate
-                  </Button>
+                    {"Оценить "}</Button>
                 }
               />
             </div>

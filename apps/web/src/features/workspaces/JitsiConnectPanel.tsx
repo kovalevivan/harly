@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 function JitsiLogo({ className }: { className?: string }) {
-  return <TheSvgLogo slug="jitsi" alt="Jitsi" className={className} />;
+  return <TheSvgLogo slug="jitsi" alt={"Jitsi"} className={className} />;
 }
 
 type TestState =
@@ -62,13 +62,13 @@ export function JitsiConnectPanel({
     : "neutral";
   const statusLabel = isConfigured
     ? status.enabled
-      ? "Connected"
-      : "Disabled"
-    : "Not connected";
+      ? "Подключено"
+      : "Отключено"
+    : "Не подключено";
 
   function toggleEnabled(next: boolean) {
     if (!status.baseUrl) {
-      toast.error("Add an instance URL first.");
+      toast.error("Сначала добавьте URL-адрес экземпляра.");
       return;
     }
     startToggle(async () => {
@@ -77,10 +77,10 @@ export function JitsiConnectPanel({
         baseUrl: status.baseUrl!,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
-      toast.success(next ? "Jitsi enabled" : "Jitsi disabled");
+      toast.success(next ? "Джитси включен" : "Джитси отключен");
       router.refresh();
     });
   }
@@ -108,7 +108,7 @@ export function JitsiConnectPanel({
                 ) : (
                   <KeyDuotoneIcon className="size-4" />
                 )}
-                {isConfigured ? (open ? "Hide settings" : "Manage") : "Connect"}
+                {isConfigured ? (open ? "Скрыть настройки" : "Управление") : "Подключиться"}
               </Button>
               {isConfigured ? (
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -116,10 +116,10 @@ export function JitsiConnectPanel({
                     checked={status.enabled}
                     disabled={togglePending}
                     onCheckedChange={toggleEnabled}
-                    aria-label="Enable Jitsi"
+                    aria-label={"Включить Джитси"}
                   />
                   <span className="text-muted-foreground">
-                    {status.enabled ? "On" : "Off"}
+                    {status.enabled ? "On" : "Выкл."}
                   </span>
                 </label>
               ) : null}
@@ -131,14 +131,13 @@ export function JitsiConnectPanel({
       {isConfigured ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            <StatCell label="Instance">
+            <StatCell label={"Экземпляр"}>
               <JitsiLogo className="size-4" />
               <span className="truncate">{status.baseUrl}</span>
             </StatCell>
-            <StatCell label="Rooms">
+            <StatCell label={"Номера"}>
               <span className="text-muted-foreground">
-                Generated per interview (random code)
-              </span>
+                {"Генерируется для каждого интервью (случайный код) "}</span>
             </StatCell>
           </div>
         </Card>
@@ -181,11 +180,11 @@ function JitsiConnectForm({
       });
       if (result.ok) {
         setTest({ kind: "ok" });
-        toast.success("Instance is reachable");
+        toast.success("Экземпляр доступен");
       } else {
         setTest({
           kind: "error",
-          message: result.error ?? "Could not reach that instance.",
+          message: result.error ?? "Не удалось связаться с этим экземпляром.",
         });
       }
     });
@@ -195,10 +194,10 @@ function JitsiConnectForm({
     startSave(async () => {
       const result = await saveJitsiSettingsAction({ enabled, baseUrl });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Jitsi settings saved");
+      toast.success("Настройки Jitsi сохранены.");
       onSaved();
     });
   }
@@ -207,10 +206,10 @@ function JitsiConnectForm({
     startDisconnect(async () => {
       const result = await disconnectJitsiAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success("Jitsi disconnected");
+      toast.success("Джитси отключен");
       router.refresh();
     });
   }
@@ -220,12 +219,10 @@ function JitsiConnectForm({
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            {status.baseUrl ? "Manage connection" : "Connect Jitsi Meet"}
+            {status.baseUrl ? "Управление подключением" : "Подключите Jitsi Meet"}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Video interviews get a unique room link on your instance. No account
-            or API key needed.
-          </p>
+            {"Видеоинтервью получают уникальную ссылку на комнату в вашем экземпляре. Никакая учетная запись или ключ API не требуются. "}</p>
         </div>
         <a
           href="https://jitsi.github.io/handbook/docs/devops-guide/"
@@ -233,14 +230,13 @@ function JitsiConnectForm({
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pine transition-colors hover:text-pine-strong"
         >
-          Self-host guide
-          <ArrowUpRightIcon className="size-3.5" />
+          {"Руководство для самостоятельного размещения "}<ArrowUpRightIcon className="size-3.5" />
         </a>
       </div>
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="jitsi-base">Instance base URL</Label>
+          <Label htmlFor="jitsi-base">{"Базовый URL-адрес экземпляра"}</Label>
           <Input
             id="jitsi-base"
             value={baseUrl}
@@ -253,28 +249,22 @@ function JitsiConnectForm({
             className="font-mono text-xs"
           />
           <p className="text-xs text-muted-foreground">
-            Your self-hosted instance, or the public https://meet.jit.si.
-          </p>
+            {"Ваш собственный экземпляр или общедоступный https://meet.jit.si. "}</p>
         </div>
 
         {isPublicInstance ? (
           <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
             <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
             <p>
-              Rooms on the public meet.jit.si are open to anyone with the link.
-              Room codes are random and unguessable, but for sensitive
-              interviews prefer a self-hosted instance with a lobby.
-            </p>
+              {"Комнаты на публичном сайте meet.jit.si открыты для всех, у кого есть ссылка. Коды комнат случайны и не поддаются угадыванию, но для деликатных интервью лучше использовать автономный экземпляр с вестибюлем. "}</p>
           </div>
         ) : null}
 
         <div className="flex items-center justify-between rounded-xl border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable Jitsi</p>
+            <p className="text-sm font-medium">{"Включить Джитси"}</p>
             <p className="text-xs text-muted-foreground">
-              Used for video interviews when Zoom, Teams and Google Meet are not
-              connected.
-            </p>
+              {"Используется для видеоинтервью, когда Zoom, Teams и Google Meet не подключены. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -298,8 +288,7 @@ function JitsiConnectForm({
             disabled={disconnecting}
           >
             {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-            Disconnect
-          </Button>
+            {"Отключить "}</Button>
         ) : (
           <span />
         )}
@@ -315,12 +304,11 @@ function JitsiConnectForm({
             ) : test.kind === "ok" ? (
               <CheckCircleIcon className="size-4 text-pine" />
             ) : null}
-            {test.kind === "ok" ? "Instance OK" : "Test connection"}
+            {test.kind === "ok" ? "Экземпляр ОК" : "Тестовое соединение"}
           </Button>
           <Button onClick={save} disabled={saving || !baseUrl.trim()}>
             {saving ? <SpinnerIcon className="size-4" /> : null}
-            Save
-          </Button>
+            {"Сохранить "}</Button>
         </div>
       </div>
     </Card>

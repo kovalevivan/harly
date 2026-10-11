@@ -1,10 +1,13 @@
 "use server";
 
+import { readIntake } from "./briefing/workflow";
+
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db, workspaceSettings } from "@harly/db";
+import { jobBriefs } from "@harly/db";
 
 import {
   createJob,
@@ -83,7 +86,49 @@ export type JobActionState = {
 export async function createJobAction(formData: FormData) {
   const context = await requirePermission("jobs:create");
   const values = parseJobFormData(formData);
+  const briefId = String(formData.get("briefId") ?? "");
+  if (briefId) {
+    const [brief] = await db
+      .select()
+      .from(jobBriefs)
+      .where(
+        and(
+          eq(jobBriefs.id, briefId),
+          eq(jobBriefs.workspaceId, context.organization.id),
+        ),
+      )
+      .limit(1);
+    if (!brief) throw new Error("План подбора не найден.");
+    if (brief.jobId)
+      redirect(`/dashboard/jobs/${brief.jobId}?briefId=${brief.id}`);
+    if (
+      String(formData.get("briefVersion") ?? "") !==
+      brief.updatedAt.toISOString()
+    )
+      throw new Error(
+        "План изменился. Откройте актуальное описание перед созданием вакансии.",
+      );
+    if (
+      brief.intake &&
+      (!readIntake(brief.intake).profileApproved ||
+        !readIntake(brief.intake).vacancyApproved)
+    )
+      throw new Error(
+        "Сначала утвердите профиль и описание вакансии в плане подбора.",
+      );
+  }
   const job = await createJob(values);
+  if (briefId) {
+    await db
+      .update(jobBriefs)
+      .set({ jobId: job.id, updatedAt: new Date() })
+      .where(
+        and(
+          eq(jobBriefs.id, briefId),
+          eq(jobBriefs.workspaceId, context.organization.id),
+        ),
+      );
+  }
 
   await logAuditEvent({
     workspaceId: context.organization.id,
@@ -115,6 +160,31 @@ export async function updateJobAction(formData: FormData) {
   const jobId = String(formData.get("jobId") ?? "");
   const context = await requireJobPermission("jobs:edit", jobId);
   const values = parseJobFormData(formData);
+  const briefId = String(formData.get("briefId") ?? "");
+  if (briefId) {
+    const [brief] = await db
+      .select()
+      .from(jobBriefs)
+      .where(
+        and(
+          eq(jobBriefs.id, briefId),
+          eq(jobBriefs.workspaceId, context.organization.id),
+          eq(jobBriefs.jobId, jobId),
+        ),
+      )
+      .limit(1);
+    if (!brief) throw new Error("План не связан с этой вакансией.");
+    const intake = readIntake(brief.intake);
+    if (brief.intake && (!intake.profileApproved || !intake.vacancyApproved))
+      throw new Error("Сначала утвердите профиль и описание в плане подбора.");
+    if (
+      String(formData.get("briefVersion") ?? "") !==
+      brief.updatedAt.toISOString()
+    )
+      throw new Error(
+        "План изменился. Загрузите актуальное описание в редактор.",
+      );
+  }
   const job = await updateJob(jobId, values);
 
   if (!job) {
@@ -144,7 +214,7 @@ export async function updateJobStatusAction(formData: FormData) {
     status === "open" ? "jobs:publish" : "jobs:edit",
     jobId,
   );
-  if (status === "open" && await getPendingJobApproval(jobId)) {
+  if (status === "open" && (await getPendingJobApproval(jobId))) {
     throw new Error("Job has a pending approval request.");
   }
   const job = await updateJobStatus(jobId, status);
@@ -254,18 +324,21 @@ export async function generateJobDraftAction(input: {
   department?: string;
   workplaceType?: string;
   keywords?: string[];
+  profile?: string;
+  language?: "ru" | "en";
+  timeoutMs?: number;
 }): Promise<GenerateJobDraftResult> {
   const context = await requirePermission("jobs:create");
 
   if (!input.title?.trim()) {
-    return { ok: false, error: "Add a job title first." };
+    return { ok: false, error: "Сначала укажите название вакансии." };
   }
 
   const config = await getWorkspaceAiConfig(context.organization.id);
   if (!config) {
     return {
       ok: false,
-      error: "Enable AI in Settings to generate with AI.",
+      error: "Подключите ИИ в настройках для генерации.",
     };
   }
 
@@ -280,26 +353,38 @@ export async function generateJobDraftAction(input: {
       .where(eq(workspaceSettings.organizationId, context.organization.id))
       .limit(1);
     const career = normalizeCareerPageConfig(settings?.careerPageConfig);
-    const draft = await generateJobDraftWithAI(config, {
-      title: input.title.trim(),
-      department: input.department?.trim() || undefined,
-      workplaceType: input.workplaceType,
-      keywords: input.keywords,
-      brand: {
-        name: context.organization.name,
-        tagline: settings?.tagline,
-        description: settings?.description,
-        careerHeadline: career.hero.headline,
-        careerSubhead: career.hero.subhead,
-        careerIntro: career.intro.body,
-        values: career.values.enabled ? career.values.items : [],
+    const draft = await generateJobDraftWithAI(
+      config,
+      {
+        title: input.title.trim(),
+        department: input.department?.trim() || undefined,
+        workplaceType: input.workplaceType,
+        keywords: input.keywords,
+        profile: input.profile?.slice(0, 12000),
+        language: input.language,
+        brand: {
+          name: context.organization.name,
+          tagline: settings?.tagline,
+          description: settings?.description,
+          careerHeadline: career.hero.headline,
+          careerSubhead: career.hero.subhead,
+          careerIntro: career.intro.body,
+          values: career.values.enabled ? career.values.items : [],
+        },
       },
-    });
+      {
+        abortSignal: input.timeoutMs
+          ? AbortSignal.timeout(
+              Math.min(120000, Math.max(10000, input.timeoutMs)),
+            )
+          : undefined,
+      },
+    );
     return { ok: true, draft };
   } catch {
     return {
       ok: false,
-      error: "Generation failed.",
+      error: "Не удалось сгенерировать описание. Повторите попытку.",
     };
   }
 }
@@ -324,7 +409,7 @@ export async function generateScreeningQuestionsAction(input: {
   const context = await requirePermission("jobs:create");
 
   if (!input.title?.trim()) {
-    return { ok: false, error: "Add a job title first." };
+    return { ok: false, error: "Сначала укажите название вакансии." };
   }
 
   const config = await getWorkspaceAiConfig(context.organization.id);
@@ -347,6 +432,9 @@ export async function generateScreeningQuestionsAction(input: {
     });
     return { ok: true, questions };
   } catch {
-    return { ok: false, error: "Generation failed." };
+    return {
+      ok: false,
+      error: "Не удалось сгенерировать описание. Повторите попытку.",
+    };
   }
 }

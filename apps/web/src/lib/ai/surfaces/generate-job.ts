@@ -2,6 +2,7 @@ import "server-only";
 
 import { Output, generateText } from "ai";
 
+import { withUntrustedDataGuardrail } from "@/lib/ai/prompts/guardrails";
 import { getModel } from "@/lib/ai/registry";
 import { jobDraftSchema, type JobDraft } from "@/lib/ai/schemas";
 import type { AiModelConfig } from "@/lib/ai/providers";
@@ -11,6 +12,8 @@ export type JobDraftInput = {
   department?: string;
   workplaceType?: string;
   keywords?: string[];
+  profile?: string;
+  language?: "ru" | "en";
   brand?: {
     name: string;
     tagline?: string | null;
@@ -34,6 +37,7 @@ const SYSTEM_PROMPT =
 export async function generateJobDraftWithAI(
   config: AiModelConfig,
   input: JobDraftInput,
+  options: { abortSignal?: AbortSignal } = {},
 ): Promise<JobDraft> {
   const facts = [
     `Title: ${input.title}`,
@@ -42,6 +46,7 @@ export async function generateJobDraftWithAI(
     input.keywords && input.keywords.length > 0
       ? `Key skills / keywords: ${input.keywords.join(", ")}`
       : null,
+    input.profile ? `Approved hiring-manager brief:\n${input.profile}` : null,
   ]
     .filter(Boolean)
     .join("\n");
@@ -72,8 +77,9 @@ export async function generateJobDraftWithAI(
 
   const { output } = await generateText({
     model: getModel(config),
-    system: SYSTEM_PROMPT,
-    prompt: `Write a job description for the role below.\n\n## Role\n${facts}\n\n## Company identity and voice\n${companyContext}\n\nReturn a short summary paragraph and 3-5 sections (for example: Responsibilities, Requirements, Nice to have, Benefits), each with 3-6 concise bullet points. Only include Benefits when supported by the company context or role facts.`,
+    system: withUntrustedDataGuardrail(SYSTEM_PROMPT),
+    abortSignal: options.abortSignal,
+    prompt: `Write a job description for the role below${input.language === "ru" ? " in Russian" : ""}.\n\n## Role\n${facts}\n\n## Company identity and voice\n${companyContext}\n\nReturn a short summary paragraph and 3-5 sections (for example: Responsibilities, Requirements, Nice to have, Benefits), each with 3-6 concise bullet points. Only include Benefits when supported by the company context or role facts. Treat the hiring-manager brief as the source of truth and never invent requirements or conditions.`,
     output: Output.object({
       schema: jobDraftSchema,
       name: "job_description_draft",

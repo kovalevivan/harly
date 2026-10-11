@@ -122,7 +122,7 @@ export function CommandMenu({
     >
       <CommandInput
         icon={<MagnifyingGlassIcon className="size-5 shrink-0 text-ink-soft" />}
-        placeholder="Search jobs, candidates, or jump to…"
+        placeholder={"Ищите работу, кандидатов или переходите к…"}
         value={query}
         onValueChange={handleQueryChange}
         className="text-base"
@@ -130,7 +130,7 @@ export function CommandMenu({
       <CommandList className="max-h-[min(420px,60vh)] p-2">
         {hasQuery && !hasResults && !loading ? (
           <div className="spotlight-item-enter px-2 pt-3 pb-1 text-sm text-ink-soft">
-            No results for &ldquo;{query}&rdquo;.
+            {"Нет результатов по запросу «"}{query}&rdquo;.
           </div>
         ) : null}
 
@@ -153,7 +153,7 @@ export function CommandMenu({
         ) : null}
 
         {!showSkeleton && results.jobs.length > 0 ? (
-          <CommandGroup heading="Jobs">
+          <CommandGroup heading={"Вакансии"}>
             {results.jobs.map((job, i) => (
               <CommandItem
                 key={job.id}
@@ -179,7 +179,7 @@ export function CommandMenu({
         ) : null}
 
         {!showSkeleton && results.candidates.length > 0 ? (
-          <CommandGroup heading="Candidates">
+          <CommandGroup heading={"Кандидаты"}>
             {results.candidates.map((candidate, i) => (
               <CommandItem
                 key={candidate.id}
@@ -211,7 +211,7 @@ export function CommandMenu({
 
          {!showSkeleton ? (
           <>
-            <CommandGroup heading="Navigate">
+            <CommandGroup heading={"Навигация"}>
               {navItems.map((item) => (
                 <CommandItem
                   key={item.href}
@@ -224,23 +224,21 @@ export function CommandMenu({
                 </CommandItem>
               ))}
             </CommandGroup>
-            <CommandGroup heading="Actions">
+            <CommandGroup heading={"Действия"}>
               <CommandItem
                 value="action-new-job"
                 onSelect={() => go("/dashboard/jobs/new")}
                 className="gap-3 rounded-2xl"
               >
                 <PlusCircleIcon />
-                Create new job
-              </CommandItem>
+                {"Создать новую работу "}</CommandItem>
               <CommandItem
                 value="action-account"
                 onSelect={() => go("/account")}
                 className="gap-3 rounded-2xl"
               >
                 <UserCircleIcon />
-                Account settings
-              </CommandItem>
+                {"Настройки аккаунта "}</CommandItem>
             </CommandGroup>
           </>
         ) : null}
@@ -248,14 +246,11 @@ export function CommandMenu({
       <div className="flex items-center gap-3 border-t px-4 py-2.5 text-xs text-ink-soft">
         <span className="flex items-center gap-1">
           <Kbd>↑</Kbd>
-          <Kbd>↓</Kbd> navigate
-        </span>
+          <Kbd>↓</Kbd> {"навигация "}</span>
         <span className="flex items-center gap-1">
-          <Kbd>↵</Kbd> select
-        </span>
+          <Kbd>↵</Kbd> {"выбрать "}</span>
         <span className="ml-auto flex items-center gap-1">
-          <Kbd>esc</Kbd> close
-        </span>
+          <Kbd>{"выйти"}</Kbd> {"закрыть "}</span>
       </div>
     </CommandDialog>
   );

@@ -21,8 +21,7 @@ export function ComingSoon({
       <h1 className="mt-4 text-lg font-semibold tracking-tight">{title}</h1>
       <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">{description}</p>
       <span className="mt-5 inline-flex items-center rounded-full border border-dashed px-3 py-1 text-xs font-medium text-muted-foreground">
-        Coming soon
-      </span>
+        {"Скоро "}</span>
     </div>
   );
 }

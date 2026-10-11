@@ -82,8 +82,7 @@ export function ConditionPanel({
           className="w-full rounded-xl border border-dashed border-border py-2.5 text-xs font-medium text-soft-ink transition-colors duration-150 ease-out hover:border-foreground/30 hover:bg-soft-kraft/40 hover:text-foreground"
         >
           <Plus className="mr-1 inline size-3.5" aria-hidden />
-          Add another filter condition
-        </button>
+          {"Добавить еще одно условие фильтра "}</button>
       )}
     </div>
   );
@@ -93,19 +92,16 @@ function EmptyConditions({ onAdd }: { onAdd: () => void }) {
   return (
     <div className="rounded-xl border border-dashed border-border bg-warm-paper px-4 py-5 text-center">
       <p className="text-sm font-semibold text-foreground">
-        No conditions — runs for every candidate
-      </p>
+        {"Никаких условий — баллотируется каждый кандидат "}</p>
       <p className="mt-1 text-xs text-soft-ink">
-        Add filters to only run when specific criteria match (e.g. source, job, AI score, tag).
-      </p>
+        {"Добавьте фильтры, которые будут запускаться только при совпадении определенных критериев (например, источника, задания, оценки AI, тега). "}</p>
       <button
         type="button"
         onClick={onAdd}
         className="mt-3 inline-flex items-center gap-1 rounded-full bg-foreground px-3.5 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90"
       >
         <Plus className="size-3.5" aria-hidden />
-        Add condition
-      </button>
+        {"Добавить условие "}</button>
     </div>
   );
 }
@@ -199,7 +195,7 @@ function GroupEditor({
     <div className="rounded-xl border border-border bg-warm-paper p-3 shadow-xs">
       <div className="mb-2.5 flex items-center justify-between">
         <span className="font-chrome rounded-full bg-soft-kraft px-2.5 py-0.5 text-[11px] uppercase tracking-wider text-foreground">
-          {node.type === "and" ? "All of these" : node.type === "or" ? "Any of these" : "Exclude"}
+          {node.type === "and" ? "Все это" : node.type === "or" ? "Любой из этих" : "Исключить"}
         </span>
         <div className="flex items-center gap-1">
           {(node.type === "and" || node.type === "or") && (
@@ -223,8 +219,7 @@ function GroupEditor({
                 className="rounded-md px-2 py-1 text-xs font-medium text-foreground hover:bg-soft-kraft"
               >
                 <Plus className="mr-1 inline size-3.5" aria-hidden />
-                add
-              </button>
+                {"добавить "}</button>
               <button
                 type="button"
                 onClick={() =>
@@ -234,18 +229,17 @@ function GroupEditor({
                   })
                 }
                 className="rounded-md px-2 py-1 text-xs text-soft-ink hover:bg-soft-kraft hover:text-foreground"
-                title="Switch AND / OR"
+                title={"Переключатель И/ИЛИ"}
               >
                 <RefreshCw className="mr-1 inline size-3.5" aria-hidden />
-                Switch
-              </button>
+                {"Переключатель "}</button>
             </>
           )}
           <button
             type="button"
             onClick={onRemove}
             className="rounded p-1 text-xs text-soft-ink hover:text-danger-rust"
-            aria-label="Remove group"
+            aria-label={"Удалить группу"}
           >
             <X className="size-3.5" aria-hidden />
           </button>
@@ -266,7 +260,7 @@ function GroupEditor({
         </TreeList>
       ) : node.children.length === 0 ? (
         <p className="px-2 py-1 text-xs italic text-soft-ink">
-          {node.type === "and" ? "Always matches" : "Never matches"}
+          {node.type === "and" ? "Всегда соответствует" : "Никогда не совпадает"}
         </p>
       ) : (
         <TreeList>
@@ -413,13 +407,12 @@ function LeafEditor({
       <div className="flex flex-col gap-2.5">
         <div className="flex items-center justify-between gap-2">
           <span className="font-chrome text-[10px] font-semibold uppercase tracking-wider text-soft-ink">
-            Field
-          </span>
+            {"Поле "}</span>
           <button
             type="button"
             onClick={onRemove}
             className="rounded p-1 text-soft-ink hover:text-danger-rust transition-colors"
-            aria-label="Remove condition"
+            aria-label={"Удалить условие"}
           >
             <X className="size-3.5" aria-hidden />
           </button>
@@ -428,25 +421,24 @@ function LeafEditor({
         <BuilderSelect
           value={preset}
           onChange={(e) => setPreset(e.target.value as PresetKey)}
-          aria-label="Condition field"
+          aria-label={"Поле условия"}
           className={builderFieldClass({ className: "w-full font-medium" })}
         >
-          <option value="source">Candidate source</option>
-          <option value="job">Job applied for</option>
-          <option value="stage">Current stage</option>
-          <option value="tag">Candidate tag</option>
-          <option value="ai_score">AI match score</option>
-          <option value="location">Location</option>
-          <option value="custom">Custom field…</option>
+          <option value="source">{"Источник кандидата"}</option>
+          <option value="job">{"Вакансия подана"}</option>
+          <option value="stage">{"Текущий этап"}</option>
+          <option value="tag">{"Тег кандидата"}</option>
+          <option value="ai_score">{"счет матча с ИИ"}</option>
+          <option value="location">{"Расположение"}</option>
+          <option value="custom">{"Пользовательское поле…"}</option>
         </BuilderSelect>
 
         <span className="font-chrome text-[10px] font-semibold uppercase tracking-wider text-soft-ink">
-          Operator
-        </span>
+          {"Оператор "}</span>
         <BuilderSelect
           value={node.op}
           onChange={(e) => setOp(e.target.value as Operator)}
-          aria-label="Condition operator"
+          aria-label={"Оператор условия"}
           className={builderFieldClass({ className: "w-full" })}
         >
           {RECRUITER_OPERATORS.map((op) => (
@@ -459,8 +451,7 @@ function LeafEditor({
         {node.op !== "is_set" && node.op !== "is_empty" && (
           <>
             <span className="font-chrome text-[10px] font-semibold uppercase tracking-wider text-soft-ink">
-              Value
-            </span>
+              {"Значение "}</span>
             <div className="min-w-0 w-full">
               <SmartValueInput
                 preset={preset}
@@ -479,7 +470,7 @@ function LeafEditor({
       {/* Fallback Custom Field Details (only if 'custom' is selected) */}
       {preset === "custom" && (
         <div className="mt-2.5 flex items-center gap-2 border-t border-hairline-c pt-2 text-xs">
-          <span className="text-soft-ink">Field:</span>
+          <span className="text-soft-ink">{"Поле:"}</span>
           <BuilderSelect
             value={node.field.kind}
             onChange={(e) => {
@@ -493,7 +484,7 @@ function LeafEditor({
                 });
               }
             }}
-            aria-label="Custom field source"
+            aria-label={"Источник пользовательского поля"}
             className="h-7 rounded border border-border bg-pure-snow px-2 text-xs text-foreground"
           >
             {FIELD_KIND_CATALOG.map((f) => (
@@ -511,7 +502,7 @@ function LeafEditor({
                   field: { ...node.field, path: e.target.value } as FieldRef,
                 })
               }
-              placeholder="property (e.g. headline)"
+              placeholder={"свойство (например, заголовок)"}
               className="h-7 flex-1 rounded border border-border bg-pure-snow px-2 text-xs text-foreground"
             />
           )}
@@ -543,8 +534,7 @@ function SmartValueInput({
   if (!meta.wantsValue) {
     return (
       <div className="flex h-9 items-center px-2 text-xs italic text-soft-ink">
-        No value required
-      </div>
+        {"Значение не требуется "}</div>
     );
   }
 
@@ -554,10 +544,10 @@ function SmartValueInput({
       <BuilderSelect
         value={String(value ?? "")}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="Job condition value"
+        aria-label={"Значение условия задания"}
         className={builderFieldClass()}
       >
-        <option value="">Select a job…</option>
+        <option value="">{"Выбрать работу…"}</option>
         {jobs.map((j) => (
           <option key={j.id} value={j.title}>
             {j.title}
@@ -573,10 +563,10 @@ function SmartValueInput({
       <BuilderSelect
         value={String(value ?? "")}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="Stage condition value"
+        aria-label={"Значение условия этапа"}
         className={builderFieldClass()}
       >
-        <option value="">Select a stage…</option>
+        <option value="">{"Выберите этап…"}</option>
         {stageNames.map((s) => (
           <option key={s} value={s}>
             {s}
@@ -595,8 +585,8 @@ function SmartValueInput({
           list={listId}
           value={String(value ?? "")}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Tag label (e.g. vip)"
-          aria-label="Candidate tag"
+          placeholder={"Ярлык тега (например, VIP)"}
+          aria-label={"Тег кандидата"}
           className={builderFieldClass()}
         />
         <datalist id={listId}>
@@ -617,12 +607,12 @@ function SmartValueInput({
           list={listId}
           value={String(value ?? "")}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Source (e.g. LinkedIn, Referral)"
-          aria-label="Candidate source"
+          placeholder={"Источник (например, LinkedIn, реферал)"}
+          aria-label={"Источник кандидата"}
           className={builderFieldClass()}
         />
         <datalist id={listId}>
-          {["LinkedIn", "Referral", "Indeed", "Career page", "Inbound", "Agency"].map(
+          {["LinkedIn", "Направление", "действительно", "Страница карьеры", "Входящий", "Агентство"].map(
             (s) => (
               <option key={s} value={s} />
             ),
@@ -639,7 +629,7 @@ function SmartValueInput({
         type="number"
         value={typeof value === "number" ? value : Number(value) || 0}
         onChange={(e) => onChange(Number(e.target.value))}
-        placeholder="Score (0-100)"
+        placeholder={"Оценка (0-100)"}
         className={builderFieldClass()}
       />
     );
@@ -653,7 +643,7 @@ function SmartValueInput({
         onChange={(e) =>
           onChange(e.target.value.split(",").map((s) => s.trim()).filter(Boolean))
         }
-        placeholder="one, two, three"
+        placeholder={"один, два, три"}
         className={builderFieldClass()}
       />
     );
@@ -664,7 +654,7 @@ function SmartValueInput({
     <input
       value={typeof value === "string" ? value : String(value ?? "")}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="Value"
+      placeholder={"Значение"}
       className={builderFieldClass()}
     />
   );

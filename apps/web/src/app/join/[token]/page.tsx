@@ -25,15 +25,13 @@ export default async function JoinPage({ params }: JoinPageProps) {
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-8 py-6">
         <Link href="/" className="font-display text-lg tracking-tight text-pine">
-          Harly
-        </Link>
+          {"Харли "}</Link>
         {!session ? (
           <Link
             href={`/login?redirect=${encodeURIComponent(`/join/${token}`)}`}
             className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
           >
-            Sign in
-          </Link>
+            {"Войти "}</Link>
         ) : null}
       </header>
 
@@ -53,13 +51,12 @@ export default async function JoinPage({ params }: JoinPageProps) {
 
         <div className="w-full max-w-sm">
           <p className="text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-pine">
-            Invitation
-          </p>
+            {"Приглашение "}</p>
           <h1 className="mt-3 text-center font-display text-3xl tracking-tight text-foreground">
-            Join {workspace.organizationName}
+            {"Присоединяйтесь "}{workspace.organizationName}
           </h1>
           <p className="mt-2 text-center text-sm leading-6 text-muted-foreground">
-            You&apos;ll join as{" "}
+            {"Вы присоединитесь как"}{" "}
             <span className="font-semibold capitalize text-foreground">
               {workspace.role.replace("_", " ")}
             </span>
@@ -73,11 +70,9 @@ export default async function JoinPage({ params }: JoinPageProps) {
                   href={`/login?redirect=${encodeURIComponent(`/join/${token}`)}`}
                   className="block w-full rounded-lg bg-primary py-3.5 text-center text-sm font-semibold text-primary-foreground transition hover:bg-pine-strong"
                 >
-                  Sign in to join
-                </Link>
+                  {"Войдите, чтобы присоединиться "}</Link>
                 <p className="text-center text-xs text-muted-foreground">
-                  Sign in or create an account to join this workspace.
-                </p>
+                  {"Войдите или создайте учетную запись, чтобы присоединиться к этому рабочему пространству. "}</p>
               </div>
             ) : (
               <JoinWorkspaceButton token={token} />

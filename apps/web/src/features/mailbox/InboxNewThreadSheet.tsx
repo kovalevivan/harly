@@ -22,13 +22,13 @@ export function InboxNewThreadSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="mx-auto max-h-[90vh] w-full overflow-y-auto sm:max-w-2xl sm:rounded-t-xl">
         <SheetHeader>
-          <SheetTitle>New thread with {person.name}</SheetTitle>
+          <SheetTitle>{"Новая тема с "}{person.name}</SheetTitle>
         </SheetHeader>
         <div className="px-4 pb-6">
           <MailComposer
             to={person.email}
-            placeholder={`Write to ${person.name}…`}
-            sendLabel="Send email"
+            placeholder={`Напишите на ${person.name}…`}
+            sendLabel={"Отправить письмо"}
             onCancel={() => onOpenChange(false)}
             onSend={async ({ subject, text, html, attachments, idempotencyKey }) => {
               const result = await createMailboxThreadAction({

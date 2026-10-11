@@ -10,17 +10,17 @@ import { PanelHeader, Section } from "./PanelKit";
 export function JobsPanel({ config, update }: { config: CareerPageConfig; update: ConfigUpdater }) {
   return (
     <div className="space-y-6">
-      <PanelHeader title="Jobs" subtitle="Configure the open positions section." />
+      <PanelHeader title={"Вакансии"} subtitle={"Настройте раздел открытых позиций."} />
 
-      <Section title="Open positions" defaultOpen>
-        <Field label="Section title">
+      <Section title={"Открытые позиции"} defaultOpen>
+        <Field label={"Название раздела"}>
           <Input
             value={config.positions.title}
             onChange={(e) => update((d) => (d.positions.title = e.target.value))}
-            placeholder="Open positions"
+            placeholder={"Открытые позиции"}
           />
         </Field>
-        <Field label="Filters">
+        <Field label={"Фильтры"}>
           {config.template === "playful" || config.template === "ashby" || config.template === "join" ? (
             <div className="flex flex-wrap gap-2">
               {(config.template === "playful"
@@ -56,8 +56,7 @@ export function JobsPanel({ config, update }: { config: CareerPageConfig; update
             </div>
           ) : (
             <p className="text-xs leading-5 text-ink-soft">
-              Filters are available in the Playful, Ashby, and Join templates.
-            </p>
+              {"Фильтры доступны в шаблонах Playful, Ashby и Join. "}</p>
           )}
         </Field>
       </Section>

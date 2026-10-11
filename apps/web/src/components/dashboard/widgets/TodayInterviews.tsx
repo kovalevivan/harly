@@ -7,7 +7,7 @@ import { UserAvatar } from "@/components/ui/UserAvatar";
 import type { TodayInterview } from "@/features/dashboard/widgets";
 import { Tile, TileHeader, TileLink, EmptyHint } from "./primitives";
 
-const timeFmt = new Intl.DateTimeFormat("en", {
+const timeFmt = new Intl.DateTimeFormat("ru-RU", {
   hour: "numeric",
   minute: "2-digit",
 });
@@ -23,8 +23,8 @@ export function TodayInterviews({
     <Tile className={className}>
       <TileHeader
         icon={CalendarClock}
-        title="Today's interviews"
-        action={<TileLink href="/dashboard/pipeline">View pipeline</TileLink>}
+        title={"Собеседования сегодня"}
+        action={<TileLink href="/dashboard/pipeline">{"Открыть воронку"}</TileLink>}
       />
       <div className="flex flex-1 flex-col px-2 pb-3 pt-1">
         {interviews.length > 0 ? (
@@ -61,7 +61,7 @@ export function TodayInterviews({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="shrink-0 text-muted-foreground hover:text-foreground"
-                    title="View in Google Calendar"
+                    title={"Посмотреть в Календаре Google"}
                   >
                     <ExternalLink className="size-3.5" />
                   </a>
@@ -70,13 +70,12 @@ export function TodayInterviews({
             ))}
           </ul>
         ) : (
-          <EmptyHint icon={CalendarClock} text="No interviews today. Enjoy the calm." />
+          <EmptyHint icon={CalendarClock} text={"Сегодня собеседований нет."} />
         )}
         <Button asChild variant="outline" size="sm" className="mt-2 w-full">
           <Link href="/dashboard/pipeline">
             <CalendarPlus className="size-4" strokeWidth={1.8} />
-            Schedule interview
-          </Link>
+            {"Назначить собеседование "}</Link>
         </Button>
       </div>
     </Tile>

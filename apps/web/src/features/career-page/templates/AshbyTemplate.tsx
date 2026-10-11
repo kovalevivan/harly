@@ -1,3 +1,4 @@
+import { russianPlural } from "@/lib/russian-plural";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -20,7 +21,7 @@ import { CareerFooter } from "@/features/career-page/CareerFooter";
 import { RichBody } from "@/features/career-page/RichBody";
 
 const reveal =
-  "duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-backwards motion-reduce:animate-none";
+  "длительность-500 анимация постепенное появление слайд-вниз-снизу-3 режим заливки назад движение-уменьшение: анимация-нет";
 
 /** Distinct, sorted facet values for a key. */
 function facet(jobs: Job[], pick: (j: Job) => string | null): string[] {
@@ -51,7 +52,7 @@ export function AshbyTemplate({
   portalEnabled?: boolean;
 }) {
   const accent = config.theme.accent ?? workspace.primaryColor;
-  const headline = config.hero.headline || "Open roles";
+  const headline = config.hero.headline || "Открытые вакансии";
   const logo = workspace.logoUrl;
   const enabled = config.positions.filters;
 
@@ -119,17 +120,17 @@ export function AshbyTemplate({
   const facetGroups = [
     {
       key: "department" as const,
-      label: "Department",
+      label: "Отдел",
       icon: Building2,
       values: departments,
     },
     {
       key: "location" as const,
-      label: "Location",
+      label: "Расположение",
       icon: MapPin,
       values: locations,
     },
-    { key: "type" as const, label: "Type", icon: Briefcase, values: types },
+    { key: "type" as const, label: "Тип", icon: Briefcase, values: types },
   ].filter((g) => enabled.includes(g.key) && g.values.length > 0);
 
   return (
@@ -186,7 +187,7 @@ export function AshbyTemplate({
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search roles"
+                placeholder={"Поиск ролей"}
                 className="w-full bg-transparent text-sm outline-none placeholder:text-zinc-400"
               />
             </div>
@@ -249,13 +250,12 @@ export function AshbyTemplate({
           {/* Job list */}
           <main>
             <div className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-              {shown.length} open {shown.length === 1 ? "role" : "roles"}
+              {"Открытых вакансий: "}{shown.length}
             </div>
 
             {groups.length === 0 ? (
               <p className="rounded-lg border border-dashed border-zinc-200 py-16 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-                No roles match these filters.
-              </p>
+                {"Ни одна роль не соответствует этим фильтрам. "}</p>
             ) : (
               <div className="space-y-10">
                 {groups.map(([dept, deptJobs], groupIdx) => (
@@ -270,7 +270,7 @@ export function AshbyTemplate({
                       </h2>
                       <span className="text-xs tabular-nums text-zinc-400">
                         {deptJobs.length}{" "}
-                        {deptJobs.length === 1 ? "role" : "roles"}
+                        {russianPlural(deptJobs.length, "вакансия", "вакансии", "вакансий")}
                       </span>
                     </div>
                     <div className="mt-3 divide-y divide-zinc-100 rounded-xl border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">

@@ -1,3 +1,4 @@
+import { localizeStageName } from "@/lib/localize-system-text";
 import { GitBranch } from "lucide-react";
 
 import type { PipelineOverview } from "@/features/dashboard/widgets";
@@ -32,8 +33,8 @@ export function PipelineOverviewCard({
     <Tile className={className}>
       <TileHeader
         icon={GitBranch}
-        title="Pipeline overview"
-        action={<TileLink href="/dashboard/pipeline">View pipeline</TileLink>}
+        title={"Обзор воронки"}
+        action={<TileLink href="/dashboard/pipeline">{"Открыть воронку"}</TileLink>}
       />
       <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-3">
         {data.selected ? (
@@ -70,7 +71,7 @@ export function PipelineOverviewCard({
                       style={{ backgroundColor: LANE_COLORS[i % LANE_COLORS.length] }}
                     />
                     <span className="truncate text-xs text-muted-foreground">
-                      {stage.name}
+                      {localizeStageName(stage.name)}
                     </span>
                   </div>
                   <p className="mt-1 text-xl font-semibold tabular-nums">
@@ -87,7 +88,7 @@ export function PipelineOverviewCard({
         ) : (
           <EmptyHint
             icon={GitBranch}
-            text="No open jobs yet. Publish a role to start a pipeline."
+            text={"Открытых вакансий пока нет. Опубликуйте роль, чтобы запустить конвейер."}
           />
         )}
       </div>

@@ -70,9 +70,9 @@ export function ScopedSearchSelect({
             setRemote(result.items ?? []);
             setNextCursor(result.nextCursor ?? null);
           }
-          else setError("Could not search this workspace. Try again.");
+          else setError("Не удалось выполнить поиск в этой рабочей области. Попробуйте еще раз.");
         } catch {
-          if (active) setError("Search unavailable. Check your connection and try again.");
+          if (active) setError("Поиск недоступен. Проверьте подключение и повторите попытку.");
         } finally {
           if (active) setPending(false);
         }
@@ -111,7 +111,7 @@ export function ScopedSearchSelect({
         cursor: nextCursor,
       });
       if (!result.ok) {
-        if (queryKeyRef.current === queryKey) setError("Could not load more results. Try again.");
+        if (queryKeyRef.current === queryKey) setError("Не удалось загрузить больше результатов. Попробуйте еще раз.");
         return;
       }
       if (queryKeyRef.current !== queryKey) return;
@@ -121,7 +121,7 @@ export function ScopedSearchSelect({
       });
       setNextCursor(result.nextCursor ?? null);
     } catch {
-      if (queryKeyRef.current === queryKey) setError("Could not load more results. Try again.");
+      if (queryKeyRef.current === queryKey) setError("Не удалось загрузить больше результатов. Попробуйте еще раз.");
     } finally {
       setLoadingMore(false);
     }
@@ -157,7 +157,7 @@ export function ScopedSearchSelect({
             onValueChange={setQuery}
           />
           <CommandList id={listId} aria-busy={pending}>
-            {pending || error ? <p role="status" className="px-3 py-3 text-xs text-soft-ink">{pending ? "Searching workspace…" : error}</p> : <CommandEmpty>No matches in this workspace.</CommandEmpty>}
+            {pending || error ? <p role="status" className="px-3 py-3 text-xs text-soft-ink">{pending ? "Поиск рабочего места…" : error}</p> : <CommandEmpty>{"В этой рабочей области нет совпадений."}</CommandEmpty>}
             <CommandGroup>
               {allowEmpty ? (
                 <CommandItem
@@ -195,7 +195,7 @@ export function ScopedSearchSelect({
                   disabled={loadingMore}
                   className="w-full border-t border-border px-3 py-2 text-left text-xs font-medium text-foreground hover:bg-soft-kraft/50 disabled:opacity-50"
                 >
-                  {loadingMore ? "Loading more…" : "Load more results"}
+                  {loadingMore ? "Загрузка еще…" : "Загрузить больше результатов"}
                 </button>
               ) : null}
             </CommandGroup>

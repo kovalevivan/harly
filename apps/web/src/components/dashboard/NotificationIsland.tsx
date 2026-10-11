@@ -13,7 +13,7 @@ import type { WorkspaceOption } from "@/features/workspaces/data";
 
 const DEMO_SEEN_KEY = "harly:demo-island-seen";
 const DEMO_MESSAGE =
-  "Live demo — shared workspace, resets ~2h. Don't enter real candidate data.";
+  "Живая демонстрация — общее рабочее пространство, сброс ~2 часа. Не вводите реальные данные кандидата.";
 const DEMO_AUTO_HIDE_MS = 5200;
 
 const STATUS_META: Record<

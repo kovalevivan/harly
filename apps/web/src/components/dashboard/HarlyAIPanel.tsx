@@ -1,5 +1,7 @@
 "use client";
 
+import { formatEnumLabel } from "@/lib/format";
+import {localizeSystemText, localizeStageName } from "@/lib/localize-system-text";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -143,16 +145,16 @@ const PhWarning = ({ className }: { className?: string }) => (
 );
 
 const QUICK_PROMPTS = [
-  { icon: PhFunnel, label: "How's my pipeline?", color: "text-blue-500" },
-  { icon: PhUserCheck, label: "Who needs review?", color: "text-green-500" },
+  { icon: PhFunnel, label: "Как мой трубопровод?", color: "text-blue-500" },
+  { icon: PhUserCheck, label: "Кому нужен обзор?", color: "text-green-500" },
   {
     icon: PhChartBar,
-    label: "Show my hiring report",
+    label: "Показать мой отчет о приеме на работу",
     color: "text-purple-500",
   },
   {
     icon: PhEnvelope,
-    label: "Which jobs are at risk?",
+    label: "Какие рабочие места находятся под угрозой?",
     color: "text-orange-500",
   },
 ];
@@ -160,75 +162,73 @@ const QUICK_PROMPTS = [
 // Human labels for the "calling a tool" inline state.
 export const TOOL_LABELS: Record<string, string> = {
   // Automations tools
-  "tool-listAutomationTools": "Checking automation tools",
-  "tool-searchAutomations": "Searching automations",
-  "tool-getAutomationContext": "Reading automation draft",
-  "tool-prepareAutomationPatch": "Preparing automation proposal",
-  "tool-simulateAutomationProposal": "Simulating automation",
-  "tool-applyAutomationProposal": "Applying automation changes",
-  "tool-resolveAutomationResources": "Resolving automation resources",
-  "tool-prepareAutomationPlan": "Preparing automation plan",
-  "tool-compilePlan": "Compiling automation plan",
-  "tool-runBranchCoverage": "Analyzing branch coverage",
-  "tool-diagnoseWorkflowRun": "Diagnosing workflow run",
-  "tool-getWorkflowRunDiagnosis": "Diagnosing workflow run",
-  "tool-prepareAutomationRepair": "Preparing automation repair",
+  "tool-listAutomationTools": "Проверка средств автоматизации",
+  "tool-searchAutomations": "Поиск автоматизации",
+  "tool-getAutomationContext": "Чтение проекта автоматизации",
+  "tool-prepareAutomationPatch": "Подготовка предложения по автоматизации",
+  "tool-simulateAutomationProposal": "Моделирование автоматизации",
+  "tool-applyAutomationProposal": "Применение изменений автоматизации",
+  "tool-resolveAutomationResources": "Ресурсы автоматизации",
+  "tool-prepareAutomationPlan": "Подготовка плана автоматизации",
+  "tool-compilePlan": "Составление плана автоматизации",
+  "tool-runBranchCoverage": "Проверка ветвей сценария",
+  "tool-diagnoseWorkflowRun": "Диагностика рабочего процесса",
+  "tool-getWorkflowRunDiagnosis": "Диагностика рабочего процесса",
+  "tool-prepareAutomationRepair": "Подготовка исправления сценария",
   // Capabilities & workspace
-  "tool-workspaceCapabilities": "Checking workspace capabilities",
-  "tool-connectedIntegrations": "Checking connected integrations",
-  "tool-userPermissions": "Checking permissions",
-  "tool-harlyProductKnowledge": "Consulting Harly documentation",
-  "tool-resolveCandidate": "Finding candidate",
-  "tool-resolveJob": "Finding job",
-  "tool-resolveApplication": "Finding application",
-  "tool-reviewCandidate": "Evaluating candidate profile",
-  "tool-candidateNextAction": "Determining next action",
-  "tool-prepareInterview": "Preparing interview scheduling",
-  "tool-hiringBrief": "Preparing hiring brief",
-  "tool-getCandidateContext": "Reading candidate context",
-  "tool-getApplicationContext": "Reading application context",
-  "tool-getJobStatus": "Checking job status",
-  "tool-jobContext": "Reading job context",
-  "tool-jobDistributionOptions": "Checking job distribution options",
+  "tool-workspaceCapabilities": "Проверка возможностей рабочего пространства",
+  "tool-connectedIntegrations": "Проверка подключенных интеграций",
+  "tool-userPermissions": "Проверка разрешений",
+  "tool-harlyProductKnowledge": "Консультации по документации Harly",
+  "tool-resolveCandidate": "Поиск кандидата",
+  "tool-resolveJob": "Поиск работы",
+  "tool-resolveApplication": "Поиск применения",
+  "tool-reviewCandidate": "Оценка профиля кандидата",
+  "tool-candidateNextAction": "Определение следующего действия",
+  "tool-prepareInterview": "Подготовка расписания собеседований",
+  "tool-hiringBrief": "Подготовка резюме о приеме на работу",
+  "tool-getCandidateContext": "Чтение контекста кандидата",
+  "tool-getApplicationContext": "Изучение отклика",
+  "tool-getJobStatus": "Проверка статуса задания",
+  "tool-jobContext": "Чтение контекста задания",
+  "tool-jobDistributionOptions": "Проверка вариантов распределения должностей",
   // Core operational tools
-  "tool-reviewPipeline": "Checking pipeline",
-  "tool-candidatesNeedingReview": "Finding candidates needing review",
-  "tool-jobsAtRisk": "Checking jobs at risk",
-  "tool-hiringReport": "Generating hiring report",
-  "tool-searchCandidates": "Searching candidates",
-  "tool-listCandidates": "Listing candidates",
-  "tool-candidateProfile": "Reading candidate profile",
-  "tool-listJobs": "Listing jobs",
-  "tool-jobDetail": "Checking job details",
-  "tool-upcomingInterviews": "Checking upcoming interviews",
-  "tool-todayInterviews": "Checking today's interviews",
-  "tool-listTasks": "Checking tasks",
-  "tool-taskCounts": "Counting tasks",
-  "tool-inbox": "Checking inbox",
-  "tool-getCandidateScore": "Reading AI evaluation",
-  "tool-candidateScorecards": "Checking team scorecards",
-  "tool-listCandidateOffers": "Checking offers",
-  "tool-talentPool": "Exploring talent pool",
-  "tool-listEmailTemplates": "Listing email templates",
-  "tool-emailTemplate": "Reading email template",
-  "tool-reportsOverview": "Generating analytics report",
-  "tool-generateCandidateScore": "Generating AI evaluation",
-  "tool-draftCandidateEmail": "Drafting candidate email",
-  "tool-generateJobDraft": "Drafting job description",
-  "tool-generateScreeningQuestions": "Generating screening questions",
-  "tool-interviewBrief": "Preparing interview brief",
-  "tool-summarizeInterviewNotes": "Summarizing interview notes",
-  "tool-detectDuplicates": "Checking duplicates",
-  "tool-compareCandidates": "Comparing candidates",
-  "tool-bulkScoreJob": "Scoring job applicants",
-  "tool-recentAgentActions": "Checking recent actions",
+  "tool-reviewPipeline": "Проверка трубопровода",
+  "tool-candidatesNeedingReview": "Поиск кандидатов, нуждающихся в проверке",
+  "tool-jobsAtRisk": "Проверка рабочих мест, находящихся под угрозой",
+  "tool-hiringReport": "Создание отчета о приеме на работу",
+  "tool-searchCandidates": "Поиск кандидатов",
+  "tool-listCandidates": "Листинг кандидатов",
+  "tool-candidateProfile": "Чтение профиля кандидата",
+  "tool-listJobs": "Список вакансий",
+  "tool-jobDetail": "Проверка деталей задания",
+  "tool-upcomingInterviews": "Проверяю предстоящие собеседования",
+  "tool-todayInterviews": "Проверяю сегодняшние интервью",
+  "tool-listTasks": "Проверка задач",
+  "tool-taskCounts": "Подсчет задач",
+  "tool-inbox": "Проверка входящих сообщений",
+  "tool-getCandidateScore": "Чтение оценки ИИ",
+  "tool-candidateScorecards": "Проверка карточек команд",
+  "tool-listCandidateOffers": "Проверка предложений",
+  "tool-talentPool": "Изучение кадрового резерва",
+  "tool-listEmailTemplates": "Список шаблонов электронной почты",
+  "tool-emailTemplate": "Чтение шаблона электронного письма",
+  "tool-reportsOverview": "Формирование аналитического отчета",
+  "tool-generateCandidateScore": "Создание оценки ИИ",
+  "tool-draftCandidateEmail": "Составление электронного письма кандидата",
+  "tool-generateJobDraft": "Составление должностной инструкции",
+  "tool-generateScreeningQuestions": "Создание проверочных вопросов",
+  "tool-interviewBrief": "Подготовка брифа для собеседования",
+  "tool-summarizeInterviewNotes": "Подведение итогов интервью",
+  "tool-detectDuplicates": "Проверка дубликатов",
+  "tool-compareCandidates": "Сравнение кандидатов",
+  "tool-bulkScoreJob": "Оценка соискателей на работу",
+  "tool-recentAgentActions": "Проверка последних действий",
 };
 
 export function getToolLabel(partType: string): string {
   if (TOOL_LABELS[partType]) return TOOL_LABELS[partType];
-  const name = partType.startsWith("tool-") ? partType.slice(5) : partType;
-  const spaced = name.replace(/([A-Z])/g, " $1").toLowerCase().trim();
-  return spaced ? `Checking ${spaced}` : "Working";
+  return partType ? "Выполняю действие" : "Работаю";
 }
 
 /**
@@ -261,7 +261,7 @@ export function chatErrorMessage(error: unknown): string | null {
     const message = (error as { message?: unknown }).message;
     if (typeof message === "string" && message.trim()) return unwrapJsonError(message.trim());
   }
-  return "Harly AI is temporarily unavailable. Please try again in a moment.";
+  return "Harly AI временно недоступен. Пожалуйста, повторите попытку через минуту.";
 }
 
 /** The chat transport surfaces non-2xx bodies verbatim; show `{ error }` text, not raw JSON. */
@@ -331,8 +331,7 @@ function ToolStatus({
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
         <PhWarning className="shrink-0 text-amber-500" />
         <span>
-          {label} was interrupted before finishing — send a message to continue.
-        </span>
+          {label} {"было прервано до завершения — отправьте сообщение, чтобы продолжить. "}</span>
       </div>
     );
   }
@@ -486,25 +485,25 @@ function ToolResultCard({
   if (toolName === "recentAgentActions" && Array.isArray(o.actions)) {
     const labelFor = (name: unknown) => {
       const labels: Record<string, string> = {
-        moveCandidateStage: "Moved candidate",
-        rejectCandidate: "Rejected candidate",
-        createTask: "Created task",
-        updateTask: "Updated task",
-        completeMyOpenTasks: "Completed open tasks",
-        createJob: "Created draft job",
-        addCandidateNote: "Added candidate note",
-        addCandidateTag: "Added candidate tag",
-        createOffer: "Created draft offer",
-        sendOffer: "Sent offer",
-        decideOffer: "Recorded offer decision",
-        scheduleInterview: "Scheduled interview",
-        addToTalentPool: "Added candidate to talent pool",
-        assignFromPoolToJob: "Assigned candidate to job",
-        createScorecard: "Created scorecard",
-        sendCandidateEmail: "Sent candidate email",
-        undoAgentAction: "Undid an action",
+        moveCandidateStage: "Перемещенный кандидат",
+        rejectCandidate: "Отклоненный кандидат",
+        createTask: "Созданная задача",
+        updateTask: "Обновленная задача",
+        completeMyOpenTasks: "Выполненные открытые задачи",
+        createJob: "Создан черновик задания",
+        addCandidateNote: "Добавлено примечание к кандидату",
+        addCandidateTag: "Добавлен тег кандидата",
+        createOffer: "Создан проект предложения",
+        sendOffer: "Отправленное предложение",
+        decideOffer: "Записанное решение по предложению",
+        scheduleInterview: "Запланированное интервью",
+        addToTalentPool: "Добавлен кандидат в кадровый резерв",
+        assignFromPoolToJob: "Назначенный кандидат на работу",
+        createScorecard: "Создана система показателей",
+        sendCandidateEmail: "Отправлено письмо кандидату",
+        undoAgentAction: "Отменил действие",
       };
-      if (typeof name !== "string") return "Harly action";
+      if (typeof name !== "string") return "Харли экшн";
       return labels[name] ?? name.replace(/([a-z])([A-Z])/g, "$1 $2");
     };
     const actions = o.actions as Array<Record<string, unknown>>;
@@ -512,8 +511,7 @@ function ToolResultCard({
       <Card className="gap-0 border-border/70 p-2 shadow-none">
         {actions.length === 0 ? (
           <span className="px-1 py-0.5 text-[12px] text-muted-foreground">
-            No recent actions.
-          </span>
+            {"Нет недавних действий. "}</span>
         ) : (
           actions.map((action, index) => {
             const success = action.success;
@@ -525,12 +523,12 @@ function ToolResultCard({
                   : "text-muted-foreground";
             const stateLabel =
               action.status === "processing"
-                ? "In progress"
+                ? "В процессе"
                 : success === true
-                  ? "Done"
+                  ? "Готово"
                   : success === false
-                    ? "Failed"
-                    : "Unknown";
+                    ? "Не удалось"
+                    : "Неизвестно";
             return (
               <div
                 key={
@@ -558,8 +556,7 @@ function ToolResultCard({
                 </div>
                 {action.undoable === true && (
                   <span className="shrink-0 text-[10px] text-muted-foreground">
-                    Undo available
-                  </span>
+                    {"Отмена доступна "}</span>
                 )}
                 <span className={cn("shrink-0 text-[10px]", tone)}>
                   {stateLabel}
@@ -581,17 +578,16 @@ function ToolResultCard({
       <Card className="gap-2 border-border/70 p-3 shadow-none">
         <div className="flex items-baseline justify-between">
           <span className="text-[12px] font-semibold tracking-tight">
-            {job ?? "Pipeline"}
+            {job ?? "Воронка найма"}
           </span>
           <span className="text-[11px] text-muted-foreground">
-            {String(o.totalActive ?? 0)} active
-          </span>
+            {String(o.totalActive ?? 0)} {"активных "}</span>
         </div>
         <div className="flex flex-col gap-1.5">
           {stages.map((s, i) => (
             <div key={s.stage} className="flex items-center gap-2">
               <span className="w-20 shrink-0 truncate text-[11px] text-muted-foreground">
-                {s.stage}
+                {localizeStageName(s.stage ?? "")}
               </span>
               <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                 <div
@@ -651,11 +647,10 @@ function ToolResultCard({
                 REC_TONE[rec] ?? "",
               )}
             >
-              {rec.replace(/_/g, " ") || "Scored"}
+              {rec.replace(/_/g, " ") || "Забил"}
             </span>
             <span className="text-[11px] text-muted-foreground">
-              AI fit score · out of 100
-            </span>
+              {"Оценка соответствия AI · из 100 "}</span>
           </div>
         </div>
         {typeof o.summary === "string" && (
@@ -700,10 +695,10 @@ function ToolResultCard({
       { value: number; deltaPct: number; positive: boolean; isRate: boolean }
     >;
     const labels: Record<string, string> = {
-      applications: "Applications",
-      interviews: "Interviews",
-      hires: "Hires",
-      offerAcceptance: "Offer accept.",
+      applications: "Отклики",
+      interviews: "Собеседования",
+      hires: "Наняты",
+      offerAcceptance: "Предложение принять.",
     };
     return (
       <Card className="grid grid-cols-2 gap-2 border-border/70 p-3 shadow-none">
@@ -756,7 +751,7 @@ function ToolResultCard({
                 {c.name}
               </span>
               <span className="truncate text-[11px] text-muted-foreground">
-                {c.job} · {c.stage}
+                {c.job} · {localizeStageName(c.stage ?? "")}
               </span>
             </div>
             <span
@@ -767,8 +762,7 @@ function ToolResultCard({
                   : "bg-muted text-muted-foreground",
               )}
             >
-              {c.waitingDays}d
-            </span>
+              {c.waitingDays}{"д "}</span>
           </Row>
         ))}
       </Card>
@@ -802,8 +796,7 @@ function ToolResultCard({
         ))}
         {list.length > 8 && (
           <p className="px-2 pt-1 text-[10px] text-muted-foreground">
-            +{list.length - 8} more
-          </p>
+            +{list.length - 8} {"ещё "}</p>
         )}
       </Card>
     );
@@ -856,7 +849,7 @@ function ToolResultCard({
                     STATUS_TONE[a.status] ?? "text-muted-foreground",
                   )}
                 >
-                  {a.stage ?? a.status}
+                  {localizeStageName(a.stage ?? "") ?? a.status}
                 </span>
               </div>
             ))}
@@ -935,11 +928,11 @@ function ToolResultCard({
                   STATUS_TONE[j.status] ?? "text-muted-foreground",
                 )}
               >
-                {j.status}
+                {formatEnumLabel(j.status)}
               </span>
             </div>
             <div className="flex shrink-0 items-center gap-2 text-[11px] tabular-nums text-muted-foreground">
-              <span>{j.activeApplicants} active</span>
+              <span>{j.activeApplicants} {"активных"}</span>
               {j.newThisWeek > 0 && (
                 <span className="rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-emerald-600 dark:text-emerald-400">
                   +{j.newThisWeek}
@@ -970,11 +963,11 @@ function ToolResultCard({
       if (!d) return "";
       const date = new Date(d);
       return toolName === "todayInterviews"
-        ? date.toLocaleTimeString("en-US", {
+        ? date.toLocaleTimeString("ru-RU", {
             hour: "numeric",
             minute: "2-digit",
           })
-        : date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        : date.toLocaleDateString("ru-RU", { month: "short", day: "numeric" });
     };
     return (
       <Card className="gap-0.5 border-border/70 p-2 shadow-none">
@@ -985,7 +978,7 @@ function ToolResultCard({
             </span>
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="truncate text-[12px] font-medium text-foreground">
-                {iv.candidate ?? "Unknown candidate"}
+                {iv.candidate ?? "Неизвестный кандидат"}
               </span>
               <span className="truncate text-[11px] text-muted-foreground">
                 {iv.label ?? iv.type ?? ""}
@@ -1076,7 +1069,7 @@ function ToolResultCard({
     return (
       <Card className="gap-0.5 border-border/70 p-2 shadow-none">
         {list.slice(0, 8).map((it, i) => {
-          const title = String(it.title ?? it.label ?? it.candidate ?? "Item");
+          const title = String(it.title ?? it.label ?? it.candidate ?? "Товар");
           const sub = String(it.subtitle ?? it.detail ?? it.job ?? "");
           const due = String(it.due ?? it.dueState ?? "");
           return (
@@ -1145,7 +1138,7 @@ function ToolResultCard({
               </span>
               <span className="truncate text-[11px] text-muted-foreground">
                 {s.author ?? ""}
-                {s.stage ? ` · ${s.stage}` : ""}
+                {s.stage ? ` · ${localizeStageName(s.stage ?? "")}` : ""}
               </span>
             </div>
             {s.comment && (
@@ -1180,9 +1173,9 @@ function ToolResultCard({
               </span>
               {of.salaryAmount != null && (
                 <span className="truncate text-[11px] text-muted-foreground">
-                  {of.currency ?? ""} {of.salaryAmount.toLocaleString()}
+                  {of.currency ?? ""} {of.salaryAmount.toLocaleString("ru-RU")}
                   {of.salaryPeriod
-                    ? `/${of.salaryPeriod === "annual" ? "yr" : "mo"}`
+                    ? `/${of.salaryPeriod === "annual" ? "год" : "мес."}`
                     : ""}
                 </span>
               )}
@@ -1193,7 +1186,7 @@ function ToolResultCard({
                 STATUS_TONE[of.status] ?? "text-muted-foreground",
               )}
             >
-              {of.status}
+              {formatEnumLabel(of.status)}
             </span>
           </Row>
         ))}
@@ -1214,11 +1207,9 @@ function ToolResultCard({
       <Card className="gap-2 border-border/70 p-3 shadow-none">
         <div className="flex items-baseline justify-between">
           <span className="text-[12px] font-semibold tracking-tight">
-            Talent pool
-          </span>
+            {"Кадровый резерв "}</span>
           <span className="text-[11px] text-muted-foreground">
-            {String(o.total ?? list.length)} total
-          </span>
+            {String(o.total ?? list.length)} {"всего "}</span>
         </div>
         {list.length > 0 && (
           <div className="flex flex-col gap-0.5">
@@ -1255,10 +1246,10 @@ function ToolResultCard({
       <Card className="gap-3 border-border/70 p-3 shadow-none">
         <div className="grid grid-cols-2 gap-2">
           {[
-            ["Open roles", s.openRoles],
-            ["Candidates", s.totalCandidates],
-            ["Apps (90d)", s.applications90d],
-            ["Hires", s.hires],
+            ["Открытые вакансии", s.openRoles],
+            ["Кандидаты", s.totalCandidates],
+            ["Отклики (90 дней)", s.applications90d],
+            ["Наняты", s.hires],
           ].map(([label, val]) => (
             <div key={String(label)} className="flex flex-col">
               <span className="text-[15px] font-semibold tabular-nums">
@@ -1355,8 +1346,7 @@ function ToolResultCard({
       <Card className="gap-0 overflow-hidden border-border/70 p-0 shadow-none">
         <div className="border-b border-border/50 bg-muted/40 px-3 py-2">
           <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-            Subject
-          </span>
+            {"Тема "}</span>
           <p className="text-[12px] font-medium text-foreground">
             {String(o.subject ?? "")}
           </p>
@@ -1384,8 +1374,7 @@ function ToolResultCard({
       return (
         <Card className="border-border/70 p-3 shadow-none">
           <span className="flex items-center gap-1.5 text-[12px] text-emerald-600 dark:text-emerald-400">
-            <PhCheck className="shrink-0" /> No duplicates found.
-          </span>
+            <PhCheck className="shrink-0" /> {"Дубликатов не обнаружено. "}</span>
         </Card>
       );
     }
@@ -1424,14 +1413,14 @@ function ToolResultCard({
           <span className="text-[15px] font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">
             {String(o.succeeded ?? 0)}
           </span>
-          <span className="text-[11px] text-muted-foreground">scored</span>
+          <span className="text-[11px] text-muted-foreground">{"оценено"}</span>
         </div>
         {Number(o.failed ?? 0) > 0 && (
           <div className="flex items-baseline gap-1.5">
             <span className="text-[15px] font-semibold tabular-nums text-rose-600 dark:text-rose-400">
               {String(o.failed)}
             </span>
-            <span className="text-[11px] text-muted-foreground">failed</span>
+            <span className="text-[11px] text-muted-foreground">{"ошибок"}</span>
           </div>
         )}
         {Number(o.remaining ?? 0) > 0 && (
@@ -1439,7 +1428,7 @@ function ToolResultCard({
             <span className="text-[15px] font-semibold tabular-nums">
               {String(o.remaining)}
             </span>
-            <span className="text-[11px] text-muted-foreground">remaining</span>
+            <span className="text-[11px] text-muted-foreground">{"осталось"}</span>
           </div>
         )}
       </Card>
@@ -1471,7 +1460,7 @@ function formatDateTime(value: unknown): string | null {
   );
   if (Number.isNaN(date.getTime())) return text;
 
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString("ru-RU", {
     dateStyle: "medium",
     timeStyle: text.includes("T") ? "short" : undefined,
   });
@@ -1484,11 +1473,11 @@ function formatMoney(input: Record<string, unknown>): string | null {
   const currency = optionalText(input.currency) ?? "";
   const period =
     input.salaryPeriod === "annual"
-      ? "/ year"
+      ? "/ год"
       : input.salaryPeriod === "monthly"
-        ? "/ month"
+        ? "/ месяц"
         : "";
-  return `${currency ? `${currency} ` : ""}${amount.toLocaleString()}${period}`;
+  return `${currency ? `${currency} ` : ""}${amount.toLocaleString("ru-RU")}${period}`;
 }
 
 function getWriteActionPreview(
@@ -1505,166 +1494,166 @@ function getWriteActionPreview(
 
   switch (toolName) {
     case "undoAgentAction":
-      return { title: "Undo action", details: [] };
+      return { title: "Отменить действие", details: [] };
     case "moveCandidateStage":
       return {
-        title: "Move candidate",
+        title: "Переместить кандидата",
         details: [
-          ...detail("Candidate", optionalText(input.candidateName)),
-          ...detail("From", optionalText(input.fromStageName)),
+          ...detail("Кандидат", optionalText(input.candidateName)),
+          ...detail("От", optionalText(input.fromStageName)),
           ...detail("To", optionalText(input.toStageName)),
         ],
       };
     case "rejectCandidate":
-      return { title: "Reject candidate", details: [] };
+      return { title: "Отклонить кандидата", details: [] };
     case "createTask":
       return {
-        title: "Create task",
+        title: "Создать задачу",
         details: [
-          ...detail("Task", optionalText(input.title)),
-          ...detail("Priority", optionalText(input.priority)),
-          ...detail("Due", formatDateTime(input.dueDate)),
+          ...detail("Задача", optionalText(input.title)),
+          ...detail("Приоритет", optionalText(input.priority)),
+          ...detail("Срок погашения", formatDateTime(input.dueDate)),
         ],
       };
     case "updateTask": {
       const count = taskIds.length || (optionalText(input.taskId) ? 1 : 0);
       const changes = [
         input.status
-          ? `Status: ${String(input.status).replace(/_/g, " ")}`
+          ? `Статус: ${String(input.status).replace(/_/g, " ")}`
           : null,
         optionalText(input.title)
-          ? `Title: ${optionalText(input.title)}`
+          ? `Название: ${optionalText(input.title)}`
           : null,
-        input.priority ? `Priority: ${String(input.priority)}` : null,
+        input.priority ? `Приоритет: ${String(input.priority)}` : null,
         input.clearDueDate === true
-          ? "Due date: remove"
+          ? "Срок сдачи: удалить"
           : formatDateTime(input.dueDate)
-            ? `Due date: ${formatDateTime(input.dueDate)}`
+            ? `Срок сдачи: ${formatDateTime(input.dueDate)}`
             : null,
         optionalText(input.ownerId) ? "Owner: change" : null,
       ].filter((change): change is string => Boolean(change));
       return {
-        title: count > 1 ? `Update ${count} tasks` : "Update task",
+        title: count > 1 ? `Обновить ${count} задачи` : "Обновить задачу",
         details: [
           ...detail(
-            "Affected",
-            count ? `${count} task${count === 1 ? "" : "s"}` : null,
+            "Затронутый",
+            count ? `${count} задача` : null,
           ),
-          ...detail("Changes", changes.join(", ") || null),
+          ...detail("Изменения", changes.join(", ") || null),
         ],
       };
     }
     case "createJob":
       return {
-        title: "Create draft job",
+        title: "Создать черновик задания",
         details: [
-          ...detail("Role", optionalText(input.title)),
-          ...detail("Workplace", optionalText(input.workplaceType)),
+          ...detail("Роль", optionalText(input.title)),
+          ...detail("Рабочее место", optionalText(input.workplaceType)),
           ...detail(
-            "Employment",
+            "Занятость",
             optionalText(input.employmentType)?.replace(/_/g, " ") ?? null,
           ),
-          ...detail("Location", optionalText(input.location)),
+          ...detail("Расположение", optionalText(input.location)),
         ],
       };
     case "addCandidateNote":
       return {
-        title: "Add candidate note",
+        title: "Добавить заметку о кандидате",
         details: detail(
-          "Note",
+          "Примечание",
           optionalText(input.body)?.slice(0, 180) ?? null,
         ),
       };
     case "addCandidateTag":
       return {
-        title: "Add candidate tag",
-        details: detail("Tag", optionalText(input.label)),
+        title: "Добавить тег кандидата",
+        details: detail("Тег", optionalText(input.label)),
       };
     case "createOffer":
       return {
-        title: "Create draft offer",
+        title: "Создать черновик предложения",
         details: [
-          ...detail("Role", optionalText(input.title)),
-          ...detail("Compensation", formatMoney(input)),
-          ...detail("Start date", formatDateTime(input.startDate)),
-          ...detail("Expires", formatDateTime(input.expiresAt)),
+          ...detail("Роль", optionalText(input.title)),
+          ...detail("Компенсация", formatMoney(input)),
+          ...detail("Дата начала", formatDateTime(input.startDate)),
+          ...detail("Срок действия истекает", formatDateTime(input.expiresAt)),
         ],
       };
     case "sendOffer":
-      return { title: "Send offer", details: [] };
+      return { title: "Отправить предложение", details: [] };
     case "decideOffer":
       return {
-        title: "Record offer decision",
-        details: detail("Decision", optionalText(input.decision)),
+        title: "Записать решение о предложении",
+        details: detail("Решение", optionalText(input.decision)),
       };
     case "scheduleInterview":
       return {
-        title: "Schedule interview",
+        title: "Назначить собеседование",
         details: [
           ...detail(
-            "Type",
+            "Тип",
             optionalText(input.type)?.replace(/_/g, " ") ?? null,
           ),
-          ...detail("When", formatDateTime(input.scheduledAt)),
+          ...detail("Когда", formatDateTime(input.scheduledAt)),
           ...detail(
-            "Duration",
+            "Продолжительность",
             typeof input.durationMins === "number"
-              ? `${input.durationMins} minutes`
+              ? `${input.durationMins} минут`
               : null,
           ),
-          ...detail("Mode", optionalText(input.mode)),
+          ...detail("Режим", optionalText(input.mode)),
         ],
       };
     case "addToTalentPool":
       return {
-        title: "Add candidate to talent pool",
+        title: "Добавить кандидата в кадровый резерв",
         details: [
-          ...detail("Source", optionalText(input.source)),
-          ...detail("Reason", optionalText(input.reason)),
+          ...detail("Источник", optionalText(input.source)),
+          ...detail("Причина", optionalText(input.reason)),
         ],
       };
     case "assignFromPoolToJob":
-      return { title: "Assign candidate to job", details: [] };
+      return { title: "Назначить кандидата на работу", details: [] };
     case "createScorecard":
       return {
-        title: "Create scorecard",
+        title: "Создать систему показателей",
         details: [
-          ...detail("Rating", optionalText(input.rating)),
-          ...detail("Stage", optionalText(input.stageName)),
+          ...detail("Рейтинг", optionalText(input.rating)),
+          ...detail("Этап", optionalText(input.stageName)),
           ...detail(
-            "Comment",
+            "Комментарий",
             optionalText(input.comment)?.slice(0, 180) ?? null,
           ),
         ],
       };
     case "sendCandidateEmail":
       return {
-        title: "Send candidate email",
+        title: "Отправить письмо кандидату",
         details: [
           ...detail("To", optionalText(input.toEmail)),
-          ...detail("Subject", optionalText(input.subject)),
+          ...detail("Тема", optionalText(input.subject)),
         ],
       };
     case "generateCandidateScore":
       return {
-        title: "Generate candidate evaluation",
+        title: "Создание оценки кандидата",
         details: [
-          ...detail("Candidate", optionalText(input.candidateName)),
-          ...detail("Role", optionalText(input.jobTitle)),
-          { label: "Data sent", value: "Resume and application answers" },
+          ...detail("Кандидат", optionalText(input.candidateName)),
+          ...detail("Роль", optionalText(input.jobTitle)),
+          { label: "Данные отправлены", value: "Resume and application answers" },
         ],
       };
     case "bulkScoreJob":
       return {
-        title: "Evaluate applicants",
+        title: "Оценить кандидатов",
         details: [
-          ...detail("Role", optionalText(input.jobTitle)),
-          { label: "Scope", value: "All currently unscored applicants" },
-          { label: "Data sent", value: "Resumes and application answers" },
+          ...detail("Роль", optionalText(input.jobTitle)),
+          { label: "Область применения", value: "Все отклики без оценки ИИ" },
+          { label: "Данные отправлены", value: "Resumes and application answers" },
         ],
       };
     default:
-      return { title: "Confirm action", details: [] };
+      return { title: "Подтвердить действие", details: [] };
   }
 }
 
@@ -1720,7 +1709,7 @@ function WriteConfirmCard({
     requiresCanonicalPreview &&
     (!serverPreview || serverPreview.title === "Verifying action…");
   const preview = verifying
-    ? { title: "Verifying action…", details: [] }
+    ? { title: "Проверка действия…", details: [] }
     : serverPreview?.canonical && serverPreview.ok
       ? serverPreview
       : localPreview;
@@ -1736,12 +1725,12 @@ function WriteConfirmCard({
         {done.confirmed && !done.error ? (
           <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
             <Check className="size-3.5 shrink-0" />
-            <span>{done.message ?? "Done."}</span>
+            <span>{done.message ?? "Готово."}</span>
           </div>
         ) : done.error ? (
-          <span className="text-destructive">{done.error}</span>
+          <span className="text-destructive">{localizeSystemText(done.error)}</span>
         ) : (
-          <span className="text-muted-foreground">Cancelled.</span>
+          <span className="text-muted-foreground">{"Отменено."}</span>
         )}
         {/* On a successful move, show the stage path as confirmation. */}
         {isMove && done.confirmed && !done.error && from && to && (
@@ -1757,7 +1746,7 @@ function WriteConfirmCard({
             onClick={onUndo}
             disabled={done.undoing}
           >
-            {done.undoing ? "Undoing…" : "Undo"}
+            {done.undoing ? "Отмена…" : "Отменить"}
           </Button>
         ) : null}
       </div>
@@ -1779,8 +1768,7 @@ function WriteConfirmCard({
             {preview.title}
           </h3>
           <p className="text-[11px] leading-snug text-muted-foreground">
-            Review the exact changes below before confirming.
-          </p>
+            {"Прежде чем подтвердить изменения, ознакомьтесь с точными изменениями ниже. "}</p>
         </div>
         {requiresCanonicalPreview &&
         serverPreview &&
@@ -1790,7 +1778,7 @@ function WriteConfirmCard({
             className="rounded-lg bg-destructive/10 px-2.5 py-2 text-[11px] leading-snug text-destructive"
             role="alert"
           >
-            {serverPreview.error ?? "The action could not be verified."}
+            {serverPreview.error ?? "Действие не удалось проверить."}
           </p>
         ) : (
           preview.details.length > 0 && (
@@ -1819,8 +1807,7 @@ function WriteConfirmCard({
         {summary && (
           <p className="text-[11px] leading-snug text-muted-foreground">
             <span className="font-medium text-foreground/80">
-              Agent summary:
-            </span>{" "}
+              {"Резюме агента: "}</span>{" "}
             {summary}
           </p>
         )}
@@ -1844,9 +1831,9 @@ function WriteConfirmCard({
           disabled={
             pending || verifying || Boolean(serverPreview && !serverPreview.ok)
           }
-          aria-label={`Confirm: ${preview.title}`}
+          aria-label={`Подтвердить: ${preview.title}`}
         >
-          {pending ? "Working…" : "Confirm"}
+          {pending ? "Работаю…" : "Подтвердить"}
         </Button>
         <Button
           size="sm"
@@ -1854,10 +1841,9 @@ function WriteConfirmCard({
           className="h-7 px-3 text-xs"
           onClick={onCancel}
           disabled={pending}
-          aria-label={`Cancel: ${preview.title}`}
+          aria-label={`Отменить: ${preview.title}`}
         >
-          Cancel
-        </Button>
+          {"Отмена "}</Button>
       </div>
     </section>
   );
@@ -1885,9 +1871,9 @@ function humanizeAutomationLabel(value: string): string {
 }
 
 const PROPOSAL_CHANGE_VERBS: Record<string, string> = {
-  node_added: "Added step",
-  node_changed: "Updated step",
-  node_removed: "Removed step",
+  node_added: "Добавлен шаг",
+  node_changed: "Обновленный шаг",
+  node_removed: "Удаленный шаг",
 };
 
 function AutomationProposalCard({ preview }: { preview: AgentWritePreview }) {
@@ -1898,46 +1884,46 @@ function AutomationProposalCard({ preview }: { preview: AgentWritePreview }) {
   const simulationLabel = !simulation
     ? null
     : simulation.status === "verified"
-      ? "All paths tested"
+      ? "Все пути проверены"
       : simulation.status === "partial"
-        ? "Partially tested"
-        : "Tests failed";
+        ? "Частично протестировано"
+        : "Тесты не пройдены";
   const requirements = preview.automationRequirements;
   const needLines: string[] = [];
   if (requirements) {
     if (requirements.permissions.length > 0) {
       needLines.push(
-        `Needs permission: ${requirements.permissions.map(humanizeAutomationLabel).join(", ")}`,
+        `Требуется разрешение: ${requirements.permissions.map(humanizeAutomationLabel).join(", ")}`,
       );
     }
     const uses = [...requirements.integrations, ...requirements.resources].map(
       humanizeAutomationLabel,
     );
     if (uses.length > 0) {
-      needLines.push(`Uses: ${uses.join(", ")}`);
+      needLines.push(`Использует: ${uses.join(", ")}`);
     }
   }
   return (
     <div className="space-y-1.5 rounded-lg bg-muted/45 px-2.5 py-2 text-[11px] leading-snug">
-      <p className="font-medium text-foreground">What this automation does</p>
-      <ul className="max-h-28 space-y-1 overflow-y-auto text-muted-foreground" aria-label="Automation steps">
+      <p className="font-medium text-foreground">{"Что делает эта автоматизация"}</p>
+      <ul className="max-h-28 space-y-1 overflow-y-auto text-muted-foreground" aria-label={"Этапы автоматизации"}>
         {visible.map((change) => (
           <li key={`${change.kind}:${change.id}`} className="flex gap-1.5">
             <span aria-hidden="true">·</span>
             <span>
-              {PROPOSAL_CHANGE_VERBS[change.kind] ?? "Changed step"}:{" "}
+              {PROPOSAL_CHANGE_VERBS[change.kind] ?? "Измененный шаг"}:{" "}
               {change.title || humanizeAutomationLabel(change.id)}
             </span>
           </li>
         ))}
-        {hidden > 0 ? <li>Plus {hidden} more steps.</li> : null}
-        {visible.length === 0 ? <li>No step changes.</li> : null}
+        {hidden > 0 ? <li>{"Плюс "}{hidden} {"больше шагов."}</li> : null}
+        {visible.length === 0 ? <li>{"Никакого изменения шага."}</li> : null}
       </ul>
       {simulation && simulationLabel ? (
         <p className="border-t border-border/50 pt-1.5 text-muted-foreground">
           {simulationLabel} · {simulation.coveragePercent}%
           {simulation.uncoveredNodeCount > 0
-            ? ` · ${simulation.uncoveredNodeCount} steps untested`
+            ? ` · ${simulation.uncoveredNodeCount} шагов не проверено`
             : ""}
         </p>
       ) : null}
@@ -2037,7 +2023,7 @@ function EmptyState({
     <div className="flex flex-col items-center gap-5 px-4 py-10 text-center">
       <Image
         src="/harly-ai-animado.svg"
-        alt="Harly AI"
+        alt={"Харли ИИ"}
         width={88}
         height={88}
         unoptimized
@@ -2045,11 +2031,10 @@ function EmptyState({
       />
       <div className="flex flex-col gap-1">
         <h2 className="text-[18px] font-semibold tracking-[-0.01em]">
-          Hi {firstName} 👋
+          {"Здравствуйте "}{firstName} 👋
         </h2>
         <p className="text-[13px] text-muted-foreground">
-          What can I help you with today?
-        </p>
+          {"Чем я могу вам помочь сегодня? "}</p>
       </div>
       <div className="flex flex-wrap justify-center gap-1.5">
         {QUICK_PROMPTS.map(({ icon: Icon, label, color }, i) => (
@@ -2076,7 +2061,7 @@ function NotConfiguredState() {
     <div className="flex flex-col items-center gap-4 px-6 py-12 text-center">
       <Image
         src="/harly-ai-animado.svg"
-        alt="Harly AI"
+        alt={"Харли ИИ"}
         width={72}
         height={72}
         unoptimized
@@ -2084,17 +2069,14 @@ function NotConfiguredState() {
       />
       <div className="flex flex-col gap-1">
         <h2 className="text-[16px] font-semibold tracking-tight">
-          Harly AI isn&apos;t set up yet
-        </h2>
+          {"Harly AI еще не настроен "}</h2>
         <p className="text-[13px] leading-relaxed text-muted-foreground">
-          Connect an AI provider key to start chatting with your hiring copilot.
-        </p>
+          {"Подключите ключ поставщика искусственного интеллекта, чтобы начать общение с нанимающим вас вторым пилотом. "}</p>
       </div>
       <Button asChild size="sm" className="gap-1.5">
         <Link href="/settings/ai">
           <Settings className="size-3.5" />
-          Open AI settings
-        </Link>
+          {"Открыть настройки ИИ "}</Link>
       </Button>
     </div>
   );
@@ -2346,7 +2328,7 @@ function HarlyChat({
   function continueConversation() {
     if (isBusy) return;
     sendMessage(
-      { text: "Continue the previous automation request. Summarize what is ready for my review and show the next safe action." },
+      { text: "Продолжить предыдущий запрос на автоматизацию. Подведу итоги того, что готово для моего обзора и покажу следующие безопасные действия." },
       {
         body: {
           conversationId,
@@ -2372,7 +2354,7 @@ function HarlyChat({
       void addToolOutput({
         tool: toolName,
         toolCallId,
-        output: { confirmed: false, note: "User cancelled." },
+        output: { confirmed: false, note: "Пользователь отменен." },
       });
       return;
     }
@@ -2423,7 +2405,7 @@ function HarlyChat({
         toolCallId,
         output: res.success
           ? { confirmed: true, ...res }
-          : { confirmed: true, error: res.error ?? "Action failed." },
+          : { confirmed: true, error: res.error ?? "Действие не удалось." },
       });
     } finally {
       pendingWriteIdsRef.current.delete(toolCallId);
@@ -2452,7 +2434,7 @@ function HarlyChat({
         undoable: result.success ? false : current.undoable,
         error: result.success ? undefined : result.error,
         message: result.success
-          ? (result.message ?? "Action undone.")
+          ? (result.message ?? "Действие отменено.")
           : current.message,
       },
     }));
@@ -2544,7 +2526,7 @@ function HarlyChat({
                       key={callId}
                       toolCallId={callId}
                       toolName={toolName}
-                      summary={inputData.summary ?? "Confirm this action?"}
+                      summary={inputData.summary ?? "Подтвердить это действие?"}
                       input={inputData}
                       serverPreview={preparedWritePreviews[callId]}
                       done={writeResults[callId] ?? null}
@@ -2661,8 +2643,8 @@ function HarlyChat({
                   );
                 } else {
                   const summaryText = hasErrors
-                    ? `${toolExecutions.filter((e) => e.state === "error").length} operations with warnings`
-                    : `${toolExecutions.length} operations completed`;
+                    ? `${toolExecutions.filter((e) => e.state === "error").length} операции с предупреждениями`
+                    : `${toolExecutions.length} операций завершено`;
                   statusSection = (
                     <details className="group text-[11px] text-muted-foreground">
                       <summary className="inline-flex cursor-pointer select-none items-center gap-1.5 font-medium transition-colors hover:text-foreground">
@@ -2718,15 +2700,14 @@ function HarlyChat({
                   className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-snug text-muted-foreground"
                   role="status"
                 >
-                  <span>Harly AI stopped before finishing this response.</span>
+                  <span>{"Харли ИИ остановился, не успев закончить ответ."}</span>
                   <button
                     type="button"
                     onClick={continueConversation}
                     className="font-medium text-foreground underline decoration-border underline-offset-2 transition-colors hover:decoration-foreground disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isBusy}
                   >
-                    Continue safely
-                  </button>
+                    {"Продолжайте безопасно "}</button>
                 </div>
               ) : null;
               // Error parts embedded in this message (stream-level useChat
@@ -2737,7 +2718,7 @@ function HarlyChat({
                   className="text-[11px] leading-snug text-rose-600 dark:text-rose-400"
                   role="alert"
                 >
-                  {partErrorMessage}
+                  {localizeSystemText(partErrorMessage)}
                 </p>
               ) : null;
 
@@ -2745,7 +2726,7 @@ function HarlyChat({
                 <div key={message.id} className="flex items-start gap-2">
                   <Image
                     src="/harly-ai-animado.svg"
-                    alt="Harly AI"
+                    alt={"Харли ИИ"}
                     width={18}
                     height={18}
                     unoptimized
@@ -2762,12 +2743,11 @@ function HarlyChat({
                       <div
                         className="self-start rounded-lg border border-border/60 bg-muted/30 p-2"
                         role="group"
-                        aria-label={`Batch confirmation for ${pendingUpdateTasks.length} task updates`}
+                        aria-label={`Пакетное подтверждение для ${pendingUpdateTasks.length} обновлений задач`}
                       >
                         <p className="mb-1.5 text-[11px] leading-snug text-muted-foreground">
-                          Review each task card, then confirm all{" "}
-                          {pendingUpdateTasks.length} updates together.
-                        </p>
+                          {"Просмотрите каждую карточку задач, затем подтвердите все"}{" "}
+                          {pendingUpdateTasks.length} {"обновления вместе. "}</p>
                         <Button
                           size="sm"
                           className="h-7 px-3 text-xs"
@@ -2777,7 +2757,7 @@ function HarlyChat({
                               pendingWriteIds.has(task.callId),
                             )
                           }
-                          aria-label={`Confirm all ${pendingUpdateTasks.length} task updates`}
+                          aria-label={`Подтвердите все обновления задач ${pendingUpdateTasks.length}.`}
                           onClick={() => {
                             for (const t of pendingUpdateTasks) {
                               void handleWriteConfirm(
@@ -2789,8 +2769,7 @@ function HarlyChat({
                             }
                           }}
                         >
-                          Confirm all {pendingUpdateTasks.length} updates
-                        </Button>
+                          {"Подтвердить все "}{pendingUpdateTasks.length} {"обновлений "}</Button>
                       </div>
                     )}
                   </div>
@@ -2802,7 +2781,7 @@ function HarlyChat({
               <div className="flex items-center gap-2">
                 <Image
                   src="/harly-ai-animado.svg"
-                  alt="Harly AI"
+                  alt={"Харли ИИ"}
                   width={18}
                   height={18}
                   unoptimized
@@ -2840,8 +2819,7 @@ function HarlyChat({
             {mentionCandidates.length > 0 ? (
               <div className="absolute inset-x-0 bottom-full z-10 mb-2 overflow-hidden rounded-xl border border-border/70 bg-popover p-1 shadow-lg">
                 <p className="px-2 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                  Mention candidate
-                </p>
+                  {"Упоминание кандидата "}</p>
                 {mentionCandidates.map((candidate) => (
                   <button
                     key={candidate.id}
@@ -2878,29 +2856,29 @@ function HarlyChat({
               className="rounded-3xl border-border/60 bg-muted/30 px-3 py-2 shadow-none"
             >
               <PromptInputTextarea
-                placeholder="Ask Harly AI… Use @ to mention a candidate"
+                placeholder={"Спросите Harly AI… Чтобы упомянуть кандидата, используйте @."}
                 className="min-h-[36px] bg-transparent py-1 text-[13px] dark:bg-transparent"
               />
               <PromptInputActions className="justify-between pt-1">
-                <PromptInputAction tooltip="Attach files (coming soon)">
+                <PromptInputAction tooltip={"Прикрепить файлы (скоро)"}>
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon-sm"
                     disabled
                     className="cursor-not-allowed text-muted-foreground/50"
-                    aria-label="Attach files (coming soon)"
+                    aria-label={"Прикрепить файлы (скоро)"}
                   >
                     <Paperclip className="size-3.5" />
                   </Button>
                 </PromptInputAction>
-                <PromptInputAction tooltip={isBusy ? "Stop" : "Send (Enter)"}>
+                <PromptInputAction tooltip={isBusy ? "Стоп" : "Отправить (Ввести)"}>
                   {isBusy ? (
                     <Button
                       type="button"
                       size="icon-sm"
                       onClick={() => void stop()}
-                      aria-label="Stop"
+                      aria-label={"Стоп"}
                     >
                       <Square className="size-3 fill-current" strokeWidth={0} />
                     </Button>
@@ -2908,7 +2886,7 @@ function HarlyChat({
                     <Button
                       size="icon-sm"
                       onClick={submit}
-                      aria-label="Send"
+                      aria-label={"Отправить"}
                       aria-disabled={!input.trim()}
                       className={cn(
                         !input.trim() && "pointer-events-none opacity-50",
@@ -2951,14 +2929,14 @@ function HistoryDrawer({
   const relative = (iso: string) => {
     const diff = now - new Date(iso).getTime();
     const m = Math.floor(diff / 60000);
-    if (m < 1) return "just now";
-    if (m < 60) return `${m}m ago`;
+    if (m < 1) return "только что";
+    if (m < 60) return `${m}м назад`;
     const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h ago`;
+    if (h < 24) return `${h}ч назад`;
     const d = Math.floor(h / 24);
     return d < 7
-      ? `${d}d ago`
-      : new Date(iso).toLocaleDateString("en-US", {
+      ? `${d}дней назад`
+      : new Date(iso).toLocaleDateString("ru-RU", {
           month: "short",
           day: "numeric",
         });
@@ -2983,14 +2961,13 @@ function HistoryDrawer({
       >
         <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-3 py-3">
           <span className="text-[12px] font-semibold tracking-tight">
-            Chats
-          </span>
+            {"Чаты "}</span>
           <Button
             variant="ghost"
             size="icon"
             className="size-7 text-muted-foreground"
             onClick={onClose}
-            aria-label="Close history"
+            aria-label={"Закрыть историю"}
           >
             <X className="size-4" />
           </Button>
@@ -3002,14 +2979,12 @@ function HistoryDrawer({
             className="flex w-full items-center gap-2 rounded-lg border border-dashed border-border/70 px-2.5 py-2 text-[12px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
           >
             <Plus className="size-3.5" />
-            New chat
-          </button>
+            {"Новый чат "}</button>
         </div>
         <div className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto p-2">
           {conversations.length === 0 ? (
             <p className="px-2 py-4 text-center text-[11px] text-muted-foreground">
-              No conversations yet.
-            </p>
+              {"Разговоров пока нет. "}</p>
           ) : (
             conversations.map((c, i) => (
               <div
@@ -3027,7 +3002,7 @@ function HistoryDrawer({
                   className="flex min-w-0 flex-1 flex-col text-left"
                 >
                   <span className="truncate text-[12px] font-medium text-foreground">
-                    {c.title ?? "New chat"}
+                    {c.title ?? "Новый чат"}
                   </span>
                   <span className="text-[10px] text-muted-foreground">
                     {relative(c.lastMessageAt)}
@@ -3037,7 +3012,7 @@ function HistoryDrawer({
                   type="button"
                   onClick={() => onDelete(c.id)}
                   className="shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground hover:!text-rose-500"
-                  aria-label="Delete conversation"
+                  aria-label={"Удалить разговор"}
                 >
                   <Trash2 className="size-3.5" />
                 </button>
@@ -3180,7 +3155,7 @@ export function HarlyAIPanel({
     >
       <Card
         className="relative flex h-[min(560px,calc(100dvh-7.5rem))] flex-col overflow-hidden border border-border/50 p-0 shadow-[0_1px_2px_rgba(23,23,23,0.04),0_4px_16px_rgba(23,23,23,0.03)] sm:h-[560px]"
-        aria-label="Harly AI assistant"
+        aria-label={"Харли AI-помощник"}
       >
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-3 py-3">
@@ -3191,15 +3166,14 @@ export function HarlyAIPanel({
                 size="icon-sm"
                 className="text-muted-foreground"
                 onClick={() => setHistoryOpen(true)}
-                aria-label="Chat history"
+                aria-label={"История чата"}
               >
                 <PanelLeft className="size-4" />
               </Button>
             )}
             <HarlyAILogoMark className="size-5 shrink-0" />
             <span className="text-sm font-semibold tracking-tight">
-              Harly AI
-            </span>
+              {"Харли ИИ "}</span>
           </div>
           <div className="flex items-center gap-0.5">
             {aiEnabled && (
@@ -3208,7 +3182,7 @@ export function HarlyAIPanel({
                 size="icon-sm"
                 className="text-muted-foreground"
                 onClick={startNewChat}
-                aria-label="New chat"
+                aria-label={"Новый чат"}
               >
                 <Plus className="size-4" />
               </Button>
@@ -3218,7 +3192,7 @@ export function HarlyAIPanel({
               size="icon-sm"
               className="text-muted-foreground"
               onClick={onClose}
-              aria-label="Close Harly AI"
+              aria-label={"Закрыть Харли AI"}
             >
               <X className="size-4" />
             </Button>
@@ -3233,8 +3207,7 @@ export function HarlyAIPanel({
           <>
             {restoringConversation ? (
               <div className="flex flex-1 items-center justify-center text-xs text-muted-foreground">
-                Restoring your chat…
-              </div>
+                {"Восстановление чата… "}</div>
             ) : (
               <HarlyChat
                 key={conversationId}

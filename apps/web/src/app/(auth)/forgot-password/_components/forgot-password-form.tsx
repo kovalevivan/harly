@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState } from "react";
 
 import { authClient } from "@/lib/auth-client";
@@ -17,7 +18,7 @@ export function ForgotPasswordForm() {
 
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
-      setError("Enter your email address.");
+      setError("Введите свой адрес электронной почты.");
       return;
     }
 
@@ -40,19 +41,16 @@ export function ForgotPasswordForm() {
     return (
       <div className="auth-stagger space-y-4">
         <p className="text-sm leading-6 text-foreground">
-          If an account exists for{" "}
-          <span className="font-medium">{email.trim()}</span>, we&apos;ve sent
-          a password reset link. Check your inbox.
-        </p>
+          {"Если существует учетная запись для"}{" "}
+          <span className="font-medium">{email.trim()}</span>{", мы отправили ссылку для сброса пароля. Проверьте свой почтовый ящик. "}</p>
         <p className="text-sm text-muted-foreground">
-          Didn&apos;t get it? Check spam, or{" "}
+          {"Не понял? Проверьте спам или"}{" "}
           <button
             type="button"
             onClick={() => setSent(false)}
             className="cursor-pointer font-medium text-foreground underline-offset-4 hover:underline"
           >
-            try again
-          </button>
+            {"попробуй еще раз "}</button>
           .
         </p>
       </div>
@@ -66,8 +64,7 @@ export function ForgotPasswordForm() {
           htmlFor="email"
           className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
         >
-          Email address
-        </label>
+          {"Адрес электронной почты "}</label>
         <input
           id="email"
           name="email"
@@ -83,7 +80,7 @@ export function ForgotPasswordForm() {
         />
       </div>
 
-      {error ? <p className="text-center text-sm text-danger-rust">{error}</p> : null}
+      {error ? <p className="text-center text-sm text-danger-rust">{localizeSystemText(error)}</p> : null}
 
       <button
         type="submit"
@@ -94,10 +91,10 @@ export function ForgotPasswordForm() {
         {isPending ? (
           <>
             <AuthSpinner />
-            <span>Sending…</span>
+            <span>{"Отправка…"}</span>
           </>
         ) : (
-          <span>Send reset link</span>
+          <span>{"Отправить ссылку для сброса"}</span>
         )}
       </button>
     </form>

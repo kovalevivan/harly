@@ -26,11 +26,11 @@ export function SaveStatus({
     (isDirty(state) || state.kind === "error" || isNeverSaved);
 
   const getButtonText = () => {
-    if (state.kind === "saving") return "Saving…";
-    if (state.kind === "error") return "Retry saving";
-    if (state.kind === "conflict") return "Conflict";
-    if (isNeverSaved) return "Save draft";
-    if (isDirty(state)) return "Save draft";
+    if (state.kind === "saving") return "Сохранение…";
+    if (state.kind === "error") return "Повторить попытку сохранения";
+    if (state.kind === "conflict") return "Конфликт";
+    if (isNeverSaved) return "Сохранить черновик";
+    if (isDirty(state)) return "Сохранить черновик";
     return formatSaveStatus(state);
   };
 

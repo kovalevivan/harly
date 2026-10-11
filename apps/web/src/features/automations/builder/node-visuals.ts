@@ -15,13 +15,13 @@ import { actionMeta, triggerMeta } from "./catalog";
 import { describeConditions } from "./preview";
 
 export const NODE_KIND_LABEL: Record<WorkflowNode["type"], string> = {
-  trigger: "Trigger",
-  condition: "Condition",
+  trigger: "Триггер",
+  condition: "Состояние",
   action: "Action",
-  delay: "Wait",
-  approval: "Approval",
-  wait: "Wait for",
-  end: "End",
+  delay: "Подожди",
+  approval: "Одобрение",
+  wait: "Подождите",
+  end: "Конец",
 };
 
 export type NodeVisualMeta = {
@@ -38,7 +38,7 @@ export function getNodeVisualMeta(node: WorkflowNode): NodeVisualMeta {
       // rationed for genuinely live things (DESIGN.md), and starting the
       // whole automation qualifies.
       return {
-        kindLabel: "Trigger",
+        kindLabel: "Триггер",
         badgeClass: "bg-chartreuse-signal/20 text-chartreuse-ink dark:bg-chartreuse-signal/25 dark:text-chartreuse-signal font-semibold",
         iconBgClass: "bg-chartreuse-signal/25 text-chartreuse-ink dark:bg-chartreuse-signal/30 dark:text-chartreuse-signal",
         Icon: Zap,
@@ -48,7 +48,7 @@ export function getNodeVisualMeta(node: WorkflowNode): NodeVisualMeta {
       // A branch point , reuses the Badge "info" tone (status-quiet), the
       // same quiet blue-grey used for neutral/logical states elsewhere.
       return {
-        kindLabel: "Condition",
+        kindLabel: "Состояние",
         badgeClass: "bg-status-quiet text-status-quiet-ink font-medium",
         iconBgClass: "bg-status-quiet text-status-quiet-ink",
         Icon: Filter,
@@ -60,7 +60,7 @@ export function getNodeVisualMeta(node: WorkflowNode): NodeVisualMeta {
       // reads as the default/operative step without claiming the signal
       // colour.
       return {
-        kindLabel: "Action",
+        kindLabel: "Действие",
         badgeClass: "bg-tag-solid text-pure-snow dark:text-warm-paper font-medium",
         iconBgClass: "bg-tag-solid text-pure-snow dark:text-warm-paper",
         Icon: isEmail ? Mail : isStage ? ArrowRight : Play,
@@ -70,7 +70,7 @@ export function getNodeVisualMeta(node: WorkflowNode): NodeVisualMeta {
       // Waiting states share the Badge "warning" tone (warning-clay) , the
       // same "pause / not yet" signal used for paused jobs elsewhere.
       return {
-        kindLabel: "Wait",
+        kindLabel: "Подожди",
         badgeClass: "bg-warning-clay/10 text-warning-clay font-medium",
         iconBgClass: "bg-warning-clay/15 text-warning-clay",
         Icon: Clock,
@@ -79,14 +79,14 @@ export function getNodeVisualMeta(node: WorkflowNode): NodeVisualMeta {
       // Approval reuses the Badge "success" tone (sage-wash) , it is a human
       // confirmation gate, semantically closer to "sign-off" than to a wait.
       return {
-        kindLabel: "Approval",
+        kindLabel: "Одобрение",
         badgeClass: "bg-sage-wash text-success-olive font-medium",
         iconBgClass: "bg-sage-wash text-success-olive",
         Icon: Hand,
       };
     case "wait":
       return {
-        kindLabel: "Wait",
+        kindLabel: "Подожди",
         badgeClass: "bg-warning-clay/10 text-warning-clay font-medium",
         iconBgClass: "bg-warning-clay/15 text-warning-clay",
         Icon: Clock,
@@ -96,13 +96,13 @@ export function getNodeVisualMeta(node: WorkflowNode): NodeVisualMeta {
       // tone for a completed run, danger tone for a stopped one.
       return node.result === "stopped"
         ? {
-            kindLabel: "End",
+            kindLabel: "Конец",
             badgeClass: "bg-danger-rust/10 text-danger-rust font-medium",
             iconBgClass: "bg-danger-rust/15 text-danger-rust",
             Icon: OctagonX,
           }
         : {
-            kindLabel: "End",
+            kindLabel: "Конец",
             badgeClass: "bg-sage-wash text-success-olive font-medium",
             iconBgClass: "bg-sage-wash text-success-olive",
             Icon: CheckCircle2,
@@ -174,9 +174,9 @@ export function nodeCaption(node: WorkflowNode): string {
       return "Pause automation";
     }
     case "approval":
-      return node.rule === "all" ? "Everyone must approve" : "Anyone can approve";
+      return node.rule === "all" ? "Каждый должен одобрить" : "Любой может одобрить";
     case "wait":
-      return node.kind === "document_package" ? "Wait for document upload" : "Wait for event";
+      return node.kind === "document_package" ? "Wait for document upload" : "Дождитесь события";
     case "end":
       return node.result === "stopped" ? "Stop automation" : "Complete automation";
   }
@@ -193,12 +193,12 @@ export function nodeTitle(node: WorkflowNode): string {
     case "action":
       return actionMeta(node.actionType)?.label ?? node.actionType.replaceAll("_", " ");
     case "delay":
-      return "Wait";
+      return "Подожди";
     case "approval":
-      return "Approval";
+      return "Одобрение";
     case "wait":
-      return "Wait for event";
+      return "Дождитесь события";
     case "end":
-      return "End automation";
+      return "Завершить автоматизацию";
   }
 }

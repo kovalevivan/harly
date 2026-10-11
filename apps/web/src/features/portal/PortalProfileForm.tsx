@@ -124,7 +124,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
         toast.error(result.error);
         return;
       }
-      toast.success("Profile updated");
+      toast.success("Профиль обновлен");
       router.refresh();
     });
   }
@@ -134,10 +134,9 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
       {/* Basic info */}
       <fieldset className="space-y-4">
         <legend className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          Basic info
-        </legend>
+          {"Основная информация "}</legend>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="First name" id="firstName">
+          <Field label={"Имя"} id="firstName">
             <input
               id="firstName"
               className={inputClass}
@@ -146,7 +145,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
               required
             />
           </Field>
-          <Field label="Last name" id="lastName">
+          <Field label={"Фамилия"} id="lastName">
             <input
               id="lastName"
               className={inputClass}
@@ -156,11 +155,11 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
           </Field>
         </div>
 
-        <Field label="Email" hint="Email cannot be changed here.">
+        <Field label={"Электронная почта"} hint={"Электронную почту здесь изменить нельзя."}>
           <div className={readonlyClass}>{form.email}</div>
         </Field>
 
-        <Field label="Headline" id="headline">
+        <Field label={"Заголовок"} id="headline">
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
               <IdentificationIcon className="size-4 text-muted-foreground" />
@@ -170,13 +169,13 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
               className={cn(inputClass, "pl-9")}
               value={form.headline ?? ""}
               onChange={(e) => set("headline", e.target.value)}
-              placeholder="e.g. Senior Software Engineer"
+              placeholder={"например Старший инженер-программист"}
             />
           </div>
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Phone" id="phone">
+          <Field label={"Телефон"} id="phone">
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
                 <PhoneIcon className="size-4 text-muted-foreground" />
@@ -191,7 +190,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
               />
             </div>
           </Field>
-          <Field label="Location" id="location">
+          <Field label={"Расположение"} id="location">
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
                 <MapPinIcon className="size-4 text-muted-foreground" />
@@ -201,7 +200,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
                 className={cn(inputClass, "pl-9")}
                 value={form.location ?? ""}
                 onChange={(e) => set("location", e.target.value)}
-                placeholder="City, Country"
+                placeholder={"Город, Страна"}
               />
             </div>
           </Field>
@@ -213,8 +212,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
       {/* Online profiles */}
       <fieldset className="space-y-4">
         <legend className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          Online profiles
-        </legend>
+          {"Онлайн-профили "}</legend>
 
         <Field label="LinkedIn" id="linkedin">
           <div className="relative">
@@ -248,7 +246,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
               />
             </div>
           </Field>
-          <Field label="Website" id="website">
+          <Field label={"Веб-сайт"} id="website">
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
                 <GlobeIcon className="size-4 text-muted-foreground" />
@@ -277,7 +275,7 @@ export function PortalProfileForm({ profile }: { profile: ProfileData }) {
             "disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100",
           )}
         >
-          {isPending ? "Saving…" : "Save profile"}
+          {isPending ? "Сохранение…" : "Сохранить профиль"}
         </button>
       </div>
     </form>

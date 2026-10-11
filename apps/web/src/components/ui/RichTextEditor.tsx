@@ -128,64 +128,64 @@ function Toolbar({ editor }: { editor: EditorInstance | null }) {
   return (
     <div className="border-b border-border bg-muted/50">
       <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5">
-        <Btn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title="Bold">
+        <Btn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title={"Жирный"}>
           <BoldIcon />
         </Btn>
-        <Btn onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic">
+        <Btn onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title={"Курсив"}>
           <ItalicIcon />
         </Btn>
-        <Btn onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough">
+        <Btn onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title={"Зачеркивание"}>
           <StrikeIcon />
         </Btn>
 
         <Sep />
 
-        <Btn onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} active={editor.isActive("heading", { level: 1 })} title="Heading 1">
+        <Btn onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} active={editor.isActive("heading", { level: 1 })} title={"Заголовок 1"}>
           <span className="text-[11px] font-bold leading-none">H1</span>
         </Btn>
-        <Btn onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })} title="Heading 2">
+        <Btn onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })} title={"Заголовок 2"}>
           <span className="text-[11px] font-bold leading-none">H2</span>
         </Btn>
-        <Btn onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })} title="Heading 3">
+        <Btn onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })} title={"Заголовок 3"}>
           <span className="text-[11px] font-bold leading-none">H3</span>
         </Btn>
 
         <Sep />
 
-        <Btn onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")} title="Bullet list">
+        <Btn onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")} title={"Маркированный список"}>
           <BulletListIcon />
         </Btn>
-        <Btn onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive("orderedList")} title="Ordered list">
+        <Btn onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive("orderedList")} title={"Упорядоченный список"}>
           <OrderedListIcon />
         </Btn>
 
         <Sep />
 
-        <Btn onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive("blockquote")} title="Blockquote">
+        <Btn onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive("blockquote")} title={"Цитата"}>
           <BlockquoteIcon />
         </Btn>
-        <Btn onClick={() => editor.chain().focus().setHorizontalRule().run()} active={false} title="Divider">
+        <Btn onClick={() => editor.chain().focus().setHorizontalRule().run()} active={false} title={"Разделитель"}>
           <HrIcon />
         </Btn>
 
         <Sep />
 
-        <Btn onClick={() => editor.chain().focus().setTextAlign("left").run()} active={editor.isActive({ textAlign: "left" })} title="Align left">
+        <Btn onClick={() => editor.chain().focus().setTextAlign("left").run()} active={editor.isActive({ textAlign: "left" })} title={"Выровнять по левому краю"}>
           <AlignLeftIcon />
         </Btn>
-        <Btn onClick={() => editor.chain().focus().setTextAlign("center").run()} active={editor.isActive({ textAlign: "center" })} title="Align center">
+        <Btn onClick={() => editor.chain().focus().setTextAlign("center").run()} active={editor.isActive({ textAlign: "center" })} title={"Выровнять по центру"}>
           <AlignCenterIcon />
         </Btn>
-        <Btn onClick={() => editor.chain().focus().setTextAlign("right").run()} active={editor.isActive({ textAlign: "right" })} title="Align right">
+        <Btn onClick={() => editor.chain().focus().setTextAlign("right").run()} active={editor.isActive({ textAlign: "right" })} title={"Выровнять по правому краю"}>
           <AlignRightIcon />
         </Btn>
 
         <Sep />
 
-        <Btn onClick={openLinkDialog} active={editor.isActive("link")} title="Link">
+        <Btn onClick={openLinkDialog} active={editor.isActive("link")} title={"Ссылка"}>
           <LinkIcon />
         </Btn>
-        <Btn onClick={() => setEmbedOpen((o) => !o)} active={embedOpen} title="Embed (iframe / HTML)">
+        <Btn onClick={() => setEmbedOpen((o) => !o)} active={embedOpen} title={"Встроить (iframe/HTML)"}>
           <EmbedIcon />
         </Btn>
       </div>
@@ -201,18 +201,18 @@ function Toolbar({ editor }: { editor: EditorInstance | null }) {
             placeholder="https://example.com"
             className="flex-1 rounded border border-input bg-background px-2 py-1 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20"
           />
-          <button type="button" onClick={applyLink} className="rounded bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground">Apply</button>
+          <button type="button" onClick={applyLink} className="rounded bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground">{"Откликнуться"}</button>
           {editor.isActive("link") && (
-            <button type="button" onClick={() => { editor.chain().focus().unsetLink().run(); setLinkOpen(false); }} className="rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted">Remove</button>
+            <button type="button" onClick={() => { editor.chain().focus().unsetLink().run(); setLinkOpen(false); }} className="rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted">{"Удалить"}</button>
           )}
-          <button type="button" onClick={() => setLinkOpen(false)} className="rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted">Cancel</button>
+          <button type="button" onClick={() => setLinkOpen(false)} className="rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted">{"Отмена"}</button>
         </div>
       )}
 
       {/* Embed/HTML input */}
       {embedOpen && (
         <div className="flex flex-col gap-1.5 border-t border-border bg-card px-2 py-2">
-          <p className="text-[10px] text-muted-foreground">Paste raw HTML, iframe, image, video, or any markup. Inserted at cursor.</p>
+          <p className="text-[10px] text-muted-foreground">{"Вставьте необработанный HTML, iframe, изображение, видео или любую разметку. Вставлено под курсором."}</p>
           <textarea
             autoFocus
             value={embedCode}
@@ -223,8 +223,8 @@ function Toolbar({ editor }: { editor: EditorInstance | null }) {
             className="w-full rounded border border-input bg-background px-2 py-1.5 font-mono text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20"
           />
           <div className="flex gap-1.5">
-            <button type="button" onClick={insertEmbed} className="rounded bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground">Insert</button>
-            <button type="button" onClick={() => setEmbedOpen(false)} className="rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted">Cancel</button>
+            <button type="button" onClick={insertEmbed} className="rounded bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground">{"Вставить"}</button>
+            <button type="button" onClick={() => setEmbedOpen(false)} className="rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted">{"Отмена"}</button>
           </div>
         </div>
       )}

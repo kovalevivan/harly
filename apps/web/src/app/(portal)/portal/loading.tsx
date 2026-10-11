@@ -12,8 +12,7 @@ export default function PortalLoading() {
         duration={2}
         spread={2}
       >
-        Loading candidate portal...
-      </TextShimmer>
+        {"Загрузка портала кандидатов... "}</TextShimmer>
     </div>
   );
 }

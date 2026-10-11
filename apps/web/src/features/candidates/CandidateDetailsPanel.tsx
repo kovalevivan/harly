@@ -1,5 +1,9 @@
 "use client";
 
+import type { HiringReviewSummary } from "@/features/applications/hiring-review/summary";
+import { ApplicationHiringReview } from "@/features/applications/hiring-review/ApplicationHiringReview";
+import { localizeStageName } from "@/lib/localize-system-text";
+import { russianPlural } from "@/lib/russian-plural";
 import { useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
@@ -57,17 +61,17 @@ const APPLICATION_SOURCE_META: Record<
   string,
   { label: string; icon: typeof Briefcase }
 > = {
-  public_form: { label: "Job board", icon: Briefcase },
-  csv_import: { label: "CSV import", icon: FileSpreadsheet },
-  referral: { label: "Referral", icon: Users },
+  public_form: { label: "Доска объявлений", icon: Briefcase },
+  csv_import: { label: "CSV-импорт", icon: FileSpreadsheet },
+  referral: { label: "Направление", icon: Users },
   linkedin: { label: "LinkedIn", icon: Briefcase },
-  career_page: { label: "Career page", icon: Globe },
-  agency: { label: "Agency", icon: Building },
-  direct_apply: { label: "Direct apply", icon: MousePointerClick },
-  internal: { label: "Internal", icon: UserPlus },
-  email: { label: "Email", icon: Mail },
-  event: { label: "Event", icon: Megaphone },
-  manual: { label: "Manual", icon: Upload },
+  career_page: { label: "Страница карьеры", icon: Globe },
+  agency: { label: "Агентство", icon: Building },
+  direct_apply: { label: "Прямая подача заявки", icon: MousePointerClick },
+  internal: { label: "Внутренний", icon: UserPlus },
+  email: { label: "Электронная почта", icon: Mail },
+  event: { label: "Событие", icon: Megaphone },
+  manual: { label: "Руководство", icon: Upload },
 };
 
 function SectionLabel({
@@ -107,13 +111,15 @@ function SkillsList({ skills }: { skills: string[] }) {
   return (
     <div className="flex flex-wrap gap-2">
       {visible.map((skill) => (
-        <Badge key={skill} variant="outline" className="font-normal text-foreground/80">
+        <Badge
+          key={skill}
+          variant="outline"
+          className="font-normal text-foreground/80"
+        >
           {skill}
         </Badge>
       ))}
-      {overflow > 0 ? (
-        <Badge variant="outline">+{overflow}</Badge>
-      ) : null}
+      {overflow > 0 ? <Badge variant="outline">+{overflow}</Badge> : null}
     </div>
   );
 }
@@ -123,7 +129,8 @@ function ExperienceHeadline({ years }: { years: number | null }) {
   return (
     <p className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/90">
       <Sparkles className="size-3.5 text-muted-foreground" strokeWidth={1.8} />
-      {years}+ years of experience
+      {years}
+      {"+ многолетний опыт "}
     </p>
   );
 }
@@ -160,8 +167,16 @@ function DetailRow({
 
 function ApplicationDisclosure({
   application,
+  reviewOpen,
+  reviewSummary,
+  onReviewOpenChange,
+  onReviewSummaryChange,
 }: {
   application: Application;
+  reviewOpen: boolean;
+  reviewSummary?: HiringReviewSummary;
+  onReviewOpenChange: (open: boolean) => void;
+  onReviewSummaryChange: (summary: HiringReviewSummary) => void;
 }) {
   const [open, setOpen] = useState(false);
   const hasAnswers = application.answers.length > 0;
@@ -189,7 +204,7 @@ function ApplicationDisclosure({
         >
           <Link href={`/dashboard/pipeline?job=${application.jobId}` as Route}>
             <ExternalLink className="size-3.5" strokeWidth={1.8} />
-            Pipeline
+            {"Воронка найма "}
           </Link>
         </Button>
       </div>
@@ -197,7 +212,7 @@ function ApplicationDisclosure({
       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 pl-[2.4rem]">
         {application.currentStageName ? (
           <ApplicationMetaItem icon={Layers}>
-            {application.currentStageName}
+            {localizeStageName(application.currentStageName ?? "")}
           </ApplicationMetaItem>
         ) : null}
         <ApplicationMetaItem icon={Calendar}>
@@ -216,8 +231,7 @@ function ApplicationDisclosure({
             className="inline-flex items-center gap-1 rounded text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
           >
             <MessageSquareText className="size-3 shrink-0" strokeWidth={1.8} />
-            {application.answers.length} answer
-            {application.answers.length === 1 ? "" : "s"}
+            {application.answers.length} {"ответ "}
             {open ? (
               <ChevronUp className="size-3 shrink-0" strokeWidth={2} />
             ) : (
@@ -226,6 +240,14 @@ function ApplicationDisclosure({
           </button>
         ) : null}
       </div>
+
+      <ApplicationHiringReview
+        applicationId={application.id}
+        open={reviewOpen}
+        reviewSummary={reviewSummary}
+        onOpenChange={onReviewOpenChange}
+        onSummaryChange={onReviewSummaryChange}
+      />
 
       <div
         className="grid transition-[grid-template-rows] duration-200 ease-out"
@@ -256,6 +278,10 @@ export type CandidateDetailsPanelProps = {
   workspaceId: string;
   files: CandidateFileItem[];
   applications: Application[];
+  openReviewId: string | null;
+  reviewSummaries: HiringReviewSummary[];
+  onOpenReviewChange: (applicationId: string | null) => void;
+  onReviewSummaryChange: (summary: HiringReviewSummary) => void;
   email: string;
   phone: string | null;
   address: string | null;
@@ -272,6 +298,10 @@ export function CandidateDetailsPanel({
   workspaceId,
   files,
   applications,
+  openReviewId,
+  reviewSummaries,
+  onOpenReviewChange,
+  onReviewSummaryChange,
   email,
   phone,
   address,
@@ -283,16 +313,20 @@ export function CandidateDetailsPanel({
   experienceEntries,
 }: CandidateDetailsPanelProps) {
   const [open, setOpen] = useState(true);
+  const expanded = open || openReviewId !== null;
   const latestFile = files[0] ?? null;
   const resumeSummary = latestFile?.parsedSummary ?? null;
   const profileSummary = summary ?? resumeSummary;
   const skills = latestFile?.parsedSkills ?? [];
   const experienceYears = latestFile?.parsedExperienceYears ?? null;
-  const resumeExperience: ResumeExperienceItem[] = latestFile?.parsedExperience ?? [];
-  const resumeEducation: ResumeEducationItem[] = latestFile?.parsedEducationItems ?? [];
+  const resumeExperience: ResumeExperienceItem[] =
+    latestFile?.parsedExperience ?? [];
+  const resumeEducation: ResumeEducationItem[] =
+    latestFile?.parsedEducationItems ?? [];
   const experience =
     experienceEntries.length > 0 ? experienceEntries : resumeExperience;
-  const education = educationEntries.length > 0 ? educationEntries : resumeEducation;
+  const education =
+    educationEntries.length > 0 ? educationEntries : resumeEducation;
   const educationFallback = latestFile?.parsedEducation ?? null;
   const applicationsWithAnswers = applications.filter(
     (application) => application.answers.length > 0,
@@ -305,25 +339,37 @@ export function CandidateDetailsPanel({
     <section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm shadow-black/[0.03]">
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          if (expanded) {
+            onOpenReviewChange(null);
+            setOpen(false);
+          } else setOpen(true);
+        }}
         className="flex w-full items-center justify-between gap-3 bg-muted/40 px-5 py-3.5 text-left sm:px-6"
-        aria-expanded={open}
+        aria-expanded={expanded}
       >
-        <span className="text-sm font-semibold">Details</span>
-        {open ? (
-          <ChevronUp className="size-4 text-muted-foreground" strokeWidth={1.8} />
+        <span className="text-sm font-semibold">{"Подробности"}</span>
+        {expanded ? (
+          <ChevronUp
+            className="size-4 text-muted-foreground"
+            strokeWidth={1.8}
+          />
         ) : (
-          <ChevronDown className="size-4 text-muted-foreground" strokeWidth={1.8} />
+          <ChevronDown
+            className="size-4 text-muted-foreground"
+            strokeWidth={1.8}
+          />
         )}
       </button>
 
-      {open ? (
+      {expanded ? (
         <div className="divide-y divide-border/70 border-t bg-card">
           <Section>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <SectionLabel>Resume</SectionLabel>
+              <SectionLabel>{"Резюме"}</SectionLabel>
               <p className="text-xs text-muted-foreground">
-                {files.length} {files.length === 1 ? "file" : "files"}
+                {files.length}{" "}
+                {russianPlural(files.length, "файл", "файла", "файлов")}
               </p>
             </div>
             <div className="mt-4">
@@ -336,22 +382,24 @@ export function CandidateDetailsPanel({
           </Section>
 
           <Section hidden={!profileSummary}>
-            <SectionLabel>Profile summary</SectionLabel>
+            <SectionLabel>{"Сводка профиля"}</SectionLabel>
             <p className="mt-3 max-w-4xl text-sm leading-6 text-foreground/85">
               {profileSummary}
             </p>
           </Section>
 
-          <Section hidden={!summary || !resumeSummary || summary === resumeSummary}>
-            <SectionLabel>Resume summary</SectionLabel>
+          <Section
+            hidden={!summary || !resumeSummary || summary === resumeSummary}
+          >
+            <SectionLabel>{"Краткое содержание резюме"}</SectionLabel>
             <p className="mt-3 max-w-4xl text-sm leading-6 text-foreground/85">
               {resumeSummary}
             </p>
           </Section>
 
           <Section hidden={experience.length === 0}>
-            <SectionLabel meta={`${experience.length} entries`}>
-              Work experience
+            <SectionLabel meta={`${experience.length} записей`}>
+              {"Опыт работы "}
             </SectionLabel>
             <div className="mt-4">
               <ExperienceTimeline experience={experience} />
@@ -359,29 +407,36 @@ export function CandidateDetailsPanel({
           </Section>
 
           <Section
-            hidden={education.length === 0 && !educationFallback && experienceYears === null}
+            hidden={
+              education.length === 0 &&
+              !educationFallback &&
+              experienceYears === null
+            }
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <SectionLabel>Education</SectionLabel>
+              <SectionLabel>{"Образование"}</SectionLabel>
               <ExperienceHeadline years={experienceYears} />
             </div>
             <div className="mt-4">
-              <EducationList education={education} fallback={educationFallback} />
+              <EducationList
+                education={education}
+                fallback={educationFallback}
+              />
             </div>
           </Section>
 
           <Section hidden={skills.length === 0}>
-            <SectionLabel>Skills</SectionLabel>
+            <SectionLabel>{"Навыки"}</SectionLabel>
             <div className="mt-4">
               <SkillsList skills={skills} />
             </div>
           </Section>
 
           <Section hidden={!hasContactDetails}>
-            <SectionLabel>Contact details</SectionLabel>
+            <SectionLabel>{"Контактные данные"}</SectionLabel>
             <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-[11rem_minmax(0,1fr)]">
               <DetailRow
-                label="Email"
+                label={"Электронная почта"}
                 value={
                   <a
                     href={`mailto:${email}`}
@@ -394,7 +449,7 @@ export function CandidateDetailsPanel({
               />
               {phone ? (
                 <DetailRow
-                  label="Phone"
+                  label={"Телефон"}
                   value={
                     <a
                       href={`tel:${phone}`}
@@ -408,7 +463,7 @@ export function CandidateDetailsPanel({
               ) : null}
               {address ? (
                 <DetailRow
-                  label="Address"
+                  label={"Адрес"}
                   value={
                     <a
                       href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
@@ -456,7 +511,7 @@ export function CandidateDetailsPanel({
               ) : null}
               {websiteUrl ? (
                 <DetailRow
-                  label="Website"
+                  label={"Веб-сайт"}
                   value={
                     <a
                       href={websiteUrl}
@@ -475,22 +530,31 @@ export function CandidateDetailsPanel({
 
           {applications.length > 0 ? (
             <section className="px-5 py-5 sm:px-6">
-              <SectionLabel meta={`${applications.length} total`}>
-                Applications
+              <SectionLabel meta={`${applications.length} всего`}>
+                {"Отклики "}
               </SectionLabel>
               <div className="mt-4 divide-y divide-border/60">
                 {applications.map((application) => (
-                  <ApplicationDisclosure key={application.id} application={application} />
+                  <ApplicationDisclosure
+                    key={application.id}
+                    application={application}
+                    reviewOpen={openReviewId === application.id}
+                    reviewSummary={reviewSummaries.find(
+                      (s) => s.applicationId === application.id,
+                    )}
+                    onReviewOpenChange={(open) =>
+                      onOpenReviewChange(open ? application.id : null)
+                    }
+                    onReviewSummaryChange={onReviewSummaryChange}
+                  />
                 ))}
               </div>
             </section>
           ) : null}
 
           <Section hidden={applicationsWithAnswers.length === 0}>
-            <SectionLabel
-              meta={`${applicationsWithAnswers.length} application${applicationsWithAnswers.length === 1 ? "" : "s"}`}
-            >
-              Application answers
+            <SectionLabel meta={`${applicationsWithAnswers.length} отклик`}>
+              {"Ответы в форме отклика "}
             </SectionLabel>
             <div className="mt-4 divide-y divide-border/60">
               {applicationsWithAnswers.map((application) => (
@@ -500,7 +564,10 @@ export function CandidateDetailsPanel({
                   </p>
                   <dl className="mt-4 space-y-4">
                     {application.answers.map((answer) => (
-                      <div key={answer.id} className="border-l border-border/70 pl-4">
+                      <div
+                        key={answer.id}
+                        className="border-l border-border/70 pl-4"
+                      >
                         <dt className="text-sm text-muted-foreground">
                           {answer.label}
                         </dt>

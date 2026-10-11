@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState } from "react";
 
 export function SetupClaimForm() {
@@ -21,7 +22,7 @@ export function SetupClaimForm() {
       });
       const data = (await response.json()) as { error?: string };
       if (!response.ok) {
-        setError(data.error ?? "Setup could not be authorized.");
+        setError(data.error ?? "Не удалось авторизовать установку.");
         setPending(false);
         return;
       }
@@ -31,7 +32,7 @@ export function SetupClaimForm() {
       setTimeout(() => setLeaving(true), 500);
       setTimeout(() => window.location.replace("/signup"), 800);
     } catch {
-      setError("Setup could not be authorized.");
+      setError("Не удалось авторизовать установку.");
       setPending(false);
     }
   }
@@ -46,8 +47,7 @@ export function SetupClaimForm() {
           htmlFor="setup-token"
           className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
         >
-          Setup token
-        </label>
+          {"Токен установки "}</label>
         <input
           id="setup-token"
           type="password"
@@ -59,7 +59,7 @@ export function SetupClaimForm() {
             setToken(event.target.value);
             setError(null);
           }}
-          placeholder="Paste your one-time token"
+          placeholder={"Вставьте свой одноразовый токен"}
           className="mt-2 w-full border-0 border-b border-input bg-transparent pb-2.5 font-mono text-sm text-foreground outline-none transition placeholder:font-sans placeholder:text-muted-foreground focus:border-ring disabled:opacity-60"
           required
         />
@@ -67,7 +67,7 @@ export function SetupClaimForm() {
 
       {error ? (
         <p className="text-sm text-destructive" role="alert">
-          {error}
+          {localizeSystemText(error)}
         </p>
       ) : null}
 
@@ -79,18 +79,17 @@ export function SetupClaimForm() {
         {done ? (
           <>
             <CheckIcon />
-            Authorized
-          </>
+            {"Авторизованный "}</>
         ) : pending ? (
-          "Authorizing…"
+          "Авторизация…"
         ) : (
-          "Authorize setup"
+          "Разрешить установку"
         )}
       </button>
 
       <p className="text-xs leading-5 text-muted-foreground">
-        Authorization is limited to the owner email configured during{" "}
-        <code className="font-mono text-[0.85em] text-foreground">init</code>.
+        {"Авторизация ограничена адресом электронной почты владельца, настроенным во время"}{" "}
+        <code className="font-mono text-[0.85em] text-foreground">{"инициализировать"}</code>.
       </p>
     </form>
   );

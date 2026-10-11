@@ -67,11 +67,11 @@ export function NativeSigningPage({ token }: { token: string }) {
     });
     const result = await response.json();
     if (!response.ok || !result.ok) {
-      toast.error(result.error ?? "Could not send code.");
+      toast.error(result.error ?? "Не удалось отправить код.");
       return;
     }
     setChallengeId(result.challengeId);
-    toast.success("Verification code sent by email.");
+    toast.success("Код подтверждения отправлен по электронной почте.");
   }
 
   async function verifyOtp() {
@@ -82,11 +82,11 @@ export function NativeSigningPage({ token }: { token: string }) {
     });
     const result = await response.json();
     if (!response.ok || !result.ok) {
-      toast.error(result.error ?? "Invalid code.");
+      toast.error(result.error ?? "Неверный код.");
       return;
     }
     setVerified(true);
-    toast.success("Email verified.");
+    toast.success("Электронная почта подтверждена.");
   }
 
   const requiredTextFieldsFilled =
@@ -95,7 +95,7 @@ export function NativeSigningPage({ token }: { token: string }) {
 
   async function submit() {
     if (!canSubmit) {
-      toast.error("Fill in every field, add your signature, and confirm consent first.");
+      toast.error("Заполните все поля, добавьте свою подпись и сначала подтвердите согласие.");
       return;
     }
     setSubmitting(true);
@@ -111,11 +111,11 @@ export function NativeSigningPage({ token }: { token: string }) {
       });
       const result = await response.json();
       if (!response.ok || !result.ok) {
-        toast.error(result.error ?? "Could not complete signing.");
+        toast.error(result.error ?? "Не удалось завершить подписание.");
         return;
       }
       setSigned(true);
-      toast.success("Document signed successfully.");
+      toast.success("Документ успешно подписан.");
     } finally {
       setSubmitting(false);
     }
@@ -125,8 +125,7 @@ export function NativeSigningPage({ token }: { token: string }) {
     return (
       <main className="mx-auto flex min-h-[100dvh] max-w-2xl items-center justify-center p-8">
         <p className="text-sm text-muted-foreground">
-          Loading signing link…
-        </p>
+          {"Загрузка ссылки для подписи… "}</p>
       </main>
     );
 
@@ -137,10 +136,9 @@ export function NativeSigningPage({ token }: { token: string }) {
           <CheckCircle2 className="size-7" />
         </span>
         <h1 className="font-display text-xl font-semibold tracking-tight">
-          Document signed
-        </h1>
+          {"Документ подписан "}</h1>
         <p className="text-sm leading-6 text-muted-foreground">
-          Thanks, {meta?.recipientName}. A copy of the signed document will be
+          {"Спасибо, "}{meta?.recipientName}. A copy of the signed document will be
           available to the sender shortly. You can close this window.
         </p>
       </main>
@@ -151,11 +149,9 @@ export function NativeSigningPage({ token }: { token: string }) {
       <main className="mx-auto flex min-h-[100dvh] max-w-md items-center justify-center p-8">
         <div className="w-full rounded-2xl border border-border/70 bg-card p-6 text-center shadow-xs">
           <h1 className="font-display text-xl font-semibold tracking-tight">
-            Signing link unavailable
-          </h1>
+            {"Ссылка для подписи недоступна "}</h1>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            This link may have expired, already been used, or been cancelled.
-          </p>
+            {"Возможно, срок действия этой ссылки истек, она уже использовалась или была отменена. "}</p>
         </div>
       </main>
     );
@@ -166,8 +162,7 @@ export function NativeSigningPage({ token }: { token: string }) {
         <div className="flex items-center gap-2">
           <PenLine className="size-4 shrink-0 text-primary" />
           <h1 className="shrink-0 font-display text-base font-semibold tracking-tight">
-            Review and sign
-          </h1>
+            {"Рассмотрите и подпишите "}</h1>
           <span className="text-muted-foreground/50" aria-hidden>
             /
           </span>
@@ -176,20 +171,18 @@ export function NativeSigningPage({ token }: { token: string }) {
           </p>
         </div>
         <span className="ml-auto hidden shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground sm:block">
-          Signer {meta.routingOrder} of {meta.signerCount}
+          {"подписывающая сторона "}{meta.routingOrder} {"из "}{meta.signerCount}
         </span>
       </header>
 
       {meta.requiresOtp && !verified ? (
         <section className="mx-auto max-w-md space-y-4 rounded-2xl border border-border/70 bg-card p-6 shadow-xs duration-500 animate-in fade-in slide-in-from-bottom-2">
-          <h2 className="font-semibold">Verify your email</h2>
+          <h2 className="font-semibold">{"Подтвердите свой адрес электронной почты"}</h2>
           <p className="text-sm text-muted-foreground">
-            We will send a one-time code to the email address selected by the
-            sender.
-          </p>
+            {"Мы отправим одноразовый код на адрес электронной почты, выбранный отправителем. "}</p>
           {challengeId ? (
             <>
-              <Label htmlFor="otp">Verification code</Label>
+              <Label htmlFor="otp">{"Код подтверждения"}</Label>
               <Input
                 id="otp"
                 inputMode="numeric"
@@ -198,11 +191,10 @@ export function NativeSigningPage({ token }: { token: string }) {
                 placeholder="123456"
               />
               <Button onClick={verifyOtp} disabled={otp.length !== 6}>
-                Verify code
-              </Button>
+                {"Подтвердить код "}</Button>
             </>
           ) : (
-            <Button onClick={requestOtp}>Send verification code</Button>
+            <Button onClick={requestOtp}>{"Отправить код подтверждения"}</Button>
           )}
         </section>
       ) : (
@@ -222,11 +214,9 @@ export function NativeSigningPage({ token }: { token: string }) {
           </div>
           <section className="flex h-fit flex-col gap-5 rounded-2xl border border-border/70 bg-card p-5 shadow-xs lg:sticky lg:top-5">
             <div>
-              <p className="text-sm font-semibold">Your signature</p>
+              <p className="text-sm font-semibold">{"Ваша подпись"}</p>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                Draw or type your signature — it fills in every signature
-                field on the document.
-              </p>
+                {"Нарисуйте или введите свою подпись — она заполняет все поля для подписи в документе. "}</p>
             </div>
             <SignaturePad onChange={setSignature} onVectorChange={setVectorSignature} />
             <label className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-sm">
@@ -235,19 +225,15 @@ export function NativeSigningPage({ token }: { token: string }) {
                 onCheckedChange={(value) => setConsent(value === true)}
               />
               <span>
-                <span className="block font-medium">Confirm signing intent</span>
+                <span className="block font-medium">{"Подтвердите намерение подписать"}</span>
                 <span className="mt-1 block text-xs leading-5 text-muted-foreground">
-                  I confirm this is my signature and agree to sign this document
-                  electronically.
-                </span>
+                  {"Я подтверждаю, что это моя подпись, и согласен подписать этот документ в электронном виде. "}</span>
               </span>
             </label>
             <div className="flex items-start gap-2 rounded-xl border border-primary/20 bg-accent/40 p-3 text-xs leading-5 text-muted-foreground">
               <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
               <p>
-                Your signing intent, consent, document hash, timestamp,
-                field values, and artifact integrity are recorded.
-              </p>
+                {"Ваше намерение подписи, согласие, хеш документа, временная метка, значения полей и целостность артефакта записываются. "}</p>
             </div>
             <Button
               size="lg"
@@ -255,7 +241,7 @@ export function NativeSigningPage({ token }: { token: string }) {
               disabled={submitting || !canSubmit}
               onClick={submit}
             >
-              {submitting ? "Signing…" : "Sign document"}
+              {submitting ? "Подписание…" : "Подписать документ"}
             </Button>
           </section>
         </div>

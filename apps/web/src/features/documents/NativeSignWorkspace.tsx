@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useEffect, useState } from "react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
@@ -113,10 +114,10 @@ export function NativeSignWorkspace({
         setPending(false);
         return;
       }
-      toast.success("Document signed");
+      toast.success("Документ подписан");
       router.replace(`/dashboard/documents/${documentId}` as Route);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not sign the document.");
+      toast.error(error instanceof Error ? error.message : "Не удалось подписать документ.");
       setPending(false);
     }
   }
@@ -131,14 +132,13 @@ export function NativeSignWorkspace({
           onClick={() => router.back()}
         >
           <ArrowLeft className="size-4" />
-          <span className="hidden sm:inline">Back</span>
+          <span className="hidden sm:inline">{"Назад"}</span>
         </Button>
         <span className="hidden h-5 w-px bg-border sm:block" aria-hidden />
         <div className="flex min-w-0 items-center gap-2">
           <PenLine className="size-4 shrink-0 text-primary" />
           <h1 className="shrink-0 font-display text-base font-semibold tracking-tight">
-            Sign document
-          </h1>
+            {"Подписать документ "}</h1>
           <span className="text-muted-foreground/50" aria-hidden>
             /
           </span>
@@ -148,7 +148,7 @@ export function NativeSignWorkspace({
         </div>
         <span className="ml-auto shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
           {placements.length}{" "}
-          {placements.length === 1 ? "signature" : "signatures"}
+          {russianPlural(placements.length, "подпись", "подписи", "подписей")}
         </span>
       </header>
 
@@ -181,23 +181,20 @@ export function NativeSignWorkspace({
           <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border/70 bg-card/80 px-3 py-2.5 backdrop-blur">
             <span className="text-xs text-muted-foreground">
               {placements.length === 0
-                ? "Draw a signature, then place it on the document"
-                : "Select a field to move, resize, duplicate, or delete it"}
+                ? "Нарисуйте подпись и поместите ее в документ."
+                : "Выберите поле для перемещения, изменения размера, дублирования или удаления."}
             </span>
             <Button size="sm" variant="outline" onClick={addPlacement} disabled={!signature}>
               <Plus className="size-4" />
-              Add signature
-            </Button>
+              {"Добавить подпись "}</Button>
           </div>
         </section>
 
         <aside className="flex h-fit flex-col gap-5 rounded-2xl border border-border/70 bg-card p-5 shadow-xs lg:sticky lg:top-5">
           <div>
-            <p className="text-sm font-semibold">Your signature</p>
+            <p className="text-sm font-semibold">{"Ваша подпись"}</p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              Draw or type the representation you want to place on the
-              document.
-            </p>
+              {"Нарисуйте или введите изображение, которое вы хотите поместить в документ. "}</p>
           </div>
           <SignaturePad
             onChange={handleSignatureChange}
@@ -211,25 +208,20 @@ export function NativeSignWorkspace({
               onCheckedChange={(value) => setConsent(value === true)}
             />
             <span>
-              <span className="block font-medium">Confirm signing intent</span>
+              <span className="block font-medium">{"Подтвердите намерение подписать"}</span>
               <span className="mt-1 block text-xs leading-5 text-muted-foreground">
-                I confirm this is my signature and agree to sign this document
-                electronically.
-              </span>
+                {"Я подтверждаю, что это моя подпись, и согласен подписать этот документ в электронном виде. "}</span>
             </span>
           </label>
           <div className="flex items-start gap-2 rounded-xl border border-primary/20 bg-accent/40 p-3 text-xs leading-5 text-muted-foreground">
             <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
             <p>
-              Harly records your signing intent, consent, document hash,
-              timestamp, placements, and artifact integrity.
-            </p>
+              {"Harly записывает ваше намерение подписи, согласие, хеш документа, временную метку, места размещения и целостность артефакта. "}</p>
           </div>
           {placements.length > 0 ? (
             <div className="space-y-1.5">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Placed signatures
-              </p>
+                {"Размещенные подписи "}</p>
               <div className="flex flex-wrap gap-1.5">
                 {placements.map((placement, index) => (
                   <button
@@ -238,23 +230,20 @@ export function NativeSignWorkspace({
                     onClick={() => setActiveIndex(index)}
                     className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors ${activeIndex === index ? "border-primary bg-accent/60 text-foreground" : "border-border/70 text-muted-foreground hover:border-ring hover:text-foreground"}`}
                   >
-                    Sig {index + 1}
+                    {"Сиг "}{index + 1}
                     <span className="ml-1 text-muted-foreground/60">
-                      p{placement.page}
+                      {"п"}{placement.page}
                     </span>
                   </button>
                 ))}
               </div>
               <p className="text-[11px] leading-4 text-muted-foreground/70">
-                Select a field on the document to move, resize, duplicate, or
-                delete it.
-              </p>
+                {"Выберите поле в документе, чтобы переместить, изменить размер, дублировать или удалить его. "}</p>
             </div>
           ) : null}
           {rotated ? (
             <p className="text-xs text-destructive" role="alert">
-              This PDF has rotated pages. Re-export it without rotation before signing.
-            </p>
+              {"В этом PDF-файле страницы повернуты. Реэкспортируйте его без ротации перед подписанием. "}</p>
           ) : null}
           <Button
             size="lg"
@@ -262,7 +251,7 @@ export function NativeSignWorkspace({
             disabled={pending || rotated || !consent || (!vectorSignature?.compressed && !savedSignatureId)}
             onClick={submit}
           >
-            {pending ? "Signing…" : "Sign document"}
+            {pending ? "Подписание…" : "Подписать документ"}
           </Button>
         </aside>
       </div>

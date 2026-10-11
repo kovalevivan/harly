@@ -18,9 +18,9 @@ import { PerformanceChart } from "./PerformanceChart";
 type ChartMetric = "applications" | "interviews" | "hires";
 
 const CHART_METRICS: { key: ChartMetric; label: string }[] = [
-  { key: "applications", label: "Applications" },
-  { key: "interviews", label: "Interviews" },
-  { key: "hires", label: "Hires" },
+  { key: "applications", label: "Отклики" },
+  { key: "interviews", label: "Собеседования" },
+  { key: "hires", label: "Наняты" },
 ];
 
 export function HiringPerformance({
@@ -33,10 +33,10 @@ export function HiringPerformance({
   const [metric, setMetric] = useState<ChartMetric>("applications");
 
   const kpis = [
-    { label: "Applications", ...data.metrics.applications },
-    { label: "Interviews", ...data.metrics.interviews },
-    { label: "Hires", ...data.metrics.hires },
-    { label: "Offer acceptance rate", ...data.metrics.offerAcceptance },
+    { label: "Отклики", ...data.metrics.applications },
+    { label: "Собеседования", ...data.metrics.interviews },
+    { label: "Наняты", ...data.metrics.hires },
+    { label: "Доля принятых предложений", ...data.metrics.offerAcceptance },
   ];
 
   return (
@@ -44,8 +44,7 @@ export function HiringPerformance({
       <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-5">
         <h2 className="flex items-center gap-2 text-sm font-semibold">
           <BarChart3 className="size-4 text-muted-foreground" strokeWidth={1.8} />
-          Hiring performance
-        </h2>
+          {"Показатели найма "}</h2>
         <div className="flex items-center gap-2">
           <Select value={metric} onValueChange={(v) => setMetric(v as ChartMetric)}>
             <SelectTrigger size="sm" className="w-[140px]">
@@ -90,8 +89,7 @@ export function HiringPerformance({
                   {kpi.deltaPct}
                   {kpi.isRate ? "pp" : "%"}
                   <span className="font-normal text-muted-foreground">
-                    vs previous 14 days
-                  </span>
+                    {"к предыдущим 14 дням "}</span>
                 </p>
               </div>
             );

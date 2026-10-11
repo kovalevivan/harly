@@ -179,7 +179,7 @@ export function PhoneInput({
           disabled={disabled}
           onClick={() => setOpen((o) => !o)}
           className="flex shrink-0 items-center gap-1.5 border-r border-inherit pl-3 pr-2 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed"
-          aria-label="Select country"
+          aria-label={"Выберите страну"}
         >
           <span className="text-base leading-none">{flagOf(activeCountry.code)}</span>
           <span className="tabular-nums text-zinc-500">+{activeCountry.dial}</span>
@@ -210,15 +210,14 @@ export function PhoneInput({
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search country or code"
+              placeholder={"Поиск страны или кода"}
               className="w-full bg-transparent text-sm outline-none"
             />
           </div>
           <div className="max-h-64 overflow-y-auto py-1">
             {filtered.length === 0 ? (
               <p className="px-3 py-4 text-center text-sm text-muted-foreground">
-                No match.
-              </p>
+                {"Нет совпадений. "}</p>
             ) : (
               filtered.map((c) => (
                 <button

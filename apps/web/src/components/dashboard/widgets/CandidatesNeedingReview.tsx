@@ -1,3 +1,4 @@
+import { localizeStageName } from "@/lib/localize-system-text";
 import Link from "next/link";
 import type { Route } from "next";
 import { ArrowRight, ClipboardCheck } from "lucide-react";
@@ -10,8 +11,8 @@ import type { ReviewCandidate } from "@/features/dashboard/widgets";
 import { Tile, TileHeader, TileLink, EmptyHint } from "./primitives";
 
 function agingLabel(days: number) {
-  if (days <= 0) return "Requested today";
-  return `Requested ${days} day${days === 1 ? "" : "s"} ago`;
+  if (days <= 0) return "Запрошено сегодня";
+  return `Дней с момента отклика: ${days}`;
 }
 
 export function CandidatesNeedingReview({
@@ -25,8 +26,8 @@ export function CandidatesNeedingReview({
     <Tile className={className}>
       <TileHeader
         icon={ClipboardCheck}
-        title="Candidates needing your review"
-        action={<TileLink href="/dashboard/candidates">View all</TileLink>}
+        title={"Кандидаты для рассмотрения"}
+        action={<TileLink href="/dashboard/candidates">{"Посмотреть все"}</TileLink>}
       />
       <div className="flex flex-1 flex-col px-2 pb-2 pt-1">
         {candidates.length > 0 ? (
@@ -48,7 +49,7 @@ export function CandidatesNeedingReview({
                     <p className="truncate text-xs text-muted-foreground" title={c.job}>{c.job}</p>
                   </div>
                   <Badge variant="secondary" className="hidden shrink-0 sm:inline-flex">
-                    {c.stage}
+                    {localizeStageName(c.stage ?? "")}
                   </Badge>
                   <div className="hidden w-36 shrink-0 text-right md:block">
                     <p className="truncate text-sm font-medium">{c.action}</p>
@@ -70,8 +71,7 @@ export function CandidatesNeedingReview({
                     asChild
                   >
                     <span>
-                      Review
-                      <ArrowRight className="size-3.5" strokeWidth={1.8} />
+                      {"Обзор "}<ArrowRight className="size-3.5" strokeWidth={1.8} />
                     </span>
                   </Button>
                 </Link>
@@ -81,7 +81,7 @@ export function CandidatesNeedingReview({
         ) : (
           <EmptyHint
             icon={ClipboardCheck}
-            text="No reviews pending. Your team is on top of feedback."
+            text={"Нет ожидающих отзывов. Ваша команда следит за обратной связью."}
           />
         )}
       </div>

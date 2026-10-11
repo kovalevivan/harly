@@ -43,9 +43,9 @@ export function ConflictDialog({
     <Dialog open={open} onOpenChange={(next) => !next && onDismiss()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>This draft was saved elsewhere</DialogTitle>
+          <DialogTitle>{"Этот черновик был сохранен в другом месте"}</DialogTitle>
           <DialogDescription>
-            {message || "Someone else saved this recipe while you were editing. We will not overwrite their version."}
+            {message || "Пока вы редактировали этот рецепт, кто-то другой сохранил его. Мы не будем перезаписывать их версию."}
           </DialogDescription>
         </DialogHeader>
         {shown.length > 0 ? (
@@ -58,8 +58,7 @@ export function ConflictDialog({
           </ul>
         ) : (
           <p className="text-xs text-soft-ink">
-            Compare with the server copy, or copy your edits into a new recipe.
-          </p>
+            {"Сравните с копией на сервере или скопируйте свои изменения в новый рецепт. "}</p>
         )}
         <DialogFooter className="gap-2 sm:justify-between">
           <button
@@ -67,8 +66,7 @@ export function ConflictDialog({
             onClick={onDismiss}
             className="rounded-lg px-3 py-1.5 text-xs font-medium text-soft-ink transition-colors duration-150 ease-out hover:text-foreground"
           >
-            Keep editing
-          </button>
+            {"Продолжайте редактировать "}</button>
           <div className="flex gap-2">
             <button
               type="button"
@@ -76,15 +74,14 @@ export function ConflictDialog({
               disabled={comparing}
               className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors duration-150 ease-out hover:bg-soft-kraft disabled:opacity-60"
             >
-              {comparing ? "Comparing…" : "Compare with server"}
+              {comparing ? "Сравнивая…" : "Сравнить с сервером"}
             </button>
             <button
               type="button"
               onClick={onCopy}
               className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background transition-colors duration-150 ease-out hover:bg-foreground/90"
             >
-              Copy my edits to a new recipe
-            </button>
+              {"Скопировать мои изменения в новый рецепт "}</button>
           </div>
         </DialogFooter>
       </DialogContent>

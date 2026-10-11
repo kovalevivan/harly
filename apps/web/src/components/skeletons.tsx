@@ -101,7 +101,7 @@ export function StatsGridSkeleton({
   className?: string;
 }) {
   return (
-    <SkeletonContainer ariaLabel="Loading stats">
+    <SkeletonContainer ariaLabel={"Загрузка статистики"}>
       <div
         className={cn(
           "grid grid-cols-2 gap-3",
@@ -296,7 +296,7 @@ export function FormSkeleton({
 /** Month calendar grid (7 columns x 6 rows). */
 export function CalendarSkeleton({ className }: { className?: string }) {
   return (
-    <SkeletonContainer ariaLabel="Loading calendar" className={className}>
+    <SkeletonContainer ariaLabel={"Загрузка календаря"} className={className}>
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div className="space-y-1.5">
@@ -381,7 +381,7 @@ export function SettingsSkeleton({
 export function DashboardSkeleton() {
   return (
     <SkeletonContainer
-      ariaLabel="Loading dashboard"
+      ariaLabel={"Загрузка панели управления"}
       className="mx-auto w-full max-w-[1440px] space-y-5 pb-4"
     >
       <header className="flex items-center gap-3">
@@ -422,7 +422,7 @@ export function DashboardSkeleton() {
 /** Pipeline kanban board skeleton. */
 export function PipelineBoardSkeleton({ columns = 5 }: { columns?: number }) {
   return (
-    <SkeletonContainer ariaLabel="Loading pipeline">
+    <SkeletonContainer ariaLabel={"Загрузочный трубопровод"}>
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <Skeleton className="h-10 w-full max-w-sm" />

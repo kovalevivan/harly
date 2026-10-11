@@ -13,18 +13,18 @@ const REPO_URL = "https://github.com/Vytral/harly";
 const POINTS = [
   {
     icon: ServerIcon,
-    title: "Your ATS, your server",
-    body: "Self-hosted and open-source. Candidate data never leaves your infrastructure.",
+    title: "Ваша АТС, ваш сервер",
+    body: "Самостоятельный хостинг и открытый исходный код. Данные кандидатов никогда не покидают вашу инфраструктуру.",
   },
   {
     icon: WaypointsIcon,
-    title: "Hiring, with less busywork",
-    body: "Screening, scheduling, and pipeline tracking in one calm place.",
+    title: "Найм сотрудников с меньшим количеством загруженной работы",
+    body: "Проверка, планирование и отслеживание конвейера в одном спокойном месте.",
   },
   {
     icon: LockKeyholeIcon,
-    title: "Yours to own",
-    body: "No per-seat pricing, no lock-in. Invite your team and start hiring.",
+    title: "Ваш собственный",
+    body: "Никаких цен за место, никакой привязки. Пригласите свою команду и начните нанимать сотрудников.",
   },
 ];
 
@@ -78,11 +78,11 @@ export function SetupBrandPanel() {
         <a
           href={LANDING_URL}
           className="inline-flex rounded-sm outline-none ring-lime/60 transition focus-visible:ring-2"
-          aria-label="Harly , visit harly.dev"
+          aria-label={"Харли, посетите harly.dev"}
         >
           <motion.img
             src="/harly-full-white.svg"
-            alt="Harly"
+            alt={"Харли"}
             className="h-10 w-auto"
             animate={reduce ? undefined : { y: [0, -5, 0] }}
             transition={
@@ -105,10 +105,8 @@ export function SetupBrandPanel() {
           variants={item}
           className="font-display text-3xl leading-tight tracking-tight lg:text-4xl"
         >
-          Let&apos;s get your
-          <br />
-          hiring home set up.
-        </motion.h2>
+          {"Давайте возьмем ваш "}<br />
+          {"найм дома обустроен. "}</motion.h2>
 
         <ul className="mt-10 space-y-6">
           {POINTS.map(({ icon: Icon, title, body }) => (
@@ -135,14 +133,13 @@ export function SetupBrandPanel() {
         className="relative z-10 flex items-center justify-between gap-4"
       >
         <p className="text-xs text-white/45">
-          Open-source applicant tracking system
-        </p>
+          {"Система отслеживания кандидатов с открытым исходным кодом "}</p>
         <a
           href={REPO_URL}
           target="_blank"
           rel="noreferrer noopener"
           className="inline-flex size-9 items-center justify-center rounded-lg text-white/55 outline-none ring-inset ring-lime/60 transition hover:bg-white/10 hover:text-white focus-visible:ring-2"
-          aria-label="Harly on GitHub"
+          aria-label={"Харли на GitHub"}
         >
           <GithubIcon className="size-[1.125rem]" />
         </a>

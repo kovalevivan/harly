@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -114,11 +115,11 @@ export function PipelineList({
 
   function afterBulk(result: { success: boolean; error?: string }, label: string) {
     if (result.success) {
-      toast.success(`${label} ${selectedIds.length} candidate${selectedIds.length === 1 ? "" : "s"}.`);
+      toast.success(`${label} ${selectedIds.length} кандидат.`);
       setSelected(new Set());
       router.refresh();
     } else {
-      toast.error(result.error ?? "Could not update candidates.");
+      toast.error(result.error ?? "Не удалось обновить кандидатов.");
     }
   }
 
@@ -130,7 +131,7 @@ export function PipelineList({
         toStageId,
         workspaceId,
       });
-      afterBulk(result, "Moved");
+      afterBulk(result, "Перемещено");
     });
   }
 
@@ -149,7 +150,7 @@ export function PipelineList({
         workspaceId,
         status,
       });
-      afterBulk(result, "Updated");
+      afterBulk(result, "Обновлено");
     });
   }
 
@@ -162,8 +163,8 @@ export function PipelineList({
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search candidates…"
-            aria-label="Search candidates"
+            placeholder={"Поиск кандидатов…"}
+            aria-label={"Поиск кандидатов"}
             className="h-9 pl-9"
           />
         </div>
@@ -172,7 +173,7 @@ export function PipelineList({
       {/* Stage tabs */}
       <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-border/70 bg-card p-1">
         <StageTab
-          label="All"
+          label={"Все"}
           count={applications.length}
           active={activeStage === ALL}
           onClick={() => setActiveStage(ALL)}
@@ -183,7 +184,7 @@ export function PipelineList({
           .map((stage) => (
             <StageTab
               key={stage.id}
-              label={stage.name}
+              label={localizeStageName(stage.name)}
               count={counts.get(stage.id) ?? 0}
               active={activeStage === stage.id}
               onClick={() => setActiveStage(stage.id)}
@@ -194,42 +195,37 @@ export function PipelineList({
       {/* Bulk bar */}
       {selectedIds.length > 0 ? (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/25 bg-accent/40 px-3 py-2 duration-200 animate-in fade-in slide-in-from-top-1">
-          <span className="text-sm font-medium">{selectedIds.length} selected</span>
+          <span className="text-sm font-medium">{selectedIds.length} {"выбрано"}</span>
           <div className="ml-auto flex flex-wrap gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="sm" variant="outline" disabled={isPending}>
                   <ArrowRightLeft className="size-4" />
-                  Move to stage
-                </Button>
+                  {"Перейти на сцену "}</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Move to</DropdownMenuLabel>
+                <DropdownMenuLabel>{"Перейти к"}</DropdownMenuLabel>
                 {stages
                   .slice()
                   .sort((a, b) => a.order - b.order)
                   .map((stage) => (
                     <DropdownMenuItem key={stage.id} onClick={() => moveToStage(stage.id)}>
-                      {stage.name}
+                      {localizeStageName(stage.name)}
                     </DropdownMenuItem>
                   ))}
               </DropdownMenuContent>
             </DropdownMenu>
             <Button size="sm" variant="outline" disabled={isPending} onClick={() => setStatus("hired")}>
               <CheckCircle2 className="size-4 text-primary" />
-              Hire
-            </Button>
+              {"Нанять "}</Button>
             <Button size="sm" variant="outline" disabled={isPending} onClick={() => setStatus("rejected")}>
               <XCircle className="size-4 text-destructive" />
-              Reject
-            </Button>
+              {"Отклонить "}</Button>
             <Button size="sm" variant="outline" disabled={isPending} onClick={() => setStatus("active")}>
               <RotateCcw className="size-4" />
-              Reactivate
-            </Button>
+              {"Повторно активировать "}</Button>
             <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>
-              Clear
-            </Button>
+              {"Очистить "}</Button>
           </div>
         </div>
       ) : null}
@@ -237,25 +233,23 @@ export function PipelineList({
       {/* Rows */}
       <div className="overflow-hidden rounded-2xl border border-border/70 bg-card">
         <div className="flex items-center gap-3 border-b border-border/60 px-4 py-2.5">
-          <Checkbox checked={allVisibleSelected} onCheckedChange={toggleAll} aria-label="Select all" />
+          <Checkbox checked={allVisibleSelected} onCheckedChange={toggleAll} aria-label={"Выбрать все"} />
           <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Candidate
-          </span>
+            {"Кандидат "}</span>
           <span className="ml-auto hidden text-xs font-medium uppercase tracking-wide text-muted-foreground sm:block">
-            Stage
-          </span>
+            {"Этап "}</span>
         </div>
         <div className="divide-y divide-border/60">
           {filtered.map((a) => {
             const fullName = `${a.candidateFirstName} ${a.candidateLastName}`;
             const isSelected = selected.has(a.id);
-            const stageName = stageNameById.get(a.currentStageId) ?? "Unknown stage";
+            const stageName = stageNameById.get(a.currentStageId) ?? "Неизвестный этап";
             return (
               <div
                 key={a.id}
                 role="button"
                 tabIndex={0}
-                aria-label={`Open ${fullName} profile`}
+                aria-label={`Открыть профиль ${fullName}`}
                 data-state={isSelected ? "selected" : undefined}
                 onClick={() => router.push(`/dashboard/candidates/${a.candidateId}`)}
                 onKeyDown={(e) => {
@@ -271,7 +265,7 @@ export function PipelineList({
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => toggleOne(a.id)}
-                    aria-label={`Select ${fullName}`}
+                    aria-label={`Выберите ${fullName}`}
                   />
                 </div>
                 <Link
@@ -291,19 +285,19 @@ export function PipelineList({
                     </p>
                     <p className="truncate text-xs text-muted-foreground">
                       {a.candidateEmail}
-                      {a.source ? ` · via ${a.source}` : ""}
+                      {a.source ? ` · через ${a.source}` : ""}
                     </p>
                   </div>
                 </Link>
                 <div className="col-start-2 min-w-0 sm:col-auto">
-                  <p className="text-xs font-medium text-foreground">{stageName}</p>
+                  <p className="text-xs font-medium text-foreground">{localizeStageName(stageName)}</p>
                   <PipelineSpine
                     current={stageName}
                     stages={orderedStageNames}
                     className="mt-1.5 max-w-40"
                   />
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Applied <ShortDate value={a.appliedAt} />
+                    {"Отклик "}<ShortDate value={a.appliedAt} />
                   </p>
                 </div>
                 <div className="col-start-2 sm:col-auto sm:self-center">
@@ -316,8 +310,7 @@ export function PipelineList({
             <div className="flex flex-col items-center gap-2 px-6 py-14 text-center">
               <Search className="size-5 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                No candidates in this view.
-              </p>
+                {"В этом представлении нет кандидатов. "}</p>
             </div>
           ) : null}
         </div>

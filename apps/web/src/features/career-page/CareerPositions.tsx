@@ -23,9 +23,9 @@ function facet(jobs: Job[], pick: (j: Job) => string | null): string[] {
 }
 
 const FILTER_META: Record<FilterKind, { label: string; pick: (j: Job) => string | null }> = {
-  department: { label: "Department", pick: (j) => j.department },
-  location: { label: "Location", pick: (j) => j.location ?? formatWorkplaceType(j.workplaceType) },
-  type: { label: "Type", pick: (j) => formatEmploymentType(j.employmentType) },
+  department: { label: "Отдел", pick: (j) => j.department },
+  location: { label: "Расположение", pick: (j) => j.location ?? formatWorkplaceType(j.workplaceType) },
+  type: { label: "Тип", pick: (j) => formatEmploymentType(j.employmentType) },
 };
 
 export function CareerPositions({
@@ -99,8 +99,7 @@ export function CareerPositions({
                 : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100",
             )}
           >
-            All
-          </button>
+            {"Все "}</button>
           {facetValues[f].map((value) => {
             const on = sel[f].has(value);
             return (
@@ -124,8 +123,7 @@ export function CareerPositions({
 
       {shown.length === 0 ? (
         <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          No open positions match these filters.
-        </p>
+          {"Ни одна открытая позиция не соответствует этим фильтрам. "}</p>
       ) : (
         <div className="divide-y divide-zinc-100 border-t border-zinc-100 dark:divide-zinc-800 dark:border-zinc-800">
           {shown.map((job) => (
@@ -142,13 +140,13 @@ export function CareerPositions({
                 />
               </span>
               <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                {job.department ?? "Not specified"}
+                {job.department ?? "Не указано"}
               </span>
               <span className="text-sm text-zinc-500 dark:text-zinc-400">
                 {formatEmploymentType(job.employmentType)}
               </span>
               <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                {job.location ?? formatWorkplaceType(job.workplaceType) ?? "Not specified"}
+                {job.location ?? formatWorkplaceType(job.workplaceType) ?? "Не указано"}
               </span>
             </Link>
           ))}

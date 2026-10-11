@@ -24,11 +24,11 @@ type DesignPanelProps = {
 export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
   return (
     <div className="space-y-6">
-      <PanelHeader title="Design" subtitle="Theme, colors, gallery, and values." />
+      <PanelHeader title={"Дизайн"} subtitle={"Тема, цвета, галерея и значения."} />
 
       {/* Theme */}
-      <Section title="Theme" defaultOpen>
-        <Field label="Mode">
+      <Section title={"Тема"} defaultOpen>
+        <Field label={"Режим"}>
           <Segmented
             value={config.theme.mode}
             onChange={(mode) =>
@@ -43,18 +43,18 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
               })
             }
             options={[
-              { value: "light", label: "Light" },
-              { value: "dark", label: "Dark" },
+              { value: "light", label: "Свет" },
+              { value: "dark", label: "Темный" },
             ]}
           />
         </Field>
         <ColorField
-          label="Background color"
+          label={"Цвет фона"}
           value={config.theme.background}
           fallback="#ffffff"
           onChange={(c) => update((d) => (d.theme.background = c ?? "#ffffff"))}
         />
-        <Field label="Font">
+        <Field label={"Шрифт"}>
           <select
             value={config.theme.font}
             onChange={(e) =>
@@ -63,13 +63,13 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
             className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm transition-colors hover:border-pine/20 focus:border-pine focus:outline-none focus:ring-2 focus:ring-pine/20"
           >
             <option value="sans">Sans-serif</option>
-            <option value="serif">Serif</option>
-            <option value="display">Display</option>
-            <option value="mono">Monospace</option>
+            <option value="serif">{"с засечками"}</option>
+            <option value="display">{"Дисплей"}</option>
+            <option value="mono">{"Моноширинный"}</option>
           </select>
         </Field>
         <ColorField
-          label="Accent color"
+          label={"Акцентный цвет"}
           value={config.theme.accent}
           fallback={workspace.primaryColor}
           onChange={(c) => update((d) => (d.theme.accent = c))}
@@ -78,24 +78,24 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
 
       {/* Overview , Playful (marginalia) + Join (meta line under name) */}
       {(config.template === "playful" || config.template === "join") && (
-        <Section title="Overview card">
+        <Section title={"Обзорная карточка"}>
           <ToggleRow
-            label="Show overview card"
+            label={"Показать обзорную карточку"}
             checked={config.overview.enabled}
             onCheckedChange={(v) => update((d) => (d.overview.enabled = v))}
           />
-          <Field label="Title">
+          <Field label={"Название"}>
             <Input
               value={config.overview.title}
               onChange={(e) => update((d) => (d.overview.title = e.target.value))}
             />
           </Field>
           <ListEditor
-            label="Stats"
+            label={"Статистика"}
             items={config.overview.stats}
             onAdd={() =>
               update((d) =>
-                d.overview.stats.push({ label: "Label", value: "", icon: "" }),
+                d.overview.stats.push({ label: "Этикетка", value: "", icon: "" }),
               )
             }
             onRemove={(i) => update((d) => d.overview.stats.splice(i, 1))}
@@ -111,7 +111,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.overview.stats[i].label = e.target.value))
                   }
-                  placeholder="Label"
+                  placeholder={"Этикетка"}
                   className="min-w-0 flex-1"
                 />
                 <Input
@@ -119,7 +119,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.overview.stats[i].value = e.target.value))
                   }
-                  placeholder="Value"
+                  placeholder={"Значение"}
                   className="w-20 shrink-0"
                 />
               </div>
@@ -130,37 +130,37 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
 
       {/* Gallery , Playful + Join (Images tab) */}
       {(config.template === "playful" || config.template === "join") && (
-        <Section title="Photo gallery">
+        <Section title={"Фотогалерея"}>
           <ToggleRow
-            label="Show gallery"
+            label={"Показать галерею"}
             checked={config.gallery.enabled}
             onCheckedChange={(v) => update((d) => (d.gallery.enabled = v))}
           />
           <ToggleRow
-            label="Autoplay"
+            label={"Автозапуск"}
             checked={config.gallery.autoplay}
             onCheckedChange={(v) => update((d) => (d.gallery.autoplay = v))}
           />
           {config.gallery.autoplay && (
-            <Field label="Speed">
+            <Field label={"Скорость"}>
               <Segmented
                 value={config.gallery.speed}
                 onChange={(s) => update((d) => (d.gallery.speed = s))}
                 options={[
-                  { value: "slow", label: "Slow" },
-                  { value: "normal", label: "Normal" },
+                  { value: "slow", label: "Медленно" },
+                  { value: "normal", label: "Нормальный" },
                 ]}
               />
             </Field>
           )}
           <ListEditor
-            label="Images"
+            label={"Изображения"}
             items={config.gallery.images}
             onAdd={() => update((d) => d.gallery.images.push(""))}
             onRemove={(i) => update((d) => d.gallery.images.splice(i, 1))}
             onMove={(i, dir) => update((d) => move(d.gallery.images, i, dir))}
             render={(_src, i) => (
-              <div className="text-xs text-ink-soft">Image {i + 1}</div>
+              <div className="text-xs text-ink-soft">{"Изображение "}{i + 1}</div>
             )}
           />
         </Section>
@@ -168,23 +168,23 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
 
       {/* Values , Playful + Join */}
       {(config.template === "playful" || config.template === "join") && (
-        <Section title="Values">
+        <Section title={"Ценности"}>
           <ToggleRow
-            label="Show values"
+            label={"Показать значения"}
             checked={config.values.enabled}
             onCheckedChange={(v) => update((d) => (d.values.enabled = v))}
           />
-          <Field label="Title">
+          <Field label={"Название"}>
             <Input
               value={config.values.title}
               onChange={(e) => update((d) => (d.values.title = e.target.value))}
             />
           </Field>
           <ListEditor
-            label="Items"
+            label={"Предметы"}
             items={config.values.items}
             onAdd={() =>
-              update((d) => d.values.items.push({ title: "Value", body: "" }))
+              update((d) => d.values.items.push({ title: "Значение", body: "" }))
             }
             onRemove={(i) => update((d) => d.values.items.splice(i, 1))}
             onMove={(i, dir) => update((d) => move(d.values.items, i, dir))}
@@ -195,7 +195,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.values.items[i].title = e.target.value))
                   }
-                  placeholder="Title"
+                  placeholder={"Название"}
                 />
                 <Textarea
                   rows={2}
@@ -203,7 +203,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.values.items[i].body = e.target.value))
                   }
-                  placeholder="Description"
+                  placeholder={"Описание"}
                 />
               </div>
             )}
@@ -212,20 +212,20 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
       )}
 
       {/* Testimonials */}
-      <Section title="Testimonials">
+      <Section title={"Отзывы"}>
         <ToggleRow
-          label="Show testimonials"
+          label={"Показать отзывы"}
           checked={config.testimonials.enabled}
           onCheckedChange={(v) => update((d) => (d.testimonials.enabled = v))}
         />
-        <Field label="Title">
+        <Field label={"Название"}>
           <Input
             value={config.testimonials.title}
             onChange={(e) => update((d) => (d.testimonials.title = e.target.value))}
           />
         </Field>
         <ListEditor
-          label="Items"
+          label={"Предметы"}
           items={config.testimonials.items}
           onAdd={() =>
             update((d) =>
@@ -242,7 +242,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                 onChange={(e) =>
                   update((d) => (d.testimonials.items[i].quote = e.target.value))
                 }
-                placeholder="Quote"
+                placeholder={"Цитата"}
               />
               <div className="flex gap-2">
                 <Input
@@ -250,7 +250,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.testimonials.items[i].name = e.target.value))
                   }
-                  placeholder="Name"
+                  placeholder={"Имя"}
                   className="min-w-0 flex-1"
                 />
                 <Input
@@ -258,7 +258,7 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
                   onChange={(e) =>
                     update((d) => (d.testimonials.items[i].role = e.target.value))
                   }
-                  placeholder="Role"
+                  placeholder={"Роль"}
                   className="min-w-0 flex-1"
                 />
               </div>
@@ -268,22 +268,22 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
       </Section>
 
       {/* FAQ */}
-      <Section title="FAQ">
+      <Section title={"Часто задаваемые вопросы"}>
         <ToggleRow
-          label="Show FAQ"
+          label={"Показать часто задаваемые вопросы"}
           checked={config.faq.enabled}
           onCheckedChange={(v) => update((d) => (d.faq.enabled = v))}
         />
-        <Field label="Title">
+        <Field label={"Название"}>
           <Input
             value={config.faq.title}
             onChange={(e) => update((d) => (d.faq.title = e.target.value))}
           />
         </Field>
         <ListEditor
-          label="Questions"
+          label={"Вопросы"}
           items={config.faq.items}
-          onAdd={() => update((d) => d.faq.items.push({ q: "Question", a: "" }))}
+          onAdd={() => update((d) => d.faq.items.push({ q: "Вопрос", a: "" }))}
           onRemove={(i) => update((d) => d.faq.items.splice(i, 1))}
           onMove={(i, dir) => update((d) => move(d.faq.items, i, dir))}
           render={(item, i) => (
@@ -291,13 +291,13 @@ export function DesignPanel({ config, update, workspace }: DesignPanelProps) {
               <Input
                 value={item.q}
                 onChange={(e) => update((d) => (d.faq.items[i].q = e.target.value))}
-                placeholder="Question"
+                placeholder={"Вопрос"}
               />
               <Textarea
                 rows={3}
                 value={item.a}
                 onChange={(e) => update((d) => (d.faq.items[i].a = e.target.value))}
-                placeholder="Answer"
+                placeholder={"Ответ"}
               />
             </div>
           )}

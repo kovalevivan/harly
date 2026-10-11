@@ -15,24 +15,24 @@ const trigger = (event: Trigger["event"]): Trigger => ({ event });
 
 describe("preview — describeTrigger", () => {
   it("renders the event label lower-cased", () => {
-    expect(describeTrigger(trigger("application.created"))).toBe("a candidate applies");
+    expect(describeTrigger(trigger("application.created"))).toBe("кандидат подает заявку");
   });
 
   it("appends the filter when present", () => {
     expect(
       describeTrigger({ event: "application.created", filter: { jobId: "job-1" } }),
-    ).toBe('a candidate applies where jobId is "job-1"');
+    ).toBe('кандидат подает заявку, где jobId равно "job-1"');
   });
 
   it("ignores an empty filter object", () => {
-    expect(describeTrigger({ event: "interview.scheduled", filter: {} })).toBe("an interview scheduled");
+    expect(describeTrigger({ event: "interview.scheduled", filter: {} })).toBe("интервью запланировано");
   });
 });
 
 describe("preview — describeConditions", () => {
   it("returns 'always' for empty / undefined", () => {
-    expect(describeConditions(undefined)).toBe("always");
-    expect(describeConditions([])).toBe("always");
+    expect(describeConditions(undefined)).toBe("всегда");
+    expect(describeConditions([])).toBe("всегда");
   });
 
   it("renders a single leaf", () => {
@@ -42,7 +42,7 @@ describe("preview — describeConditions", () => {
       op: "eq",
       value: "Ada",
     };
-    expect(describeConditions([leaf])).toBe('candidate.firstName equals "Ada"');
+    expect(describeConditions([leaf])).toBe('candidate.firstName равно "Ada"');
   });
 
   it("renders an AND group", () => {
@@ -53,7 +53,7 @@ describe("preview — describeConditions", () => {
         { type: "leaf", field: { kind: "ai", path: "score" }, op: "lt", value: 40 },
       ],
     };
-    expect(describeConditions([node])).toBe('job.seniority equals "junior" and ai.score is less than 40');
+    expect(describeConditions([node])).toBe('job.seniority равно "junior" и ai.score меньше, чем 40');
   });
 
   it("renders is_set without a value", () => {
@@ -63,7 +63,7 @@ describe("preview — describeConditions", () => {
       op: "is_set",
       value: null,
     };
-    expect(describeConditions([leaf])).toBe("candidate.email is set");
+    expect(describeConditions([leaf])).toBe("candidate.email задано");
   });
 
   it("truncates long values with an ellipsis inside the quotes", () => {
@@ -83,17 +83,17 @@ describe("preview — describeConditions", () => {
 describe("preview — describeAction", () => {
   it("summarizes move_stage by target", () => {
     const a: Action = { type: "move_stage", config: { toStageName: "Phone screen" }, continueOnError: false };
-    expect(describeAction(a)).toBe("move to Phone screen");
+    expect(describeAction(a)).toBe("переместить в Phone screen");
   });
 
   it("summarizes set_status", () => {
     const a: Action = { type: "set_status", config: { status: "rejected" }, continueOnError: false };
-    expect(describeAction(a)).toBe("set status to rejected");
+    expect(describeAction(a)).toBe("изменить статус на Отказ");
   });
 
   it("summarizes add_tag", () => {
     const a: Action = { type: "add_tag", config: { label: "vip" }, continueOnError: false };
-    expect(describeAction(a)).toBe('add the "vip" tag');
+    expect(describeAction(a)).toBe('добавить тег "vip"');
   });
 
   it("summarizes http_request with method + url", () => {
@@ -103,12 +103,12 @@ describe("preview — describeAction", () => {
 
   it("summarizes a self-scheduling booking link", () => {
     const a: Action = { type: "send_booking_link", config: {}, continueOnError: false };
-    expect(describeAction(a)).toBe("send a self-scheduling link to the candidate");
+    expect(describeAction(a)).toBe("отправить ссылку для записи кандидату");
   });
 
   it("falls back to the catalog label for an unregistered type", () => {
     const a = { type: "ai_decide", config: {}, continueOnError: false } as unknown as Action;
-    expect(describeAction(a)).toBe("ai: decide");
+    expect(describeAction(a)).toBe("ии: решение");
   });
 });
 
@@ -121,7 +121,7 @@ describe("preview — describeWorkflow (full sentence)", () => {
       ],
       actions: [{ type: "add_tag", config: { label: "vip" }, continueOnError: true }],
     });
-    expect(out).toBe('When a candidate applies, if ai.score is at least 80, then add the "vip" tag.');
+    expect(out).toBe('Когда кандидат подает заявку, если ai.score не меньше 80, то добавить тег "vip".');
   });
 
   it("omits the if clause when there are no conditions", () => {
@@ -130,7 +130,7 @@ describe("preview — describeWorkflow (full sentence)", () => {
       conditions: [],
       actions: [{ type: "send_slack", config: { message: "hi" }, continueOnError: true }],
     });
-    expect(out).toBe('When a candidate applies, then send a chat message "hi".');
+    expect(out).toBe('Когда кандидат подает заявку, то отправить сообщение в чат "hi".');
   });
 
   it("says 'do nothing' for an empty action list", () => {
@@ -139,7 +139,7 @@ describe("preview — describeWorkflow (full sentence)", () => {
       conditions: [],
       actions: [],
     });
-    expect(out).toBe("When a job published, then do nothing.");
+    expect(out).toBe("Когда вакансия опубликована, то ничего не делать.");
   });
 
   it("joins multiple actions with commas + 'and'", () => {
@@ -151,7 +151,7 @@ describe("preview — describeWorkflow (full sentence)", () => {
         { type: "add_tag", config: { label: "auto-rejected" }, continueOnError: true },
       ],
     });
-    expect(out).toBe("When a candidate applies, then set status to rejected and add the \"auto-rejected\" tag.");
+    expect(out).toBe("Когда кандидат подает заявку, то изменить статус на Отказ и добавить тег \"auto-rejected\".");
   });
 });
 
@@ -174,7 +174,7 @@ describe("preview — v2 graph summary", () => {
 
     expect(graphActionCount(graph)).toBe(1);
     expect(describeGraphWorkflow(graph)).toBe(
-      "When a candidate applies, then 1 action, branching, a delay, an approval, an event wait.",
+      "Когда кандидат подает заявку, то действий: 1, ветвление, задержка, согласование, ожидание события.",
     );
   });
 });

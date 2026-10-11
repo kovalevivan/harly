@@ -7,9 +7,9 @@ import { PublicJobPreview } from "../PublicJobPreview";
 import { SemanticMatchPanel } from "@/features/matching/SemanticMatchPanel";
 
 const WORKPLACE_LABEL: Record<string, string> = {
-  remote: "Remote",
-  hybrid: "Hybrid",
-  onsite: "Onsite",
+  remote: "Удаленный",
+  hybrid: "Гибрид",
+  onsite: "На месте",
 };
 
 export function ReviewSection({
@@ -42,11 +42,11 @@ export function ReviewSection({
           </span>
           <div className="min-w-0">
             <p className="font-display text-[15px] font-semibold tracking-tight">
-              {title || "New job"}
+              {title || "Новая вакансия"}
             </p>
             <p className="mt-0.5 text-sm text-muted-foreground">
               {WORKPLACE_LABEL[workplace] ?? workplace}
-              {job ? " · Ready to save" : ` · Ready to ${submitLabel.toLowerCase()}`}
+              {job ? " · Готова к сохранению" : ` · Действие: ${submitLabel}`}
             </p>
           </div>
         </div>
@@ -71,11 +71,9 @@ export function ReviewSection({
           <span className="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <Rocket className="size-5" />
           </span>
-          <p className="text-sm font-medium">Hiring team, AI matching, and live preview unlock after you publish</p>
+          <p className="text-sm font-medium">{"Команда найма, подбор с помощью ИИ и просмотр публикации"}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Save this job first. You&apos;ll be able to assign a hiring team, rank your candidate pool, and preview
-            the public listing right after.
-          </p>
+            {"Сначала сохраните вакансию. Затем можно назначить команду найма, оценить кандидатов и посмотреть страницу вакансии. "}</p>
         </div>
       )}
     </div>

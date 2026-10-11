@@ -24,12 +24,12 @@ export type WorkflowTemplate = {
 export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   {
     id: "notify-slack-on-apply",
-    name: "Notify chat on new application",
-    description: "Post a message to your Slack/Discord channel every time a candidate applies.",
+    name: "Уведомить команду о новом отклике",
+    description: "Публикуйте сообщение на своем канале Slack/Discord каждый раз, когда кандидат подает заявку.",
     category: "Notification",
     build: () => ({
-      name: "Notify chat on new application",
-      description: "Posts to the workspace chat channel when a candidate applies.",
+      name: "Уведомить команду о новом отклике",
+      description: "Публикации в канале чата рабочей области, когда кандидат подает заявку.",
       enabled: true,
       trigger: { event: "application.created" },
       conditions: [],
@@ -44,12 +44,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "auto-reject-juniors",
-    name: "Auto-reject under-qualified applicants",
-    description: "When a candidate applies, if the job seniority is 'junior' and the AI score is low, reject them.",
+    name: "Отказать кандидатам, не соответствующим требованиям",
+    description: "Когда кандидат подает заявку, если его стаж работы «младший» и рейтинг AI низкий, отклоните его.",
     category: "Triage",
     build: () => ({
-      name: "Auto-reject under-qualified applicants",
-      description: "Rejects junior-role applicants with a low AI match score.",
+      name: "Отказать кандидатам, не соответствующим требованиям",
+      description: "Отклоняет кандидатов на младшие должности с низким показателем соответствия ИИ.",
       enabled: false,
       trigger: { event: "application.created" },
       conditions: [
@@ -77,12 +77,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "screening-task-on-stage",
-    name: "Create screening task on stage change",
-    description: "When an application moves to 'Phone screen', assign a screening task to the owner.",
+    name: "Создать задачу при смене этапа",
+    description: "Когда приложение перемещается на «Экран телефона», назначьте владельцу задачу проверки.",
     category: "Pipeline",
     build: () => ({
-      name: "Create screening task on stage change",
-      description: "Assigns a phone-screen task when an application reaches the Phone screen stage.",
+      name: "Создать задачу при смене этапа",
+      description: "Назначает задачу экрана телефона, когда приложение достигает стадии экрана телефона.",
       enabled: true,
       trigger: { event: "application.stage_changed" },
       conditions: [
@@ -91,7 +91,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       actions: [
         {
           type: "create_task",
-          config: { title: "Phone screen candidate", priority: "high" },
+          config: { title: "Кандидат с экраном телефона", priority: "high" },
           continueOnError: false,
         },
       ],
@@ -99,12 +99,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "tag-vip-candidates",
-    name: "Tag high-fit candidates",
-    description: "When a candidate applies with an AI score above 80, tag them 'vip'.",
+    name: "Отметить подходящих кандидатов",
+    description: "Если кандидат подает заявку с рейтингом AI выше 80, отметьте его как vip.",
     category: "Triage",
     build: () => ({
-      name: "Tag high-fit candidates",
-      description: "Tags strong applicants as 'vip' based on AI score.",
+      name: "Отметить подходящих кандидатов",
+      description: "Помечает сильных кандидатов как «VIP» на основе оценки AI.",
       enabled: true,
       trigger: { event: "application.created" },
       conditions: [
@@ -113,7 +113,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       actions: [
         {
           type: "add_tag",
-          config: { label: "vip" },
+          config: { label: "VIP" },
           continueOnError: true,
         },
         {
@@ -126,12 +126,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "note-on-reject",
-    name: "Log a note on rejection",
-    description: "When a candidate is rejected, add an internal note for the team.",
+    name: "Добавить заметку при отказе",
+    description: "Если кандидат отклонен, добавьте внутреннюю заметку для команды.",
     category: "Pipeline",
     build: () => ({
-      name: "Log a note on rejection",
-      description: "Adds a timestamped note when an application is rejected.",
+      name: "Добавить заметку при отказе",
+      description: "Добавляет примечание с отметкой времени, когда заявка отклонена.",
       enabled: true,
       trigger: { event: "application.rejected" },
       conditions: [],
@@ -146,19 +146,19 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "interview-prep-task",
-    name: "Prep task on interview scheduled",
-    description: "When an interview is scheduled, create a prep task for the interviewer.",
+    name: "Подготовиться к назначенному собеседованию",
+    description: "Когда собеседование назначено, создайте для интервьюера подготовительное задание.",
     category: "Onboarding",
     build: () => ({
-      name: "Prep task on interview scheduled",
-      description: "Creates an interview-prep task when an interview is booked.",
+      name: "Подготовиться к назначенному собеседованию",
+      description: "Создает задачу подготовки к собеседованию, когда собеседование назначено.",
       enabled: true,
       trigger: { event: "interview.scheduled" },
       conditions: [],
       actions: [
         {
           type: "create_task",
-          config: { title: "Prepare for upcoming interview", priority: "medium" },
+          config: { title: "Подготовьтесь к предстоящему собеседованию", priority: "medium" },
           continueOnError: false,
         },
       ],
@@ -166,12 +166,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "notify-hire",
-    name: "Celebrate hires in chat",
-    description: "When a candidate is hired, post a celebratory message to the team channel.",
+    name: "Сообщить команде о найме",
+    description: "Когда кандидат будет принят на работу, опубликуйте поздравительное сообщение на канале команды.",
     category: "Notification",
     build: () => ({
-      name: "Celebrate hires in chat",
-      description: "Posts to the team channel when an application is marked hired.",
+      name: "Сообщить команде о найме",
+      description: "Публикует сообщения в канале команды, когда приложение помечается как принятое на работу.",
       enabled: true,
       trigger: { event: "application.hired" },
       conditions: [],
@@ -186,19 +186,19 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   },
   {
     id: "tag-new-candidate",
-    name: "Tag new candidates by source",
-    description: "When a candidate is created, tag them with their source for downstream filtering.",
+    name: "Отметить источник нового кандидата",
+    description: "Когда кандидат будет создан, пометьте его источником для последующей фильтрации.",
     category: "Triage",
     build: () => ({
-      name: "Tag new candidates by source",
-      description: "Adds a 'new' tag to every freshly created candidate.",
+      name: "Отметить источник нового кандидата",
+      description: "Добавляет «новый» тег к каждому только что созданному кандидату.",
       enabled: false,
       trigger: { event: "candidate.created" },
       conditions: [],
       actions: [
         {
           type: "add_tag",
-          config: { label: "new" },
+          config: { label: "новых" },
           continueOnError: true,
         },
       ],

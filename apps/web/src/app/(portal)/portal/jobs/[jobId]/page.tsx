@@ -32,21 +32,21 @@ function formatSalary(min: number | null, max: number | null, currency: string |
   const fmt = (v: number) => v >= 1000 ? `${cur} ${Math.round(v / 1000)}k` : `${cur} ${v}`;
   const suffix = period === "monthly" ? "/mo" : "/yr";
   if (min && max) return `${fmt(min)} – ${fmt(max)}${suffix}`;
-  if (min) return `From ${fmt(min)}${suffix}`;
-  return `Up to ${fmt(max!)}${suffix}`;
+  if (min) return `С ${fmt(min)}${suffix}`;
+  return `До ${fmt(max!)}${suffix}`;
 }
 
 const WORKPLACE_LABELS: Record<string, string> = {
-  remote: "Remote",
-  hybrid: "Hybrid",
-  onsite: "On-site",
+  remote: "Удаленный",
+  hybrid: "Гибрид",
+  onsite: "В клинике",
 };
 
 const EMPLOYMENT_LABELS: Record<string, string> = {
-  full_time: "Full-time",
-  part_time: "Part-time",
-  contract: "Contract",
-  internship: "Internship",
+  full_time: "Полная занятость",
+  part_time: "Частичная занятость",
+  contract: "Договор",
+  internship: "Стажировка",
 };
 
 export default async function JobDetailPage({ params }: PageProps) {
@@ -136,8 +136,7 @@ export default async function JobDetailPage({ params }: PageProps) {
           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
           </svg>
-          Back to jobs
-        </Link>
+          {"Вернуться к работе "}</Link>
 
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
@@ -168,7 +167,7 @@ export default async function JobDetailPage({ params }: PageProps) {
 
         {job.description && (
           <div className="rounded-xl border border-border bg-card p-5">
-            <h2 className="mb-2 text-sm font-semibold text-foreground">About the role</h2>
+            <h2 className="mb-2 text-sm font-semibold text-foreground">{"О роли"}</h2>
             <RichBody html={job.description} className="prose prose-sm max-w-none text-muted-foreground" />
           </div>
         )}
@@ -176,14 +175,12 @@ export default async function JobDetailPage({ params }: PageProps) {
         {existingApp ? (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-center dark:border-emerald-800 dark:bg-emerald-950/30">
             <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
-              You&apos;ve already applied to this position
-            </p>
+              {"Вы уже подали заявку на эту вакансию "}</p>
             <Link
               href={`/portal/applications/${existingApp.id}` as Route}
               className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 underline-offset-2 hover:underline dark:text-emerald-400"
             >
-              View your application
-            </Link>
+              {"Посмотреть вашу заявку "}</Link>
           </div>
         ) : (
           <JobApplyForm jobId={job.id} questions={questions} />

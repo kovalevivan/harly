@@ -4,11 +4,11 @@ import { SocialIcon, socialLabel } from "./social-icons";
 import type { CareerPageConfig } from "./config";
 
 const LEGAL_LINK_LABELS: Record<string, string> = {
-  "privacy-policy": "Privacy Policy",
-  "terms-of-service": "Terms of Service",
-  "cookie-policy": "Cookie Policy",
-  "candidate-notice": "Candidate Notice",
-  "ai-transparency-notice": "AI Transparency",
+  "privacy-policy": "Политика конфиденциальности",
+  "terms-of-service": "Условия использования",
+  "cookie-policy": "Политика использования файлов cookie",
+  "candidate-notice": "Уведомление кандидата",
+  "ai-transparency-notice": "Прозрачность ИИ",
 };
 
 export function CareerFooter({
@@ -41,18 +41,18 @@ export function CareerFooter({
           rel="noopener noreferrer"
           className="group inline-flex items-center gap-2 text-zinc-400 transition-colors hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200"
         >
-          <span className="text-xs font-medium">Powered by</span>
+          <span className="text-xs font-medium">{"При поддержке"}</span>
           {/* Black wordmark on light, white on dark , swapped via the .dark class
               set by ThemeWrapper. */}
           {/* eslint-disable @next/next/no-img-element */}
           <img
             src="/harly-full-black.svg"
-            alt="Harly"
+            alt={"Харли"}
             className="h-6 w-auto opacity-70 transition-opacity group-hover:opacity-100 dark:hidden"
           />
           <img
             src="/harly-full-white.svg"
-            alt="Harly"
+            alt={"Харли"}
             className="hidden h-6 w-auto opacity-70 transition-opacity group-hover:opacity-100 dark:block"
           />
           {/* eslint-enable @next/next/no-img-element */}
@@ -89,8 +89,7 @@ export function CareerFooter({
               href="/portal"
               className="transition-colors hover:text-zinc-700 dark:hover:text-zinc-300"
             >
-              Candidate portal
-            </a>
+              {"Кандидатский портал "}</a>
           ) : null}
           {legalLinks.map((slug) => (
             <a

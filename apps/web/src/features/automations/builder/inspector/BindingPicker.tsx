@@ -34,8 +34,7 @@ export function BindingPicker({
           <ModeButton active={!usingData} onClick={() => {
             if (usingData) onChange({ kind: "literal", value: "" });
           }}>
-            Type a value
-          </ModeButton>
+            {"Введите значение "}</ModeButton>
         </div>
       ) : null}
         <Popover open={open} onOpenChange={setOpen}>
@@ -44,14 +43,14 @@ export function BindingPicker({
             type="button"
             className="min-h-9 w-full rounded-lg border border-border bg-pure-snow px-2.5 text-left text-xs text-foreground focus-visible:outline-2"
           >
-            {usingData ? describeBinding(value, graph) : "Use data from another step…"}
+            {usingData ? describeBinding(value, graph) : "Используйте данные с другого шага…"}
           </button>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-[320px] max-w-[calc(100vw-24px)] p-0">
             <Command>
-              <CommandInput placeholder="Search available data" />
+              <CommandInput placeholder={"Поиск доступных данных"} />
               <CommandList>
-              <CommandEmpty>No data available for this step.</CommandEmpty>
+              <CommandEmpty>{"Для этого шага нет данных."}</CommandEmpty>
               {groups.map((group) => (
                 <CommandGroup key={group} heading={group}>
                   {options
@@ -71,7 +70,7 @@ export function BindingPicker({
               ))}
               </CommandList>
             </Command>
-            <p className="border-t border-border px-3 py-2 text-[11px] text-soft-ink">Dynamic values are resolved from the trigger or a completed earlier step when the workflow runs.</p>
+            <p className="border-t border-border px-3 py-2 text-[11px] text-soft-ink">{"Динамические значения разрешаются на основе триггера или выполненного ранее шага при запуске рабочего процесса."}</p>
           </PopoverContent>
         </Popover>
     </div>

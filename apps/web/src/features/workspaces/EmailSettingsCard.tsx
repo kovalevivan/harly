@@ -40,7 +40,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 const PROVIDER_LABEL: Record<EmailProviderId, string> = {
-  resend: "Resend",
+  resend: "Отправить повторно",
   smtp: "SMTP",
 };
 
@@ -58,7 +58,7 @@ export function EmailSettingsCard({
 
   function toggleEnabled(next: boolean) {
     if (!isConfigured && next) {
-      toast.error("Configure email settings first.");
+      toast.error("Сначала настройте параметры электронной почты.");
       return;
     }
     startToggle(async () => {
@@ -70,22 +70,22 @@ export function EmailSettingsCard({
           })
         : await disableEmailAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
-      toast.success(next ? "Email enabled" : "Email disabled");
+      toast.success(next ? "Электронная почта включена" : "Электронная почта отключена");
       router.refresh();
     });
   }
 
   const badge = isConfigured ? (
     <StatusPill tone={status.enabled ? "on" : "off"}>
-      {status.enabled ? "Connected" : "Disabled"}
+      {status.enabled ? "Подключено" : "Отключено"}
     </StatusPill>
   ) : status.usingPlatformDefault ? (
-    <StatusPill tone="neutral">Harly default</StatusPill>
+    <StatusPill tone="neutral">{"Почти по умолчанию"}</StatusPill>
   ) : (
-    <StatusPill tone="neutral">Not connected</StatusPill>
+    <StatusPill tone="neutral">{"Не подключено"}</StatusPill>
   );
 
   return (
@@ -95,9 +95,9 @@ export function EmailSettingsCard({
         <div className="p-6">
           <SectionHeader
             icon={EnvelopeIcon}
-            title="Email delivery"
+            title={"Доставка по электронной почте"}
             badge={badge}
-            description="Send candidate and recruiter emails from your own domain via Resend or SMTP. Without it, Harly sends from a shared address."
+            description={"Отправляйте электронные письма кандидатам и рекрутерам со своего домена посредством повторной отправки или SMTP. Без него Харли отправляет с общего адреса."}
             action={
               canEdit ? (
                 <>
@@ -105,14 +105,13 @@ export function EmailSettingsCard({
                     <Button asChild variant={isConfigured ? "outline" : "default"}>
                       <Link href={"/settings/email/configure" as Route}>
                         <KeyDuotoneIcon className="size-4" />
-                        {isConfigured ? "Manage" : "Connect"}
+                        {isConfigured ? "Управление" : "Подключиться"}
                       </Link>
                     </Button>
                   ) : (
                     <Button variant="default" disabled>
                       <KeyDuotoneIcon className="size-4" />
-                      Connect
-                    </Button>
+                      {"Подключиться "}</Button>
                   )}
                   {isConfigured ? (
                     <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -120,10 +119,10 @@ export function EmailSettingsCard({
                         checked={status.enabled}
                         disabled={togglePending}
                         onCheckedChange={toggleEnabled}
-                        aria-label="Enable email"
+                        aria-label={"Включить электронную почту"}
                       />
                       <span className="text-muted-foreground">
-                        {status.enabled ? "On" : "Off"}
+                        {status.enabled ? "On" : "Выкл."}
                       </span>
                     </label>
                   ) : null}
@@ -134,7 +133,7 @@ export function EmailSettingsCard({
         </div>
 
         <div className="grid grid-cols-1 divide-y border-t bg-muted/20 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-          <StatCell label="Provider">
+          <StatCell label={"Поставщик"}>
             {status.provider === "resend" ? (
               <ResendLogo className="size-3.5" />
             ) : (
@@ -142,7 +141,7 @@ export function EmailSettingsCard({
             )}
             {PROVIDER_LABEL[status.provider!]}
           </StatCell>
-          <StatCell label="From address">
+          <StatCell label={"С адреса"}>
             <span className="truncate font-mono text-[13px]">
               {status.from}
             </span>
@@ -158,9 +157,7 @@ function EncryptionWarning() {
     <div className="flex items-start gap-2 rounded-2xl border border-clay/30 bg-clay/5 px-4 py-3 text-sm text-clay">
       <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
       <p>
-        Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on the
-        server to store email credentials.
-      </p>
+        {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере для хранения учетных данных электронной почты. "}</p>
     </div>
   );
 }
@@ -202,13 +199,13 @@ export function EmailSettingsForm({ status }: {
     startTest(async () => {
       const result = await sendTestEmailAction(fieldsForAction());
       if (!result.ok) {
-        toast.error(result.error ?? "Test failed.");
+        toast.error(result.error ?? "Тест не пройден.");
         return;
       }
       toast.success(
         provider === "smtp"
-          ? "SMTP connection verified"
-          : "Test email sent. Check your inbox",
+          ? "SMTP-соединение проверено"
+          : "Тестовое письмо отправлено. Проверьте свой почтовый ящик",
       );
     });
   }
@@ -220,10 +217,10 @@ export function EmailSettingsForm({ status }: {
         enabled,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("Email settings saved");
+      toast.success("Настройки электронной почты сохранены.");
       router.refresh();
     });
   }
@@ -236,19 +233,18 @@ export function EmailSettingsForm({ status }: {
 
   return (
     <DrawerLayout
-      title="Configure email"
-      description="Secrets are encrypted at rest and never shown again."
+      title={"Настроить электронную почту"}
+      description={"Секреты зашифровываются и никогда больше не отображаются."}
       surface="page"
       footer={
         <Button onClick={save} disabled={saving || !from.trim()}>
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save changes
-        </Button>
+          {"Сохранить изменения "}</Button>
       }
     >
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label>Provider</Label>
+          <Label>{"Поставщик"}</Label>
           <Select
             value={provider}
             onValueChange={(value) => setProvider(value as EmailProviderId)}
@@ -257,14 +253,14 @@ export function EmailSettingsForm({ status }: {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="resend">Resend</SelectItem>
-              <SelectItem value="smtp">SMTP (custom, AWS SES, etc.)</SelectItem>
+              <SelectItem value="resend">{"Отправить повторно"}</SelectItem>
+              <SelectItem value="smtp">{"SMTP (пользовательский, AWS SES и т. д.)"}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email-from">From address</Label>
+          <Label htmlFor="email-from">{"С адреса"}</Label>
           <Input
             id="email-from"
             value={from}
@@ -272,13 +268,12 @@ export function EmailSettingsForm({ status }: {
             placeholder="Acme <hello@acme.com>"
           />
           <p className="text-xs text-muted-foreground">
-            Must be a verified sender or domain with your provider.
-          </p>
+            {"Должен быть проверенным отправителем или доменом вашего провайдера. "}</p>
         </div>
 
         {provider === "resend" ? (
           <div className="space-y-2">
-            <Label htmlFor="email-api-key">Resend API key</Label>
+            <Label htmlFor="email-api-key">{"Повторно отправить ключ API"}</Label>
             <Input
               id="email-api-key"
               type="password"
@@ -286,20 +281,19 @@ export function EmailSettingsForm({ status }: {
               onChange={(event) => setApiKey(event.target.value)}
               placeholder={
                 status.hasSecret
-                  ? "•••••••• (stored, leave blank to keep)"
+                  ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
                   : "re_xxxxxxxxxxxxxxxxxxxx"
               }
               autoComplete="off"
             />
             <p className="text-xs text-muted-foreground">
-              Resend → API Keys. Needs permission to send from your domain.
-            </p>
+              {"Повторная отправка → Ключи API. Требуется разрешение на отправку из вашего домена. "}</p>
           </div>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label htmlFor="email-smtp-host">SMTP host</Label>
+                <Label htmlFor="email-smtp-host">{"SMTP-хост"}</Label>
                 <Input
                   id="email-smtp-host"
                   value={smtpHost}
@@ -309,7 +303,7 @@ export function EmailSettingsForm({ status }: {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email-smtp-port">Port</Label>
+                <Label htmlFor="email-smtp-port">{"Порт"}</Label>
                 <Input
                   id="email-smtp-port"
                   inputMode="numeric"
@@ -321,18 +315,18 @@ export function EmailSettingsForm({ status }: {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email-smtp-user">Username</Label>
+              <Label htmlFor="email-smtp-user">{"Имя пользователя"}</Label>
               <Input
                 id="email-smtp-user"
                 value={smtpUser}
                 onChange={(event) => setSmtpUser(event.target.value)}
-                placeholder="SMTP username"
+                placeholder={"Имя пользователя SMTP"}
                 autoComplete="off"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email-smtp-pass">Password</Label>
+              <Label htmlFor="email-smtp-pass">{"Пароль"}</Label>
               <Input
                 id="email-smtp-pass"
                 type="password"
@@ -340,8 +334,8 @@ export function EmailSettingsForm({ status }: {
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder={
                   status.hasSecret
-                    ? "•••••••• (stored, leave blank to keep)"
-                    : "SMTP password"
+                    ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
+                    : "SMTP-пароль"
                 }
                 autoComplete="off"
               />
@@ -349,10 +343,9 @@ export function EmailSettingsForm({ status }: {
 
             <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
               <div>
-                <p className="text-sm font-medium">Use TLS</p>
+                <p className="text-sm font-medium">{"Используйте TLS"}</p>
                 <p className="text-xs text-muted-foreground">
-                  Enable for port 465. Leave off for 587/25 (STARTTLS).
-                </p>
+                  {"Включите порт 465. Оставьте порт 587/25 (STARTTLS). "}</p>
               </div>
               <Switch checked={smtpSecure} onCheckedChange={setSmtpSecure} />
             </div>
@@ -361,10 +354,9 @@ export function EmailSettingsForm({ status }: {
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable</p>
+            <p className="text-sm font-medium">{"Включить"}</p>
             <p className="text-xs text-muted-foreground">
-              When off, Harly sends from its shared address instead.
-            </p>
+              {"Если этот параметр отключен, Харли вместо этого отправляет сообщения со своего общего адреса. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -381,7 +373,7 @@ export function EmailSettingsForm({ status }: {
           ) : (
             <PaperPlaneDuotoneIcon className="size-4" />
           )}
-          {provider === "smtp" ? "Test connection" : "Send test email"}
+          {provider === "smtp" ? "Тестовое соединение" : "Отправить тестовое письмо"}
         </Button>
       </div>
     </DrawerLayout>

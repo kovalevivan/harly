@@ -24,10 +24,10 @@ export function ChangePasswordForm() {
     startTransition(async () => {
       const res = await completeForcedPasswordChangeAction({ password });
       if (!res.ok) {
-        toast.error(res.error ?? "Couldn't change password.");
+        toast.error(res.error ?? "Не удалось сменить пароль.");
         return;
       }
-      toast.success("Password updated.");
+      toast.success("Пароль обновлен.");
       router.replace("/dashboard");
       router.refresh();
     });
@@ -36,7 +36,7 @@ export function ChangePasswordForm() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="cp-new">New password</Label>
+        <Label htmlFor="cp-new">{"Новый пароль"}</Label>
         <Input
           id="cp-new"
           type="password"
@@ -46,11 +46,11 @@ export function ChangePasswordForm() {
           autoFocus
         />
         {tooShort ? (
-          <p className="text-xs text-destructive">Use at least 8 characters.</p>
+          <p className="text-xs text-destructive">{"Используйте не менее 8 символов."}</p>
         ) : null}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="cp-confirm">Confirm password</Label>
+        <Label htmlFor="cp-confirm">{"Подтвердите пароль"}</Label>
         <Input
           id="cp-confirm"
           type="password"
@@ -60,7 +60,7 @@ export function ChangePasswordForm() {
           autoComplete="new-password"
         />
         {mismatch ? (
-          <p className="text-xs text-destructive">Passwords do not match.</p>
+          <p className="text-xs text-destructive">{"Пароли не совпадают."}</p>
         ) : null}
       </div>
       <Button
@@ -70,8 +70,7 @@ export function ChangePasswordForm() {
         disabled={isPending || password.length < 8 || password !== confirm}
       >
         {isPending && <SpinnerIcon className="mr-1.5 size-4" />}
-        Set new password
-      </Button>
+        {"Установить новый пароль "}</Button>
     </div>
   );
 }

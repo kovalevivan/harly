@@ -8,19 +8,19 @@ import type { Scorecard } from "./types";
 
 const RATING_META = {
   strong: {
-    label: "Strong",
+    label: "Сильный",
     icon: ThumbsUp,
     className: "text-primary",
     accent: "bg-lime",
   },
   mixed: {
-    label: "Mixed",
+    label: "Смешанный",
     icon: Minus,
     className: "text-clay",
     accent: "bg-clay",
   },
   weak: {
-    label: "Weak",
+    label: "Слабый",
     icon: ThumbsDown,
     className: "text-destructive",
     accent: "bg-destructive",
@@ -60,7 +60,7 @@ export function ScorecardList({ scorecards }: { scorecards: Scorecard[] }) {
                 <p className="whitespace-pre-line text-sm">{scorecard.comment}</p>
               ) : null}
               <p className="text-xs text-muted-foreground">
-                {scorecard.authorName ?? "Someone"} ·{" "}
+                {scorecard.authorName ?? "Кто-то"} ·{" "}
                 <RelativeTime value={scorecard.createdAt} />
               </p>
             </div>

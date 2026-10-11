@@ -55,28 +55,28 @@ const PROVIDER_META: Record<
     name: "Cloudflare Turnstile",
     logo: CloudflareLogo,
     docsUrl: "https://developers.cloudflare.com/turnstile/get-started/",
-    docsLabel: "Turnstile docs",
+    docsLabel: "Документация по турникету",
     sitePlaceholder: "0x4AAAAAAA…",
     secretHint:
-      "Cloudflare dashboard → Turnstile → your site → Settings. Used server-side to verify each submission.",
+      "Панель управления Cloudflare → Турникет → ваш сайт → Настройки. Используется на стороне сервера для проверки каждой отправки.",
   },
   recaptcha: {
     name: "Google reCAPTCHA",
     logo: ReCaptchaLogo,
     docsUrl: "https://developers.google.com/recaptcha/docs/display",
-    docsLabel: "reCAPTCHA docs",
+    docsLabel: "документы reCAPTCHA",
     sitePlaceholder: "6Lc…",
     secretHint:
-      "reCAPTCHA admin console → your site → Settings → reCAPTCHA keys. Use a v2 checkbox key. Verified server-side on each submission.",
+      "Консоль администратора reCAPTCHA → ваш сайт → Настройки → ключи reCAPTCHA. Используйте ключ флажка v2. Проверено на стороне сервера при каждой отправке.",
   },
   hcaptcha: {
     name: "hCaptcha",
     logo: HCaptchaLogo,
     docsUrl: "https://docs.hcaptcha.com/",
-    docsLabel: "hCaptcha docs",
+    docsLabel: "документы hCaptcha",
     sitePlaceholder: "10000000-ffff-ffff-ffff-000000000001",
     secretHint:
-      "hCaptcha dashboard → Settings → Secret Key (and Sites for the site key). Verified server-side on each submission.",
+      "Панель управления hCaptcha → Настройки → Секретный ключ (и Сайты для ключа сайта). Проверено на стороне сервера при каждой отправке.",
   },
 };
 
@@ -109,9 +109,9 @@ export function CaptchaConnectPanel({
   const statusTone = configured ? (isActive ? "on" : "off") : "neutral";
   const statusLabel = configured
     ? isActive
-      ? "Protecting"
-      : "Disabled"
-    : "Not connected";
+      ? "Защита"
+      : "Отключено"
+    : "Не подключено";
 
   function toggleEnabled(next: boolean) {
     if (!configured) return;
@@ -120,10 +120,10 @@ export function CaptchaConnectPanel({
         ? await saveCaptchaSettingsAction({ provider, enabled: true })
         : await disableCaptchaAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update.");
+        toast.error(result.error ?? "Не удалось обновить.");
         return;
       }
-      toast.success(next ? `${meta.name} enabled` : `${meta.name} disabled`);
+      toast.success(next ? `${meta.name} включено` : `${meta.name} отключено`);
       router.refresh();
     });
   }
@@ -151,7 +151,7 @@ export function CaptchaConnectPanel({
                 ) : (
                   <KeyDuotoneIcon className="size-4" />
                 )}
-                {configured ? (open ? "Hide settings" : "Manage") : "Connect"}
+                {configured ? (open ? "Скрыть настройки" : "Управление") : "Подключиться"}
               </Button>
               {configured ? (
                 <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -159,10 +159,10 @@ export function CaptchaConnectPanel({
                     checked={isActive}
                     disabled={togglePending}
                     onCheckedChange={toggleEnabled}
-                    aria-label={`Enable ${meta.name}`}
+                    aria-label={`Включить ${meta.name}`}
                   />
                   <span className="text-muted-foreground">
-                    {isActive ? "On" : "Off"}
+                    {isActive ? "On" : "Выкл."}
                   </span>
                 </label>
               ) : null}
@@ -175,8 +175,7 @@ export function CaptchaConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-border/70 bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Another CAPTCHA is currently active. Turning this one on will switch
-            protection to {meta.name}.
+            {"В настоящее время активна другая CAPTCHA. Включение этого параметра переключит защиту на "}{meta.name}.
           </p>
         </div>
       ) : null}
@@ -185,22 +184,20 @@ export function CaptchaConnectPanel({
         <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2 text-sm text-clay">
           <WarningCircleIcon className="mt-0.5 size-4 shrink-0" />
           <p>
-            Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on
-            the server to store the {meta.name} secret.
-          </p>
+            {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере для хранения "}{meta.name} {"секрет. "}</p>
         </div>
       ) : null}
 
       {configured ? (
         <Card className="overflow-hidden p-0">
           <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            <StatCell label="Site key">
+            <StatCell label={"Ключ сайта"}>
               <span className="truncate font-mono text-[13px] text-muted-foreground">
                 {keys.siteKey}
               </span>
             </StatCell>
-            <StatCell label="Secret key">
-              <span className="font-mono text-[13px]">•••••••• stored</span>
+            <StatCell label={"Секретный ключ"}>
+              <span className="font-mono text-[13px]">{"•••••••• сохранено"}</span>
             </StatCell>
           </div>
         </Card>
@@ -254,10 +251,10 @@ function CaptchaConnectForm({
         secretKey: secretKey || undefined,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success(`${meta.name} settings saved`);
+      toast.success(`${meta.name} настройки сохранены`);
       onSaved();
     });
   }
@@ -266,10 +263,10 @@ function CaptchaConnectForm({
     startDisconnect(async () => {
       const result = await disableCaptchaAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not disconnect.");
+        toast.error(result.error ?? "Не удалось отключиться.");
         return;
       }
-      toast.success(`${meta.name} disabled`);
+      toast.success(`${meta.name} отключено`);
       router.refresh();
     });
   }
@@ -279,12 +276,10 @@ function CaptchaConnectForm({
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <h2 className="font-display text-base font-semibold tracking-tight">
-            {connected ? "Manage connection" : `Connect ${meta.name}`}
+            {connected ? "Управление подключением" : `Подключить ${meta.name}`}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Your secret key is encrypted at rest and never shown again. The site
-            key is public.
-          </p>
+            {"Ваш секретный ключ зашифрован и никогда больше не отображается. Ключ сайта является общедоступным. "}</p>
         </div>
         <a
           href={meta.docsUrl}
@@ -299,7 +294,7 @@ function CaptchaConnectForm({
 
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="captcha-site">Site key</Label>
+          <Label htmlFor="captcha-site">{"Ключ сайта"}</Label>
           <Input
             id="captcha-site"
             value={siteKey}
@@ -309,12 +304,11 @@ function CaptchaConnectForm({
             className="font-mono text-xs"
           />
           <p className="text-xs text-muted-foreground">
-            Public key rendered in the form widget.
-          </p>
+            {"Открытый ключ отображается в виджете формы. "}</p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="captcha-secret">Secret key</Label>
+          <Label htmlFor="captcha-secret">{"Секретный ключ"}</Label>
           <Input
             id="captcha-secret"
             type="password"
@@ -322,7 +316,7 @@ function CaptchaConnectForm({
             onChange={(event) => setSecretKey(event.target.value)}
             placeholder={
               keys.hasSecretKey
-                ? "•••••••• (stored, leave blank to keep)"
+                ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
                 : meta.sitePlaceholder
             }
             autoComplete="off"
@@ -333,11 +327,9 @@ function CaptchaConnectForm({
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable {meta.name}</p>
+            <p className="text-sm font-medium">{"Включить "}{meta.name}</p>
             <p className="text-xs text-muted-foreground">
-              Turns on this CAPTCHA and switches off any other. When off, the
-              application form skips bot verification.
-            </p>
+              {"Включает эту капчу и отключает любую другую. Если этот параметр отключен, форма заявки пропускает проверку бота. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -354,15 +346,13 @@ function CaptchaConnectForm({
             disabled={disconnecting}
           >
             {disconnecting ? <SpinnerIcon className="size-3.5" /> : null}
-            Disconnect
-          </Button>
+            {"Отключить "}</Button>
         ) : (
           <span />
         )}
         <Button onClick={save} disabled={saving}>
           {saving ? <SpinnerIcon className="size-4" /> : null}
-          Save
-        </Button>
+          {"Сохранить "}</Button>
       </div>
     </Card>
   );

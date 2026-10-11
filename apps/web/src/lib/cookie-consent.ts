@@ -13,6 +13,7 @@ export type CookiePreferences = {
 
 const PRIVATE_PREFIXES = [
   "/dashboard",
+  "/briefing",
   "/settings",
   "/account",
   "/people",

@@ -41,14 +41,14 @@ function candidateIdFromPath(pathname: string | null): string | undefined {
 }
 
 function surfaceLabelFromPath(pathname: string | null): string {
-  if (!pathname || pathname === "/dashboard") return "Dashboard";
-  if (pathname.includes("/tasks")) return "Tasks";
-  if (pathname.includes("/calendars")) return "Interview calendar";
-  if (pathname.includes("/reports")) return "Reports";
-  if (pathname.includes("/inbox")) return "Inbox";
-  if (pathname.includes("/jobs")) return "Jobs";
-  if (pathname.includes("/candidates")) return "Candidates";
-  return "Current workspace";
+  if (!pathname || pathname === "/dashboard") return "Главная";
+  if (pathname.includes("/tasks")) return "Задачи";
+  if (pathname.includes("/calendars")) return "Календарь интервью";
+  if (pathname.includes("/reports")) return "Отчеты";
+  if (pathname.includes("/inbox")) return "Входящие";
+  if (pathname.includes("/jobs")) return "Вакансии";
+  if (pathname.includes("/candidates")) return "Кандидаты";
+  return "Текущая рабочая область";
 }
 
 /**
@@ -91,7 +91,7 @@ export function HarlyAIProvider({
     label: activeCandidateId
       ? candidateContext?.id === activeCandidateId
         ? candidateContext.name
-        : "Current candidate"
+        : "Текущий кандидат"
       : surfaceLabelFromPath(pathname),
     path: pathname ?? "/dashboard",
   };

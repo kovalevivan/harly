@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PersonJobRow } from "@/features/people/actions";
 
 const ROLE_LABELS: Record<string, string> = {
-  recruiter: "Recruiter",
-  hiring_manager: "Hiring manager",
-  interviewer: "Interviewer",
+  recruiter: "Рекрутер",
+  hiring_manager: "Менеджер по найму",
+  interviewer: "Интервьюер",
 };
 
 export function PersonJobsSection({ jobs }: { jobs: PersonJobRow[] }) {
@@ -20,8 +20,7 @@ export function PersonJobsSection({ jobs }: { jobs: PersonJobRow[] }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
           <Briefcase className="size-3.5" />
-          Jobs & hiring teams
-        </CardTitle>
+          {"Вакансии и команды по найму "}</CardTitle>
       </CardHeader>
       <CardContent className="divide-y divide-border/60 p-0">
         {jobs.map((job) => (

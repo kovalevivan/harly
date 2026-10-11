@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = slug ? await getLegalIndexData(slug) : null;
   return data
     ? {
-        title: `Legal & privacy · ${data.workspaceName}`,
+        title: `Законность и конфиденциальность · ${data.workspaceName}`,
         robots: { index: false },
       }
     : {};

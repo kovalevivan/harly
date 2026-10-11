@@ -96,7 +96,7 @@ export function AiSettingsCard({
 
   function toggleEnabled(next: boolean) {
     if (!status.hasApiKey && next) {
-      toast.error("Configure a provider and API key first.");
+      toast.error("Сначала настройте поставщика и ключ API.");
       return;
     }
     startToggle(async () => {
@@ -108,10 +108,10 @@ export function AiSettingsCard({
           })
         : await disableAiAction();
       if (!result.ok) {
-        toast.error(result.error ?? "Could not update AI settings.");
+        toast.error(result.error ?? "Не удалось обновить настройки AI.");
         return;
       }
-      toast.success(next ? "AI enabled" : "AI disabled");
+      toast.success(next ? "ИИ включен" : "ИИ отключен");
       router.refresh();
     });
   }
@@ -125,17 +125,17 @@ export function AiSettingsCard({
         <div className="p-6">
           <SectionHeader
             icon={RobotDuotoneIcon}
-            title="AI"
+            title={"ИИ"}
             badge={
               status.hasApiKey ? (
                 <StatusPill tone={status.enabled ? "on" : "off"}>
-                  {status.enabled ? "Active" : "Paused"}
+                  {status.enabled ? "Активные" : "Приостановлено"}
                 </StatusPill>
               ) : (
-                <StatusPill tone="neutral">Using heuristics</StatusPill>
+                <StatusPill tone="neutral">{"Использование эвристики"}</StatusPill>
               )
             }
-            description="Bring your own provider key to power resume parsing and job-description drafting. Without one, Harly falls back to fast built-in heuristics."
+            description={"Используйте свой собственный ключ поставщика услуг для анализа резюме и составления описания вакансии. Без него Харли возвращается к быстрым встроенным эвристикам."}
             action={
               canEdit ? (
                 <>
@@ -146,14 +146,13 @@ export function AiSettingsCard({
                     >
                       <Link href={"/settings/ai/configure" as Route}>
                         <KeyDuotoneIcon className="size-4" />
-                        {status.hasApiKey ? "Manage" : "Configure AI"}
+                        {status.hasApiKey ? "Управление" : "Настройка ИИ"}
                       </Link>
                     </Button>
                   ) : (
                     <Button variant="default" disabled>
                       <KeyDuotoneIcon className="size-4" />
-                      Configure AI
-                    </Button>
+                      {"Настройка ИИ "}</Button>
                   )}
                   {status.hasApiKey ? (
                     <label className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
@@ -161,10 +160,10 @@ export function AiSettingsCard({
                         checked={status.enabled}
                         disabled={togglePending}
                         onCheckedChange={toggleEnabled}
-                        aria-label="Enable AI"
+                        aria-label={"Включить ИИ"}
                       />
                       <span className="text-muted-foreground">
-                        {status.enabled ? "On" : "Off"}
+                        {status.enabled ? "On" : "Выкл."}
                       </span>
                     </label>
                   ) : null}
@@ -175,20 +174,20 @@ export function AiSettingsCard({
 
           {status.hasApiKey ? (
             <div className="mt-4 grid grid-cols-1 divide-y border-t bg-muted/20 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-              <StatCell label="Provider">
+              <StatCell label={"Поставщик"}>
                 {ActiveLogo ? <ActiveLogo className="size-4" /> : null}
                 {providerLabel(status.provider)}
               </StatCell>
-              <StatCell label="Model">
+              <StatCell label={"Модель"}>
                 <span className="truncate font-mono text-[13px]">
                   {status.modelId
                     ? formatModelLabel(status.modelId)
-                    : "Not configured"}
+                    : "Не настроено"}
                 </span>
               </StatCell>
-              <StatCell label="Endpoint">
+              <StatCell label={"Конечная точка"}>
                 <span className="truncate text-muted-foreground">
-                  {status.baseUrl ?? "Provider default"}
+                  {status.baseUrl ?? "Поставщик по умолчанию"}
                 </span>
               </StatCell>
             </div>
@@ -199,19 +198,18 @@ export function AiSettingsCard({
       {/* AI Features section */}
       <div>
         <h2 className="mb-3 text-sm font-semibold tracking-tight text-foreground/80">
-          AI Features
-        </h2>
+          {"Возможности искусственного интеллекта "}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <FeatureCard
             icon={ReadCvDuotoneIcon}
-            title="Resume parsing"
-            description="Extract name, contacts, skills, and work history from uploaded CVs into structured candidate profiles automatically on apply."
+            title={"Возобновить парсинг"}
+            description={"Автоматически извлекайте имя, контакты, навыки и историю работы из загруженных резюме в структурированные профили кандидатов при подаче заявки."}
             alwaysOn
           />
           <FeatureCard
             icon={MagicWandDuotoneIcon}
-            title="Job-description drafting"
-            description="Generate first-draft postings from a short brief in the job wizard. Title, keywords, and workplace type are enough to get a full draft."
+            title={"Составление должностной инструкции"}
+            description={"Создавайте первые черновики публикаций из краткого описания в мастере вакансий. Должности, ключевых слов и типа рабочего места достаточно, чтобы получить полный черновик."}
             alwaysOn
           />
           <AutoScoreFeatureCard status={status} canEdit={canEdit} />
@@ -224,12 +222,9 @@ export function AiSettingsCard({
       <Card className="gap-4">
         <div className="px-6">
           <h3 className="text-sm font-semibold tracking-tight">
-            Works with your provider
-          </h3>
+            {"Работает с вашим провайдером "}</h3>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Bring a key from any major provider, or route through OpenRouter for
-            hundreds of models, including free ones. Keys are encrypted at rest.
-          </p>
+            {"Возьмите с собой ключ от любого крупного провайдера или направьте через OpenRouter сотни моделей, включая бесплатные. Ключи шифруются в состоянии покоя. "}</p>
         </div>
         <div className="grid grid-cols-2 gap-2.5 px-6 sm:grid-cols-3 lg:grid-cols-5">
           {AI_PROVIDERS.map((provider) => {
@@ -255,16 +250,13 @@ export function AiSettingsCard({
                   </span>
                   {isActive ? (
                     <span className="block text-[11px] font-medium text-pine">
-                      Connected
-                    </span>
+                      {"Подключено "}</span>
                   ) : provider.supportsModelSearch ? (
                     <span className="block text-[11px] text-muted-foreground">
-                      100s of models
-                    </span>
+                      {"сотни моделей "}</span>
                   ) : (
                     <span className="block text-[11px] text-muted-foreground">
-                      {provider.models.length} models
-                    </span>
+                      {provider.models.length} {"моделей "}</span>
                   )}
                 </span>
               </div>
@@ -281,9 +273,7 @@ function EncryptionWarning() {
     <div className="flex items-start gap-2 rounded-2xl border border-clay/30 bg-clay/5 px-4 py-3 text-sm text-clay">
       <GlobeIcon className="mt-0.5 size-4 shrink-0" />
       <p>
-        Set <code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> on the
-        server to enable AI features.
-      </p>
+        {"Установить "}<code className="font-mono text-xs">AI_ENCRYPTION_KEY</code> {"на сервере, чтобы включить функции ИИ. "}</p>
     </div>
   );
 }
@@ -307,8 +297,7 @@ function FeatureCard({
         </span>
         {alwaysOn ? (
           <span className="mt-0.5 rounded-full bg-sage/60 px-2 py-0.5 text-[11px] font-semibold text-pine">
-            Always on
-          </span>
+            {"Всегда включен "}</span>
         ) : null}
       </div>
       <h3 className="mt-3.5 text-sm font-semibold tracking-tight">{title}</h3>
@@ -336,10 +325,10 @@ function AutoScoreFeatureCard({
       const result = await saveAiAutoScoreAction(next);
       if (!result.ok) {
         setOptimistic(!next);
-        toast.error(result.error ?? "Could not update setting.");
+        toast.error(result.error ?? "Не удалось обновить настройку.");
         return;
       }
-      toast.success(next ? "Auto-scoring enabled" : "Auto-scoring disabled");
+      toast.success(next ? "Автоматическая оценка включена" : "Автоматическая оценка отключена");
       router.refresh();
     });
   }
@@ -354,24 +343,20 @@ function AutoScoreFeatureCard({
           checked={optimistic}
           onCheckedChange={toggle}
           disabled={disabled || pending}
-          aria-label="Auto-score applications"
+          aria-label={"Заявки на автооценку"}
           className="mt-0.5"
         />
       </div>
       <h3 className="mt-3.5 text-sm font-semibold tracking-tight">
-        Auto-score applications
-      </h3>
+        {"Заявки на автооценку "}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Score each new application automatically as it arrives. No manual
-        trigger needed. Requires AI to be enabled.
-      </p>
+        {"Автоматически оценивайте каждое новое приложение по мере его поступления. Ручной триггер не требуется. Требуется включение ИИ. "}</p>
       {disabled && status.hasApiKey && !status.enabled ? (
-        <p className="mt-2 text-xs text-clay">Enable AI above to activate.</p>
+        <p className="mt-2 text-xs text-clay">{"Включите AI выше, чтобы активировать."}</p>
       ) : null}
       {!status.hasApiKey ? (
         <p className="mt-2 text-xs text-muted-foreground">
-          Configure a provider to unlock.
-        </p>
+          {"Настройте провайдера для разблокировки. "}</p>
       ) : null}
     </Card>
   );
@@ -396,11 +381,11 @@ function DuplicateCheckFeatureCard({
       const result = await saveAiDuplicateCheckAction(next);
       if (!result.ok) {
         setOptimistic(!next);
-        toast.error(result.error ?? "Could not update setting.");
+        toast.error(result.error ?? "Не удалось обновить настройку.");
         return;
       }
       toast.success(
-        next ? "Duplicate detection enabled" : "Duplicate detection disabled",
+        next ? "Обнаружение дубликатов включено" : "Обнаружение дубликатов отключено",
       );
       router.refresh();
     });
@@ -416,24 +401,20 @@ function DuplicateCheckFeatureCard({
           checked={optimistic}
           onCheckedChange={toggle}
           disabled={disabled || pending}
-          aria-label="Duplicate detection"
+          aria-label={"Обнаружение дубликатов"}
           className="mt-0.5"
         />
       </div>
       <h3 className="mt-3.5 text-sm font-semibold tracking-tight">
-        Duplicate detection
-      </h3>
+        {"Обнаружение дубликатов "}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Automatically flag potential duplicate candidates when a new application
-        arrives, and let you verify with AI from any candidate profile.
-      </p>
+        {"Автоматически отмечайте потенциальных повторяющихся кандидатов при поступлении нового заявления и позволяйте проверять их с помощью ИИ из любого профиля кандидата. "}</p>
       {disabled && status.hasApiKey && !status.enabled ? (
-        <p className="mt-2 text-xs text-clay">Enable AI above to activate.</p>
+        <p className="mt-2 text-xs text-clay">{"Включите AI выше, чтобы активировать."}</p>
       ) : null}
       {!status.hasApiKey ? (
         <p className="mt-2 text-xs text-muted-foreground">
-          Configure a provider to unlock.
-        </p>
+          {"Настройте провайдера для разблокировки. "}</p>
       ) : null}
     </Card>
   );
@@ -460,11 +441,11 @@ function ResumeAnonymizationFeatureCard({
       const result = await saveAiResumeAnonymizationAction(next);
       if (!result.ok) {
         setOptimistic(!next);
-        toast.error(result.error ?? "Could not update setting.");
+        toast.error(result.error ?? "Не удалось обновить настройку.");
         return;
       }
       toast.success(
-        next ? "Resume anonymization enabled" : "Resume anonymization disabled",
+        next ? "Возобновить анонимизацию включена" : "Анонимизация возобновления отключена",
       );
       router.refresh();
     });
@@ -480,18 +461,14 @@ function ResumeAnonymizationFeatureCard({
           checked={optimistic}
           onCheckedChange={toggle}
           disabled={disabled || pending}
-          aria-label="Resume anonymization"
+          aria-label={"Возобновить анонимизацию"}
           className="mt-0.5"
         />
       </div>
       <h3 className="mt-3.5 text-sm font-semibold tracking-tight">
-        Resume anonymization
-      </h3>
+        {"Возобновить анонимизацию "}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Hide names, contacts, and links on candidate profiles during review, so
-        early screening leans on skills and experience, not identity. Reviewers
-        can reveal per candidate.
-      </p>
+        {"Скрывайте имена, контакты и ссылки в профилях кандидатов во время проверки, чтобы ранний отбор основывался на навыках и опыте, а не на личности. Рецензенты могут раскрывать данные по каждому кандидату. "}</p>
     </Card>
   );
 }
@@ -546,8 +523,8 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
       const found = await searchOpenRouterModelsAction(query);
       setResults(found);
       if (found.length === 0) {
-        toast.message("No models found", {
-          description: "Try a different term.",
+        toast.message("Модели не найдены", {
+          description: "Попробуйте другой термин.",
         });
       }
     });
@@ -565,13 +542,13 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
       });
       if (result.ok) {
         setTestResult({ state: "ok", model: modelId });
-        toast.success("Connection OK");
+        toast.success("Соединение в порядке");
       } else {
         setTestResult({
           state: "error",
-          message: result.error ?? "Connection failed.",
+          message: result.error ?? "Соединение не удалось.",
         });
-        toast.error(result.error ?? "Connection failed.");
+        toast.error(result.error ?? "Соединение не удалось.");
       }
     });
   }
@@ -587,10 +564,10 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
         enabled,
       });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save.");
+        toast.error(result.error ?? "Не удалось сохранить.");
         return;
       }
-      toast.success("AI settings saved");
+      toast.success("Настройки ИИ сохранены.");
       // Guide the user back to the AI settings overview instead of leaving
       // them on the same form (which reads as "nothing happened").
       router.push("/settings/ai" as Route);
@@ -600,13 +577,13 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
 
   return (
     <DrawerLayout
-      title="Configure AI"
-      description="Your API key is encrypted at rest and never shown again."
+      title={"Настройка ИИ"}
+      description={"Ваш ключ API зашифрован и никогда больше не отображается."}
       surface="page"
     >
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label>Provider</Label>
+          <Label>{"Поставщик"}</Label>
           <Select value={provider} onValueChange={changeProvider}>
             <SelectTrigger className="w-full">
               <SelectValue>
@@ -619,7 +596,7 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
                     {getProvider(provider)?.label ?? provider}
                   </span>
                 ) : (
-                  "Select a provider"
+                  "Выберите провайдера"
                 )}
               </SelectValue>
             </SelectTrigger>
@@ -640,7 +617,7 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="ai-model">Model</Label>
+          <Label htmlFor="ai-model">{"Модель"}</Label>
           <Input
             id="ai-model"
             value={modelId}
@@ -650,8 +627,8 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
             }}
             placeholder={
               isOpenRouter
-                ? "e.g. openai/gpt-4o"
-                : "Choose or enter any model ID"
+                ? "например опенай/gpt-4o"
+                : "Выберите или введите любой идентификатор модели"
             }
             className="font-mono text-sm"
           />
@@ -661,7 +638,7 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
                 <Input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search OpenRouter models (incl. free)…"
+                  placeholder={"Поиск моделей OpenRouter (в том числе бесплатных)…"}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {
                       event.preventDefault();
@@ -704,7 +681,7 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
                         </span>
                       </span>
                       {model.free ? (
-                        <Badge className="bg-sage text-sage-ink">Free</Badge>
+                        <Badge className="bg-sage text-sage-ink">{"Бесплатно"}</Badge>
                       ) : null}
                     </button>
                   ))}
@@ -735,14 +712,12 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
           )}
           {!isOpenRouter ? (
             <p className="text-xs text-muted-foreground">
-              Choose a suggested model or enter any model ID supported by the
-              provider.
-            </p>
+              {"Выберите предложенную модель или введите любой идентификатор модели, поддерживаемый поставщиком. "}</p>
           ) : null}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="ai-key">API key</Label>
+          <Label htmlFor="ai-key">{"API-ключ"}</Label>
           <Input
             id="ai-key"
             type="password"
@@ -753,8 +728,8 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
             }}
             placeholder={
               status.hasApiKey
-                ? "•••••••• (stored, leave blank to keep)"
-                : "Paste your API key"
+                ? "•••••••• (сохранено, оставьте пустым, чтобы сохранить)"
+                : "Вставьте свой ключ API"
             }
             autoComplete="off"
           />
@@ -767,8 +742,7 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
                 rel="noreferrer"
                 className="font-medium text-foreground underline underline-offset-2 hover:text-pine"
               >
-                Get a key
-              </a>
+                {"Получить ключ "}</a>
             </p>
           ) : null}
         </div>
@@ -781,8 +755,8 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
           >
             <GlobeIcon className="size-3.5" />
             {showCustomEndpoint
-              ? "Use default endpoint"
-              : "Custom API endpoint"}
+              ? "Использовать конечную точку по умолчанию"
+              : "Конечная точка пользовательского API"}
           </button>
           {showCustomEndpoint ? (
             <Input
@@ -803,10 +777,9 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
 
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <div>
-            <p className="text-sm font-medium">Enable AI</p>
+            <p className="text-sm font-medium">{"Включить ИИ"}</p>
             <p className="text-xs text-muted-foreground">
-              When off, Harly uses heuristics only.
-            </p>
+              {"Когда параметр выключен, Харли использует только эвристику. "}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={setEnabled} />
         </div>
@@ -826,15 +799,14 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
             ) : (
               <LightningIcon className="size-4" />
             )}
-            Test connection
-          </Button>
+            {"Тестовое соединение "}</Button>
           {testResult?.state === "ok" ? (
             <div className="flex items-start gap-2 rounded-xl border border-pine/20 bg-sage/30 px-3 py-2.5 text-sm text-pine">
               <CheckIcon className="mt-0.5 size-4 shrink-0" />
               <p>
-                <span className="font-medium">Connection healthy.</span>{" "}
+                <span className="font-medium">{"Соединение исправно."}</span>{" "}
                 <span className="text-pine/80">
-                  {providerLabel(provider)} responded with{" "}
+                  {providerLabel(provider)} {"ответил с"}{" "}
                   <span className="font-mono text-[13px]">
                     {testResult.model}
                   </span>
@@ -846,26 +818,24 @@ export function AiSettingsForm({ status }: { status: WorkspaceAiStatus }) {
             <div className="flex items-start gap-2 rounded-xl border border-clay/30 bg-clay/5 px-3 py-2.5 text-sm text-clay">
               <GlobeIcon className="mt-0.5 size-4 shrink-0" />
               <p>
-                <span className="font-medium">Couldn&apos;t connect.</span>{" "}
+                <span className="font-medium">{"Не удалось подключиться."}</span>{" "}
                 {testResult.message}
               </p>
             </div>
           ) : (
             <p className="text-center text-xs text-muted-foreground">
-              Verify your key and model before saving.
-            </p>
+              {"Перед сохранением проверьте свой ключ и модель. "}</p>
           )}
         </div>
 
         {/* Save is inline at the end — scroll to it, no floating bar. */}
         <div className="flex items-center justify-end gap-2 border-t pt-5">
           <Button asChild variant="ghost">
-            <Link href={"/settings/ai" as Route}>Cancel</Link>
+            <Link href={"/settings/ai" as Route}>{"Отмена"}</Link>
           </Button>
           <Button onClick={save} disabled={saving || !modelId.trim()}>
             {saving ? <SpinnerIcon className="size-4" /> : null}
-            Save changes
-          </Button>
+            {"Сохранить изменения "}</Button>
         </div>
       </div>
     </DrawerLayout>

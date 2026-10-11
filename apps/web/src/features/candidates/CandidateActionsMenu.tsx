@@ -33,10 +33,10 @@ export function CandidateActionsMenu({
     startTransition(async () => {
       const result = await trashCandidateAction(candidateId);
       if (!result.success) {
-        toast.error(result.error ?? "Could not delete the candidate.");
+        toast.error(result.error ?? "Не удалось удалить кандидата.");
         return;
       }
-      toast.success("Candidate moved to trash.");
+      toast.success("Кандидат перемещен в корзину.");
       if (redirectAfterTrash) {
         router.replace("/dashboard/candidates");
       }
@@ -51,7 +51,7 @@ export function CandidateActionsMenu({
           variant="ghost"
           size="icon"
           className="size-8 text-muted-foreground data-[state=open]:bg-accent"
-          aria-label="Candidate actions"
+          aria-label={"Действия кандидата"}
           disabled={isPending}
           onClick={(event) => event.stopPropagation()}
         >
@@ -61,8 +61,7 @@ export function CandidateActionsMenu({
       <DropdownMenuContent align={align} className="w-48">
         <DropdownMenuItem variant="destructive" onClick={deleteCandidate}>
           <Trash2 />
-          Move to trash
-        </DropdownMenuItem>
+          {"Переместить в корзину "}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

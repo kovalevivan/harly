@@ -31,7 +31,7 @@ export default async function AccountPage() {
 
   return (
     <div className="space-y-6">
-      <PageTitle title="Account" />
+      <PageTitle title={"Аккаунт"} />
       <AccountSettingsPanel
         demoLocked={demoLocked}
         user={{

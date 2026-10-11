@@ -17,19 +17,17 @@ export default async function ForgotPasswordPage() {
           href="/login"
           className="font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
-          Back to sign in
-        </Link>
+          {"Вернуться для входа в систему "}</Link>
       }
     >
       <AuthCard
-        title="Forgot password"
-        subtitle="Enter your email and we'll send you a link to reset it."
+        title={"Забыли пароль"}
+        subtitle={"Введите свой адрес электронной почты, и мы вышлем вам ссылку для его сброса."}
         footer={
           <>
-            Remembered it?{" "}
+            {"Запомнил это?"}{" "}
             <Link href="/login" className="font-semibold text-foreground hover:underline">
-              Sign in
-            </Link>
+              {"Войти "}</Link>
           </>
         }
       >

@@ -8,46 +8,46 @@ import {
 
 describe("formatEmploymentType", () => {
   it("formats full_time", () => {
-    expect(formatEmploymentType("full_time")).toBe("Full Time");
+    expect(formatEmploymentType("full_time")).toBe("Полная занятость");
   });
 
   it("formats part_time", () => {
-    expect(formatEmploymentType("part_time")).toBe("Part Time");
+    expect(formatEmploymentType("part_time")).toBe("Частичная занятость");
   });
 
   it("formats contract", () => {
-    expect(formatEmploymentType("contract")).toBe("Contract");
+    expect(formatEmploymentType("contract")).toBe("Договор");
   });
 
   it("formats internship", () => {
-    expect(formatEmploymentType("internship")).toBe("Internship");
+    expect(formatEmploymentType("internship")).toBe("Стажировка");
   });
 });
 
 describe("formatWorkplaceType", () => {
   it("formats remote", () => {
-    expect(formatWorkplaceType("remote")).toBe("Remote");
+    expect(formatWorkplaceType("remote")).toBe("Удалённо");
   });
 
   it("formats hybrid", () => {
-    expect(formatWorkplaceType("hybrid")).toBe("Hybrid");
+    expect(formatWorkplaceType("hybrid")).toBe("Гибридный формат");
   });
 
   it("formats onsite", () => {
-    expect(formatWorkplaceType("onsite")).toBe("Onsite");
+    expect(formatWorkplaceType("onsite")).toBe("В клинике");
   });
 });
 
 describe("formatJobStatus", () => {
   it("formats draft", () => {
-    expect(formatJobStatus("draft")).toBe("Draft");
+    expect(formatJobStatus("draft")).toBe("Черновик");
   });
 
   it("formats open", () => {
-    expect(formatJobStatus("open")).toBe("Open");
+    expect(formatJobStatus("open")).toBe("Открыта");
   });
 
   it("formats closed", () => {
-    expect(formatJobStatus("closed")).toBe("Closed");
+    expect(formatJobStatus("closed")).toBe("Закрыта");
   });
 });

@@ -18,7 +18,7 @@ describe("T02 — validation is readable and does not block drafts", () => {
     const graph = emptyCanvasGraph();
     graph.nodes.push(action);
     const required = requiredConfigIssues(graph);
-    expect(required.some((issue) => issue.message.includes("Note"))).toBe(true);
+    expect(required.some((issue) => issue.fieldPath === "input.body" && /[А-Яа-яЁё]/.test(issue.message))).toBe(true);
   });
 });
 

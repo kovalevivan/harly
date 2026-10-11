@@ -802,25 +802,25 @@ describe("Harly AI × Automations End-to-End Scenarios", () => {
       expect(result.matched).toBe(false);
     });
 
-    it("verifies all user-facing tool labels and fallback formatters are strictly in English", () => {
+    it("verifies all user-facing tool labels and fallback formatters are in Russian", () => {
       for (const label of Object.values(TOOL_LABELS)) {
-        expect(label).not.toMatch(/[áéíóúñ¿¡]/i);
+        expect(label).toMatch(/[А-Яа-яЁё]/);
         expect(label).not.toMatch(
           /\b(revisando|consultando|buscando|preparando|evaluando)\b/i,
         );
       }
 
       expect(getToolLabel("tool-listAutomationTools")).toBe(
-        "Checking automation tools",
+        "Проверка средств автоматизации",
       );
       expect(getToolLabel("tool-prepareAutomationPlan")).toBe(
-        "Preparing automation plan",
+        "Подготовка плана автоматизации",
       );
       expect(getToolLabel("tool-simulateAutomationProposal")).toBe(
-        "Simulating automation",
+        "Моделирование автоматизации",
       );
       expect(getToolLabel("tool-customSecurityScan")).toBe(
-        "Checking custom security scan",
+        "Выполняю действие",
       );
     });
   });

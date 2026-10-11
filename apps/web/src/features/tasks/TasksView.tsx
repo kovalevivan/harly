@@ -108,7 +108,7 @@ export function TasksView({
         return next;
       });
       if (!res.success) {
-        toast.error(res.error ?? "Couldn't update task.");
+        toast.error(res.error ?? "Не удалось обновить задачу.");
       } else {
         router.refresh();
       }
@@ -118,7 +118,7 @@ export function TasksView({
 
   const runRemove = useCallback(
     async (id: string) => {
-      if (!window.confirm("Archive this task? It will leave the active task list.")) return;
+      if (!window.confirm("Архивировать эту задачу? Он покинет список активных задач.")) return;
       setPending((p) => new Set(p).add(id));
       setRemoved((r) => new Set(r).add(id));
       const res = await deleteTask(id);
@@ -129,7 +129,7 @@ export function TasksView({
           next.delete(id);
           return next;
         });
-        toast.error(res.error ?? "Couldn't delete task.");
+        toast.error(res.error ?? "Не удалось удалить задачу.");
       } else {
         router.refresh();
       }
@@ -185,27 +185,27 @@ export function TasksView({
 
   return (
     <div className="space-y-5">
-      <PageTitle title="Tasks" />
+      <PageTitle title={"Задачи"} />
 
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="relative sm:w-60">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            aria-label="Search tasks"
+            aria-label={"Поиск задач"}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search tasks…"
+            placeholder={"Поиск задач…"}
             className="w-full pl-9"
           />
         </div>
 
         <Select value={assignee} onValueChange={setAssignee}>
-          <SelectTrigger aria-label="Filter by assignee" className="w-full sm:w-44">
+          <SelectTrigger aria-label={"Фильтровать по правопреемнику"} className="w-full sm:w-44">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All assignees</SelectItem>
+            <SelectItem value="all">{"Все правопреемники"}</SelectItem>
             {members.map((m) => (
               <SelectItem key={m.id} value={m.id}>
                 {m.name}
@@ -215,11 +215,11 @@ export function TasksView({
         </Select>
 
         <Select value={priority} onValueChange={setPriority}>
-          <SelectTrigger aria-label="Filter by priority" className="w-full sm:w-36">
+          <SelectTrigger aria-label={"Фильтровать по приоритету"} className="w-full sm:w-36">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All priorities</SelectItem>
+            <SelectItem value="all">{"Все приоритеты"}</SelectItem>
             {TASK_PRIORITIES.map((p) => (
               <SelectItem key={p} value={p}>
                 {TASK_PRIORITY_LABELS[p]}
@@ -229,11 +229,11 @@ export function TasksView({
         </Select>
 
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger aria-label="Filter by status" className="w-full sm:w-36">
+          <SelectTrigger aria-label={"Фильтровать по статусу"} className="w-full sm:w-36">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="all">{"Все статусы"}</SelectItem>
             {TASK_STATUSES.map((item) => (
               <SelectItem key={item} value={item}>{TASK_STATUS_LABELS[item]}</SelectItem>
             ))}
@@ -241,28 +241,28 @@ export function TasksView({
         </Select>
 
         <Select value={due} onValueChange={setDue}>
-          <SelectTrigger aria-label="Filter by due date" className="w-full sm:w-36">
+          <SelectTrigger aria-label={"Фильтровать по дате сдачи"} className="w-full sm:w-36">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All due dates</SelectItem>
-            <SelectItem value="due">With due date</SelectItem>
-            <SelectItem value="overdue">Overdue</SelectItem>
-            <SelectItem value="no_due">No due date</SelectItem>
+            <SelectItem value="all">{"Все сроки выполнения"}</SelectItem>
+            <SelectItem value="due">{"Со сроком исполнения"}</SelectItem>
+            <SelectItem value="overdue">{"Просрочено"}</SelectItem>
+            <SelectItem value="no_due">{"Нет срока сдачи"}</SelectItem>
           </SelectContent>
         </Select>
 
         <div className="flex items-center gap-1.5 sm:ml-auto">
-          <SummaryChip count={summary.open} label="open" tone="bg-slate-info" />
-          <SummaryChip count={summary.overdue} label="overdue" tone="bg-rust" />
-          <SummaryChip count={summary.done} label="done" tone="bg-primary" />
+          <SummaryChip count={summary.open} label={"открытых"} tone="bg-slate-info" />
+          <SummaryChip count={summary.overdue} label={"просроченный"} tone="bg-rust" />
+          <SummaryChip count={summary.done} label={"выполнено"} tone="bg-primary" />
         </div>
 
         <div className="flex items-center gap-2">
           <div className="inline-flex rounded-full border bg-card p-0.5">
             {([
-              { key: "list", icon: List, label: "List view" },
-              { key: "board", icon: KanbanSquare, label: "Board view" },
+              { key: "list", icon: List, label: "Просмотр списка" },
+              { key: "board", icon: KanbanSquare, label: "Вид на доску" },
             ] as const).map(({ key, icon: Icon, label }) => (
               <button
                 key={key}
@@ -287,8 +287,7 @@ export function TasksView({
             }}
           >
             <Plus className="mr-1.5 size-4" />
-            New task
-          </Button>
+            {"Новая задача "}</Button>
         </div>
       </div>
 

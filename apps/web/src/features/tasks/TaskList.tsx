@@ -50,10 +50,10 @@ export function TaskList({
     })).filter((g) => g.tasks.length > 0);
 
     if (done.length > 0) {
-      byUrgency.push({ key: "completed", label: "Completed", dot: "bg-primary", tasks: done });
+      byUrgency.push({ key: "completed", label: "Завершено", dot: "bg-primary", tasks: done });
     }
     if (canceled.length > 0) {
-      byUrgency.push({ key: "canceled", label: "Canceled", dot: "bg-muted-foreground/40", tasks: canceled });
+      byUrgency.push({ key: "canceled", label: "Отменено", dot: "bg-muted-foreground/40", tasks: canceled });
     }
     return byUrgency;
   }, [tasks]);
@@ -63,14 +63,14 @@ export function TaskList({
       <EmptyState
         variant="filtered"
         icon={SearchX}
-        title="No tasks match these filters"
-        hint="Try a different assignee or due window, or reset the filters."
+        title={"Нет задач, соответствующих этим фильтрам."}
+        hint={"Попробуйте выбрать другого исполнителя или срок выполнения или сбросьте фильтры."}
       />
     ) : (
       <EmptyState
         icon={CheckCircle2}
-        title="Nothing on your plate"
-        hint="Tasks you create , or that a stage move assigns you , collect here with the most urgent first."
+        title={"Ничего на твоей тарелке"}
+        hint={"Задачи, которые вы создаете или которые вам поручает этап, собираются здесь, начиная с самых срочных."}
       />
     );
   }

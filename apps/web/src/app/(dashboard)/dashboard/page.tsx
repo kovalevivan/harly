@@ -96,24 +96,24 @@ export default async function DashboardPage({
         <TriageStrip
           items={[
             {
-              label: "Awaiting your review",
+              label: "Ожидают рассмотрения",
               value: review.length,
               href: "/dashboard/candidates",
               urgent: true,
             },
             {
-              label: "Overdue replies",
+              label: "Просроченные ответы",
               value: overdue,
               href: "/dashboard/inbox",
               urgent: true,
             },
             {
-              label: "Interviews today",
+              label: "Собеседования сегодня",
               value: interviews.length,
               href: "/dashboard/calendars",
             },
             {
-              label: "Candidates in pipeline",
+              label: "Кандидаты в воронке",
               value: activeCandidates,
               href: "/dashboard/pipeline",
             },

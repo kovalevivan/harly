@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/notification-island/toast";
@@ -40,13 +41,13 @@ export function InviteOnboard({
         password,
       });
       if (signUp.error) {
-        setError(signUp.error.message ?? "Could not create your account.");
+        setError(signUp.error.message ?? "Не удалось создать учетную запись.");
         return;
       }
 
       const accepted = await acceptWorkspaceInvitationAction(invitationId);
       if (!accepted.success || !accepted.organizationId) {
-        setError(accepted.error ?? "Could not join the workspace.");
+        setError(accepted.error ?? "Не удалось присоединиться к рабочей области.");
         return;
       }
 
@@ -54,7 +55,7 @@ export function InviteOnboard({
         organizationId: accepted.organizationId,
       });
 
-      toast.success("Welcome aboard");
+      toast.success("Добро пожаловать на борт");
       router.replace("/onboarding");
       router.refresh();
     });
@@ -63,17 +64,17 @@ export function InviteOnboard({
   return (
     <div className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="invite-email">Email</Label>
+        <Label htmlFor="invite-email">{"Электронная почта"}</Label>
         <Input id="invite-email" value={email} disabled readOnly />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="invite-name">Full name</Label>
+        <Label htmlFor="invite-name">{"Полное имя"}</Label>
         <Input
           id="invite-name"
           value={name}
           autoFocus
           autoComplete="name"
-          placeholder="Ada Lovelace"
+          placeholder={"Ада Лавлейс"}
           onChange={(e) => {
             setName(e.target.value);
             setError(null);
@@ -81,13 +82,13 @@ export function InviteOnboard({
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="invite-password">Password</Label>
+        <Label htmlFor="invite-password">{"Пароль"}</Label>
         <Input
           id="invite-password"
           type="password"
           value={password}
           autoComplete="new-password"
-          placeholder="At least 8 characters"
+          placeholder={"Минимум 8 символов"}
           onChange={(e) => {
             setPassword(e.target.value);
             setError(null);
@@ -100,7 +101,7 @@ export function InviteOnboard({
 
       {error ? (
         <p className="rounded-lg border border-destructive/25 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-          {error}
+          {localizeSystemText(error)}
         </p>
       ) : null}
 
@@ -110,7 +111,7 @@ export function InviteOnboard({
         disabled={!canSubmit || isPending}
         onClick={submit}
       >
-        {isPending ? "Setting up…" : "Join & start working"}
+        {isPending ? "Настройка…" : "Присоединяйтесь и начните работать"}
       </Button>
     </div>
   );

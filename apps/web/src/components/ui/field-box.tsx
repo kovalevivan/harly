@@ -1,3 +1,4 @@
+import { localizeSystemText } from "@/lib/localize-system-text";
 import type { ReactNode } from "react";
 
 import { Label } from "@/components/ui/label";
@@ -52,7 +53,7 @@ export function FieldBox({
         {children}
       </div>
       {error ? (
-        <p className="text-xs text-destructive">{error}</p>
+        <p className="text-xs text-destructive">{localizeSystemText(error)}</p>
       ) : hint ? (
         <p className="text-xs text-muted-foreground">{hint}</p>
       ) : null}

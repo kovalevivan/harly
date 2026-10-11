@@ -87,4 +87,20 @@ describe("loadHarlyConfig", () => {
     expect(config.HARLY_URL).toBe("https://legacy.example.com");
     expect(warn).toHaveBeenCalledOnce();
   });
+  it.each([undefined, "", "   "])("keeps AI requests direct when the proxy is unset: %s", (value) => {
+    expect(loadHarlyConfig({ ...production, HARLY_AI_PROXY_URL: value }).HARLY_AI_PROXY_URL).toBeUndefined();
+  });
+
+  it.each(["http://proxy.example.com:8888", "https://proxy.example.com:8888"])(
+    "accepts an instance AI forward proxy: %s", (value) => {
+      expect(loadHarlyConfig({ ...production, HARLY_AI_PROXY_URL: value }).HARLY_AI_PROXY_URL).toBe(value);
+    },
+  );
+
+  it.each(["invalid", "socks5://localhost:8888", "http://proxy.example.com/path", "http://proxy.example.com/?key=secret", "http://proxy.example.com/#fragment"])(
+    "rejects invalid AI proxy configuration: %s", (value) => {
+      expect(() => loadHarlyConfig({ ...production, HARLY_AI_PROXY_URL: value })).toThrow(/HARLY_AI_PROXY_URL/);
+    },
+  );
+
 });

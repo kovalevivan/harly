@@ -14,10 +14,10 @@ import { OwnerOnboarding } from "@/features/onboarding/OwnerOnboarding";
 import { RecruiterOnboarding } from "@/features/onboarding/RecruiterOnboarding";
 
 const BUILTIN_ROLE_LABELS: Record<string, string> = {
-  owner: "Owner",
-  admin: "Admin",
-  recruiter: "Recruiter",
-  hiring_manager: "Hiring Manager",
+  owner: "Владелец",
+  admin: "Админ",
+  recruiter: "Рекрутер",
+  hiring_manager: "Менеджер по найму",
 };
 
 /** Human label for the role assigned at invite time, used to pre-fill "Your

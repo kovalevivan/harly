@@ -1,5 +1,6 @@
 "use client";
 
+import { localizeSystemText } from "@/lib/localize-system-text";
 import { useState, useTransition } from "react";
 import { Calendar, Flag, Loader2 } from "lucide-react";
 import { toast } from "@/lib/notification-island/toast";
@@ -86,11 +87,11 @@ export function CreateTaskDialog({
       });
 
       if (result.success) {
-        toast.success("Task created");
+        toast.success("Задача создана");
         reset();
         onOpenChange(false);
       } else {
-        setError(result.error ?? "Something went wrong.");
+        setError(result.error ?? "Что-то пошло не так.");
       }
     });
   }
@@ -105,20 +106,20 @@ export function CreateTaskDialog({
     >
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>New task</DialogTitle>
+          <DialogTitle>{"Новая задача"}</DialogTitle>
           <DialogDescription>
             {defaultStatus === "pending"
-              ? "Add a task with an assignee, priority, and due date."
-              : `Adds to "${TASK_STATUS_LABELS[defaultStatus]}". Set an assignee, priority, and due date.`}
+              ? "Добавьте задачу с указанием исполнителя, приоритета и срока выполнения."
+              : `Добавляет к «${TASK_STATUS_LABELS[defaultStatus]}». Установите правопреемника, приоритет и дату выполнения.`}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="new-task-title" className="sr-only">Task title</label>
+            <label htmlFor="new-task-title" className="sr-only">{"Название задачи"}</label>
             <Input
               id="new-task-title"
-              placeholder="Task title"
+              placeholder={"Название задачи"}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               autoFocus
@@ -127,10 +128,10 @@ export function CreateTaskDialog({
           </div>
 
           <div>
-            <label htmlFor="new-task-description" className="sr-only">Description</label>
+            <label htmlFor="new-task-description" className="sr-only">{"Описание"}</label>
             <Textarea
               id="new-task-description"
-              placeholder="Description (optional)"
+              placeholder={"Описание (необязательно)"}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -144,15 +145,14 @@ export function CreateTaskDialog({
                 value={ownerId}
                 onChange={setOwnerId}
                 members={interviewerOptions}
-                label="Assignee"
+                label={"Правопреемник"}
               />
             </div>
 
             <div className="flex-1">
               <label htmlFor="new-task-due-date" className="mb-1.5 block text-xs font-medium text-zinc-500">
                 <Calendar className="mr-1 inline size-3" />
-                Due date
-              </label>
+                {"Срок сдачи "}</label>
               <Input
                 id="new-task-due-date"
                 type="date"
@@ -168,8 +168,7 @@ export function CreateTaskDialog({
           <div>
             <label className="mb-1.5 block text-xs font-medium text-zinc-500">
               <Flag className="mr-1 inline size-3" />
-              Priority
-            </label>
+              {"Приоритет "}</label>
             <div className="flex gap-1.5">
               {TASK_PRIORITIES.map((p) => (
                 <button
@@ -191,7 +190,7 @@ export function CreateTaskDialog({
           </div>
 
           {error && (
-            <p role="alert" className="text-sm text-red-600">{error}</p>
+            <p role="alert" className="text-sm text-red-600">{localizeSystemText(error)}</p>
           )}
 
           <DialogFooter>
@@ -201,14 +200,12 @@ export function CreateTaskDialog({
               onClick={() => onOpenChange(false)}
               disabled={pending}
             >
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button type="submit" disabled={pending || !title.trim()}>
               {pending ? (
                 <Loader2 className="mr-1.5 size-4 animate-spin" />
               ) : null}
-              Create task
-            </Button>
+              {"Создать задачу "}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

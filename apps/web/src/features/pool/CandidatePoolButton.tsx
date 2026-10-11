@@ -35,12 +35,12 @@ export function CandidatePoolButton({
         : await addToPoolAction({ candidateId, source: "sourced" });
 
       if (!result.success) {
-        toast.error(result.error ?? "Could not update pool status.");
+        toast.error(result.error ?? "Не удалось обновить статус пула.");
         return;
       }
 
       setInPool(!inPool);
-      toast.success(inPool ? "Removed from pool." : "Added to pool.");
+      toast.success(inPool ? "Удален из бассейна." : "Добавлен в пул.");
       (router as { refresh?: () => void }).refresh?.();
     });
   }
@@ -55,17 +55,17 @@ export function CandidatePoolButton({
         inPool && "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800",
         className,
       )}
-      title={inPool ? "Remove from pool" : "Add to pool"}
+      title={inPool ? "Удалить из пула" : "Добавить в пул"}
     >
       {inPool ? (
         <>
           <BookmarkSimpleIcon className="size-4 fill-current" />
-          {size !== "icon" && <span className="ml-1.5">In Pool</span>}
+          {size !== "icon" && <span className="ml-1.5">{"В бассейне"}</span>}
         </>
       ) : (
         <>
           <BookmarkSimpleIcon className="size-4" />
-          {size !== "icon" && <span className="ml-1.5">Add to Pool</span>}
+          {size !== "icon" && <span className="ml-1.5">{"Добавить в пул"}</span>}
         </>
       )}
     </Button>

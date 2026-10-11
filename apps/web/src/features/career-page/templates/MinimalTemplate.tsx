@@ -27,9 +27,9 @@ export function MinimalTemplate({
   portalEnabled?: boolean;
 }) {
   const accent = config.theme.accent ?? workspace.primaryColor;
-  const headline = config.hero.headline || `Careers at ${workspace.name}`;
+  const headline = config.hero.headline || `Карьера в ${workspace.name}`;
   const subhead = config.hero.subhead;
-  const ctaText = config.hero.ctaButtonText || "View jobs";
+  const ctaText = config.hero.ctaButtonText || "Посмотреть вакансии";
 
   // Which logo to show: square mark vs full wordmark
   const displayLogo =
@@ -199,8 +199,7 @@ export function MinimalTemplate({
 
           {jobs.length === 0 ? (
             <p className="mt-8 text-sm text-zinc-500 dark:text-zinc-400">
-              No open positions right now.
-            </p>
+              {"На данный момент открытых позиций нет. "}</p>
           ) : (
             <div className="mt-6 space-y-10">
               {groups.map(([dept, deptJobs]) => (
@@ -270,7 +269,7 @@ export function MinimalTemplate({
                 className="mt-5 inline-flex h-10 items-center rounded-md px-6 text-sm font-semibold text-white transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: config.cta.color ?? accent }}
               >
-                {config.cta.buttonText || "Get in touch"}
+                {config.cta.buttonText || "Свяжитесь с нами"}
               </a>
             )}
           </div>

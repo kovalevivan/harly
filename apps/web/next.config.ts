@@ -11,6 +11,7 @@ const harlyVersion = (
 ).version;
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   env: {
     NEXT_PUBLIC_HARLY_VERSION: harlyVersion ?? "",
   },
@@ -25,6 +26,7 @@ const nextConfig: NextConfig = {
   experimental:
     process.env.NODE_ENV === "production"
       ? {
+          serverActions: { bodySizeLimit: "12mb" },
           cpus: 2,
           memoryBasedWorkersCount: false,
           parallelServerBuildTraces: false,
@@ -39,6 +41,7 @@ const nextConfig: NextConfig = {
       : {
           // Keep development predictable across machines. Turbopack's
           // persistent cache can otherwise grow to several GB under .next/dev.
+          serverActions: { bodySizeLimit: "12mb" },
           turbopackFileSystemCacheForDev: false,
         },
   typedRoutes: true,

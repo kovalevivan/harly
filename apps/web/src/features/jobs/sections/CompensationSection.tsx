@@ -16,7 +16,7 @@ export function CompensationSection({ job }: { job?: Job }) {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-4">
-        <FieldBox label="Salary min" htmlFor="salaryMin">
+        <FieldBox label={"Зарплата мин"} htmlFor="salaryMin">
           <Input
             id="salaryMin"
             name="salaryMin"
@@ -26,7 +26,7 @@ export function CompensationSection({ job }: { job?: Job }) {
             className={fieldBoxControlClassName}
           />
         </FieldBox>
-        <FieldBox label="Salary max" htmlFor="salaryMax">
+        <FieldBox label={"Зарплата макс."} htmlFor="salaryMax">
           <Input
             id="salaryMax"
             name="salaryMax"
@@ -36,7 +36,7 @@ export function CompensationSection({ job }: { job?: Job }) {
             className={fieldBoxControlClassName}
           />
         </FieldBox>
-        <FieldBox label="Currency" htmlFor="currency">
+        <FieldBox label={"Валюта"} htmlFor="currency">
           <Select name="currency" defaultValue={job?.currency ?? "USD"}>
             <SelectTrigger id="currency" className={fieldBoxSelectTriggerClassName}>
               <SelectValue />
@@ -50,14 +50,14 @@ export function CompensationSection({ job }: { job?: Job }) {
             </SelectContent>
           </Select>
         </FieldBox>
-        <FieldBox label="Period" htmlFor="salaryPeriod">
+        <FieldBox label={"Период"} htmlFor="salaryPeriod">
           <Select name="salaryPeriod" defaultValue={job?.salaryPeriod ?? "annual"}>
             <SelectTrigger id="salaryPeriod" className={fieldBoxSelectTriggerClassName}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="annual">Per year</SelectItem>
-              <SelectItem value="monthly">Per month</SelectItem>
+              <SelectItem value="annual">{"в год"}</SelectItem>
+              <SelectItem value="monthly">{"В месяц"}</SelectItem>
             </SelectContent>
           </Select>
         </FieldBox>

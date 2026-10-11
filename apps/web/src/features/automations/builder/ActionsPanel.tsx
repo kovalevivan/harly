@@ -16,9 +16,9 @@ type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 const MAX_ACTIONS = MAX_ACTIONS_PER_WORKFLOW;
 
 const VARIABLE_CHIPS = [
-  { label: "Candidate Name", value: "{{candidate_first_name}}" },
-  { label: "Job Title", value: "{{job_title}}" },
-  { label: "Company", value: "{{company_name}}" },
+  { label: "Имя кандидата", value: "{{candidate_first_name}}" },
+  { label: "Должность", value: "{{job_title}}" },
+  { label: "Компания", value: "{{company_name}}" },
 ];
 
 /**
@@ -103,7 +103,7 @@ export function ActionsPanel({
                 {i + 1}
               </span>
               <span className="font-chrome text-[11px] uppercase tracking-wider text-soft-ink">
-                Step {i + 1}
+                {"Шаг "}{i + 1}
               </span>
             </span>
             <ActionCard
@@ -143,13 +143,12 @@ export function ActionsPanel({
                 : "bg-near-ink text-primary-foreground border-near-ink hover:bg-near-ink/90 hover:text-primary-foreground",
             )}
           >
-            {value.length > 0 ? "+ Add another action" : "Choose an action"}
+            {value.length > 0 ? "+ Добавить еще одно действие" : "Выберите действие"}
           </button>
         )
       ) : (
         <p className="mt-3 text-center text-xs text-soft-ink">
-          Maximum of {MAX_ACTIONS} actions reached.
-        </p>
+          {"Максимум "}{MAX_ACTIONS} {"действия достигнуты. "}</p>
       )}
     </div>
   );
@@ -210,7 +209,7 @@ function ActionCard({
                 onClick={() => onMove(-1)}
                 disabled={index === 0}
                 className="rounded p-1 hover:bg-soft-kraft hover:text-foreground disabled:opacity-25"
-                aria-label="Move up"
+                aria-label={"Вверх"}
               >
                 <ChevronUpIcon className="size-3.5" />
               </button>
@@ -219,7 +218,7 @@ function ActionCard({
                 onClick={() => onMove(1)}
                 disabled={index === total - 1}
                 className="rounded p-1 hover:bg-soft-kraft hover:text-foreground disabled:opacity-25"
-                aria-label="Move down"
+                aria-label={"Двигаться вниз"}
               >
                 <ChevronDownIcon className="size-3.5" />
               </button>
@@ -228,7 +227,7 @@ function ActionCard({
                 type="button"
                 onClick={onRemove}
                 className="rounded p-1 hover:bg-danger-rust/10 hover:text-danger-rust"
-                aria-label="Remove action"
+                aria-label={"Удалить действие"}
               >
                 <CloseIcon className="size-3.5" />
               </button>
@@ -258,7 +257,7 @@ function ActionCard({
             action.type === "send_booking_link" ||
             action.type === "add_note") && (
             <div className="mt-2.5 flex flex-wrap items-center gap-1 text-[11px] text-soft-ink">
-              <span>Insert variable:</span>
+              <span>{"Вставьте переменную:"}</span>
               {VARIABLE_CHIPS.map((chip) => (
                 <button
                   key={chip.value}
@@ -292,8 +291,7 @@ function ActionCard({
               onChange={(e) => onUpdate({ continueOnError: e.target.checked })}
               className="size-3.5 rounded border-border accent-foreground"
             />
-            Continue workflow if this action fails
-          </label>
+            {"Продолжить рабочий процесс, если это действие не удалось "}</label>
         </div>
       </div>
     </div>
@@ -348,11 +346,10 @@ function ConfigEditor({
           onChange={(e) => onChange(e.target.value || undefined)}
           className={base}
         >
-          <option value="">Choose an email template…</option>
+          <option value="">{"Выберите шаблон электронного письма…"}</option>
           {emailTemplates.length === 0 ? (
             <option value="" disabled>
-              No email templates configured
-            </option>
+              {"Шаблоны электронной почты не настроены "}</option>
           ) : (
             emailTemplates.map((t) => (
               <option key={t.id} value={t.id}>
@@ -376,13 +373,13 @@ function ConfigEditor({
           onChange={(e) => onChange(Number(e.target.value))}
           className={base}
         >
-          <option value="0">Same day (0 days)</option>
-          <option value="1">In 1 day</option>
-          <option value="2">In 2 days</option>
-          <option value="3">In 3 days</option>
-          <option value="5">In 5 days</option>
-          <option value="7">In 1 week (7 days)</option>
-          <option value="14">In 2 weeks (14 days)</option>
+          <option value="0">{"В тот же день (0 дней)"}</option>
+          <option value="1">{"Через 1 день"}</option>
+          <option value="2">{"Через 2 дня"}</option>
+          <option value="3">{"Через 3 дня"}</option>
+          <option value="5">{"Через 5 дней"}</option>
+          <option value="7">{"Через 1 неделю (7 дней)"}</option>
+          <option value="14">{"Через 2 недели (14 дней)"}</option>
         </BuilderSelect>
       </div>
     );
@@ -398,7 +395,7 @@ function ConfigEditor({
             list="action-tag-list"
             value={String(value ?? "")}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="Tag label (e.g. vip, referral)"
+            placeholder={"Ярлык тега (например, VIP, реферал)"}
             className={base}
           />
           <datalist id="action-tag-list">
@@ -454,7 +451,7 @@ function ConfigEditor({
           onChange={(e) => onChange(e.target.value)}
           className={base}
         >
-          <option value="">{field.placeholder ?? "Select…"}</option>
+          <option value="">{field.placeholder ?? "Выберите…"}</option>
           {field.options.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
@@ -474,11 +471,10 @@ function ConfigEditor({
           onChange={(e) => onChange(e.target.value)}
           className={base}
         >
-          <option value="">Select a stage…</option>
+          <option value="">{"Выберите этап…"}</option>
           {stageNames.length === 0 ? (
             <option value="" disabled>
-              No stages defined yet
-            </option>
+              {"Этапы еще не определены "}</option>
           ) : (
             stageNames.map((name) => (
               <option key={name} value={name}>
@@ -500,7 +496,7 @@ function ConfigEditor({
           onChange={(e) => onChange(e.target.value)}
           className={base}
         >
-          <option value="">Assign to workflow owner</option>
+          <option value="">{"Назначить владельцу рабочего процесса"}</option>
           {members.map((m) => (
             <option key={m.id} value={m.id}>
               {m.name}
@@ -585,13 +581,12 @@ function ActionPicker({
     <div className="rounded-xl border border-border bg-warm-paper p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
         <span className="font-display text-sm font-semibold text-foreground">
-          Choose an action
-        </span>
+          {"Выберите действие "}</span>
         <button
           type="button"
           onClick={onCancel}
           className="rounded p-1 text-soft-ink hover:bg-soft-kraft hover:text-foreground"
-          aria-label="Cancel"
+          aria-label={"Отмена"}
         >
           <CloseIcon className="size-3.5" />
         </button>

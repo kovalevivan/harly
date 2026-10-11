@@ -53,7 +53,7 @@ export function OffersPanel({
     startTransition(async () => {
       const result = await action();
       if (!result.success) {
-        toast.error(result.error ?? "Could not update the offer.");
+        toast.error(result.error ?? "Не удалось обновить предложение.");
         return;
       }
       toast.success(ok);
@@ -66,14 +66,13 @@ export function OffersPanel({
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           {offers.length === 0
-            ? "No offers yet."
-            : `${offers.length} offer${offers.length === 1 ? "" : "s"}.`}
+            ? "Пока предложений нет."
+            : `Предложений: ${offers.length}.`}
         </p>
         {applications.length > 0 ? (
           <Button size="sm" onClick={() => setCreateOpen(true)}>
             <BadgeDollarSign className="size-4" />
-            New offer
-          </Button>
+            {"Новое предложение "}</Button>
         ) : null}
       </div>
 
@@ -82,11 +81,9 @@ export function OffersPanel({
           <span className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
             <BadgeDollarSign className="size-5" strokeWidth={1.6} />
           </span>
-          <p className="text-sm font-medium">No offers extended</p>
+          <p className="text-sm font-medium">{"Ни одно предложение не продлено"}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Draft an offer with compensation and start date, then send it and
-            track the candidate&apos;s decision here.
-          </p>
+            {"Составьте предложение с указанием компенсации и даты начала, затем отправьте его и отследите решение кандидата здесь. "}</p>
         </div>
       ) : (
         <div className="space-y-4 duration-300 animate-in fade-in slide-in-from-bottom-1">
@@ -120,20 +117,18 @@ export function OffersPanel({
                             disabled={isPending}
                             onClick={() => setEditing(offer)}
                           >
-                            Edit
-                          </Button>
+                            {"Редактировать "}</Button>
                           <Button
                             size="sm"
                             disabled={isPending}
                             onClick={() =>
                               offerSignatureChannel === "native"
                                 ? setPlacingFieldsFor(offer)
-                                : run(() => sendOffer({ offerId: offer.id }), "Offer sent")
+                                : run(() => sendOffer({ offerId: offer.id }), "Предложение отправлено")
                             }
                           >
                             <Send className="size-4" />
-                            Send offer
-                          </Button>
+                            {"Отправить предложение "}</Button>
                         </>
                       ) : null}
                       {offer.status === "sent" ? (
@@ -145,13 +140,12 @@ export function OffersPanel({
                               run(
                                 () =>
                                   decideOffer({ offerId: offer.id, decision: "accepted" }),
-                                "Offer accepted. Candidate marked as hired",
+                                "Предложение принято. Кандидат отмечен как принятый на работу",
                               )
                             }
                           >
                             <BadgeCheck className="size-4" />
-                            Mark accepted
-                          </Button>
+                            {"Отметить, что принято "}</Button>
                           <Button
                             size="sm"
                             variant="outline"
@@ -160,13 +154,12 @@ export function OffersPanel({
                               run(
                                 () =>
                                   decideOffer({ offerId: offer.id, decision: "declined" }),
-                                "Offer marked as declined",
+                                "Предложение помечено как отклоненное",
                               )
                             }
                           >
                             <ThumbsDown className="size-4" />
-                            Declined
-                          </Button>
+                            {"Отклонено "}</Button>
                         </>
                       ) : null}
                       {offer.status === "draft" || offer.status === "sent" ? (
@@ -178,13 +171,12 @@ export function OffersPanel({
                           onClick={() =>
                             run(
                               () => withdrawOffer({ offerId: offer.id }),
-                              "Offer withdrawn",
+                              "Предложение отозвано",
                             )
                           }
                         >
                           <Undo2 className="size-4" />
-                          Withdraw
-                        </Button>
+                          {"Вывести "}</Button>
                       ) : null}
                     </div>
                   </div>
@@ -199,18 +191,18 @@ export function OffersPanel({
                     {offer.equity ? (
                       <span className="inline-flex items-center gap-1.5">
                         <BadgeDollarSign className="size-4" />
-                        Equity: {offer.equity}
+                        {"Доля в компании: "}{offer.equity}
                       </span>
                     ) : null}
                     {offer.startDate ? (
                       <span className="inline-flex items-center gap-1.5">
                         <CalendarDays className="size-4" />
-                        Starts <ShortDate value={offer.startDate} />
+                        {"Начинается "}<ShortDate value={offer.startDate} />
                       </span>
                     ) : null}
                     {offer.expiresAt ? (
                       <span>
-                        Expires <ShortDate value={offer.expiresAt} />
+                        {"Срок действия истекает "}<ShortDate value={offer.expiresAt} />
                       </span>
                     ) : null}
                   </div>
@@ -222,12 +214,12 @@ export function OffersPanel({
                   ) : null}
 
                   <p className="text-xs text-muted-foreground">
-                    {offer.createdByName ?? "Someone"} ·{" "}
+                    {offer.createdByName ?? "Кто-то"} ·{" "}
                     <RelativeTime value={offer.createdAt} />
                     {offer.decidedAt ? (
                       <>
                         {" "}
-                        · decided <RelativeTime value={offer.decidedAt} />
+                        {"· решил "}<RelativeTime value={offer.decidedAt} />
                       </>
                     ) : null}
                   </p>

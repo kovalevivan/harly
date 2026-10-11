@@ -59,9 +59,9 @@ export function createBlock(
 }
 
 export const CONTROL_BLOCKS: Array<{ kind: BlockKind; label: string; blurb: string }> = [
-  { kind: "condition", label: "Condition", blurb: "Split the path if / if not." },
-  { kind: "delay", label: "Wait", blurb: "Pause until a time or duration." },
-  { kind: "approval", label: "Approval", blurb: "Ask a person before continuing." },
-  { kind: "wait", label: "Wait for event", blurb: "Resume when something happens." },
-  { kind: "end", label: "End", blurb: "Finish this path." },
+  { kind: "condition", label: "Состояние", blurb: "Разделите путь, если/если нет." },
+  { kind: "delay", label: "Подожди", blurb: "Пауза до определенного времени или продолжительности." },
+  { kind: "approval", label: "Одобрение", blurb: "Прежде чем продолжить, спросите человека." },
+  { kind: "wait", label: "Дождитесь события", blurb: "Возобновите, когда что-то произойдет." },
+  { kind: "end", label: "Конец", blurb: "Завершите этот путь." },
 ];

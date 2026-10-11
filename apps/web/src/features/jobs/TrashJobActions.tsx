@@ -31,10 +31,10 @@ export function TrashJobActions({
     startTransition(async () => {
       const result = await restoreJobAction(jobId);
       if (result.success) {
-        toast.success("Job restored.");
+        toast.success("Работа восстановлена.");
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not restore the job.");
+        toast.error(result.error ?? "Не удалось восстановить работу.");
       }
     });
   }
@@ -43,11 +43,11 @@ export function TrashJobActions({
     startTransition(async () => {
       const result = await permanentlyDeleteJobAction(jobId);
       if (result.success) {
-        toast.success("Job deleted permanently.");
+        toast.success("Вакансия удалена навсегда.");
         setConfirmOpen(false);
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not delete the job.");
+        toast.error(result.error ?? "Не удалось удалить задание.");
       }
     });
   }
@@ -61,15 +61,14 @@ export function TrashJobActions({
         disabled={isPending}
       >
         <RotateCcw className="size-4" />
-        Restore
-      </Button>
+        {"Восстановить "}</Button>
       <Button
         variant="ghost"
         size="icon"
         className="size-8 text-muted-foreground hover:text-destructive"
         onClick={() => setConfirmOpen(true)}
         disabled={isPending}
-        aria-label="Delete permanently"
+        aria-label={"Удалить навсегда"}
       >
         <Trash2 className="size-4" />
       </Button>
@@ -77,11 +76,9 @@ export function TrashJobActions({
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete permanently?</DialogTitle>
+            <DialogTitle>{"Удалить навсегда?"}</DialogTitle>
             <DialogDescription>
-              “{jobTitle}” will be removed for good. This can&apos;t be undone.
-              Jobs with applications can&apos;t be deleted. Close them instead.
-            </DialogDescription>
+              “{jobTitle}{"» будет удалено навсегда. Это невозможно отменить. Вакансии с откликами нельзя удалить. Вместо этого закройте их. "}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button
@@ -89,14 +86,13 @@ export function TrashJobActions({
               onClick={() => setConfirmOpen(false)}
               disabled={isPending}
             >
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button
               variant="destructive"
               onClick={deleteForever}
               disabled={isPending}
             >
-              {isPending ? "Deleting…" : "Delete permanently"}
+              {isPending ? "Удаление…" : "Удалить навсегда"}
             </Button>
           </DialogFooter>
         </DialogContent>

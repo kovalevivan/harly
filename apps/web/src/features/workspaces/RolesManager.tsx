@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/notification-island/toast";
@@ -87,12 +88,12 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
                   <div className="flex items-center gap-2">
                     <p className="font-medium">{role.name}</p>
                     <Badge variant={role.isBuiltin ? "secondary" : "outline"}>
-                      {role.isBuiltin ? "Built-in" : "Custom"}
+                      {role.isBuiltin ? "Встроенная" : "Пользовательский"}
                     </Badge>
                   </div>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     {role.memberCount}{" "}
-                    {role.memberCount === 1 ? "member" : "members"}
+                    {russianPlural(role.memberCount, "участник", "участника", "участников")}
                   </p>
                 </div>
               </div>
@@ -108,10 +109,9 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
                       {role.editable ? (
                         <>
                           <PencilIcon className="size-4" />
-                          Edit
-                        </>
+                          {"Редактировать "}</>
                       ) : (
-                        "View"
+                        "Посмотреть"
                       )}
                     </Button>
                   </SheetTrigger>
@@ -126,10 +126,10 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
 
             <div className="mt-4 space-y-1.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Permissions</span>
+                <span className="text-muted-foreground">{"Разрешения"}</span>
                 <span className="font-medium tabular-nums">
                   {fullAccess
-                    ? "Full access"
+                    ? "Полный доступ"
                     : `${role.permissions.length} / ${TOTAL_PERMISSIONS}`}
                 </span>
               </div>
@@ -148,12 +148,12 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
             role.scope.departments.length > 0 ||
             role.scope.regions.length > 0 ? (
               <p className="mt-3 text-xs text-muted-foreground">
-                Scoped to {role.scope.jobAccess === "assigned" ? "assigned jobs" : "selected filters"}
+                {"Ограничено до "}{role.scope.jobAccess === "assigned" ? "назначенные задания" : "выбранные фильтры"}
                 {role.scope.departments.length > 0
-                  ? ` · ${role.scope.departments.length} department${role.scope.departments.length === 1 ? "" : "s"}`
+                  ? ` · ${role.scope.departments.length} отдел`
                   : ""}
                 {role.scope.regions.length > 0
-                  ? ` · ${role.scope.regions.length} region${role.scope.regions.length === 1 ? "" : "s"}`
+                  ? ` · ${role.scope.regions.length} регион`
                   : ""}
               </p>
             ) : null}
@@ -161,8 +161,7 @@ export function RolesManager({ roles }: { roles: RoleSummary[] }) {
             {role.members.length > 0 && (
               <div className="mt-4 border-t pt-4">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">
-                  Members with this role
-                </p>
+                  {"Участники с этой ролью "}</p>
                 <AvatarGroup>
                   {role.members.slice(0, 5).map((member) => (
                     <UserAvatar
@@ -235,10 +234,10 @@ export function RoleEditor({
           ? await createCustomRole({ name, permissions, scope })
           : await updateCustomRole({ key: role!.key, name, permissions, scope });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not save role.");
+        toast.error(result.error ?? "Не удалось сохранить роль.");
         return;
       }
-      toast.success(mode === "create" ? "Role created" : "Role updated");
+      toast.success(mode === "create" ? "Роль создана" : "Роль обновлена");
       onDone();
       router.refresh();
     });
@@ -249,10 +248,10 @@ export function RoleEditor({
     startDelete(async () => {
       const result = await deleteCustomRole({ key: role.key });
       if (!result.ok) {
-        toast.error(result.error ?? "Could not delete role.");
+        toast.error(result.error ?? "Не удалось удалить роль.");
         return;
       }
-      toast.success("Role deleted. Members moved to Recruiter");
+      toast.success("Роль удалена. Участники перешли в Recruiter");
       onDone();
       router.refresh();
     });
@@ -260,10 +259,10 @@ export function RoleEditor({
 
   const title =
     mode === "create"
-      ? "New role"
+      ? "Новая роль"
       : mode === "view"
-        ? role?.name ?? "Role"
-        : `Edit ${role?.name ?? "role"}`;
+        ? role?.name ?? "Роль"
+        : `Редактировать ${role?.name ?? "role"}`;
 
   return (
     <DrawerLayout
@@ -271,15 +270,15 @@ export function RoleEditor({
       className="sm:max-w-2xl"
       description={
         readOnly
-          ? "The Owner role always has full access and can't be changed."
+          ? "Роль владельца всегда имеет полный доступ и не может быть изменена."
           : role?.isBuiltin
-            ? "Built-in role. Tune its permissions. The name is fixed."
-            : "Pick a name and the permissions this role grants."
+            ? "Встроенная роль. Настройте его разрешения. Имя фиксированное."
+            : "Выберите имя и разрешения, которые предоставляет эта роль."
       }
       footer={
         readOnly ? (
           <SheetClose asChild>
-            <Button variant="outline">Close</Button>
+            <Button variant="outline">{"Закрыть"}</Button>
           </SheetClose>
         ) : (
           <>
@@ -295,58 +294,54 @@ export function RoleEditor({
                 ) : (
                   <TrashIcon className="size-4" />
                 )}
-                Delete
-              </Button>
+                {"Удалить "}</Button>
             ) : null}
             <SheetClose asChild>
               <Button variant="outline" disabled={saving}>
-                Cancel
-              </Button>
+                {"Отмена "}</Button>
             </SheetClose>
             <Button onClick={save} disabled={saving || name.trim().length < 2}>
               {saving ? <SpinnerIcon className="size-4" /> : null}
-              Save
-            </Button>
+              {"Сохранить "}</Button>
           </>
         )
       }
     >
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="role-name">Role name</Label>
+          <Label htmlFor="role-name">{"Имя роли"}</Label>
           <Input
             id="role-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Sourcer"
+            placeholder={"например Источник"}
             disabled={readOnly || Boolean(role?.isBuiltin)}
           />
         </div>
 
         <div className="space-y-3 rounded-xl border bg-muted/20 p-4">
           <div>
-            <p className="text-sm font-medium">Access scope</p>
+            <p className="text-sm font-medium">{"Область доступа"}</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Limit this role to assigned jobs, departments, or regions. Empty filters mean unrestricted access.
-            </p>
+              {"Ограничьте эту роль назначенными должностями, отделами или регионами. Пустые фильтры означают неограниченный доступ. "}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="space-y-1.5">
-              <Label htmlFor="role-job-access">Jobs</Label>
+              <Label htmlFor="role-job-access">{"Вакансии"}</Label>
               <Select value={jobAccess} onValueChange={(value) => setJobAccess(value as RoleScope["jobAccess"])} disabled={readOnly}>
                 <SelectTrigger id="role-job-access"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All matching jobs</SelectItem>
-                  <SelectItem value="assigned">Assigned jobs only</SelectItem>
+                  <SelectItem value="all">{"Все подходящие вакансии"}</SelectItem>
+                  <SelectItem value="assigned">{"Только назначенные задания"}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="role-departments">Departments</Label>
-              <Input id="role-departments" value={departments} onChange={(e) => setDepartments(e.target.value)} placeholder="Engineering, Sales" disabled={readOnly} />
+              <Label htmlFor="role-departments">{"Отделы"}</Label>
+              <Input id="role-departments" value={departments} onChange={(e) => setDepartments(e.target.value)} placeholder={"Инжиниринг, Продажи"} disabled={readOnly} />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="role-regions">Regions</Label>
+              <Label htmlFor="role-regions">{"Регионы"}</Label>
               <Input id="role-regions" value={regions} onChange={(e) => setRegions(e.target.value)} placeholder="LATAM, EMEA" disabled={readOnly} />
             </div>
           </div>

@@ -46,13 +46,13 @@ export function WorkflowCanvasEdge({
           style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
         >
           <StepSelector
-            title="Insert step"
+            title={"Вставить шаг"}
             onSelect={(kind, actionType) => insertOnEdge(id, kind, actionType)}
             trigger={
               <button
                 type="button"
                 className="flex size-5 items-center justify-center rounded-full border border-border bg-pure-snow text-xs font-medium text-foreground shadow-xs transition-transform hover:scale-110 active:scale-95"
-                aria-label="Insert a step on this connection"
+                aria-label={"Вставить шаг по этому соединению"}
                 onClick={(event) => {
                   event.stopPropagation();
                   selectEdge(id);

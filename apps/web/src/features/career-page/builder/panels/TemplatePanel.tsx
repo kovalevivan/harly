@@ -10,26 +10,26 @@ const TEMPLATE_META: Record<
   { label: string; blurb: string; ready: boolean; swatch: { bg: string; accent: string; ink: string } }
 > = {
   minimal: {
-    label: "Minimal",
-    blurb: "Clean type, just the essentials",
+    label: "Минимальный",
+    blurb: "Чистый тип, только самое необходимое",
     ready: true,
     swatch: { bg: "#ffffff", accent: "#1a1a1a", ink: "#e6e6e6" },
   },
   playful: {
-    label: "Playful",
-    blurb: "Colorful, friendly, high-energy",
+    label: "Игривый",
+    blurb: "Красочный, дружелюбный, энергичный",
     ready: true,
     swatch: { bg: "#FFF9E6", accent: "#f4c100", ink: "#f0e4b8" },
   },
   ashby: {
-    label: "Ashby",
-    blurb: "Structured, sidebar filters",
+    label: "Эшби",
+    blurb: "Структурированные фильтры боковой панели",
     ready: true,
     swatch: { bg: "#f7f7f5", accent: "#3f6212", ink: "#e2e2dd" },
   },
   join: {
-    label: "Join",
-    blurb: "Company profile tabs, job-board style",
+    label: "Присоединяйтесь",
+    blurb: "Вкладки профиля компании, стиль доски объявлений",
     ready: true,
     swatch: { bg: "#ffffff", accent: "#18181b", ink: "#e4e4e7" },
   },
@@ -75,7 +75,7 @@ export function TemplatePanel({
 
   return (
     <div className="space-y-6">
-      <PanelHeader title="Template" subtitle="Choose a base layout for your career page." />
+      <PanelHeader title={"Шаблон"} subtitle={"Выберите базовый макет для своей страницы карьеры."} />
 
       <div className="grid grid-cols-1 gap-3">
         {(["minimal", "playful", "ashby", "join"] as const).map((t) => {
@@ -102,15 +102,13 @@ export function TemplatePanel({
                   <span className="font-cal text-base font-semibold text-foreground">{meta.label}</span>
                   {active && (
                     <span className="rounded-full bg-pine/10 px-2 py-0.5 text-[10px] font-medium text-pine">
-                      Active
-                    </span>
+                      {"Активные "}</span>
                   )}
                 </div>
                 <p className="mt-0.5 text-xs text-ink-soft">{meta.blurb}</p>
                 {!meta.ready && (
                   <span className="mt-1.5 inline-block rounded bg-clay/10 px-1.5 py-0.5 text-[10px] font-medium text-clay">
-                    Coming soon
-                  </span>
+                    {"Скоро "}</span>
                 )}
               </div>
             </button>
@@ -122,13 +120,12 @@ export function TemplatePanel({
         <button
           type="button"
           onClick={() => {
-            if (!confirm("Reset all settings to template defaults? This cannot be undone.")) return;
+            if (!confirm("Сбросить все настройки к значениям шаблона по умолчанию? Это невозможно отменить.")) return;
             setConfig(CAREER_PRESETS[config.template as CareerTemplate]());
           }}
           className="text-xs text-ink-soft underline-offset-2 hover:text-foreground hover:underline"
         >
-          Reset to template defaults
-        </button>
+          {"Сбросить настройки шаблона по умолчанию "}</button>
       )}
     </div>
   );

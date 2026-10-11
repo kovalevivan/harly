@@ -45,10 +45,9 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
           <span className="flex size-11 items-center justify-center rounded-xl bg-muted text-muted-foreground">
             <Reply className="size-5" />
           </span>
-          <p className="text-sm font-medium">No candidate replies yet</p>
+          <p className="text-sm font-medium">{"Пока ни один кандидат не ответил"}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Replies sent to your configured inbound address will appear here.
-          </p>
+            {"Здесь будут отображаться ответы, отправленные на настроенный вами входящий адрес. "}</p>
         </CardContent>
       </Card>
     );
@@ -60,7 +59,7 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
         <div
           className="inline-flex rounded-lg border bg-card p-1"
           role="tablist"
-          aria-label="Reply filter"
+          aria-label={"Фильтр ответов"}
         >
           {(["all", "unread"] as const).map((value) => (
             <Button
@@ -73,7 +72,7 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
               aria-selected={filter === value}
             >
               {value === "all"
-                ? "All replies"
+                ? "Все ответы"
                 : `Unread${unread ? ` (${unread})` : ""}`}
             </Button>
           ))}
@@ -86,8 +85,7 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
             disabled={isPending}
           >
             <CheckCheck className="size-4" />
-            Mark all as read
-          </Button>
+            {"Отметить все как прочитанное "}</Button>
         ) : null}
       </div>
 
@@ -95,8 +93,8 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
         <EmptyState
           variant="filtered"
           icon={CheckCheck}
-          title="No unread replies"
-          hint="You're caught up. Switch off the unread filter to see the whole history."
+          title={"Нет непрочитанных ответов"}
+          hint={"Вы втянуты. Отключите фильтр непрочитанных, чтобы увидеть всю историю."}
         />
       ) : (
         <div className="overflow-hidden rounded-xl border bg-card">
@@ -127,7 +125,7 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
                   {!item.read ? (
                     <span
                       className="size-1.5 rounded-full bg-sky-500"
-                      aria-label="Unread"
+                      aria-label={"Непрочитано"}
                     />
                   ) : null}
                 </div>
@@ -137,10 +135,10 @@ export function InboundReplyList({ items }: { items: InboundReplyItem[] }) {
                     !item.read ? "font-medium" : "text-muted-foreground",
                   )}
                 >
-                  {item.subject || "(No subject)"}
+                  {item.subject || "(Нет темы)"}
                 </p>
                 <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                  {item.body || "No plain-text preview was included."}
+                  {item.body || "Предварительный просмотр открытого текста не был включен."}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                   <span>{item.fromEmail ?? item.candidateEmail}</span>

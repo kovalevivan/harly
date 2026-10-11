@@ -31,10 +31,10 @@ export function TrashCandidateActions({
     startTransition(async () => {
       const result = await restoreCandidateAction(candidateId);
       if (result.success) {
-        toast.success("Candidate restored.");
+        toast.success("Кандидат восстановлен.");
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not restore the candidate.");
+        toast.error(result.error ?? "Не удалось восстановить кандидата.");
       }
     });
   }
@@ -43,11 +43,11 @@ export function TrashCandidateActions({
     startTransition(async () => {
       const result = await permanentlyDeleteCandidateAction(candidateId);
       if (result.success) {
-        toast.success("Candidate deleted permanently.");
+        toast.success("Кандидат удален навсегда.");
         setConfirmOpen(false);
         router.refresh();
       } else {
-        toast.error(result.error ?? "Could not delete the candidate.");
+        toast.error(result.error ?? "Не удалось удалить кандидата.");
       }
     });
   }
@@ -61,15 +61,14 @@ export function TrashCandidateActions({
         disabled={isPending}
       >
         <RotateCcw className="size-4" />
-        Restore
-      </Button>
+        {"Восстановить "}</Button>
       <Button
         variant="ghost"
         size="icon"
         className="size-8 text-muted-foreground hover:text-destructive"
         onClick={() => setConfirmOpen(true)}
         disabled={isPending}
-        aria-label="Delete permanently"
+        aria-label={"Удалить навсегда"}
       >
         <Trash2 className="size-4" />
       </Button>
@@ -77,12 +76,9 @@ export function TrashCandidateActions({
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete permanently?</DialogTitle>
+            <DialogTitle>{"Удалить навсегда?"}</DialogTitle>
             <DialogDescription>
-              “{candidateName}” and all their applications, notes, files, and
-              messages will be removed for good. This can&apos;t be undone. Any
-              pending erasure request will be marked fulfilled.
-            </DialogDescription>
+              “{candidateName}{"\", и все отклики, заметки, файлы и сообщения будут удалены навсегда. Это невозможно отменить. Любой ожидающий запрос на удаление будет помечен как выполненный. "}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button
@@ -90,14 +86,13 @@ export function TrashCandidateActions({
               onClick={() => setConfirmOpen(false)}
               disabled={isPending}
             >
-              Cancel
-            </Button>
+              {"Отмена "}</Button>
             <Button
               variant="destructive"
               onClick={deleteForever}
               disabled={isPending}
             >
-              {isPending ? "Deleting…" : "Delete permanently"}
+              {isPending ? "Удаление…" : "Удалить навсегда"}
             </Button>
           </DialogFooter>
         </DialogContent>

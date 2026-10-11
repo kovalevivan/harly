@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeStageName } from "@/lib/localize-system-text";
+
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/notification-island/toast";
@@ -54,10 +56,10 @@ export function MoveStageButton({
           }),
       );
       if (result.success) {
-        toast.success(`Moved to ${nextStage.name}.`);
+        toast.success(`Перемещено в ${localizeStageName(nextStage.name)}.`);
         (router as { refresh?: () => void }).refresh?.();
       } else {
-        toast.error(result.error ?? "Could not move candidate.");
+        toast.error(result.error ?? "Не удалось переместить кандидата.");
       }
     });
   }
@@ -68,17 +70,17 @@ export function MoveStageButton({
       onClick={move}
       disabled={!nextStage || isPending}
       className={cn("gap-1.5", className)}
-      title={nextStage ? `Move to ${nextStage.name}` : "Already in the final stage"}
+      title={nextStage ? `Переместить на этап ${localizeStageName(nextStage.name)}` : "Уже на финальной стадии"}
     >
       {nextStage ? (
         <>
           <span className="truncate">
-            {isPending ? "Moving…" : `Move to ${nextStage.name}`}
+            {isPending ? "Перемещение…" : `Переместить на этап ${localizeStageName(nextStage.name)}`}
           </span>
           <ArrowLineRightIcon className="size-4 shrink-0" />
         </>
       ) : (
-        "Final stage"
+        "Заключительный этап"
       )}
     </Button>
   );

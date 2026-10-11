@@ -53,8 +53,7 @@ export function PipelineJobSelect({
         className="w-(--radix-dropdown-menu-trigger-width) min-w-72"
       >
         <DropdownMenuLabel className="text-xs text-muted-foreground">
-          Switch job
-        </DropdownMenuLabel>
+          {"Сменить работу "}</DropdownMenuLabel>
         {jobs.map((job) => (
           <DropdownMenuItem
             key={job.id}

@@ -1,5 +1,6 @@
 "use client";
 
+import { russianPlural } from "@/lib/russian-plural";
 import Link from "next/link";
 import { Mail, Paperclip } from "lucide-react";
 
@@ -40,7 +41,7 @@ export function ConversationThread({
             <p className="truncate text-sm font-semibold">{first.subject}</p>
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
               {candidateName} · {conversation.length}{" "}
-              {conversation.length === 1 ? "message" : "messages"} ·{" "}
+              {russianPlural(conversation.length, "сообщение", "сообщения", "сообщений")} ·{" "}
               <RelativeTime value={last.createdAt} />
             </p>
           </div>
@@ -54,7 +55,7 @@ export function ConversationThread({
                 : "secondary"
           }
         >
-          {last.status === "failed" ? "Failed" : last.read ? "Read" : "Unread"}
+          {last.status === "failed" ? "Не удалось" : last.read ? "Читать" : "Непрочитано"}
         </Badge>
       </div>
 
@@ -79,7 +80,7 @@ export function ConversationThread({
                   )}
                 >
                   <span className="font-medium text-foreground/80">
-                    {inbound ? message.fromEmail ?? "Candidate" : "You"}
+                    {inbound ? message.fromEmail ?? "Кандидат" : "ты"}
                   </span>
                   <RelativeTime value={message.createdAt} />
                 </div>
@@ -119,8 +120,7 @@ export function ConversationThread({
             href={`/dashboard/inbox?thread=${encodeURIComponent(threadId)}`}
             className="text-xs font-semibold text-foreground underline underline-offset-4"
           >
-            Open in Inbox
-          </Link>
+            {"Открыть во входящих "}</Link>
         ) : (
           <span />
         )}
@@ -135,8 +135,7 @@ export function ConversationThread({
             trigger={
               <Button size="sm" variant="outline">
                 <Mail className="size-4" />
-                Reply
-              </Button>
+                {"Ответить "}</Button>
             }
           />
         ) : null}

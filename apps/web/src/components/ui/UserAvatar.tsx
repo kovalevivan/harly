@@ -70,6 +70,7 @@ export function UserAvatar({
         <span className="flex size-full items-center justify-center">
           <Seedface
             value={name}
+            title={`Аватар: ${name}`}
             size={seedfacePixels[size]}
             radius="full"
             style="character"

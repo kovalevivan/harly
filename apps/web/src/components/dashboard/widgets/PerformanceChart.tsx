@@ -47,7 +47,7 @@ export function PerformanceChart({ points }: { points: Point[] }) {
 
   return (
     <div ref={ref} className="w-full text-primary">
-      <svg width={width} height={H} role="img" aria-label="Hiring trend">
+      <svg width={width} height={H} role="img" aria-label={"Динамика найма"}>
         <defs>
           <linearGradient id="perf-fill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="currentColor" stopOpacity="0.16" />

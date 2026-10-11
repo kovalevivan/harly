@@ -21,7 +21,7 @@ export function JoinWorkspaceButton({ token }: { token: string }) {
           const result = await joinViaInviteLinkAction(token);
 
           if (!result.success || !result.organizationId) {
-            toast.error(result.error ?? "Unable to join workspace.");
+            toast.error(result.error ?? "Невозможно присоединиться к рабочей области.");
             return;
           }
 
@@ -34,7 +34,7 @@ export function JoinWorkspaceButton({ token }: { token: string }) {
         });
       }}
     >
-      {isPending ? "Joining…" : "Join workspace"}
+      {isPending ? "Присоединяюсь…" : "Присоединиться к рабочей области"}
     </button>
   );
 }

@@ -25,7 +25,7 @@ export const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 export const EASE_IN_OUT = [0.77, 0, 0.175, 1] as const;
 export const EASE_DRAWER = [0.32, 0.72, 0, 1] as const;
 
-export const EASE_OUT_CSS = "cubic-bezier(0.16, 1, 0.3, 1)";
+export const EASE_OUT_CSS = "кубический-безье(0,16, 1, 0,3, 1)";
 
 export const SPRING_PRESS = {
   type: "spring",
@@ -122,10 +122,10 @@ const FAST_TRANSITION = {
 } as const;
 
 const STATUS_LABEL: Record<FileUploadStatus, string> = {
-  queued: "Queued",
-  uploading: "Uploading",
-  success: "Uploaded",
-  error: "Failed",
+  queued: "В очереди",
+  uploading: "Загрузка",
+  success: "Загружено",
+  error: "Не удалось",
 };
 
 const STATUS_TONE: Record<FileUploadStatus, string> = {
@@ -420,7 +420,7 @@ function FileUploadRow({
                 <button
                   type="button"
                   onClick={() => onRetry(item)}
-                  aria-label={`Retry ${item.name}`}
+                  aria-label={`Повторить ${item.name}`}
                   className={cn(
                     "grid h-7 w-7 place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground active:scale-95",
                     classNames?.action,
@@ -433,7 +433,7 @@ function FileUploadRow({
               <button
                 type="button"
                 onClick={() => onRemove(item)}
-                aria-label={`Remove ${item.name}`}
+                aria-label={`Удалить ${item.name}`}
                 className={cn(
                   "grid h-7 w-7 place-items-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground active:scale-95",
                   classNames?.action,
@@ -450,7 +450,7 @@ function FileUploadRow({
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={Math.round(progress)}
-              aria-label={`${item.name} upload progress`}
+              aria-label={`${item.name} прогресс загрузки`}
               className={cn(
                 "mt-3 h-1.5 overflow-hidden rounded-full bg-muted",
                 classNames?.progress,
@@ -590,7 +590,7 @@ export function FileUpload({
         ref={inputRef}
         id={inputId}
         type="file"
-        aria-label="Upload files"
+        aria-label={"Загрузить файлы"}
         accept={accept}
         multiple={multiple}
         disabled={disabled || maxReached}
@@ -673,7 +673,7 @@ export function FileUpload({
               centered ? "text-base" : "text-sm",
             )}
           >
-            {maxReached ? "Upload limit reached" : title}
+            {maxReached ? "Достигнут лимит загрузки" : title}
           </span>
 
           <span
@@ -682,7 +682,7 @@ export function FileUpload({
               centered ? "mt-1 leading-5" : "mt-0.5",
             )}
           >
-            {maxReached ? `${items.length} of ${maxFiles} files added` : description}
+            {maxReached ? `Добавлено ${items.length} из ${maxFiles} файлов` : description}
           </span>
         </span>
 

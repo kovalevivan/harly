@@ -17,18 +17,18 @@ const visibilityOptions: Array<{
 }> = [
   {
     value: "required",
-    label: "Required",
-    description: "Candidates must fill this field.",
+    label: "Требуется",
+    description: "Кандидаты должны заполнить это поле.",
   },
   {
     value: "optional",
-    label: "Optional",
-    description: "Show it, but let candidates skip it.",
+    label: "Необязательно",
+    description: "Покажите это, но позвольте кандидатам пропустить это.",
   },
   {
     value: "disabled",
-    label: "Disabled",
-    description: "Hide it from the application form.",
+    label: "Отключено",
+    description: "Скройте его из формы заявки.",
   },
 ];
 
@@ -122,42 +122,42 @@ export function ApplicationSection({
   return (
     <div className="space-y-6">
       <FieldGroup
-        title="Personal information"
-        description="Name and email stay required. Configure the additional fields shown in the first section of the application form."
+        title={"Личная информация"}
+        description={"Имя и адрес электронной почты остаются обязательными. Настройте дополнительные поля, показанные в первом разделе формы заявки."}
       >
         <VisibilityField
           name="applicationPhoneVisibility"
-          label="Phone"
+          label={"Телефон"}
           value={applicationConfig.sections.personal.phone}
         />
         <VisibilityField
           name="applicationAddressVisibility"
-          label="Address"
+          label={"Адрес"}
           value={applicationConfig.sections.personal.address}
         />
         <VisibilityField
           name="applicationPhotoVisibility"
-          label="Photo"
+          label={"Фото"}
           value={applicationConfig.sections.personal.photo}
-          description="Candidates can upload a profile photo."
+          description={"Кандидаты могут загрузить фотографию профиля."}
         />
         <VisibilityField
           name="applicationHeadlineVisibility"
-          label="Headline"
+          label={"Заголовок"}
           value={applicationConfig.sections.personal.headline}
-          description="Short professional title or summary."
+          description={"Краткое профессиональное название или резюме."}
         />
       </FieldGroup>
 
       <FieldGroup
-        title="Profile"
-        description="Control resume and profile links."
+        title={"Профиль"}
+        description={"Контролируйте резюме и ссылки на профили."}
       >
         <VisibilityField
           name="applicationResumeVisibility"
-          label="Resume / CV"
+          label={"Резюме"}
           value={applicationConfig.sections.profile.resume}
-          description="Candidates can upload PDF, DOC, or DOCX."
+          description={"Кандидаты могут загружать PDF, DOC или DOCX."}
         />
         <VisibilityField
           name="applicationLinkedinVisibility"
@@ -171,34 +171,34 @@ export function ApplicationSection({
         />
         <VisibilityField
           name="applicationWebsiteVisibility"
-          label="Website / Portfolio"
+          label={"Сайт/Портфолио"}
           value={applicationConfig.sections.profile.websiteUrl}
         />
         <VisibilityField
           name="applicationEducationVisibility"
-          label="Education"
+          label={"Образование"}
           value={applicationConfig.sections.profile.education}
-          description="Candidates can add one or more education entries."
+          description={"Кандидаты могут добавить одну или несколько записей об образовании."}
         />
         <VisibilityField
           name="applicationExperienceVisibility"
-          label="Experience"
+          label={"Опыт"}
           value={applicationConfig.sections.profile.experience}
-          description="Candidates can add one or more work experience entries."
+          description={"Кандидаты могут добавить одну или несколько записей об опыте работы."}
         />
       </FieldGroup>
 
       <FieldGroup
-        title="Details"
-        description="Add screening questions, applicant-facing information, and agreements."
+        title={"Подробности"}
+        description={"Добавьте проверочные вопросы, информацию для кандидатов и соглашения."}
       >
         <VisibilityField
           name="applicationCoverLetterVisibility"
-          label="Cover letter"
+          label={"Сопроводительное письмо"}
           value={applicationConfig.sections.details.coverLetter}
         />
         <div>
-          <h3 className="mb-3 text-sm font-semibold">Custom form content</h3>
+          <h3 className="mb-3 text-sm font-semibold">{"Пользовательское содержимое формы"}</h3>
           <JobQuestionBuilder
             initialQuestions={applicationConfig.questions}
             aiContext={aiContext}

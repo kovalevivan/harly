@@ -27,7 +27,7 @@ export function AcceptInvitationButton({
           const result = await acceptWorkspaceInvitationAction(invitationId);
 
           if (!result.success || !result.organizationId) {
-            toast.error(result.error ?? "Unable to accept invitation.");
+            toast.error(result.error ?? "Не удалось принять приглашение.");
             return;
           }
 
@@ -40,7 +40,7 @@ export function AcceptInvitationButton({
         });
       }}
     >
-      {isPending ? "Accepting…" : "Accept invitation"}
+      {isPending ? "Принятие…" : "Принять приглашение"}
     </button>
   );
 }

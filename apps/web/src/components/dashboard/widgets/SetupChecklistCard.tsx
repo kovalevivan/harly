@@ -163,13 +163,11 @@ export function SetupChecklistCard({ checklist }: { checklist: SetupChecklist })
           </span>
           <div>
             <h2 className="font-display text-[15px] font-semibold tracking-tight">
-              Recommended next steps
-            </h2>
+              {"Рекомендуемые шаги "}</h2>
             <p className="text-xs text-muted-foreground">
-              {checklist.completed} of {checklist.total} done
-              {checklist.nextStep ? (
+              Выполнено {checklist.completed} из {checklist.total}{checklist.nextStep ? (
                 <>
-                  {" · Next: "}
+                  {" · Далее: "}
                   <span className="font-medium text-foreground">
                     {checklist.nextStep.title}
                   </span>
@@ -251,8 +249,8 @@ export function SetupChecklistCard({ checklist }: { checklist: SetupChecklist })
                   <button
                     type="button"
                     onClick={() => skippedStore.skip(item.key)}
-                    aria-label={`Skip "${item.title}"`}
-                    title="Skip this step"
+                    aria-label={`Пропустить «${item.title}»`}
+                    title={"Пропустить этот шаг"}
                     className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     <X className="size-4" />

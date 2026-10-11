@@ -23,7 +23,6 @@ export function DemoEntryButton() {
           strokeLinejoin="round"
         />
       </svg>
-      Explore the ATS
-    </a>
+      {"Изучите АТС "}</a>
   );
 }

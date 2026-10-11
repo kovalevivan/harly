@@ -68,11 +68,10 @@ export function PortalDocumentRequestsCard({
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Requested documents</h2>
+        <h2 className="text-lg font-semibold text-foreground">{"Запрошенные документы"}</h2>
         {outstanding > 0 ? (
           <span className="rounded-full bg-warning-clay/10 px-2.5 py-0.5 text-xs font-medium text-warning-clay">
-            {outstanding} to upload
-          </span>
+            {outstanding} {"загрузить "}</span>
         ) : null}
       </div>
       <div className="space-y-3">
@@ -101,11 +100,11 @@ function RequestRow({ request }: { request: DocumentRequestItem }) {
   function onFile(file: File | null) {
     if (!file) return;
     if (!ALLOWED_TYPES.has(file.type)) {
-      toast.error("Upload a PDF, Word doc, or image.");
+      toast.error("Загрузите PDF, документ Word или изображение.");
       return;
     }
     if (file.size <= 0 || file.size > MAX_BYTES) {
-      toast.error("File must be between 1 byte and 25 MB.");
+      toast.error("Размер файла должен быть от 1 байта до 25 МБ.");
       return;
     }
     start(async () => {
@@ -143,10 +142,10 @@ function RequestRow({ request }: { request: DocumentRequestItem }) {
           toast.error(result.error);
           return;
         }
-        toast.success("Document submitted");
+        toast.success("Документ отправлен");
         router.refresh();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Could not submit the document.");
+        toast.error(error instanceof Error ? error.message : "Не удалось отправить документ.");
       } finally {
         if (inputRef.current) inputRef.current.value = "";
       }
@@ -215,7 +214,7 @@ function RequestRow({ request }: { request: DocumentRequestItem }) {
             ) : null}
             {request.dueAt ? (
               <p className="mt-1.5 text-xs text-muted-foreground">
-                Due {new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(request.dueAt))}
+                {"Срок погашения "}{new Intl.DateTimeFormat("ru-RU", { dateStyle: "medium" }).format(new Date(request.dueAt))}
               </p>
             ) : null}
           </div>
@@ -242,7 +241,7 @@ function RequestRow({ request }: { request: DocumentRequestItem }) {
               )}
             >
               {isPending ? <SpinnerIcon className="size-4 animate-spin" /> : <FileArrowUpIcon className="size-4" />}
-              {isPending ? "Uploading…" : request.status === "declined" ? "Re-upload" : "Upload"}
+              {isPending ? "Загрузка…" : request.status === "declined" ? "Загрузить повторно" : "Загрузить"}
             </button>
           </>
         ) : canSign ? (
@@ -256,13 +255,12 @@ function RequestRow({ request }: { request: DocumentRequestItem }) {
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >
-            {isSigning ? "Preparing…" : "Review & sign"}
+            {isSigning ? "Подготовка…" : "Просмотрите и подпишите"}
           </button>
         ) : request.status === "submitted" ? (
           <span className="inline-flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground">
             <SpinnerIcon className="size-3.5 animate-spin" />
-            In review
-          </span>
+            {"На рассмотрении "}</span>
         ) : null}
       </div>
     </div>

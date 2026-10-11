@@ -55,7 +55,7 @@ export function JobLivePreview({
           <span className="size-2.5 rounded-full bg-clay/70" />
           <span className="size-2.5 rounded-full bg-success/70" />
         </div>
-        <p className="text-xs font-medium text-ink-soft">Live preview</p>
+        <p className="text-xs font-medium text-ink-soft">{"Предварительный просмотр в реальном времени"}</p>
         <div className="flex items-center gap-1 rounded-lg border border-border p-0.5">
           {(["desktop", "mobile"] as const).map((d) => {
             const Icon = d === "desktop" ? Monitor : Smartphone;
@@ -68,7 +68,7 @@ export function JobLivePreview({
                   "rounded-md p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pine/40",
                   device === d ? "bg-sage text-pine" : "text-ink-soft hover:text-foreground",
                 )}
-                aria-label={`${d} preview`}
+                aria-label={`${d} предварительный просмотр`}
                 aria-pressed={device === d}
               >
                 <Icon className="size-4" />
@@ -100,8 +100,7 @@ export function JobLivePreview({
           </PreviewFrame>
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-ink-soft">
-            Career page isn&apos;t configured yet , preview unavailable.
-          </div>
+            {"Страница карьеры еще не настроена, предварительный просмотр недоступен. "}</div>
         )}
       </div>
     </div>
