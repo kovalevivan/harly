@@ -152,7 +152,7 @@ export async function processBriefingMessage(input: {
     throw new Error(
       "Достигнут лимит переписки. Проверьте итог и передайте его HR.",
     );
-  if (!existing && brief.updatedAt.toISOString() !== input.expectedVersion)
+  if (brief.updatedAt.toISOString() !== input.expectedVersion)
     throw new Error("Брифинг изменился. Обновите сводку перед отправкой.");
   const [{ count }] = await db
     .select({
